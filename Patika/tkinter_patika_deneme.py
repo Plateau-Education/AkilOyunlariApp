@@ -35,8 +35,8 @@
 
 import random, time, timeit
 from tkinter import Tk, Canvas, BOTH
-
-#TO-DO Tracking the line to figure out whether the line passes all the boxes. 
+import pandas as pd
+import numpy as np
 
 def blacklist(patika_boyutu=6, siyah_kare_sayisi = 0):
     # siyah_kare_sayisi = patika_boyutu #- 2
@@ -63,21 +63,6 @@ def orta_nokta(row, column, genislik):
 
 def create_grid(c,genislik, patika_boyutu=6, siyah_kare_sayisi=0):
     blackList = blacklist(patika_boyutu, siyah_kare_sayisi)
-    # if set(blackList) in [set([(0, 2), (5, 0), (2, 5), (3, 1)]),
-    #                         set([(1, 3), (0, 5), (5, 2), (2, 0)]),  
-                            
-    #                         set([(4, 2), (3, 5), (0, 3), (5, 0)]), 
-    #                         set([(0, 5), (5, 3), (2, 4), (3, 0)]),
-
-    #                         set([(0, 2), (3, 0), (4, 3), (5, 5)]),
-    #                         set([(0, 3), (3, 4), (5, 5), (2, 0)]), 
-
-    #                         set([(0, 0), (1, 2), (2, 5), (5, 3)]), 
-    #                         set([(3, 5), (0, 0), (2, 1), (5, 2)]),
-
-    #                         set([(4, 2), (3, 4), (2, 1), (1, 3)]),
-    #                         set([(1, 2), (3, 1), (2, 4), (4, 3)])]:
-        # blackList = blacklist()
 
     # blackList = [(4, 4), (4, 2), (6, 0), (6, 3), (0, 4), (2,5), (2,1)]
 
@@ -1415,24 +1400,101 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     break
                             
 
-                        if (row, column) in sag_cizgi and (row,column) in sol_cizgi and (row,column)not in kenar_sag_sol:
-                            
-                            kenar_sag_sol.append((row, column))
-                        elif (row, column) in yukari_cizgi and (row, column) in asagi_cizgi and (row,column) not in kenar_yukari_asagi:
-                            
-                            kenar_yukari_asagi.append((row,column))
-                        elif (row, column) in sol_cizgi and (row, column) in asagi_cizgi and (row,column) not in kose_sol_asagi:
-                            
-                            kose_sol_asagi.append((row,column))
-                        elif (row, column) in sol_cizgi and (row, column) in yukari_cizgi and (row,column) not in kose_sol_yukari:
-                            
-                            kose_sol_yukari.append((row,column))
-                        elif (row, column) in sag_cizgi and (row, column) in asagi_cizgi and (row,column) not in kose_sag_asagi:
-                            
-                            kose_sag_asagi.append((row,column))
-                        elif (row, column) in sag_cizgi and (row, column) in yukari_cizgi and (row,column) not in kose_sag_yukari:
-                            
-                            kose_sag_yukari.append((row,column))
+                    if (row, column) in sag_cizgi and (row,column) in sol_cizgi and (row,column)not in kenar_sag_sol:
+                        degismeme_count = "degisti"
+                        kenar_sag_sol.append((row, column))
+                    elif (row, column) in yukari_cizgi and (row, column) in asagi_cizgi and (row,column) not in kenar_yukari_asagi:
+                        degismeme_count = "degisti"
+                        kenar_yukari_asagi.append((row,column))
+                    elif (row, column) in sol_cizgi and (row, column) in asagi_cizgi and (row,column) not in kose_sol_asagi:
+                        degismeme_count = "degisti"
+                        kose_sol_asagi.append((row,column))
+                    elif (row, column) in sol_cizgi and (row, column) in yukari_cizgi and (row,column) not in kose_sol_yukari:
+                        degismeme_count = "degisti"
+                        kose_sol_yukari.append((row,column))
+                    elif (row, column) in sag_cizgi and (row, column) in asagi_cizgi and (row,column) not in kose_sag_asagi:
+                        degismeme_count = "degisti"
+                        kose_sag_asagi.append((row,column))
+                    elif (row, column) in sag_cizgi and (row, column) in yukari_cizgi and (row,column) not in kose_sag_yukari:
+                        degismeme_count = "degisti"
+                        kose_sag_yukari.append((row,column))
+                    
+                    if sag in sag_cizgi and sag in sol_cizgi and sag not in kenar_sag_sol:
+                        degismeme_count = "degisti"
+                        kenar_sag_sol.append(sag)
+                    elif sag in yukari_cizgi and sag in asagi_cizgi and sag not in kenar_yukari_asagi:
+                        degismeme_count = "degisti"
+                        kenar_yukari_asagi.append(sag)
+                    elif sag in sol_cizgi and sag in asagi_cizgi and sag not in kose_sol_asagi:
+                        degismeme_count = "degisti"
+                        kose_sol_asagi.append(sag)
+                    elif sag in sol_cizgi and sag in yukari_cizgi and sag not in kose_sol_yukari:
+                        degismeme_count = "degisti"
+                        kose_sol_yukari.append(sag)
+                    elif sag in sag_cizgi and sag in asagi_cizgi and sag not in kose_sag_asagi:
+                        degismeme_count = "degisti"
+                        kose_sag_asagi.append(sag)
+                    elif sag in sag_cizgi and sag in yukari_cizgi and sag not in kose_sag_yukari:
+                        degismeme_count = "degisti"
+                        kose_sag_yukari.append(sag)
+        
+                    if sol in sag_cizgi and sol in sol_cizgi and sol not in kenar_sag_sol:
+                        degismeme_count = "degisti"
+                        kenar_sag_sol.append(sol)
+                    elif sol in yukari_cizgi and sol in asagi_cizgi and sol not in kenar_yukari_asagi:
+                        degismeme_count = "degisti"
+                        kenar_yukari_asagi.append(sol)
+                    elif sol in sol_cizgi and sol in asagi_cizgi and sol not in kose_sol_asagi:
+                        degismeme_count = "degisti"
+                        kose_sol_asagi.append(sol)
+                    elif sol in sol_cizgi and sol in yukari_cizgi and sol not in kose_sol_yukari:
+                        degismeme_count = "degisti"
+                        kose_sol_yukari.append(sol)
+                    elif sol in sag_cizgi and sol in asagi_cizgi and sol not in kose_sag_asagi:
+                        degismeme_count = "degisti"
+                        kose_sag_asagi.append(sol)
+                    elif sol in sag_cizgi and sol in yukari_cizgi and sol not in kose_sag_yukari:
+                        degismeme_count = "degisti"
+                        kose_sag_yukari.append(sol)
+        
+                    if yukari in sag_cizgi and yukari in sol_cizgi and yukari not in kenar_sag_sol:
+                        degismeme_count = "degisti"
+                        kenar_sag_sol.append(yukari)
+                    elif yukari in yukari_cizgi and yukari in asagi_cizgi and yukari not in kenar_yukari_asagi:
+                        degismeme_count = "degisti"
+                        kenar_yukari_asagi.append(yukari)
+                    elif yukari in sol_cizgi and yukari in asagi_cizgi and yukari not in kose_sol_asagi:
+                        degismeme_count = "degisti"
+                        kose_sol_asagi.append(yukari)
+                    elif yukari in sol_cizgi and yukari in yukari_cizgi and yukari not in kose_sol_yukari:
+                        degismeme_count = "degisti"
+                        kose_sol_yukari.append(yukari)
+                    elif yukari in sag_cizgi and yukari in asagi_cizgi and yukari not in kose_sag_asagi:
+                        degismeme_count = "degisti"
+                        kose_sag_asagi.append(yukari)
+                    elif yukari in sag_cizgi and yukari in yukari_cizgi and yukari not in kose_sag_yukari:
+                        degismeme_count = "degisti"
+                        kose_sag_yukari.append(yukari)
+                    
+                    if asagi in sag_cizgi and asagi in sol_cizgi and asagi not in kenar_sag_sol:
+                        degismeme_count = "degisti"
+                        kenar_sag_sol.append(asagi)
+                    elif asagi in yukari_cizgi and asagi in asagi_cizgi and asagi not in kenar_yukari_asagi:
+                        degismeme_count = "degisti"
+                        kenar_yukari_asagi.append(asagi)
+                    elif asagi in sol_cizgi and asagi in asagi_cizgi and asagi not in kose_sol_asagi:
+                        degismeme_count = "degisti"
+                        kose_sol_asagi.append(asagi)
+                    elif asagi in sol_cizgi and asagi in yukari_cizgi and asagi not in kose_sol_yukari:
+                        degismeme_count = "degisti"
+                        kose_sol_yukari.append(asagi)
+                    elif asagi in sag_cizgi and asagi in asagi_cizgi and asagi not in kose_sag_asagi:
+                        degismeme_count = "degisti"
+                        kose_sag_asagi.append(asagi)
+                    elif asagi in sag_cizgi and asagi in yukari_cizgi and asagi not in kose_sag_yukari:
+                        degismeme_count = "degisti"
+                        kose_sag_yukari.append(asagi)
+                    
             
 
 
@@ -1499,6 +1561,7 @@ def main(c,genislik,patika_boyutu=6, siyah_kare_sayisi=0):
             c.delete("all")
     end = timeit.default_timer()
     print(f"It took {end-start} seconds.")
+    return blackList
 
 root = Tk()
 c = Canvas(root)
@@ -1506,14 +1569,28 @@ root.title("Patika")
 
 genislik = 40
 
-patika_boyutu = int(input("Patika boyutu:"))
-siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
-if patika_boyutu <= 2:
-    raise ValueError("Patika boyutu en az 3 olabilir.")
-if siyah_kare_sayisi >= patika_boyutu**2//4:
-    raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
-main(c,genislik,patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
-
+# patika_boyutu = int(input("Patika boyutu:"))
+# siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
+# if patika_boyutu <= 2:
+#     raise ValueError("Patika boyutu en az 3 olabilir.")
+# if siyah_kare_sayisi >= patika_boyutu**2//4:
+#     raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
+# main(c,genislik,patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
+adet = 3
+tum_dogru_blackListler =[]
+for patika_boyutu in range(4,7):
+    boyut_dogru_blackList = []
+    for tur in range(1,adet+1):
+        if patika_boyutu <= 6: siyah_kare_sayisi = patika_boyutu-2
+        else: siyah_kare_sayisi = patika_boyutu
+        dogru_blackList = main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
+        boyut_dogru_blackList.append(dogru_blackList)
+    tum_dogru_blackListler.append(tuple(boyut_dogru_blackList))
+tum_dogru_blackListler = np.array(tum_dogru_blackListler)
+tum_dogru_blackListler = tum_dogru_blackListler.T
+# print(tum_dogru_blackListler)
+df = pd.DataFrame(tum_dogru_blackListler,columns=["4x4","5x5","6x6"])
+print(df)
 
 
 c.pack(fill=BOTH, expand=1)
