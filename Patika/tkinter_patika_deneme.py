@@ -177,11 +177,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
 
     for tur in range(30):
         
-        if degismeme_count == "degisti":
-            degismeme_count = "ilk_degismeme"
-        elif degismeme_count == "ilk_degismeme":
-            degismeme_count = "ikinci_degismeme" 
-        else: degismeme_count = "ilk_degismeme"
+        degismeme_count="degismedi"
         for row in range(patika_boyutu):
             for column in range(patika_boyutu):
                 if (row,column) not in blackList and (row,column) not in kose_sag_asagi and (row,column) not in kose_sag_yukari and (row,column) not in kose_sol_asagi and (row,column) not in kose_sol_yukari and (row,column) not in kenar_yukari_asagi and (row,column) not in kenar_sag_sol:
@@ -354,7 +350,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                         degismeme_count = "degisti"
                         kose_sag_yukari.append(asagi)
                     
-        if degismeme_count == "ikinci_degismeme":
+        if degismeme_count == "degismedi":
             print(f"{tur} tur gecti, bulunabilen koseler bulundu.")
             
             for row in range(patika_boyutu):
@@ -382,70 +378,110 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             if rc in sag_cizgi: 
                                 current = sag
                                 gelis = "sol"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
+                            elif rc in yukari_cizgi:
+                                current = yukari
+                                gelis = "asagi"
+                            elif rc in asagi_cizgi:
+                                current = asagi
+                                gelis = "yukari"
+                        elif sag_dolu:
+                            if rc in sol_cizgi: 
+                                current = sol
+                                gelis = "sag"
+                            elif rc in yukari_cizgi:
+                                current = yukari
+                                gelis = "asagi"
+                            elif rc in asagi_cizgi: 
+                                current = asagi
+                                gelis = "yukari"                      
+                        elif yukari_dolu:
+                            if rc in sol_cizgi: 
+                                current = sol
+                                gelis = "sag"
+                            elif rc in sag_cizgi: 
+                                current = sag
+                                gelis = "sol"
+                            elif rc in asagi_cizgi: 
+                                current = asagi
+                                gelis = "yukari"
+                        elif asagi_dolu:
+                            if rc in sol_cizgi: 
+                                current = sol
+                                gelis = "sag"
+                            elif rc in sag_cizgi: 
+                                current = sag
+                                gelis = "sol"
+                            elif rc in yukari_cizgi:
+                                current = yukari
+                                gelis = "asagi"
+                                
+                        # print(current)
+                        current_degisti = True
+                        while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
+                            # time.sleep(0.2)
+                            current_degisti = False
+                            if gelis == "sag": #cizgi sağından gelmişse
+                                if current in kose_sag_asagi:  
+                                    current_degisti = True
+                                    gelis = "yukari"
+                                    current = (current[0], current[1]+1) #asagiya gidecek
+                                elif current in kose_sag_yukari: 
+                                    current_degisti = True
+                                    gelis = "asagi"
+                                    current = (current[0], current[1]-1) #yukariya gidecek
+                                elif current in kenar_sag_sol:
+                                    current_degisti = True
+                                    gelis = "sag"
+                                    current = (current[0]-1, current[1]) #sola gidecek
+                            elif gelis == "sol": #cizgi solundan gelmişse
 
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
+                                if current in kose_sol_asagi:  
+                                    current_degisti = True
+                                    gelis = "yukari"
+                                    current = (current[0], current[1]+1) #asagiya gidecek
+                                elif current in kose_sol_yukari: 
+                                    current_degisti = True
+                                    gelis = "asagi"
+                                    current = (current[0], current[1]-1) #yukariya gidecek
+                                elif current in kenar_sag_sol:
+                                    current_degisti = True
+                                    gelis = "sol" 
+                                    current = (current[0]+1, current[1]) #saga gidecek
+                            elif gelis == "asagi": #asagidan gelmişse
 
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
+                                if current in kose_sol_asagi:  
+                                    current_degisti = True
+                                    gelis = "sag"
+                                    current = (current[0]-1, current[1]) #sola gidecek
+                                elif current in kose_sag_asagi: 
+                                    current_degisti = True
+                                    gelis = "sol" 
+                                    current = (current[0]+1, current[1]) #saga gidecek
+                                elif current in kenar_yukari_asagi:
+                                    current_degisti = True
+                                    gelis = "asagi"
+                                    current = (current[0], current[1]-1) #yukariya gidecek
+                            elif gelis == "yukari": #yukaridan gelmişse
 
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                                if current in kose_sol_yukari:  
+                                    current_degisti = True
+                                    gelis = "sag"
+                                    current = (current[0]-1, current[1]) #sola gidecek
+                                elif current in kose_sag_yukari: 
+                                    current_degisti = True
+                                    gelis = "sol" 
+                                    current = (current[0]+1, current[1]) #saga gidecek
+                                elif current in kenar_yukari_asagi:
+                                    current_degisti = True
+                                    gelis = "yukari"
+                                    current = (current[0], current[1]+1) #asagiya gidecek
+                            # print(current)
+                            if current_degisti == False:
+                                print("stuck")
+                                return "Wrong Question"
+   
+                        if sol_dolu:
+                            if rc in sag_cizgi:
                                 if current == yukari: #yukarısıyla birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -463,73 +499,6 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
-                                current = yukari
-                                gelis = "asagi"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
                                 if current == sag: #sagdakiyle birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -548,73 +517,6 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     degismeme_count = "degisti"
                                     break
                             elif rc in asagi_cizgi:
-                                current = asagi
-                                gelis = "yukari"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
                                 if current == sag: #sagdakiyle birleşirse kapalı alan oluşturucak
                                     yukari_cizgi.append(rc) #şuanki bloğa yukari_cizgi eklendi
                                     asagi_cizgi.append(yukari) #altindaki bloğa asagi_cizgi eklendi
@@ -634,74 +536,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                 else:
                                     print((row,column),"kapalı alan oluşturmuyor", current)
                         elif sag_dolu:
-                            if rc in sol_cizgi: 
-                                current = sol
-                                gelis = "sag"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            if rc in sol_cizgi:
                                 if current == yukari: #yukarısıyla birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -719,73 +554,6 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
-                                current = yukari
-                                gelis = "asagi"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
                                 if current == sol: #soldakiyle birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -802,74 +570,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     canvas.create_line(bas[0],bas[1],son[0],son[1])
                                     degismeme_count = "degisti"
                                     break
-                            elif rc in asagi_cizgi: 
-                                current = asagi
-                                gelis = "yukari"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            elif rc in asagi_cizgi:
                                 if current == sol: #soldakiyle birleşirse kapalı alan oluşturucak
                                     yukari_cizgi.append(rc) #şuanki bloğa yukari_cizgi eklendi
                                     asagi_cizgi.append(yukari) #altindaki bloğa asagi_cizgi eklendi
@@ -888,76 +589,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     degismeme_count = "degisti"
                                     break
                                 else:
-                                    print((row,column),"kapalı alan oluşturmuyor",current)                      
+                                    print((row,column),"kapalı alan oluşturmuyor",current)
                         elif yukari_dolu:
-                            if rc in sol_cizgi: 
-                                current = sol
-                                gelis = "sag"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            if rc in sol_cizgi:
                                 if current == sag: #sagla birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -974,74 +608,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     canvas.create_line(bas[0],bas[1],son[0],son[1])
                                     degismeme_count = "degisti"
                                     break
-                            elif rc in sag_cizgi: 
-                                current = sag
-                                gelis = "sol"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            elif rc in sag_cizgi:
                                 if current == sol: #yukarısıyla birleşirse kapalı alan oluşturucak
                                     asagi_cizgi.append(rc) #şuanki bloğa asagi_cizgi eklendi
                                     yukari_cizgi.append(asagi) #altindaki bloğa yukari_cizgi eklendi
@@ -1058,74 +625,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     canvas.create_line(bas[0],bas[1],son[0],son[1])
                                     degismeme_count = "degisti"
                                     break
-                            elif rc in asagi_cizgi: 
-                                current = asagi
-                                gelis = "yukari"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            elif rc in asagi_cizgi:
                                 if current == sol: #soldakiyle birleşirse kapalı alan oluşturucak
                                     sag_cizgi.append(rc) #şuanki bloğa sag_cizgi eklendi
                                     sol_cizgi.append(sag) #sagindaki bloğa sol_cizgi eklendi
@@ -1146,74 +646,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                 else:
                                     print((row,column),"kapalı alan oluşturmuyor",current)
                         elif asagi_dolu:
-                            if rc in sol_cizgi: 
-                                current = sol
-                                gelis = "sag"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            if rc in sol_cizgi:
                                 if current == sag: #sagla birleşirse kapalı alan oluşturucak
                                     yukari_cizgi.append(rc) #şuanki bloğa yukari_cizgi eklendi
                                     asagi_cizgi.append(yukari) #üstündeki bloğa asagii_cizgi eklendi
@@ -1230,74 +663,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     canvas.create_line(bas[0],bas[1],son[0],son[1])
                                     degismeme_count = "degisti"
                                     break
-                            elif rc in sag_cizgi: 
-                                current = sag
-                                gelis = "sol"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
+                            elif rc in sag_cizgi:
                                 if current == sol: #yukarısıyla birleşirse kapalı alan oluşturucak
                                     yukari_cizgi.append(rc) #şuanki bloğa yukari_cizgi eklendi
                                     asagi_cizgi.append(yukari) #üstündeki bloğa asagi_cizgi eklendi
@@ -1315,73 +681,6 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
-                                current = yukari
-                                gelis = "asagi"
-                                # print(current)
-                                current_degisti = True
-                                while (current in kose_sol_asagi or current in kose_sol_yukari or current in kose_sag_asagi or current in kose_sag_yukari or current in kenar_sag_sol or current in kenar_yukari_asagi):
-                                    # time.sleep(0.2)
-                                    current_degisti = False
-                                    if gelis == "sag": #cizgi sağından gelmişse
-
-                                        if current in kose_sag_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                    elif gelis == "sol": #cizgi solundan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                        elif current in kose_sol_yukari: 
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                        elif current in kenar_sag_sol:
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                    elif gelis == "asagi": #asagidan gelmişse
-
-                                        if current in kose_sol_asagi:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_asagi: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "asagi"
-                                            current = (current[0], current[1]-1) #yukariya gidecek
-                                    elif gelis == "yukari": #yukaridan gelmişse
-
-                                        if current in kose_sol_yukari:  
-                                            current_degisti = True
-                                            gelis = "sag"
-                                            current = (current[0]-1, current[1]) #sola gidecek
-                                        elif current in kose_sag_yukari: 
-                                            current_degisti = True
-                                            gelis = "sol" 
-                                            current = (current[0]+1, current[1]) #saga gidecek
-                                        elif current in kenar_yukari_asagi:
-                                            current_degisti = True
-                                            gelis = "yukari"
-                                            current = (current[0], current[1]+1) #asagiya gidecek
-                                    # print(current)
-                                    if current_degisti == False:
-                                        print("stuck")
-                                        return "Wrong Question"
                                 if current == sol: #soldakiyle birleşirse kapalı alan oluşturucak
                                     sag_cizgi.append(rc) #şuanki bloğa sag_cizgi eklendi
                                     sol_cizgi.append(sag) #sağındaki bloğa sol_cizgi eklendi
@@ -1398,7 +697,6 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     canvas.create_line(bas[0],bas[1],son[0],son[1])
                                     degismeme_count = "degisti"
                                     break
-                            
 
                     if (row, column) in sag_cizgi and (row,column) in sol_cizgi and (row,column)not in kenar_sag_sol:
                         degismeme_count = "degisti"
@@ -1569,28 +867,28 @@ root.title("Patika")
 
 genislik = 40
 
-# patika_boyutu = int(input("Patika boyutu:"))
-# siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
-# if patika_boyutu <= 2:
-#     raise ValueError("Patika boyutu en az 3 olabilir.")
-# if siyah_kare_sayisi >= patika_boyutu**2//4:
-#     raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
-# main(c,genislik,patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
-adet = 3
-tum_dogru_blackListler =[]
-for patika_boyutu in range(4,7):
-    boyut_dogru_blackList = []
-    for tur in range(1,adet+1):
-        if patika_boyutu <= 6: siyah_kare_sayisi = patika_boyutu-2
-        else: siyah_kare_sayisi = patika_boyutu
-        dogru_blackList = main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
-        boyut_dogru_blackList.append(dogru_blackList)
-    tum_dogru_blackListler.append(tuple(boyut_dogru_blackList))
-tum_dogru_blackListler = np.array(tum_dogru_blackListler)
-tum_dogru_blackListler = tum_dogru_blackListler.T
-# print(tum_dogru_blackListler)
-df = pd.DataFrame(tum_dogru_blackListler,columns=["4x4","5x5","6x6"])
-print(df)
+patika_boyutu = int(input("Patika boyutu:"))
+siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
+if patika_boyutu <= 2:
+    raise ValueError("Patika boyutu en az 3 olabilir.")
+if siyah_kare_sayisi >= patika_boyutu**2//4:
+    raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
+main(c,genislik,patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
+# adet = 3
+# tum_dogru_blackListler =[]
+# for patika_boyutu in range(4,7):
+#     boyut_dogru_blackList = []
+#     for tur in range(1,adet+1):
+#         if patika_boyutu <= 6: siyah_kare_sayisi = patika_boyutu-2
+#         else: siyah_kare_sayisi = patika_boyutu
+#         dogru_blackList = main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
+#         boyut_dogru_blackList.append(dogru_blackList)
+#     tum_dogru_blackListler.append(tuple(boyut_dogru_blackList))
+# tum_dogru_blackListler = np.array(tum_dogru_blackListler)
+# tum_dogru_blackListler = tum_dogru_blackListler.T
+# # print(tum_dogru_blackListler)
+# df = pd.DataFrame(tum_dogru_blackListler,columns=["4x4","5x5","6x6"])
+# print(df)
 
 
 c.pack(fill=BOTH, expand=1)
