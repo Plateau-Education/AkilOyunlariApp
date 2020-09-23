@@ -27,7 +27,7 @@ Harf Sayısına göre ayırma
 # with open("C:\\Users\\ezrea\\Documents\\GitHub\\AkilOyunlariApp\\Kelime Oyunları\\words.txt", encoding="utf-8") as all_words:
 #     words = all_words.read()
 #     word_list = words.split("\n")
-#     for n in range(3,11):
+#     for n in range(2,11):
 #         harf_sayisina_gore = []
 #         for word in word_list:
 #             if len(word) == n:
