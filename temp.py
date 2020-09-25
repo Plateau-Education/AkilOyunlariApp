@@ -1,4 +1,3 @@
-import random
-
-for i in range(20):
-    print(random.randint(0,5),end=" ")
+a = {1,2,3,4}
+b = {3,4,5}
+print(a-b)

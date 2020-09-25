@@ -175,8 +175,8 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
 
     degismeme_count = "degisti"    
 
-    for tur in range(30):
-        
+    for tur in range(200):
+        # if degismeme_count == "degismedi": return "Wrong Question"
         degismeme_count="degismedi"
         for row in range(patika_boyutu):
             for column in range(patika_boyutu):
@@ -792,7 +792,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                     elif asagi in sag_cizgi and asagi in yukari_cizgi and asagi not in kose_sag_yukari:
                         degismeme_count = "degisti"
                         kose_sag_yukari.append(asagi)
-                    
+
+            tum_kenar_koseler = blackList + kose_sag_asagi + kose_sag_yukari + kose_sol_asagi + kose_sol_yukari + kenar_sag_sol + kenar_yukari_asagi
+    
+            if not all([(r,c) in tum_kenar_koseler for r in range(patika_boyutu) for c in range(patika_boyutu)]) and degismeme_count == "degismedi": return "Wrong Question"
             
 
 

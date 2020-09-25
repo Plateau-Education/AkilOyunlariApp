@@ -6,8 +6,6 @@ class SozcukTuru:
     def __init__(self):
         self.zorluk = "kolay"
         
-        
-
     def create_grid(self,canvas,genislik):
         if self.zorluk == "kolay": self.boyut = (3,4)
         elif self.zorluk == "orta": self.boyut = (3,5)
@@ -26,7 +24,7 @@ class SozcukTuru:
 
         kelimeler = []
         for harf_sayisi in range(self.harf_range[0],self.harf_range[1]+1):
-            f = open(f"{harf_sayisi}.txt",encoding="utf-8")
+            f = open(f"C:\\Users\\ezrea\\Documents\\GitHub\\AkilOyunlariApp\\Kelime Oyunları\\{harf_sayisi}.txt",encoding="utf-8")
             lst = f.read()
             lst = lst.split()
             kelime = random.choice(lst)
