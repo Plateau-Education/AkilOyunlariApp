@@ -106,5 +106,5 @@ class SozcukTuru:
 
 
 obj = SozcukTuru()
-obj.zorluk= "kolay"
+obj.zorluk= "zor"
 print(obj.main())
