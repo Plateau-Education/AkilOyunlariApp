@@ -55,7 +55,24 @@ class Piramit:
 
         for row in range(1,self.boyut):
             for column in range(row+1):
+                if len(grid[row][column]) == 0: return "Wrong Question"
                 if len(grid[row][column]) == 1: continue
+                
+                # print(grid[row][column])
+                if column != row and column != 0:#son karede ve ilk karede değilse
+                    grid[row][column] = grid[row][column] & set([j[0] for i in grid[row-1][column] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[1] in grid[row][column+1]])
+                    grid[row][column] = grid[row][column] & set([j[1] for i in grid[row-1][column-1] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[0] in grid[row][column-1]])
+                
+                elif column == 0:#ilk karede ise 
+                    grid[row][column] = grid[row][column] & set([j[0] for i in grid[row-1][column] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[1] in grid[row][column+1]])
+                elif column == row:#son karede ise
+                    grid[row][column] = grid[row][column] & set([j[0] for i in grid[row-1][column-1] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[1] in grid[row][column-1]])                
+                
+                print(grid)
+                    
+
+
+                
                 
 
 
