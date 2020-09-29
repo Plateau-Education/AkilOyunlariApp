@@ -38,7 +38,7 @@ def solve():
                         solve()
                         grid[y][x] = 0
                 return
-    # print(np.matrix(grid))
+    print(np.matrix(grid))
     solutions.append(np.matrix(grid))
     # input("More?")
 

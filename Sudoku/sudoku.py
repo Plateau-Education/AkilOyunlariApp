@@ -4,11 +4,6 @@ import time
 import copy
 import random
 
-level = "Easy"
-
-# [Level of Difficulty] = Input the level of difficulty of the sudoku puzzle. Difficulty levels
-# include ‘Easy’ ‘Medium’ ‘Hard’ and ‘Insane’. Outputs a sudoku of desired difficulty.
-
 
 class Cell:
     # Initializes cell object. A cell is a single box of a sudoku puzzle. 81 cells make up the body of a sudoku puzzle.
@@ -140,6 +135,8 @@ def printSudoku(sudoku):
     print(row7[0:3], row7[3:6], row7[6:9])
     print(row8[0:3], row8[3:6], row8[6:9])
     print(row9[0:3], row9[3:6], row9[6:9])
+
+    return [row1,row2,row3,row4,row5,row6,row7,row8,row9]
 
 
 def sudokuGen():
@@ -396,5 +393,64 @@ def main(level):
     else:
         raise ValueError
 
+import numpy as np
+class OneSolution:
 
-main(level)
+    def __init__(self):
+        self.grid = []
+        self.solutions = []
+
+    def possible(self,y,x,n):
+        for i in range(0,9):
+            if self.grid[y][i] == n:
+                return False
+        for i in range(0,9):
+            if self.grid[i][x] == n:
+                return False
+        x0 = (x//3)*3
+        y0 = (y//3)*3
+        for i in range(0,3):
+            for j in range(0,3):
+                if self.grid[y0+i][x0+j] == n:
+                    return False
+        return True
+    
+    def solve(self):
+        for y in range(9):
+            for x in range(9):
+                if self.grid[y][x] == 0:
+                    for n in range(1,10):
+                        if self.possible(y,x,n):
+                            self.grid[y][x] = n
+                            self.solve()
+                            self.grid[y][x] = 0
+                    return
+        # print(np.matrix(self.grid))
+        self.solutions.append(np.matrix(self.grid))
+        # input("More?")
+
+    def tek_cozum(self):
+        self.solve()
+        if len(self.solutions) == 1: return True
+        else: return False
+
+
+level = "Insane"
+
+# [Level of Difficulty] = Input the level of difficulty of the sudoku puzzle. Difficulty levels
+# include ‘Easy’ ‘Medium’ ‘Hard’ and ‘Insane’. Outputs a sudoku of desired difficulty.
+import timeit
+
+start = timeit.default_timer()
+tekcozum = False
+while not tekcozum:
+    q = OneSolution()
+    q.grid = main(level)
+    tek_cozumlu = q.tek_cozum()
+    if tek_cozumlu:
+        print(tek_cozumlu)
+        break
+    else:
+        print(tek_cozumlu)
+end = timeit.default_timer()
+print(f"Toplam süre: {end-start} seconds.")
