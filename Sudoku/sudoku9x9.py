@@ -1,8 +1,10 @@
 # Working code to Generate a puzzle
 # -*- coding: utf-8 -*-
+import timeit
 import time
 import copy
 import random
+import numpy as np
 
 
 class Cell:
@@ -44,7 +46,7 @@ class Cell:
 
     def returnSolved(self):
         # Returns whether or not a cell has been solved
-        if self.solved == True:
+        if self.solved:
             return self.possibleAnswers[0]
         else:
             return 0
@@ -73,13 +75,10 @@ def emptySudoku():
     for x in range(1, 10):
         if x in [7, 8, 9]:
             intz = 7
-            z = 7
         if x in [4, 5, 6]:
             intz = 4
-            z = 4
         if x in [1, 2, 3]:
             intz = 1
-            z = 1
         for y in range(1, 10):
             z = intz
             if y in [7, 8, 9]:
@@ -136,11 +135,11 @@ def printSudoku(sudoku):
     print(row8[0:3], row8[3:6], row8[6:9])
     print(row9[0:3], row9[3:6], row9[6:9])
 
-    return [row1,row2,row3,row4,row5,row6,row7,row8,row9]
+    return [row1, row2, row3, row4, row5, row6, row7, row8, row9]
 
 
 def sudokuGen():
-    # Generates a completed sudoku. Sudoku is completly random
+    # Generates a completed sudoku. Sudoku is completely random
     cells = [i for i in range(81)]  # our cells is the positions of cells not currently set
     sudoku = emptySudoku()
     while len(cells) != 0:
@@ -159,7 +158,7 @@ def sudokuGen():
         choiceIndex = sudoku.index(choiceElement)
         cells.remove(choiceIndex)
         position1 = choiceElement.checkPosition()
-        if choiceElement.solvedMethod() == False:  # the actual setting of the cell
+        if not choiceElement.solvedMethod():  # the actual setting of the cell
             possibleValues = choiceElement.returnPossible()
             finalValue = random.choice(possibleValues)
             choiceElement.setAnswer(finalValue)
@@ -206,7 +205,7 @@ def sudokuChecker(sudoku):
 def perfectSudoku():
     # Generates a completed sudoku. Sudoku is in the correct format and is completly random
     result = False
-    while result == False:
+    while not result:
         s = sudokuGen()
         result = sudokuChecker(s)
     return s
@@ -230,7 +229,7 @@ def solver(sudoku, f=0):
     for i in cells:
         if copy_s[i].lenOfPossible() == 1:
             solvedCells.append(i)
-    while solvedCells != []:
+    while solvedCells:
         for n in solvedCells:
             cell = copy_s[n]
             position1 = cell.checkPosition()
@@ -266,14 +265,14 @@ def solver(sudoku, f=0):
             guesses += 1
     if sudokuChecker(copy_s):
         if guesses == 0:
-            level = 'Easy'
+            xlevel = 'Easy'
         elif guesses <= 2:
-            level = 'Medium'
+            xlevel = 'Medium'
         elif guesses <= 7:
-            level = 'Hard'
+            xlevel = 'Hard'
         else:
-            level = 'Insane'
-        return copy_s, guesses, level
+            xlevel = 'Insane'
+        return copy_s, guesses, xlevel
     else:
         return solver(sudoku, f + 1)
 
@@ -283,7 +282,7 @@ def solve(sudoku, n=0):
     # Returns True if the puzzle is solvable and false if otherwise.
     if n < 30:
         s = solver(sudoku)
-        if s != False:
+        if s:
             return s
         else:
             solve(sudoku, n + 1)
@@ -294,13 +293,13 @@ def solve(sudoku, n=0):
 def puzzleGen(sudoku):
     # Generates a puzzle with a unique solution.
     cells = [i for i in range(81)]
-    while cells != []:
+    while cells:
         copy_s = copy.deepcopy(sudoku)
         randIndex = random.choice(cells)
         cells.remove(randIndex)
         copy_s[randIndex].reset()
         s = solve(copy_s)
-        if s[0] == False:
+        if not s[0]:
             f = solve(sudoku)
             print("Guesses: " + str(f[1]))
             print("Level: " + str(f[2]))
@@ -323,67 +322,67 @@ def equalChecker(s1, s2):
     return True
 
 
-def main(level):
+def main(levelx):
     # Input the level of difficulty of the sudoku puzzle. Difficulty levels include ‘Easy’ ‘Medium’ ‘Hard’ and ‘Insane’
     # Outputs a sudoku of desired difficulty.
     t1 = time.time()
     n = 0
-    if level == 'Easy':
+    if levelx == 'Easy':
         p = perfectSudoku()
         s = puzzleGen(p)
         if s[2] != 'Easy':
-            return main(level)
+            return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
         print("Runtime is " + str(t3) + " seconds")
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if level == 'Medium':
+    if levelx == 'Medium':
         p = perfectSudoku()
         s = puzzleGen(p)
         while s[2] == 'Easy':
             n += 1
             s = puzzleGen(p)
             if n > 50:
-                return main(level)
+                return main(levelx)
         if s[2] != 'Medium':
-            return main(level)
+            return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
         print("Runtime is " + str(t3) + " seconds")
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if level == 'Hard':
+    if levelx == 'Hard':
         p = perfectSudoku()
         s = puzzleGen(p)
         while s[2] == 'Easy':
             n += 1
             s = puzzleGen(p)
             if n > 50:
-                return main(level)
+                return main(levelx)
         while s[2] == 'Medium':
             n += 1
             s = puzzleGen(p)
             if n > 50:
-                return main(level)
+                return main(levelx)
         if s[2] != 'Hard':
-            return main(level)
+            return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
         print("Runtime is " + str(t3) + " seconds")
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if level == 'Insane':
+    if levelx == 'Insane':
         p = perfectSudoku()
         s = puzzleGen(p)
         while s[2] != 'Insane':
             n += 1
             s = puzzleGen(p)
             if n > 50:
-                return main(level)
+                return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
         print("Runtime is " + str(t3) + " seconds")
@@ -393,24 +392,24 @@ def main(level):
     else:
         raise ValueError
 
-import numpy as np
+
 class OneSolution:
 
     def __init__(self):
         self.grid = []
         self.solutions = []
 
-    def possible(self,y,x,n):
-        for i in range(0,9):
+    def possible(self, y, x, n):
+        for i in range(9):
             if self.grid[y][i] == n:
                 return False
-        for i in range(0,9):
+        for i in range(9):
             if self.grid[i][x] == n:
                 return False
         x0 = (x//3)*3
         y0 = (y//3)*3
-        for i in range(0,3):
-            for j in range(0,3):
+        for i in range(3):
+            for j in range(3):
                 if self.grid[y0+i][x0+j] == n:
                     return False
         return True
@@ -419,31 +418,29 @@ class OneSolution:
         for y in range(9):
             for x in range(9):
                 if self.grid[y][x] == 0:
-                    for n in range(1,10):
-                        if self.possible(y,x,n):
+                    for n in range(1, 10):
+                        if self.possible(y, x, n):
                             self.grid[y][x] = n
                             self.solve()
                             self.grid[y][x] = 0
                     return
-        # print(np.matrix(self.grid))
         self.solutions.append(np.matrix(self.grid))
-        # input("More?")
 
     def tek_cozum(self):
         self.solve()
-        if len(self.solutions) == 1: return True
-        else: return False
+        if len(self.solutions) == 1:
+            return True
+        else:
+            return False
 
-
-level = "Insane"
+level = input("Type a level /Easy-Medium-Hard-Insane\n")
 
 # [Level of Difficulty] = Input the level of difficulty of the sudoku puzzle. Difficulty levels
 # include ‘Easy’ ‘Medium’ ‘Hard’ and ‘Insane’. Outputs a sudoku of desired difficulty.
-import timeit
+
 
 start = timeit.default_timer()
-tekcozum = False
-while not tekcozum:
+for _ in range(201):
     q = OneSolution()
     q.grid = main(level)
     tek_cozumlu = q.tek_cozum()
