@@ -1,4 +1,4 @@
-import random, time, timeit
+import random, time, timeit, copy
 from tkinter import Tk, Canvas, BOTH
 import tkinter.font as tkFont
 
@@ -43,7 +43,7 @@ class Piramit:
         grid = []
         for column in range(self.boyut):
             c = []
-            for row in range(column+1):
+            for _ in range(column+1):
                 c.append(0)
             grid.append(c)
         # grid[0][0] = 8
@@ -143,7 +143,7 @@ class Piramit:
                             grid[row][column] = 0
                     return
         print(grid)
-        self.solutions.append(grid)
+        self.solutions.append(copy.deepcopy(grid))
         
         
                 # if len(grid[row][column]) > 1:
@@ -197,22 +197,11 @@ class Piramit:
                 # if len(grid[row][column]) == 1: 
                 #     canvas.create_text(self.orta_nokta(column,row,40), text=list(grid[row][column])[0], font=tkFont.Font(family="Poppins",size=25))
                 #     continue
-        
-
-                
-                    
-
-
-                
-                
-
-
 
         # print(grid)
 
     def cizici(self, canvas, genislik):
         grid = self.solutions[0]
-        print(grid)
         for column in range(self.boyut):
             for row in range(column+1):
                 canvas.create_rectangle(row*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), column*genislik+10, (row+1)*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), (column+1)*genislik+10)
@@ -221,6 +210,8 @@ class Piramit:
 
     def main(self):
         
+        start = timeit.default_timer()
+
         while True:
             grid = self.grid_olusturucu()
             self.solutions = []
@@ -228,15 +219,18 @@ class Piramit:
 
             if len(self.solutions) == 1:
                 break
-        
+
+        end = timeit.default_timer()
+        print(f"It took {end-start} seconds.")
+
         root = Tk()
         canvas = Canvas(root)
 
         self.cizici(canvas,40)
 
         canvas.pack(fill=BOTH,expand=1)
-        root.geometry("400x250+300+300")
+        root.geometry("500x350+300+300")
         root.mainloop()
 soru = Piramit()
-soru.boyut = 5
+soru.boyut = 6
 soru.main()

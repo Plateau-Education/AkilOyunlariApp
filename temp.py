@@ -38,7 +38,7 @@
 #                         solve()
 #                         grid[y][x] = 0
 #                 return
-#     print(np.matrix(grid))
+#     # print(np.matrix(grid))
 #     solutions.append(np.matrix(grid))
 #     # input("More?")
 
@@ -48,7 +48,6 @@
 #     if len(solutions) == 1: return True
 #     else: return False
 # print(tek_cozum())
+# print(solutions)
 
         
-print(any([j==0 for i in [[6], [4, 2], [3, 7, 5], [5, 2, 9, 4], [9, 4, 2, 7, 3]] for j in i]))
-    
