@@ -254,7 +254,7 @@ def solver(sudoku, f=0):
             xlevel = 'Easy'
         elif guesses == 1:
             xlevel = 'Medium'
-        elif guesses == 2:
+        elif guesses >= 2:
             xlevel = 'Hard'
         return copy_s, guesses, xlevel
     else:

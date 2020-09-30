@@ -6,6 +6,7 @@ class Piramit:
 
     def __init__(self):
         self.boyut = 3
+        self.solutions = []
 
     def orta_nokta(self,row, column, genislik):
         ortanokta_x = (row + 1/2)*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5))
@@ -39,26 +40,42 @@ class Piramit:
         return en_dusuk_ihtimal
 
     def grid_olusturucu(self):
-
-        # for column in range(self.boyut):
-        #     for row in range(column+1):
-        #         canvas.create_rectangle(row*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), column*genislik+10, (row+1)*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), (column+1)*genislik+10)
-
         grid = []
         for column in range(self.boyut):
             c = []
             for row in range(column+1):
                 c.append(0)
             grid.append(c)
-        grid[0][0] = 8
-        grid[2][0] = 6
-        grid[2][2] = 8
-        grid[4][0] = 7
-        grid[4][2] = 5
-        grid[4][4] = 3
-        # canvas.create_text(self.orta_nokta(0,0,40), text=list(grid[0][0])[0], font=tkFont.Font(family="Poppins",size=25))
-        # canvas.create_text(self.orta_nokta(0,2,40), text=list(grid[2][0])[0], font=tkFont.Font(family="Poppins",size=25))
-        # canvas.create_text(self.orta_nokta(2,2,40), text=list(grid[2][2])[0], font=tkFont.Font(family="Poppins",size=25))
+        # grid[0][0] = 8
+        # grid[2][0] = 6
+        # grid[2][2] = 8
+        # grid[4][0] = 7
+        # grid[4][2] = 5
+        # grid[4][4] = 3
+        if self.boyut == 3:
+            grid[0][0] = random.randint(2,9)
+            grid[2][0] = random.randint(1,9)
+            grid[2][2] = random.randint(1,9)
+        elif self.boyut == 4:
+            grid[0][0] = random.randint(2,9)
+            grid[2][1] = random.randint(2,9)
+            grid[3][0] = random.randint(1,9)
+            grid[3][3] = random.randint(1,9)
+        elif self.boyut == 5:
+            grid[0][0] = random.randint(2,9)
+            grid[2][0] = random.randint(2,9)
+            grid[2][2] = random.randint(2,9)
+            grid[4][0] = random.randint(1,9)
+            grid[4][2] = random.randint(1,9)
+            grid[4][4] = random.randint(1,9)
+        elif self.boyut == 6:
+            grid[0][0] = random.randint(2,9)
+            grid[2][0] = random.randint(2,9)
+            grid[2][2] = random.randint(2,9)
+            grid[4][1] = random.randint(2,9)
+            grid[4][3] = random.randint(2,9)
+            grid[5][0] = random.randint(1,9)
+            grid[5][5] = random.randint(1,9)
         
         return grid
 
@@ -126,6 +143,9 @@ class Piramit:
                             grid[row][column] = 0
                     return
         print(grid)
+        self.solutions.append(grid)
+        
+        
                 # if len(grid[row][column]) > 1:
                 #     if column != row and column != 0:#son karede ve ilk karede değilse
                 #         # print(set([j[0] for i in grid[row-1][column] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[1] in grid[row][column+1]]) | set([j[1] for i in grid[row-1][column-1] for j in self.tum_ihtimaller(i,(row==(self.boyut-1))) if j[0] in grid[row][column-1]]))
@@ -190,16 +210,33 @@ class Piramit:
 
         # print(grid)
 
+    def cizici(self, canvas, genislik):
+        grid = self.solutions[0]
+        print(grid)
+        for column in range(self.boyut):
+            for row in range(column+1):
+                canvas.create_rectangle(row*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), column*genislik+10, (row+1)*genislik*(8/5)+(((self.boyut-column+1)/2)*genislik*(8/5)), (column+1)*genislik+10)
+                canvas.create_text(self.orta_nokta(row,column,genislik), text=grid[column][row], font=tkFont.Font(family="Poppins",size=25))
+        
+
     def main(self):
-        # root = Tk()
-        # canvas = Canvas(root)
+        
+        while True:
+            grid = self.grid_olusturucu()
+            self.solutions = []
+            self.solver(grid)
 
-        grid = self.grid_olusturucu()
-        self.solver(grid)
+            if len(self.solutions) == 1:
+                break
+        
+        root = Tk()
+        canvas = Canvas(root)
 
-        # canvas.pack(fill=BOTH,expand=1)
-        # root.geometry("400x250+300+300")
-        # root.mainloop()
+        self.cizici(canvas,40)
+
+        canvas.pack(fill=BOTH,expand=1)
+        root.geometry("400x250+300+300")
+        root.mainloop()
 soru = Piramit()
 soru.boyut = 5
 soru.main()

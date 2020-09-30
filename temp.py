@@ -50,6 +50,5 @@
 # print(tek_cozum())
 
         
-grid = [[[6]],[[1],[1,2],[1,3,2]]]
-a = [i for i in grid[1]]
-print(a[1])
+print(any([j==0 for i in [[6], [4, 2], [3, 7, 5], [5, 2, 9, 4], [9, 4, 2, 7, 3]] for j in i]))
+    
