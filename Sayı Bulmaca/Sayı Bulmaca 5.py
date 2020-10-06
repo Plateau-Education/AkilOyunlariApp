@@ -8,7 +8,7 @@ class SayiBulmaca:
         self.answer = []
         self.grid = []
         self.set = set()
-        self.clues = -3
+        self.clues = -5
 
     def SetAnswer(self):
         for i in range(5):
