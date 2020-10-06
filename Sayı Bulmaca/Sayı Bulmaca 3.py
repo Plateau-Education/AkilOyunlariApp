@@ -8,27 +8,27 @@ class SayiBulmaca:
         self.answer = []
         self.grid = []
         self.set = set()
-        self.clues = -4
+        self.clues = -3
 
     def SetAnswer(self):
-        for i in range(4):
+        for i in range(3):
             self.answer.append(rd.choice(self.possible_nums))
             self.possible_nums.remove(self.answer[-1])
         while self.answer[0] == 0:
             rd.shuffle(self.answer)
 
     def PerfectGrid(self):
-        for _ in range(4):
+        for _ in range(3):
             num_list = self.possible_nums.copy()
             answer = self.answer.copy()
             row = []
-            clue = rd.randint(1, 3)
+            clue = rd.randint(1, 2)
             for j in range(clue):
                 choice = rd.choice(answer)
                 row.append(choice)
                 self.set.add(choice)
                 answer.remove(row[-1])
-            for i in range(4 - clue):
+            for i in range(3 - clue):
                 choice = rd.choice(num_list)
                 row.append(choice)
                 self.set.add(choice)
@@ -72,17 +72,17 @@ def main(levelx):
     game.PerfectGrid()
     game.ClueGuide()
     if levelx == 'Easy':
-        if game.clues > 7:
+        if game.clues > 6:
             game.PrintGrid()
         else:
             return main(levelx)
     if levelx == 'Medium':
-        if 8 > game.clues > 5:
+        if 7 > game.clues > 4:
             game.PrintGrid()
         else:
             return main(levelx)
     if levelx == 'Hard':
-        if game.clues < 6:
+        if game.clues < 5:
             game.PrintGrid()
         else:
             return main(levelx)
