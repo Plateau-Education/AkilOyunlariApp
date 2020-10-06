@@ -2,36 +2,57 @@
 import random as rd
 
 
-def Sort(a):
-    return a[1]
-
-
 class Pentomino:
     def __init__(self):
         self.grid = []
         self.patterns = []
+        self.possible = set()
+
+    def CreateGrid(self):
+        for x in range(6):
+            row = []
+            for y in range(6):
+                row.append((x, y, "[]"))
+            self.grid.append(row)
+
+    def SetPossible(self):
+        for a in self.grid[0]:
+            self.possible.add(a)
+        for b in self.grid[-1]:
+            self.possible.add(b)
+        for i in self.grid[1:5]:
+            self.possible.add(i[0])
+            self.possible.add(i[-1])
 
     def CreateCells(self):
-        xs = []
-        ys = []
-        x = 0
-        y = 0
-        for _ in range(20):
-            xs.append(x)
-            ys.append(y)
-            self.grid.append((x, y))
-            possibles = [(x + 1, y), (x, y + 1), (x - 1, y), (x, y - 1)]
-            dict1 = {(x + 1, y): (x - 1, y), (x - 1, y): (x + 1, y), (x, y + 1): (x, y - 1), (x, y - 1): (x, y + 1)}
-            choice = rd.choice(possibles)
-            if len(possibles) == 4:
-                possibles.remove(dict1[choice])
-            else:
-                possibles.remove(dict1[choice])
-                possibles.append(dict1[dict1[choice]])
+        for i in range(16):
+            choice = rd.choice(list(self.possible))
+            self.possible.remove(choice)
             x = choice[0]
             y = choice[1]
+            self.grid[x][y] = (x, y, "  ")
+            if x == 0 and 0 < y < 5:
+                self.possible.add((x+1, y, "[]"))
+            elif x == 5 and 0 < y < 5:
+                self.possible.add((x-1, y, "[]"))
+            elif y == 0 and 0 < x < 5:
+                self.possible.add((x, y+1, "[]"))
+            elif y == 5 and 0 < x < 5:
+                self.possible.add((x, y-1, "[]"))
 
     def PrintGrid(self):
         grid = self.grid.copy()
-        grid.sort(key=Sort)
-        print(grid)
+        for i in grid:
+            print()
+            for j in i:
+                print(j[2], end="")
+
+
+def main():
+    game = Pentomino()
+    game.CreateGrid()
+    game.SetPossible()
+    game.CreateCells()
+    game.PrintGrid()
+
+main()
