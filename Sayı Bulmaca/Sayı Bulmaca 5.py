@@ -1,5 +1,6 @@
 # An algorithm to generate "Sayı Bulmaca"
 import random as rd
+import timeit
 
 
 class SayiBulmaca:
@@ -46,7 +47,17 @@ class SayiBulmaca:
             return
         self.grid.append(self.answer)
 
-    def ClueGuide(self):
+    def ClueGuide(self, trygrid=None, tryanswer=None):
+        if trygrid:
+            for i in trygrid:
+                x = 0
+                y = 0
+                for j in tryanswer:
+                    if j in i and j == i[tryanswer.index(j)]:
+                        x += 1
+                    elif j in i:
+                        y -= 1
+                i.append((x, y))
         grid = self.grid.copy()
         answer = self.answer.copy()
         for i in grid:
@@ -64,6 +75,22 @@ class SayiBulmaca:
     def PrintGrid(self):
         for i in self.grid:
             print(i)
+
+    def Solver(self):
+        nums = list(self.set)
+        grid = [i[:-1] for i in self.grid[:-1]]
+        guide = [i[-1] for i in self.grid[:-1]]
+        solve = 0
+        for a in nums:
+            for b in nums:
+                for c in nums:
+                    for d in nums:
+                        for e in nums:
+                            self.ClueGuide(grid, [a, b, c, d, e])
+                            if [i[-1] for i in grid] == guide:
+                                solve += 1
+        if solve == 1:
+            return True
 
 
 def main(levelx):
@@ -89,4 +116,7 @@ def main(levelx):
 
 
 level = input("Easy-Medium-Hard\nChoose\n")
+start1 = timeit.default_timer()
 main(level)
+end1 = timeit.default_timer()
+print(f"Toplam süre: {end1 - start1} seconds.")
