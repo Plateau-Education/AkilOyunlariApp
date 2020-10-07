@@ -43,13 +43,13 @@ def blacklist(patika_boyutu=6, siyah_kare_sayisi=0):
     # siyah_kare_sayisi = patika_boyutu #- 2
     if siyah_kare_sayisi == 0:
         siyah_kare_sayisi = patika_boyutu
+    blackList = set()
     while True:
         rows = [random.randint(0, patika_boyutu - 1) for i in range(siyah_kare_sayisi)]
         columns = [
             random.randint(0, patika_boyutu - 1) for i in range(siyah_kare_sayisi)
         ]
         zipped = zip(rows, columns)
-        blackList = set()
         for coor in zipped:
             if coor not in [
                 (0, 1),
@@ -65,7 +65,7 @@ def blacklist(patika_boyutu=6, siyah_kare_sayisi=0):
         if len(blackList) >= siyah_kare_sayisi:
             blackList = list(blackList)[:siyah_kare_sayisi]
             break
-    print(blackList)
+    # print(blackList)
     return blackList
 
 
@@ -221,7 +221,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
 
     degismeme_count = "degisti"
 
-    for tur in range(200):
+    for tur in range(patika_boyutu**2+1):
         # if degismeme_count == "degismedi": return "Wrong Question"
         degismeme_count = "degismedi"
         for row in range(patika_boyutu):
@@ -281,7 +281,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                     # print(kose_sag_yukari,kose_sag_asagi,kose_sol_yukari,kose_sol_asagi,kenar_sag_sol,kenar_yukari_asagi)
                     # print((row,column),": ",dolu_komsu_sayisi, "sol:",sol_dolu, "sag:",sag_dolu, "yukari:",yukari_dolu, "asagi:",asagi_dolu)
                     if dolu_komsu_sayisi >= 3:
-                        print("Wrong Question")
+                        # print("Wrong Question")
                         return "Wrong Question"
                     elif dolu_komsu_sayisi == 2:
                         # blackList.append((row,column))
@@ -1462,7 +1462,7 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
                 siyah_kare_sayisi,
             )
     # print("Tüm kenar ve köşeler: ",sorted(tum_kenar_koseler))
-    print("Soru çözülebilir: ", is_solvable)
+    # print("Soru çözülebilir: ", is_solvable)
 
     return is_solvable
 
@@ -1473,7 +1473,7 @@ def main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
     # blackList = create_grid(c,genislik, patika_boyutu, siyah_kare_sayisi)
     # solver(c, blackList, genislik,patika_boyutu, siyah_kare_sayisi)
     start = timeit.default_timer()
-    for _ in range(100000):
+    for _ in range(1000000):
         blackList = create_grid(c, genislik, patika_boyutu, siyah_kare_sayisi)
         is_solvable = solver(c, blackList, genislik, patika_boyutu, siyah_kare_sayisi)
         if is_solvable:
@@ -1529,7 +1529,7 @@ Patika Boyutu / En İyi Siyah Kare Sayıları
 5 => 3
 6 => 4 ve 6
 7 => 7
-8 => 8 en iyi gibi, 10 ve 12 de de buldu.
-9 => 9 da bulması 15 dk sürdü
+8 => 10 en iyi gibi, 8 ve 12 de de buldu.
+9 => 9 da bulması 15 dk sürdü, 11 çok daha iyi 1 dk 10 sn de bitti
 
 """
