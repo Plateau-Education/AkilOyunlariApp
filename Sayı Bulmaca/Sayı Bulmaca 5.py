@@ -98,22 +98,24 @@ def main(levelx):
     game.SetAnswer()
     game.PerfectGrid()
     game.ClueGuide()
-    if levelx == 'Easy':
-        if game.clues > 11:
-            game.PrintGrid()
-        else:
-            return main(levelx)
-    if levelx == 'Medium':
-        if 12 > game.clues > 8:
-            game.PrintGrid()
-        else:
-            return main(levelx)
-    if levelx == 'Hard':
-        if game.clues < 9:
-            game.PrintGrid()
-        else:
-            return main(levelx)
-
+    if game.Solver():
+        if levelx == 'Easy':
+            if game.clues > 11:
+                game.PrintGrid()
+            else:
+                return main(levelx)
+        if levelx == 'Medium':
+            if 12 > game.clues > 8:
+                game.PrintGrid()
+            else:
+                return main(levelx)
+        if levelx == 'Hard':
+            if game.clues < 9:
+                game.PrintGrid()
+            else:
+                return main(levelx)
+    else:
+        return main(levelx)
 
 level = input("Easy-Medium-Hard\nChoose\n")
 start1 = timeit.default_timer()
