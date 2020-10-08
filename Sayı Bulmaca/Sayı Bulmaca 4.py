@@ -1,7 +1,7 @@
 # An algorithm to generate "Sayı Bulmaca"
-# Easy --> 0 3 (20sn)dk, Medium --> 1 7 (63sn)dk, Hard --> 10 45 (42dk)dk
 import random as rd
 import timeit
+import itertools
 
 
 class SayiBulmaca:
@@ -10,7 +10,6 @@ class SayiBulmaca:
         self.answer = []
         self.grid = []
         self.set = set()
-        self.clues = -4
 
     def SetAnswer(self):
         for i in range(4):
@@ -20,11 +19,18 @@ class SayiBulmaca:
             rd.shuffle(self.answer)
 
     def PerfectGrid(self):
+        flag = 0
+        cluessum = 0
         for _ in range(4):
             num_list = self.possible_nums.copy()
             answer = self.answer.copy()
             row = []
-            clue = rd.randint(1, 3)
+            clue = rd.randint(1, 2)
+            flag += 1
+            if flag > 2:
+                if cluessum < 4:
+                    clue += 1
+            cluessum += clue
             for j in range(clue):
                 choice = rd.choice(answer)
                 row.append(choice)
@@ -46,6 +52,7 @@ class SayiBulmaca:
             self.set = set()
             self.PerfectGrid()
             return
+        rd.shuffle(self.grid)
         self.grid.append(self.answer)
 
     def ClueGuide(self, trygrid=None, tryanswer=None):
@@ -60,7 +67,7 @@ class SayiBulmaca:
                         y -= 1
                 i.append((x, y))
         else:
-            grid = self.grid.copy()
+            grid = self.grid[:-1].copy()
             answer = self.answer.copy()
             for i in grid:
                 x = 0
@@ -68,59 +75,50 @@ class SayiBulmaca:
                 for j in answer:
                     if j in i and j == i[answer.index(j)]:
                         x += 1
-                        self.clues += 1
                     elif j in i:
                         y -= 1
-                        self.clues += 1
+                if x == 3 or y == -3:
+                    rd.shuffle(self.grid[grid.index(i)])
+                    self.ClueGuide()
+                    continue
                 self.grid[grid.index(i)].append((x, y))
 
     def PrintGrid(self):
+        # store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "w")
+        # store.write(str(self.grid)+" ")
+        self.grid[-1].append((4, 0))
         for i in self.grid:
             print(i)
 
     def Solver(self):
-        nums = list(self.set)
+        nums = self.set.copy()
         grid = [i[:-1] for i in self.grid[:-1]]
         guide = [i[-1] for i in self.grid[:-1]]
         solve = 0
-        for a in nums:
-            for b in nums:
-                for c in nums:
-                    for d in nums:
-                        self.ClueGuide(grid, [a, b, c, d])
-                        if [i[-1] for i in grid] == guide:
-                            solve += 1
+        for a, b, c, d in itertools.permutations(nums, 4):
+            self.ClueGuide(grid, [a, b, c, d])
+            if [i[-1] for i in grid] == guide:
+                solve += 1
+                if solve > 1:
+                    return False
         if solve == 1:
             return True
 
 
-def main(levelx):
+def main():
     game = SayiBulmaca()
     game.SetAnswer()
     game.PerfectGrid()
     game.ClueGuide()
+    for u in game.grid:
+        game.grid[game.grid.index(u)] = u[:5]
     if game.Solver():
-        if levelx == 'Easy':
-            if 11 > game.clues > 8:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Medium':
-            if 9 > game.clues > 6:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Hard':
-            if 4 < game.clues < 7:
-                game.PrintGrid()
-            else:
-                return main(levelx)
+        game.PrintGrid()
     else:
-        main(levelx)
+        return main()
 
 
-level = input("Easy-Medium-Hard\nChoose\n")
 start1 = timeit.default_timer()
-main(level)
+main()
 end1 = timeit.default_timer()
-print(f"Toplam süre: {end - start} seconds.")
+print(f"Süre: {end1-start1}")

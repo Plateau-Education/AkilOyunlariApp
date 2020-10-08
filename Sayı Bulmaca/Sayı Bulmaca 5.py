@@ -1,6 +1,7 @@
 # An algorithm to generate "Sayı Bulmaca"
 import random as rd
 import timeit
+import itertools
 
 
 class SayiBulmaca:
@@ -9,7 +10,6 @@ class SayiBulmaca:
         self.answer = []
         self.grid = []
         self.set = set()
-        self.clues = -5
 
     def SetAnswer(self):
         for i in range(5):
@@ -19,11 +19,18 @@ class SayiBulmaca:
             rd.shuffle(self.answer)
 
     def PerfectGrid(self):
+        flag = 0
+        cluessum = 0
         for _ in range(5):
             num_list = self.possible_nums.copy()
             answer = self.answer.copy()
             row = []
-            clue = rd.randint(1, 4)
+            clue = rd.randint(1, 3)
+            flag += 1
+            if flag > 3:
+                if cluessum < 5:
+                    clue += 1
+            cluessum += clue
             for j in range(clue):
                 choice = rd.choice(answer)
                 row.append(choice)
@@ -45,6 +52,7 @@ class SayiBulmaca:
             self.set = set()
             self.PerfectGrid()
             return
+        rd.shuffle(self.grid)
         self.grid.append(self.answer)
 
     def ClueGuide(self, trygrid=None, tryanswer=None):
@@ -58,21 +66,25 @@ class SayiBulmaca:
                     elif j in i:
                         y -= 1
                 i.append((x, y))
-        grid = self.grid.copy()
-        answer = self.answer.copy()
-        for i in grid:
-            x = 0
-            y = 0
-            for j in answer:
-                if j in i and j == i[answer.index(j)]:
-                    x += 1
-                    self.clues += 1
-                elif j in i:
-                    y -= 1
-                    self.clues += 1
-            self.grid[grid.index(i)].append((x, y))
+        else:
+            grid = self.grid[:-1].copy()
+            answer = self.answer.copy()
+            for i in grid:
+                x = 0
+                y = 0
+                for j in answer:
+                    if j in i and j == i[answer.index(j)]:
+                        x += 1
+                    elif j in i:
+                        y -= 1
+                    if x == 4 or y == -4:
+                        rd.shuffle(self.grid[grid.index(i)])
+                        self.ClueGuide()
+                        continue
+                self.grid[grid.index(i)].append((x, y))
 
     def PrintGrid(self):
+        self.grid[-1].append((5, 0))
         for i in self.grid:
             print(i)
 
@@ -81,44 +93,30 @@ class SayiBulmaca:
         grid = [i[:-1] for i in self.grid[:-1]]
         guide = [i[-1] for i in self.grid[:-1]]
         solve = 0
-        for a in nums:
-            for b in nums:
-                for c in nums:
-                    for d in nums:
-                        for e in nums:
-                            self.ClueGuide(grid, [a, b, c, d, e])
-                            if [i[-1] for i in grid] == guide:
-                                solve += 1
+        for a, b, c, d, e in itertools.permutations(nums, 5):
+            self.ClueGuide(grid, [a, b, c, d, e])
+            if [i[-1] for i in grid] == guide:
+                solve += 1
+                if solve > 1:
+                    return False
         if solve == 1:
             return True
 
 
-def main(levelx):
+def main():
     game = SayiBulmaca()
     game.SetAnswer()
     game.PerfectGrid()
     game.ClueGuide()
+    for u in game.grid:
+        game.grid[game.grid.index(u)] = u[:6]
     if game.Solver():
-        if levelx == 'Easy':
-            if game.clues > 11:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Medium':
-            if 12 > game.clues > 8:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Hard':
-            if game.clues < 9:
-                game.PrintGrid()
-            else:
-                return main(levelx)
+        game.PrintGrid()
     else:
-        return main(levelx)
+        return main()
 
-level = input("Easy-Medium-Hard\nChoose\n")
+
 start1 = timeit.default_timer()
-main(level)
+main()
 end1 = timeit.default_timer()
 print(f"Toplam süre: {end1 - start1} seconds.")

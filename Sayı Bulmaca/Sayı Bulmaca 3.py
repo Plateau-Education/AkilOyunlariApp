@@ -1,7 +1,7 @@
 # An algorithm to generate "Sayı Bulmaca"
-# Üç seviye de hızlı üretiliyor
 import random as rd
 import timeit
+import itertools
 
 
 class SayiBulmaca:
@@ -10,7 +10,6 @@ class SayiBulmaca:
         self.answer = []
         self.grid = []
         self.set = set()
-        self.clues = -3
 
     def SetAnswer(self):
         for i in range(3):
@@ -20,11 +19,17 @@ class SayiBulmaca:
             rd.shuffle(self.answer)
 
     def PerfectGrid(self):
+        flag = 0
+        cluessum = 0
         for _ in range(3):
             num_list = self.possible_nums.copy()
             answer = self.answer.copy()
             row = []
             clue = rd.randint(1, 2)
+            flag += 1
+            if flag > 2:
+                if cluessum == 2:
+                    clue = 2
             for j in range(clue):
                 choice = rd.choice(answer)
                 row.append(choice)
@@ -60,7 +65,7 @@ class SayiBulmaca:
                         y -= 1
                 i.append((x, y))
         else:
-            grid = self.grid.copy()
+            grid = self.grid[:-1].copy()
             answer = self.answer.copy()
             for i in grid:
                 x = 0
@@ -68,58 +73,53 @@ class SayiBulmaca:
                 for j in answer:
                     if j in i and j == i[answer.index(j)]:
                         x += 1
-                        self.clues += 1
                     elif j in i:
                         y -= 1
-                        self.clues += 1
+                if x == 2:
+                    rd.shuffle(self.grid[grid.index(i)])
+                    self.ClueGuide()
+                    continue
                 self.grid[grid.index(i)].append((x, y))
 
     def PrintGrid(self):
-        for i in self.grid:
-            print(i)
+        self.grid[-1].append((3, 0))
+        for p in self.grid:
+            print(p)
+        # for i in self.grid:
+            # print(i)
 
     def Solver(self):
-        nums = list(self.set)
+        nums = self.set.copy()
         grid = [i[:-1] for i in self.grid[:-1]]
         guide = [i[-1] for i in self.grid[:-1]]
         solve = 0
-        for a in nums:
-            for b in nums:
-                for c in nums:
-                    self.ClueGuide(grid, [a, b, c])
-                    if [i[-1] for i in grid] == guide:
-                        solve += 1
+        for a, b, c in itertools.permutations(nums, 3):
+            self.ClueGuide(grid, [a, b, c])
+            if [i[-1] for i in grid] == guide:
+                solve += 1
+                if solve > 1:
+                    return False
         if solve == 1:
             return True
 
 
-def main(levelx):
+# store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "a+")
+
+
+def main():
     game = SayiBulmaca()
     game.SetAnswer()
     game.PerfectGrid()
     game.ClueGuide()
+    for u in game.grid:
+        game.grid[game.grid.index(u)] = u[:4]
     if game.Solver():
-        if levelx == 'Easy':
-            if game.clues == 6:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Medium':
-            if game.clues == 5:
-                game.PrintGrid()
-            else:
-                return main(levelx)
-        if levelx == 'Hard':
-            if game.clues == 4:
-                game.PrintGrid()
-            else:
-                return main(levelx)
+        game.PrintGrid()
     else:
-        return main(levelx)
+        return main()
 
 
-level = input("Easy-Medium-Hard\nChoose\n")
 start1 = timeit.default_timer()
-main(level)
+main()
 end1 = timeit.default_timer()
-print(f"Toplam süre: {end1 - start1} seconds.")
+print(f"Süre: {end1-start1}")
