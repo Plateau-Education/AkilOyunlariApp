@@ -91,8 +91,8 @@ class HazineAvi:
                 list1.append((komsu[0], komsu[1]))
             elif grid[komsu[0]][komsu[1]] == 0:
                 list0.append((komsu[0], komsu[1]))
-            if y == 0 and x == 1:
-                print(grid[komsu[0]][komsu[1]])
+            # if y == 0 and x == 1:
+            #     print(grid[komsu[0]][komsu[1]])
         return len(list0), len(list1), list0, list1, grid[y][x] == len(list1)
 
     def minmax(self, c):
@@ -132,18 +132,19 @@ class HazineAvi:
                 if x1 > maxx:
                     maxx = self.minmax(x1)[1]
 
-            for c2 in combinations(set(list0) - set(c1), len(list0) - n + len(list1)):
-                for y2, x2 in c2:
-                    copy_g[y2][x2] = -2
-                    comb_set.add((y2, x2, -2))
-                    if y2 < miny:
-                        miny = self.minmax(y2)[0]
-                    if y2 > maxy:
-                        maxy = self.minmax(y2)[1]
-                    if x2 < minx:
-                        minx = self.minmax(x2)[0]
-                    if x2 > maxx:
-                        maxx = self.minmax(x2)[1]
+            # for c2 in combinations(set(list0) - set(c1), len(list0) - n + len(list1)):
+            c2 = tuple(set(list0) - set(c1))
+            for y2, x2 in c2:
+                copy_g[y2][x2] = -2
+                comb_set.add((y2, x2, -2))
+                if y2 < miny:
+                    miny = self.minmax(y2)[0]
+                if y2 > maxy:
+                    maxy = self.minmax(y2)[1]
+                if x2 < minx:
+                    minx = self.minmax(x2)[0]
+                if x2 > maxx:
+                    maxx = self.minmax(x2)[1]
 
             for y3 in range(miny, maxy + 1):
                 if impflag:
@@ -154,14 +155,14 @@ class HazineAvi:
                     n1 = copy_g[y3][x3]
                     if n1 > 0:
                         count_0, count_1, list_0 = self.count01(y3, x3, copy_g)[:3]
-                        print(
-                            f"y:{y3} x:{x3} n:{n1} count_1:{count_1} count_0:{count_0}"
-                        )
+                        # print(
+                        #     f"y:{y3} x:{x3} n:{n1} count_1:{count_1} count_0:{count_0}"
+                        # )
                         if (n1 - count_1) > count_0:
                             impflag = True
-                            print(
-                                f"PROBLEM!!! y:{y3} x:{x3} n:{n1} count_1:{count_1} count_0:{count_0}"
-                            )
+                            # print(
+                            # f"PROBLEM!!! y:{y3} x:{x3} n:{n1} count_1:{count_1} count_0:{count_0}"
+                            # )
                             break
                         elif (n1 - count_1) == 0:
                             for y4, x4 in list_0:
@@ -172,7 +173,7 @@ class HazineAvi:
                                 copy_g[y5][x5] = -1
                                 comb_set.add((y5, x5, -1))
 
-            print(f"-------{y,x,n,c1,c2}-------")
+            # print(f"-------{y,x,n,c1,c2}-------")
             if impflag:
                 continue
             else:
@@ -180,7 +181,7 @@ class HazineAvi:
                     intercept_list.append(comb_set)
 
         if intercept_list:
-            print("INTERCEPT LIST: ", self.intercept_setList(intercept_list))
+            # print("INTERCEPT LIST: ", self.intercept_setList(intercept_list))
             return self.intercept_setList(intercept_list)
         else:
             return set()
@@ -216,20 +217,34 @@ class HazineAvi:
                         for y3, x3 in list0:
                             grid[y3][x3] = -1
                     elif (n - count1) < count0:
+                        pass
+
+    def second_base(self, grid):
+        for y in range(self.boyut):
+            for x in range(self.boyut):
+                n = grid[y][x]
+                if n > 0:
+                    count0, count1, list0, list1 = self.count01(y, x, grid)[:4]
+                    if (n - count1) < count0:
                         for pc in self.possible_combinations(
                             y, x, n, list0, list1, grid
                         ):
                             if pc == set():
                                 continue
                             y4, x4, n4 = pc
-                            # print("PC: =====================dSADASDASDASD:", pc)
                             grid[y4][x4] = n4
-                        # pass
 
     def solver2(self, grid):
-        for _ in range(10):
-            self.first_base(grid)
-
+        for __ in range(10):
+            for _ in range(3):
+                cgrid = copy.deepcopy(grid)
+                self.first_base(grid)
+                if cgrid == grid:
+                    break
+            cgrid = copy.deepcopy(grid)
+            self.second_base(grid)
+            if cgrid == grid:
+                break
         self.solutions.append(copy.deepcopy(grid))
 
     def main(self):
@@ -237,15 +252,15 @@ class HazineAvi:
         root = Tk()
         canvas = Canvas(root)
 
-        # start = timeit.default_timer()
+        start = timeit.default_timer()
         self.create_grid(canvas, 40)
         # self.elmas_yerlestirme(20,30)
         # self.sayi_belirleme()
         # self.sayi_azaltma()
         self.solver2(self.grid)
         print("Solutions: ", self.solutions)
-        # end = timeit.default_timer()
-        # print(f"It took {end-start} seconds.")
+        end = timeit.default_timer()
+        print(f"It took {end-start} seconds.")
         self.gorsellestir(canvas, 40)
 
         canvas.pack(fill=BOTH, expand=1)
@@ -254,16 +269,38 @@ class HazineAvi:
 
 
 soru = HazineAvi()
+
 soru.grid = [
-    [0, 0, 0, 0, 0, 4, 0, 0],
-    [1, 0, 2, 4, 0, 0, 3, 0],
-    [0, 4, 0, 0, 5, 0, 0, 1],
-    [0, 0, 4, 4, 0, 0, 3, 0],
-    [0, 4, 0, 0, 3, 2, 0, 0],
-    [2, 0, 0, 4, 0, 0, 2, 0],
-    [0, 3, 0, 0, 3, 1, 0, 2],
-    [0, 0, 4, 0, 0, 0, 0, 0],
+    [0, 2, 1, 0, 2, 0, 2, 0, 0, 0],
+    [0, 4, 0, 0, 3, 0, 0, 0, 5, 3],
+    [0, 0, 0, 4, 0, 4, 4, 0, 0, 3],
+    [4, 0, 4, 0, 0, 5, 0, 6, 0, 0],
+    [0, 0, 4, 5, 0, 0, 0, 0, 5, 4],
+    [3, 4, 0, 0, 0, 0, 5, 5, 0, 0],
+    [0, 0, 4, 0, 4, 0, 0, 5, 0, 5],
+    [2, 0, 0, 3, 3, 0, 6, 0, 0, 0],
+    [3, 6, 0, 0, 0, 3, 0, 0, 4, 0],
+    [0, 0, 0, 4, 0, 2, 0, 2, 1, 0],
 ]
+# soru.grid = [
+#     [0, 0, 0, 0, 0, 4, 0, 0],
+#     [1, 0, 2, 4, 0, 0, 3, 0],
+#     [0, 4, 0, 0, 5, 0, 0, 1],
+#     [0, 0, 4, 4, 0, 0, 3, 0],
+#     [0, 4, 0, 0, 3, 2, 0, 0],
+#     [2, 0, 0, 4, 0, 0, 2, 0],
+#     [0, 3, 0, 0, 3, 1, 0, 2],
+#     [0, 0, 4, 0, 0, 0, 0, 0],
+# ]
+# soru.grid = [
+#     [0, 0, 0, 0, 0, 0, 0],
+#     [0, 2, 3, 4, 3, 5, 0],
+#     [0, 1, 0, 0, 0, 3, 0],
+#     [0, 0, 0, 5, 0, 0, 0],
+#     [0, 1, 0, 0, 0, 3, 0],
+#     [0, 1, 2, 2, 3, 4, 0],
+#     [0, 0, 0, 0, 0, 0, 0],
+# ]
 soru.boyut = len(soru.grid)
 # soru.boyut = 10
 soru.main()
