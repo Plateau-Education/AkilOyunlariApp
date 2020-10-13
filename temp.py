@@ -1,31 +1,46 @@
-# # import numpy as np
+grid = [
+    [-2, 1, -1, -2, -2, 4, -1, 3],
+    [1, 3, 3, -2, -1, -1, -1, -1],
+    [-1, 4, -1, -1, -2, 3, -2, -1],
+    [-1, 5, -1, -2, -2, -2, -2, 1],
+    [3, -1, -2, 2, 2, -2, 1, -2],
+    [2, -1, -2, -1, -2, -1, 2, -2],
+    [-2, -2, -1, 2, 4, -1, -2, 1],
+    [-2, -1, 2, 1, 2, -1, -1, 1],
+]
 
-# # a = np.zeros((8,8),dtype=int)
 
-import itertools
+def komsular(y, x):
+    komsular = [
+        (y + 1, x),
+        (y - 1, x),
+        (y, x + 1),
+        (y, x - 1),
+        (y + 1, x + 1),
+        (y + 1, x - 1),
+        (y - 1, x + 1),
+        (y - 1, x - 1),
+    ]
+    for _ in range(5):
+        for komsu in komsular:
+            if komsu[0] < 0 or komsu[0] > 8 - 1 or komsu[1] < 0 or komsu[1] > 8 - 1:
+                komsular.remove(komsu)
+    return komsular
 
-# # for i in itertools.combinations([(3,2),(4,3),(5,3),(5,2)],3):
-# #     print(i)
+
+def isAllEmptyHasNumNeighbor(grid):
+    for y in range(len(grid)):
+        for x in range(len(grid)):
+            result = False
+            if grid[y][x] <= 0:
+                komsulr = komsular(y, x)
+                for k in komsulr:
+                    if grid[k[0]][k[1]] > 0:
+                        result = True
+                        break
+                if not result:
+                    return False
+    return True
 
 
-# def intercept_setList(setList):
-#     s = setList[0]
-#     for i in setList[1:]:
-#         s = s & i
-#     return s
-
-# def common_coordinates(tuple12):
-#     one = intercept_setList(tuple12[0])
-#     two = intercept_setList(tuple12[1])
-#     return one,two
-
-# d = {(1,1) : ([{(1,2),(2,3)},{(1,2),(3,4),(5,3)},{(1,2)}], [{(3,2),(5,3)},{(3,2),(3,4),(5,3)},{(3,2),(5,3)}])}
-# # tuple12 = ([{(1,2),(2,3)},{(1,2),(3,4),(5,3)},{(1,2)}], [{(3,2),(5,3)},{(3,2),(3,4),(5,3)},{(3,2),(5,3)}])
-# d[(1,1)] = common_coordinates(d[(1,1)])
-# print(d)
-
-# a = [{(1,2),(2,3)},{(1,2),(3,4),(5,3)},{(1,2)}]
-# print(intercept_setList(a))
-# list0 = [(2, 0), (0, 0), (1, 1), (0, 1)]
-# for y1 in itertools.combinations(list0,1):
-#     print(y1)
+print(isAllEmptyHasNumNeighbor(grid))

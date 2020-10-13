@@ -126,11 +126,11 @@ def printSudoku(sudoku):
     print(row1[0:3], row1[3:6], row1[6:9])
     print(row2[0:3], row2[3:6], row2[6:9])
     print(row3[0:3], row3[3:6], row3[6:9])
-    print('')
+    print("")
     print(row4[0:3], row4[3:6], row4[6:9])
     print(row5[0:3], row5[3:6], row5[6:9])
     print(row6[0:3], row6[3:6], row6[6:9])
-    print('')
+    print("")
     print(row7[0:3], row7[3:6], row7[6:9])
     print(row8[0:3], row8[3:6], row8[6:9])
     print(row9[0:3], row9[3:6], row9[6:9])
@@ -140,7 +140,9 @@ def printSudoku(sudoku):
 
 def sudokuGen():
     # Generates a completed sudoku. Sudoku is completely random
-    cells = [i for i in range(81)]  # our cells is the positions of cells not currently set
+    cells = [
+        i for i in range(81)
+    ]  # our cells is the positions of cells not currently set
     sudoku = emptySudoku()
     while len(cells) != 0:
         lowestNum = []
@@ -194,7 +196,11 @@ def sudokuChecker(sudoku):
             if i != n:
                 position1 = sudoku[i].checkPosition()
                 position2 = sudoku[n].checkPosition()
-                if position1[0] == position2[0] or position1[1] == position2[1] or position1[2] == position2[2]:
+                if (
+                    position1[0] == position2[0]
+                    or position1[1] == position2[1]
+                    or position1[2] == position2[2]
+                ):
                     num1 = sudoku[i].returnSolved()
                     num2 = sudoku[n].returnSolved()
                     if num1 == num2:
@@ -224,7 +230,9 @@ def solver(sudoku, f=0):
         return False
     guesses = 0
     copy_s = copy.deepcopy(sudoku)
-    cells = [i for i in range(81)]  # our cells is the positions of cells not currently set
+    cells = [
+        i for i in range(81)
+    ]  # our cells is the positions of cells not currently set
     solvedCells = []
     for i in cells:
         if copy_s[i].lenOfPossible() == 1:
@@ -243,7 +251,11 @@ def solver(sudoku, f=0):
                     copy_s[i].remove(finalValue)
                 if position1[2] == position2[2]:
                     copy_s[i].remove(finalValue)
-                if copy_s[i].lenOfPossible() == 1 and i not in solvedCells and i in cells:
+                if (
+                    copy_s[i].lenOfPossible() == 1
+                    and i not in solvedCells
+                    and i in cells
+                ):
                     solvedCells.append(i)
                 # print(n)
             solvedCells.remove(n)
@@ -265,13 +277,13 @@ def solver(sudoku, f=0):
             guesses += 1
     if sudokuChecker(copy_s):
         if guesses == 0:
-            xlevel = 'Easy'
+            xlevel = "Easy"
         elif guesses <= 2:
-            xlevel = 'Medium'
+            xlevel = "Medium"
         elif guesses <= 7:
-            xlevel = 'Hard'
+            xlevel = "Hard"
         else:
-            xlevel = 'Insane'
+            xlevel = "Insane"
         return copy_s, guesses, xlevel
     else:
         return solver(sudoku, f + 1)
@@ -327,10 +339,10 @@ def main(levelx):
     # Outputs a sudoku of desired difficulty.
     t1 = time.time()
     n = 0
-    if levelx == 'Easy':
+    if levelx == "Easy":
         p = perfectSudoku()
         s = puzzleGen(p)
-        if s[2] != 'Easy':
+        if s[2] != "Easy":
             return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
@@ -338,15 +350,15 @@ def main(levelx):
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if levelx == 'Medium':
+    if levelx == "Medium":
         p = perfectSudoku()
         s = puzzleGen(p)
-        while s[2] == 'Easy':
+        while s[2] == "Easy":
             n += 1
             s = puzzleGen(p)
             if n > 50:
                 return main(levelx)
-        if s[2] != 'Medium':
+        if s[2] != "Medium":
             return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
@@ -354,20 +366,20 @@ def main(levelx):
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if levelx == 'Hard':
+    if levelx == "Hard":
         p = perfectSudoku()
         s = puzzleGen(p)
-        while s[2] == 'Easy':
+        while s[2] == "Easy":
             n += 1
             s = puzzleGen(p)
             if n > 50:
                 return main(levelx)
-        while s[2] == 'Medium':
+        while s[2] == "Medium":
             n += 1
             s = puzzleGen(p)
             if n > 50:
                 return main(levelx)
-        if s[2] != 'Hard':
+        if s[2] != "Hard":
             return main(levelx)
         t2 = time.time()
         t3 = t2 - t1
@@ -375,10 +387,10 @@ def main(levelx):
         print("Guesses: " + str(s[1]))
         print("Level: " + str(s[2]))
         return printSudoku(s[0])
-    if levelx == 'Insane':
+    if levelx == "Insane":
         p = perfectSudoku()
         s = puzzleGen(p)
-        while s[2] != 'Insane':
+        while s[2] != "Insane":
             n += 1
             s = puzzleGen(p)
             if n > 50:
@@ -394,7 +406,6 @@ def main(levelx):
 
 
 class OneSolution:
-
     def __init__(self):
         self.grid = []
         self.solutions = []
@@ -406,14 +417,14 @@ class OneSolution:
         for i in range(9):
             if self.grid[i][x] == n:
                 return False
-        x0 = (x//3)*3
-        y0 = (y//3)*3
+        x0 = (x // 3) * 3
+        y0 = (y // 3) * 3
         for i in range(3):
             for j in range(3):
-                if self.grid[y0+i][x0+j] == n:
+                if self.grid[y0 + i][x0 + j] == n:
                     return False
         return True
-    
+
     def solve(self):
         for y in range(9):
             for x in range(9):
@@ -432,6 +443,7 @@ class OneSolution:
             return True
         else:
             return False
+
 
 level = input("Type a level /Easy-Medium-Hard-Insane\n")
 

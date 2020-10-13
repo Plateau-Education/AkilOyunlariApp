@@ -33,8 +33,7 @@ class HazineAvi:
                     (column + 1) * genislik + 10,
                 )
 
-    def gorsellestir(self, canvas, genislik):
-        grid = self.solutions[0]
+    def gorsellestir(self, canvas, genislik, grid):
         for row in range(self.boyut):
             for column in range(self.boyut):
                 if grid[column][row] > 0:
@@ -118,7 +117,7 @@ class HazineAvi:
         for c1 in combinations(list0, n - len(list1)):
             comb_set = set()
             copy_g = []
-            copy_g = copy.deepcopy(self.grid)
+            copy_g = copy.deepcopy(grid)
             impflag = False
             minx, maxx, miny, maxy = self.boyut, 0, self.boyut, 0
             for y1, x1 in c1:
@@ -238,18 +237,116 @@ class HazineAvi:
                             y4, x4, n4 = pc
                             grid[y4][x4] = n4
 
+    def isFullCheck(self, grid):
+        return all(
+            [grid[y][x] != 0 for y in range(self.boyut) for x in range(self.boyut)]
+        )
+
+    def isAllEmptyHasNumNeighbor(self, grid):
+        for y in range(self.boyut):
+            for x in range(self.boyut):
+                if grid[y][x] <= 0:
+                    result = False
+                    komsulr = self.komsular(y, x)
+                    for k in komsulr:
+                        if grid[k[0]][k[1]] > 0:
+                            result = True
+                            break
+                    if not result:
+                        return False
+        return True
+
     def solver2(self, grid):
         for __ in range(10):
             for _ in range(3):
                 cgrid = copy.deepcopy(grid)
-                self.first_base(grid)
-                if cgrid == grid:
+                if self.first_base(grid) == "Wrong Question":
+                    return "Wrong Question"
+                if np.array_equal(cgrid, grid):
                     break
             cgrid = copy.deepcopy(grid)
             self.second_base(grid)
-            if cgrid == grid:
+            if np.array_equal(cgrid, grid):
                 break
-        self.solutions.append(copy.deepcopy(grid))
+        if self.isFullCheck(grid) and self.isAllEmptyHasNumNeighbor:
+            self.solutions.append(copy.deepcopy(grid))
+            return
+        else:
+            return "Wrong Question"
+
+    def elmas_yerlestirme(self, alt_sinir, ust_sinir, grid):
+        self.elmas_sayisi = random.randint(alt_sinir, ust_sinir)
+        rows = [random.randint(0, self.boyut - 1) for i in range(self.elmas_sayisi)]
+        columns = [random.randint(0, self.boyut - 1) for i in range(self.elmas_sayisi)]
+        zipped = zip(rows, columns)
+        grid = np.zeros((self.boyut, self.boyut), dtype=int)
+        for row, column in zipped:
+            grid[row][column] = -1
+        return grid
+        # self.solutions.append(self.grid)
+        # print(self.grid)
+
+    def sayi_belirleme(self, grid):
+        count0 = 0
+        for r in range(self.boyut):
+            for c in range(self.boyut):
+                if grid[r][c] == 0:
+                    count0 += 1
+                    grid[r][c] = self.count01(r, c, grid)[1]
+        while count0 > (self.boyut ** 2 - self.elmas_sayisi) * (8 * 8) - 1:
+            while True:
+                y = random.randint(0, self.boyut - 1)
+                x = random.randint(0, self.boyut - 1)
+                if grid[y][x] > 0:
+                    grid[y][x] = 0
+                    count0 -= 1
+                    break
+        return grid
+        # self.solutions.append(self.grid)
+
+    def sayi_azaltma(self):
+        cozulmus = self.sayi_belirleme(
+            self.elmas_yerlestirme(20, 30, np.zeros((self.boyut, self.boyut)))
+        )
+        cozulmemis = []
+        for y in range(self.boyut):
+            cozulmemis.append([])
+            for x in range(self.boyut):
+                if cozulmus[y][x] >= 0:
+                    cozulmemis[y].append(cozulmus[y][x])
+                else:
+                    cozulmemis[y].append(0)
+
+        grid = copy.deepcopy(cozulmemis)
+        previous_grid = copy.deepcopy(grid)
+        cells = [
+            (y, x)
+            for y in range(self.boyut)
+            for x in range(self.boyut)
+            if grid[y][x] > 0
+        ]
+        for tur in range(self.boyut ** 2):
+            rndIndex = random.choice(cells)
+            cells.remove(rndIndex)
+            grid[rndIndex[0]][rndIndex[1]] = 0
+            # print(grid)
+            self.solutions = []
+            if self.solver2(grid) == "Wrong Question":
+                if tur > 10 and self.isAllEmptyHasNumNeighbor(previous_grid):
+                    cozulmemis = []
+                    for y in range(self.boyut):
+                        cozulmemis.append([])
+                        for x in range(self.boyut):
+                            if grid[y][x] >= 0:
+                                cozulmemis[y].append(grid[y][x])
+                            elif grid[y][x] == -2 or grid[y][x] == -1:
+                                cozulmemis[y].append(0)
+                            else:
+                                cozulmemis[y].append(0)
+                    return previous_grid, cozulmemis
+                break
+            previous_grid = copy.deepcopy(grid)
+        self.sayi_azaltma()
 
     def main(self):
 
@@ -258,17 +355,33 @@ class HazineAvi:
 
         start = timeit.default_timer()
         self.create_grid(canvas, 40)
-        # self.elmas_yerlestirme(20,30)
+        # self.elmas_yerlestirme(20, 30)
         # self.sayi_belirleme()
-        # self.sayi_azaltma()
-        self.solver2(self.grid)
+        while True:
+            try:
+                cozulmus, cozulmemis = self.sayi_azaltma()
+                break
+            except:
+                pass
+        print(np.matrix(cozulmemis))
+        print(np.matrix(cozulmus))
+        # self.solver2(self.grid)
         print("Solutions: ", self.solutions)
         end = timeit.default_timer()
         print(f"It took {end-start} seconds.")
-        self.gorsellestir(canvas, 40)
+        self.gorsellestir(canvas, 40, cozulmus)
 
         canvas.pack(fill=BOTH, expand=1)
         root.geometry(f"{self.boyut*45}x{self.boyut*45}+300+300")
+        if input() == "q":
+            root.destroy()
+            root = Tk()
+            canvas = Canvas(root)
+            self.create_grid(canvas, 40)
+            self.gorsellestir(canvas, 40, cozulmemis)
+            canvas.pack(fill=BOTH, expand=1)
+            root.geometry(f"{self.boyut*45}x{self.boyut*45}+300+300")
+            root.mainloop()
         root.mainloop()
 
 
@@ -286,18 +399,18 @@ soru = HazineAvi()
 #     [3, 6, 0, 0, 0, 3, 0, 0, 4, 0],
 #     [0, 0, 0, 4, 0, 2, 0, 2, 1, 0],
 # ]
-soru.grid = [
-    [2, 0, 0, 0, 2, 2, 0, 0, 0, 2],
-    [0, 5, 0, 4, 0, 0, 5, 0, 6, 0],
-    [0, 0, 4, 0, 3, 0, 0, 3, 0, 0],
-    [0, 4, 0, 0, 3, 0, 4, 0, 4, 0],
-    [3, 0, 5, 3, 2, 0, 0, 0, 0, 2],
-    [3, 0, 0, 0, 0, 3, 3, 4, 0, 2],
-    [0, 5, 0, 4, 0, 2, 0, 0, 4, 0],
-    [0, 0, 2, 0, 0, 4, 0, 2, 0, 0],
-    [0, 5, 0, 4, 0, 0, 2, 0, 5, 0],
-    [2, 0, 0, 0, 3, 2, 0, 0, 0, 2],
-]
+# soru.grid = [
+#     [2, 0, 0, 0, 2, 2, 0, 0, 0, 2],
+#     [0, 5, 0, 4, 0, 0, 5, 0, 6, 0],
+#     [0, 0, 4, 0, 3, 0, 0, 3, 0, 0],
+#     [0, 4, 0, 0, 3, 0, 4, 0, 4, 0],
+#     [3, 0, 5, 3, 2, 0, 0, 0, 0, 2],
+#     [3, 0, 0, 0, 0, 3, 3, 4, 0, 2],
+#     [0, 5, 0, 4, 0, 2, 0, 0, 4, 0],
+#     [0, 0, 2, 0, 0, 4, 0, 2, 0, 0],
+#     [0, 5, 0, 4, 0, 0, 2, 0, 5, 0],
+#     [2, 0, 0, 0, 3, 2, 0, 0, 0, 2],
+# ]
 # soru.grid = [
 #     [0, 0, 0, 0, 0, 4, 0, 0],
 #     [1, 0, 2, 4, 0, 0, 3, 0],
@@ -327,6 +440,6 @@ soru.grid = [
 #     [2, 0, 0, 1, 0, 0, 0],
 # ]
 
-soru.boyut = len(soru.grid)
-# soru.boyut = 10
+# soru.boyut = len(soru.grid)
+soru.boyut = 8
 soru.main()
