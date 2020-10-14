@@ -254,6 +254,18 @@ class HazineAvi:
                             break
                     if not result:
                         return False
+                # else:
+                #     result = False
+                #     komsulr = self.komsular(y, x)
+                #     for k1 in komsulr:
+                #         countb0 = 0
+                #         komsulr2 = self.komsular(k1[0], k1[1])
+                #         for k2 in komsulr2:
+                #             if grid[k[0]][k[1]] > 0:
+                #                 countb0 += 1
+                #         if countb0 > 1:
+                #             return True
+                #     return False
         return True
 
     def solver2(self, grid):
@@ -293,20 +305,22 @@ class HazineAvi:
                 if grid[r][c] == 0:
                     count0 += 1
                     grid[r][c] = self.count01(r, c, grid)[1]
-        while count0 > (self.boyut ** 2 - self.elmas_sayisi) * (8 * 8) - 1:
-            while True:
-                y = random.randint(0, self.boyut - 1)
-                x = random.randint(0, self.boyut - 1)
-                if grid[y][x] > 0:
-                    grid[y][x] = 0
-                    count0 -= 1
-                    break
+        # while count0 > (self.boyut ** 2 - self.elmas_sayisi) * (8 * 8) - 1:
+        #     while True:
+        #         y = random.randint(0, self.boyut - 1)
+        #         x = random.randint(0, self.boyut - 1)
+        #         if grid[y][x] > 0:
+        #             grid[y][x] = 0
+        #             count0 -= 1
+        #             break
         return grid
         # self.solutions.append(self.grid)
 
     def sayi_azaltma(self):
         cozulmus = self.sayi_belirleme(
-            self.elmas_yerlestirme(20, 30, np.zeros((self.boyut, self.boyut)))
+            self.elmas_yerlestirme(
+                self.boyut + 1, self.boyut * 3, np.zeros((self.boyut, self.boyut))
+            )
         )
         cozulmemis = []
         for y in range(self.boyut):
@@ -331,19 +345,24 @@ class HazineAvi:
             grid[rndIndex[0]][rndIndex[1]] = 0
             # print(grid)
             self.solutions = []
-            if self.solver2(grid) == "Wrong Question":
-                if tur > 10 and self.isAllEmptyHasNumNeighbor(previous_grid):
-                    cozulmemis = []
-                    for y in range(self.boyut):
-                        cozulmemis.append([])
-                        for x in range(self.boyut):
-                            if grid[y][x] >= 0:
-                                cozulmemis[y].append(grid[y][x])
-                            elif grid[y][x] == -2 or grid[y][x] == -1:
-                                cozulmemis[y].append(0)
-                            else:
-                                cozulmemis[y].append(0)
-                    return previous_grid, cozulmemis
+            if self.solver2(copy.deepcopy(grid)) == "Wrong Question":
+                if tur > 4 and self.isAllEmptyHasNumNeighbor(previous_grid):
+                    # cozulmemis = []
+                    # for y in range(self.boyut):
+                    #     cozulmemis.append([])
+                    #     for x in range(self.boyut):
+                    #         if previous_grid[y][x] >= 0:
+                    #             cozulmemis[y].append(previous_grid[y][x])
+                    #         elif previous_grid[y][x] == -2 or previous_grid[y][x] == -1:
+                    #             cozulmemis[y].append(0)
+                    #         else:
+                    #             cozulmemis[y].append(0)
+                    print("Prev: ", np.matrix(previous_grid))
+                    print("Grid: ", np.matrix(grid))
+                    cozulmemis = copy.deepcopy(previous_grid)
+                    self.solver2(previous_grid)
+                    cozulmus = previous_grid
+                    return cozulmus, cozulmemis
                 break
             previous_grid = copy.deepcopy(grid)
         self.sayi_azaltma()
@@ -440,6 +459,16 @@ soru = HazineAvi()
 #     [2, 0, 0, 1, 0, 0, 0],
 # ]
 
+# soru.grid = [
+#     [0, 0, 0, 0, 0],
+#     [0, 5, 0, 0, 2],
+#     [0, 0, 0, 0, 0],
+#     [0, 2, 0, 0, 1],
+#     [0, 0, 0, 0, 0],
+# ]
+
 # soru.boyut = len(soru.grid)
-soru.boyut = 8
+soru.boyut = 10
+# print(soru.solver2(soru.grid))
+# print(np.matrix(cozulmus), np.matrix(cozulmemis))
 soru.main()
