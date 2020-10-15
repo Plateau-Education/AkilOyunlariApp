@@ -1,38 +1,3 @@
-# from tkinter import Tk, Canvas, Frame, BOTH
-
-# class Example(Frame):
-
-#     def __init__(self):
-#         super().__init__()
-
-#         self.initUI()
-
-
-#     def initUI(self):
-
-#         self.master.title("Lines")
-#         self.pack(fill=BOTH, expand=1)
-
-#         canvas = Canvas(self)
-#         # canvas.create_line(15, 25, 200, 25)
-#         # canvas.create_line(300, 35, 300, 200, dash=(4, 2))
-#         # canvas.create_line(55, 85, 155, 85, 105, 180, 55, 85)
-#         canvas.create_rectangle(50, 25, 150, 75, fill="blue", width=0)
-
-#         canvas.pack(fill=BOTH, expand=1)
-
-
-# def main():
-
-#     root = Tk()
-#     ex = Example()
-#     root.geometry("400x250+300+300")
-#     root.mainloop()
-
-
-# if __name__ == '__main__':
-#     main()
-
 import random, time, timeit
 from tkinter import Tk, Canvas, BOTH
 import pandas as pd
@@ -78,29 +43,30 @@ def orta_nokta(row, column, genislik):
     return (ortanokta_x, ortanokta_y)
 
 
-def create_grid(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
+def create_grid(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0, tkinterOn=False):
     blackList = blacklist(patika_boyutu, siyah_kare_sayisi)
 
     # blackList = [(4, 4), (4, 2), (6, 0), (6, 3), (0, 4), (2,5), (2,1)]
 
     # [(0,5), (1,3), (2,0), (5,2)]   /   [(5,0), (5,3), (3,3), (0,3)]   /   [(3,5), (3,2), (1,1), (5,2)]
-    for row in range(patika_boyutu):
-        for column in range(patika_boyutu):
-            if (row, column) in blackList:
-                c.create_rectangle(
-                    row * genislik + 10,
-                    column * genislik + 10,
-                    (row + 1) * genislik + 10,
-                    (column + 1) * genislik + 10,
-                    fill="black",
-                )
-            else:
-                c.create_rectangle(
-                    row * genislik + 10,
-                    column * genislik + 10,
-                    (row + 1) * genislik + 10,
-                    (column + 1) * genislik + 10,
-                )
+    if tkinterOn:
+        for row in range(patika_boyutu):
+            for column in range(patika_boyutu):
+                if (row, column) in blackList:
+                    c.create_rectangle(
+                        row * genislik + 10,
+                        column * genislik + 10,
+                        (row + 1) * genislik + 10,
+                        (column + 1) * genislik + 10,
+                        fill="black",
+                    )
+                else:
+                    c.create_rectangle(
+                        row * genislik + 10,
+                        column * genislik + 10,
+                        (row + 1) * genislik + 10,
+                        (column + 1) * genislik + 10,
+                    )
     return blackList
 
 
@@ -131,7 +97,7 @@ def tracking_check(
         # time.sleep(0.2)
         counter += 1
         if counter > patika_boyutu ** 2 - siyah_kare_sayisi:  # boş kare sayısı
-            print("Boş kare sayısından büyük")
+            # print("Boş kare sayısından büyük")
             return False
         current_degisti = False
         if gelis == "sag":  # cizgi sağından gelmişse
@@ -192,20 +158,20 @@ def tracking_check(
                 current = (current[0], current[1] + 1)  # asagiya gidecek
         # print(current)
         if current_degisti == False:
-            print("stuck")
+            # print("stuck")
             return False
     if counter < patika_boyutu ** 2 - siyah_kare_sayisi - 1:
-        print("boş kutu sayısından küçük")
+        # print("boş kutu sayısından küçük")
         return False
     elif counter > patika_boyutu ** 2 - siyah_kare_sayisi:
-        print("boş kutu sayısından büyük")
+        # print("boş kutu sayısından büyük")
         return False
     elif counter >= patika_boyutu ** 2 - siyah_kare_sayisi - 1:
-        print("boş kutu sayısı civarında")
+        # print("boş kutu sayısı civarında")
         return True
 
 
-def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
+def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6, tkinterOn=False):
 
     kose_sol_asagi = []
     kose_sag_asagi = []
@@ -221,7 +187,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
 
     degismeme_count = "degisti"
 
-    for tur in range(patika_boyutu**2+1):
+    for tur in range(patika_boyutu ** 2 + 1):
         # if degismeme_count == "degismedi": return "Wrong Question"
         degismeme_count = "degismedi"
         for row in range(patika_boyutu):
@@ -292,14 +258,16 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             sol_cizgi.append(sag)
                             bas = orta_nokta(sol[0], sol[1], genislik)
                             son = orta_nokta(sag[0], sag[1], genislik)
-                            canvas.create_line(bas[0], bas[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
                         elif not yukari_dolu and not asagi_dolu:  # yukari-asagi kenar
                             kenar_yukari_asagi.append((row, column))
                             yukari_cizgi.append(asagi)
                             asagi_cizgi.append(yukari)
                             bas = orta_nokta(yukari[0], yukari[1], genislik)
                             son = orta_nokta(asagi[0], asagi[1], genislik)
-                            canvas.create_line(bas[0], bas[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
                         elif not sol_dolu and not asagi_dolu:  # sol ve asagi köşe
                             kose_sol_asagi.append((row, column))
                             sag_cizgi.append(sol)
@@ -307,8 +275,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             bas = orta_nokta(sol[0], sol[1], genislik)
                             orta = orta_nokta(row, column, genislik)
                             son = orta_nokta(asagi[0], asagi[1], genislik)
-                            canvas.create_line(bas[0], bas[1], orta[0], orta[1])
-                            canvas.create_line(orta[0], orta[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                canvas.create_line(orta[0], orta[1], son[0], son[1])
                         elif not sag_dolu and not asagi_dolu:  # sag ve asagi köşe
                             kose_sag_asagi.append((row, column))
                             sol_cizgi.append(sag)
@@ -316,8 +285,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             bas = orta_nokta(sag[0], sag[1], genislik)
                             orta = orta_nokta(row, column, genislik)
                             son = orta_nokta(asagi[0], asagi[1], genislik)
-                            canvas.create_line(bas[0], bas[1], orta[0], orta[1])
-                            canvas.create_line(orta[0], orta[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                canvas.create_line(orta[0], orta[1], son[0], son[1])
                         elif not sol_dolu and not yukari_dolu:  # sol ve yukarı köşe
                             kose_sol_yukari.append((row, column))
                             sag_cizgi.append(sol)
@@ -325,8 +295,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             bas = orta_nokta(sol[0], sol[1], genislik)
                             orta = orta_nokta(row, column, genislik)
                             son = orta_nokta(yukari[0], yukari[1], genislik)
-                            canvas.create_line(bas[0], bas[1], orta[0], orta[1])
-                            canvas.create_line(orta[0], orta[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                canvas.create_line(orta[0], orta[1], son[0], son[1])
                         elif not sag_dolu and not yukari_dolu:  # sağ ve yukarı köşe
                             kose_sag_yukari.append((row, column))
                             sol_cizgi.append(sag)
@@ -334,8 +305,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             bas = orta_nokta(sag[0], sag[1], genislik)
                             orta = orta_nokta(row, column, genislik)
                             son = orta_nokta(yukari[0], yukari[1], genislik)
-                            canvas.create_line(bas[0], bas[1], orta[0], orta[1])
-                            canvas.create_line(orta[0], orta[1], son[0], son[1])
+                            if tkinterOn:
+                                canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                canvas.create_line(orta[0], orta[1], son[0], son[1])
                     if (
                         (row, column) in sag_cizgi
                         and (row, column) in sol_cizgi
@@ -547,7 +519,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                         degismeme_count = "degisti"
                         kose_sag_yukari.append(asagi)
         if degismeme_count == "degismedi":
-            print(f"{tur} tur gecti, bulunabilen koseler bulundu.")
+            # print(f"{tur} tur gecti, bulunabilen koseler bulundu.")
 
             for row in range(patika_boyutu):
                 for column in range(patika_boyutu):
@@ -751,7 +723,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # asagiya gidecek
                             # print(current)
                             if current_degisti == False:
-                                print("stuck")
+                                # print("stuck")
                                 return "Wrong Question"
                         if sol_dolu:
                             if rc in sag_cizgi:
@@ -766,7 +738,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -780,7 +755,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
@@ -795,7 +773,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 if (
@@ -811,7 +792,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # sagindaki bloğa sol_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in asagi_cizgi:
@@ -826,7 +810,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -840,15 +827,18 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # sagindaki bloğa sol_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
-                                else:
-                                    print(
-                                        (row, column),
-                                        "kapalı alan oluşturmuyor",
-                                        current,
-                                    )
+                                # else:
+                                #     print(
+                                #         (row, column),
+                                #         "kapalı alan oluşturmuyor",
+                                #         current,
+                                #     )
                         elif sag_dolu:
                             if rc in sol_cizgi:
                                 if (
@@ -862,7 +852,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -876,7 +869,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
@@ -891,7 +887,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -905,7 +904,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # solundaki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in asagi_cizgi:
@@ -920,7 +922,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -934,15 +939,18 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # solundaki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
-                                else:
-                                    print(
-                                        (row, column),
-                                        "kapalı alan oluşturmuyor",
-                                        current,
-                                    )
+                                # else:
+                                # print(
+                                #     (row, column),
+                                #     "kapalı alan oluşturmuyor",
+                                #     current,
+                                # )
                         elif yukari_dolu:
                             if rc in sol_cizgi:
                                 if (
@@ -956,7 +964,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -970,7 +981,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in sag_cizgi:
@@ -985,7 +999,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # altindaki bloğa yukari_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(asagi[0], asagi[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -999,7 +1016,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in asagi_cizgi:
@@ -1014,7 +1034,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # sagindaki bloğa sol_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -1028,15 +1051,18 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # solundaki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
-                                else:
-                                    print(
-                                        (row, column),
-                                        "kapalı alan oluşturmuyor",
-                                        current,
-                                    )
+                                # else:
+                                # print(
+                                #     (row, column),
+                                #     "kapalı alan oluşturmuyor",
+                                #     current,
+                                # )
                         elif asagi_dolu:
                             if rc in sol_cizgi:
                                 if (
@@ -1050,7 +1076,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagii_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -1064,7 +1093,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in sag_cizgi:
@@ -1079,7 +1111,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(yukari[0], yukari[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -1093,7 +1128,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # üstündeki bloğa asagi_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                             elif rc in yukari_cizgi:
@@ -1108,7 +1146,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # sağındaki bloğa sol_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sag[0], sag[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                                 elif (
@@ -1122,7 +1163,10 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                     )  # solundaki bloğa sag_cizgi eklendi
                                     bas = orta_nokta(rc[0], rc[1], genislik)
                                     son = orta_nokta(sol[0], sol[1], genislik)
-                                    canvas.create_line(bas[0], bas[1], son[0], son[1])
+                                    if tkinterOn:
+                                        canvas.create_line(
+                                            bas[0], bas[1], son[0], son[1]
+                                        )
                                     degismeme_count = "degisti"
                                     break
                     if (
@@ -1464,41 +1508,84 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
     # print("Tüm kenar ve köşeler: ",sorted(tum_kenar_koseler))
     # print("Soru çözülebilir: ", is_solvable)
 
-    return is_solvable
+    if is_solvable:
+        return is_solvable, [
+            blackList,
+            kose_sag_asagi,
+            kose_sag_yukari,
+            kose_sol_asagi,
+            kose_sol_yukari,
+            kenar_sag_sol,
+            kenar_yukari_asagi,
+        ]
+
+    return is_solvable, []
 
 
-def main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
+def class_main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0, tkinterOn=False):
     if siyah_kare_sayisi == 0:
         siyah_kare_sayisi = patika_boyutu
     # blackList = create_grid(c,genislik, patika_boyutu, siyah_kare_sayisi)
     # solver(c, blackList, genislik,patika_boyutu, siyah_kare_sayisi)
-    start = timeit.default_timer()
+    # start = timeit.default_timer()
     for _ in range(1000000):
         blackList = create_grid(c, genislik, patika_boyutu, siyah_kare_sayisi)
         is_solvable = solver(c, blackList, genislik, patika_boyutu, siyah_kare_sayisi)
-        if is_solvable:
-            print("BlackList: ", blackList, "is solvable")
+        if is_solvable[0]:
+            # print("BlackList: ", blackList, "is solvable")
             break
         else:
-            c.delete("all")
-    end = timeit.default_timer()
-    print(f"It took {end-start} seconds.")
-    return blackList
+            if tkinterOn:
+                c.delete("all")
+    # end = timeit.default_timer()
+    # print(f"It took {end-start} seconds.")
+    return is_solvable[1]
 
 
-root = Tk()
-c = Canvas(root)
-root.title("Patika")
+def main(size):
+    tkinterOn = False
+    if tkinterOn:
+        root = Tk()
+        c = Canvas(root)
+        root.title("Patika")
+    else:
+        c = None
+    genislik = 40
+    patika_boyutu = size
+    if patika_boyutu == 5:
+        siyah_kare_sayisi = random.choice([3, 3, 3, 5])
+    elif patika_boyutu == 6:
+        siyah_kare_sayisi = random.choice([4, 6])
+    elif patika_boyutu == 7:
+        siyah_kare_sayisi = random.choice([7, 7, 9])
+    elif patika_boyutu == 8:
+        siyah_kare_sayisi = random.choice([10, 10, 10, 8, 2])
+    elif patika_boyutu == 9:
+        siyah_kare_sayisi = random.choice([11, 11, 11, 9, 9, 13])
+    else:
+        raise ValueError("Size should be in between 5 and 9")
+    result = class_main(
+        c,
+        genislik,
+        patika_boyutu=patika_boyutu,
+        siyah_kare_sayisi=siyah_kare_sayisi,
+        tkinterOn=tkinterOn,
+    )
 
-genislik = 40
+    if tkinterOn:
+        c.pack(fill=BOTH, expand=1)
+        root.geometry("400x400+300+300")
+        root.mainloop()
+    return result
 
-patika_boyutu = int(input("Patika boyutu:"))
-siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
-if patika_boyutu <= 2:
-    raise ValueError("Patika boyutu en az 3 olabilir.")
-if siyah_kare_sayisi >= patika_boyutu ** 2 // 4:
-    raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
-main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
+
+# patika_boyutu = int(input("Patika boyutu:"))
+# siyah_kare_sayisi = int(input("Siyah kare sayısı:"))
+# if patika_boyutu <= 2:
+#     raise ValueError("Patika boyutu en az 3 olabilir.")
+# if siyah_kare_sayisi >= patika_boyutu ** 2 // 4:
+#     raise ValueError("Girdiğiniz siyah kare sayısı, patika boyutuna göre fazladır.")
+# main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayisi)
 # adet = 3
 # tum_dogru_blackListler =[]
 # for patika_boyutu in range(4,7):
@@ -1515,21 +1602,18 @@ main(c, genislik, patika_boyutu=patika_boyutu, siyah_kare_sayisi=siyah_kare_sayi
 # df = pd.DataFrame(tum_dogru_blackListler,columns=["4x4","5x5","6x6"])
 # print(df)
 
-
-c.pack(fill=BOTH, expand=1)
-root.geometry("400x400+300+300")
-root.mainloop()
+# print(main(8))
 
 
 """
 Patika Boyutu / En İyi Siyah Kare Sayıları
 
-3 => 1
-4 => 2
-5 => 3
+3 => 1 ==> olmayacak
+4 => 2 ==> olmayacak
+5 => 3 ve 5
 6 => 4 ve 6
 7 => 7
 8 => 10 en iyi gibi, 8 ve 12 de de buldu.
-9 => 9 da bulması 15 dk sürdü, 11 çok daha iyi 1 dk 10 sn de bitti
+9 => 9 da bulması 2 dk 45 sn sürdü, 11 çok daha iyi 1 dk 10 sn de bitti
 
 """
