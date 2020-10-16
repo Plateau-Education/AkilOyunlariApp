@@ -7,6 +7,7 @@ class Piramit:
     def __init__(self):
         self.boyut = 3
         self.solutions = []
+        self.tkinterOn = False
 
     def orta_nokta(self, row, column, genislik):
         ortanokta_x = (row + 1 / 2) * genislik * (8 / 5) + (
@@ -30,16 +31,6 @@ class Piramit:
             ihtimaller.append((i, sayi - i))
             ihtimaller.append((sayi - i, i))
         return ihtimaller
-
-    def en_dusuk_sayida_ihtimal(self, grid):
-        en_dusuk_ihtimal = (9, 0, 0)
-        for row in range(1, self.boyut):
-            for column in range(row + 1):
-                if len(grid[row][column]) == 1:
-                    continue
-                elif len(grid[row][column]) < en_dusuk_ihtimal[0]:
-                    en_dusuk_ihtimal = (len(grid[row][column]), row, column)
-        return en_dusuk_ihtimal
 
     def grid_olusturucu(self):
         grid = []
@@ -184,7 +175,7 @@ class Piramit:
                             self.solver(grid)
                             grid[row][column] = 0
                     return
-        print(grid)
+        # print(grid)
         self.solutions.append(copy.deepcopy(grid))
 
     def cizici(self, canvas, genislik, grid, solution_or_question="solution"):
@@ -228,9 +219,9 @@ class Piramit:
                         font=tkFont.Font(family="Poppins", size=25),
                     )
 
-    def main(self):
+    def class_main(self):
 
-        start = timeit.default_timer()
+        # start = timeit.default_timer()
 
         while True:
             grid = self.grid_olusturucu()
@@ -239,28 +230,35 @@ class Piramit:
 
             if len(self.solutions) == 1:
                 break
-        end = timeit.default_timer()
-        print(f"It took {end-start} seconds.")
+        # end = timeit.default_timer()
+        # print(f"It took {end-start} seconds.")
 
-        root = Tk()
-        canvas = Canvas(root)
-
-        self.cizici(canvas, 40, self.solutions[0], "solution")
-
-        canvas.pack(fill=BOTH, expand=1)
-        root.geometry("500x350+300+300")
-        if input() == "q":
-            root.destroy()
+        if self.tkinterOn:
             root = Tk()
             canvas = Canvas(root)
-            self.cizici(canvas, 40, self.solutions[0], "question")
+
+            self.cizici(canvas, 40, self.solutions[0], "solution")
+
             canvas.pack(fill=BOTH, expand=1)
             root.geometry("500x350+300+300")
+            if input() == "q":
+                root.destroy()
+                root = Tk()
+                canvas = Canvas(root)
+                self.cizici(canvas, 40, self.solutions[0], "question")
+                canvas.pack(fill=BOTH, expand=1)
+                root.geometry("500x350+300+300")
+                root.mainloop()
+
             root.mainloop()
+        return self.solutions[0]
 
-        root.mainloop()
+
+def main(size):
+    soru = Piramit()
+    soru.boyut = size
+    soru.tkinterOn = False
+    return soru.class_main()
 
 
-soru = Piramit()
-soru.boyut = 4
-soru.main()
+# print(main(5))

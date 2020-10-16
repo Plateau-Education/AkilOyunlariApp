@@ -5,36 +5,37 @@ import tkinter.font as tkFont
 
 class SozcukTuru:
     def __init__(self):
-        self.zorluk = "kolay"
+        self.zorluk = "Easy"
 
     def create_grid(self, canvas, genislik):
-        if self.zorluk == "kolay":
+        if self.zorluk == "Easy":
             self.boyut = (3, 4)
-        elif self.zorluk == "orta":
+        elif self.zorluk == "Medium":
             self.boyut = (3, 5)
-        elif self.zorluk == "zor":
+        elif self.zorluk == "Hard":
             self.boyut = (4, 5)
-        elif self.zorluk == "en zor":
+        elif self.zorluk == "Hardest":
             self.boyut = (5, 5)
         else:
-            raise ValueError("zorluk sadece kolay, orta, zor veya en zor olabilir")
-        for row in range(self.boyut[0]):
-            for column in range(self.boyut[1]):
-                canvas.create_rectangle(
-                    row * genislik + 10,
-                    column * genislik + 10,
-                    (row + 1) * genislik + 10,
-                    (column + 1) * genislik + 10,
-                )
+            raise ValueError("zorluk sadece Easy, Medium, Hard veya Hardest olabilir")
+        if self.tkinterOn:
+            for row in range(self.boyut[0]):
+                for column in range(self.boyut[1]):
+                    canvas.create_rectangle(
+                        row * genislik + 10,
+                        column * genislik + 10,
+                        (row + 1) * genislik + 10,
+                        (column + 1) * genislik + 10,
+                    )
 
     def kelime_secici(self):
-        if self.zorluk == "kolay":
+        if self.zorluk == "Easy":
             self.harf_range = (3, 5)
-        elif self.zorluk == "orta":
+        elif self.zorluk == "Medium":
             self.harf_range = (4, 6)
-        elif self.zorluk == "zor":
+        elif self.zorluk == "Hard":
             self.harf_range = (2, 6)
-        elif self.zorluk == "en zor":
+        elif self.zorluk == "Hardest":
             self.harf_range = (3, 7)
 
         kelimeler = []
@@ -48,7 +49,7 @@ class SozcukTuru:
             kelime = random.choice(lst)
             kelimeler.append(kelime)
             f.close()
-        print(kelimeler)
+        # print(kelimeler)
         return kelimeler
 
     def orta_nokta(self, row, column, genislik):
@@ -64,11 +65,12 @@ class SozcukTuru:
         )
         dolu_kareler.append(ilk_index)
         suanki = ilk_index
-        canvas.create_text(
-            self.orta_nokta(suanki[0], suanki[1], 40),
-            text=kelimeler[0][0],
-            font=tkFont.Font(family="Poppins", size=20),
-        )
+        if self.tkinterOn:
+            canvas.create_text(
+                self.orta_nokta(suanki[0], suanki[1], 40),
+                text=kelimeler[0][0],
+                font=tkFont.Font(family="Poppins", size=20),
+            )
         harf_koordinat_list = [(suanki[0], suanki[1], kelimeler[0][0])]
         for h in range(self.harf_range[0], self.harf_range[1] + 1):
             if h == self.harf_range[0]:
@@ -100,20 +102,22 @@ class SozcukTuru:
                 suanki = random.choice(komsular)
                 dolu_kareler.append(suanki)
                 if h == self.harf_range[0] - 1:
-                    canvas.create_text(
-                        self.orta_nokta(suanki[0], suanki[1], 40),
-                        text=kelimeler[0][i + 1],
-                        font=tkFont.Font(family="Poppins", size=20),
-                    )
+                    if self.tkinterOn:
+                        canvas.create_text(
+                            self.orta_nokta(suanki[0], suanki[1], 40),
+                            text=kelimeler[0][i + 1],
+                            font=tkFont.Font(family="Poppins", size=20),
+                        )
                     harf_koordinat_list.append(
                         (suanki[0], suanki[1], kelimeler[0][i + 1])
                     )
                 else:
-                    canvas.create_text(
-                        self.orta_nokta(suanki[0], suanki[1], 40),
-                        text=kelimeler[h - self.harf_range[0]][i],
-                        font=tkFont.Font(family="Poppins", size=20),
-                    )
+                    if self.tkinterOn:
+                        canvas.create_text(
+                            self.orta_nokta(suanki[0], suanki[1], 40),
+                            text=kelimeler[h - self.harf_range[0]][i],
+                            font=tkFont.Font(family="Poppins", size=20),
+                        )
                     harf_koordinat_list.append(
                         (suanki[0], suanki[1], kelimeler[h - self.harf_range[0]][i])
                     )
@@ -134,30 +138,44 @@ class SozcukTuru:
             )
             ilk_coor = son_coor
 
-    def main(self):
-        root = Tk()
-        canvas = Canvas(root)
-
-        start = timeit.default_timer()
+    def class_main(self):
+        if self.tkinterOn:
+            root = Tk()
+            canvas = Canvas(root)
+        else:
+            canvas = None
+        # start = timeit.default_timer()
         self.create_grid(canvas, 40)
         kelimeler = self.kelime_secici()
         for _ in range(1000):
             grid = self.kelime_dagitici(canvas, kelimeler)
             if grid == []:
-                canvas.delete("all")
+                if self.tkinterOn:
+                    canvas.delete("all")
             else:
                 self.create_grid(canvas, 40)
                 break
-        end = timeit.default_timer()
-        print(f"It took {end-start} seconds.")
-        self.yol_cizici(canvas, grid)
-        canvas.pack(fill=BOTH, expand=1)
-        root.geometry("400x250+300+300")
-        root.mainloop()
+        # end = timeit.default_timer()
+        # print(f"It took {end-start} seconds.")
+        if self.tkinterOn:
+            self.yol_cizici(canvas, grid)
+            canvas.pack(fill=BOTH, expand=1)
+            root.geometry("400x250+300+300")
+            root.mainloop()
 
         return grid
 
 
-obj = SozcukTuru()
-obj.zorluk = "orta"
-print(obj.main())
+# obj = SozcukTuru()
+# obj.zorluk = "Medium"
+# print(obj.class_main())
+
+
+def main(level):
+    obj = SozcukTuru()
+    obj.zorluk = level
+    obj.tkinterOn = False
+    return obj.class_main()
+
+
+# print(main("Easy"))
