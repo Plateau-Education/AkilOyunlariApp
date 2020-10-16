@@ -106,6 +106,18 @@ class SayiBulmaca:
 # store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "a+")
 
 
+# def main():
+#     game = SayiBulmaca()
+#     game.SetAnswer()
+#     game.PerfectGrid()
+#     game.ClueGuide()
+#     for u in game.grid:
+#         game.grid[game.grid.index(u)] = u[:4]
+#     if game.Solver():
+#         game.PrintGrid()
+#     else:
+#         return main()
+
 def main():
     game = SayiBulmaca()
     game.SetAnswer()
@@ -114,12 +126,13 @@ def main():
     for u in game.grid:
         game.grid[game.grid.index(u)] = u[:4]
     if game.Solver():
-        game.PrintGrid()
+        game.grid[-1].append((3, 0))
+        return game.grid
     else:
         return main()
 
 
-start1 = timeit.default_timer()
-main()
-end1 = timeit.default_timer()
-print(f"Süre: {end1-start1}")
+# start1 = timeit.default_timer()
+# main()
+# end1 = timeit.default_timer()
+# print(f"Süre: {end1-start1}")

@@ -4,9 +4,11 @@ import SayiBulmaca.SayiBulmaca_3 as SayiBulmaca_3
 import SayiBulmaca.SayiBulmaca_4 as SayiBulmaca_4
 import Sudoku.Sudoku_6x6 as Sudoku_6x6
 import Sudoku.Sudoku_9x9 as Sudoku_9x9
+import Piramit.piramit_deneme as Piramit
 urlSudoku6Kolay = "http://127.0.0.1:5000/"+"Sudoku_6_KOLAY"
 urlSayiBulmaca3 = "http://127.0.0.1:5000/"+"SayiBulmaca_3"
 urlSayiBulmaca4 = "http://127.0.0.1:5000/"+"SayiBulmaca_4"
+urlPiramit_3 = "http://127.0.0.1:5000/"+"Piramit_6"
 token = "fx!Ay:;<p6Q?C8N{"
 
 
@@ -71,8 +73,8 @@ def PrintSudoku(veri):
             print("--------------------------------")
 
 
-PostGame(num=5, url1=urlSayiBulmaca4, token1=token, game=SayiBulmaca_4)
-info = GetGame(num="a", url1=urlSayiBulmaca4, token1=token)
+PostGame(num=5, url1=urlPiramit_3, token1=token, game=Piramit, level=6)
+info = GetGame(url1=urlPiramit_3, token1=token)
 print(info[0], info[1])
 # res = loads(info[1])["Info"]
 # PrintSayiBulmaca(res)

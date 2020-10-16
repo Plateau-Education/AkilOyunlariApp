@@ -6,11 +6,11 @@ import sqlite3
 app = Flask(__name__)
 api = Api(app)
 request = reqparse.RequestParser()
-request.add_argument("Info", help="Enter Info", required=True)
+request.add_argument("Info", help="Enter Info", required=False)
 request.add_argument("Token", required=False)
 request.add_argument("Where", required=False)
 request.add_argument("Req", required=False)
-db = sqlite3.connect("C:/Users/Proper/PycharmProjects/untitled/sorular.db", check_same_thread=False)
+db = sqlite3.connect("C:/Users/Proper/Documents/GitHub/AkilOyunlariApp/RestfulAPI/sorular.db", check_same_thread=False)
 cursor = db.cursor()
 
 

@@ -111,12 +111,13 @@ def main():
     for u in game.grid:
         game.grid[game.grid.index(u)] = u[:6]
     if game.Solver():
-        game.PrintGrid()
+        game.grid[-1].append((5, 0))
+        return game.grid
     else:
         return main()
 
 
-start1 = timeit.default_timer()
-main()
-end1 = timeit.default_timer()
-print(f"Toplam süre: {end1 - start1} seconds.")
+# start1 = timeit.default_timer()
+# main()
+# end1 = timeit.default_timer()
+# print(f"Toplam süre: {end1 - start1} seconds.")

@@ -84,8 +84,6 @@ class SayiBulmaca:
                 self.grid[grid.index(i)].append((x, y))
 
     def PrintGrid(self):
-        # store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "w")
-        # store.write(str(self.grid)+" ")
         self.grid[-1].append((4, 0))
         for i in self.grid:
             print(i)
@@ -113,12 +111,13 @@ def main():
     for u in game.grid:
         game.grid[game.grid.index(u)] = u[:5]
     if game.Solver():
-        game.PrintGrid()
+        game.grid[-1].append((4, 0))
+        return game.grid
     else:
         return main()
 
 
-start1 = timeit.default_timer()
-main()
-end1 = timeit.default_timer()
-print(f"Süre: {end1-start1}")
+# start1 = timeit.default_timer()
+# main()
+# end1 = timeit.default_timer()
+# print(f"Süre: {end1-start1}")
