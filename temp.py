@@ -1,46 +1,45 @@
-grid = [
-    [-2, 1, -1, -2, -2, 4, -1, 3],
-    [1, 3, 3, -2, -1, -1, -1, -1],
-    [-1, 4, -1, -1, -2, 3, -2, -1],
-    [-1, 5, -1, -2, -2, -2, -2, 1],
-    [3, -1, -2, 2, 2, -2, 1, -2],
-    [2, -1, -2, -1, -2, -1, 2, -2],
-    [-2, -2, -1, 2, 4, -1, -2, 1],
-    [-2, -1, 2, 1, 2, -1, -1, 1],
+# import copy
+# from itertools import combinations
+
+# grid = [
+#     [0, 0, 1, 0, 0],
+#     [3, 3, 3, 1, 0],
+#     [0, 0, 2, 0, 0],
+#     [1, 0, 3, 0, 1],
+#     [0, 1, 0, 0, 0],
+# ]
+
+# cells = [(y, x) for y in range(len(grid)) for x in range(len(grid)) if grid[y][x] > 0]
+# # time.sleep(0.1)
+# # print(grid)
+# for silinen_ipucu_sayisi in range(len(cells) - len(grid) + 1, len(grid) - 1, -1):
+
+#     for sis in combinations(cells, silinen_ipucu_sayisi):
+#         # print(sis)
+#         copy_g = copy.deepcopy(grid)
+#         for si in sis:
+#             copy_g[si[0]][si[1]] = 0
+#         print("Copy_g2:", copy_g)
+
+from itertools import combinations
+
+cells = [
+    (0, 1),
+    (0, 2),
+    (1, 0),
+    (1, 1),
+    (1, 2),
+    (1, 4),
+    (2, 0),
+    (2, 1),
+    (2, 4),
+    (3, 0),
+    (3, 2),
+    (3, 3),
+    (3, 4),
+    (4, 0),
+    (4, 3),
 ]
 
-
-def komsular(y, x):
-    komsular = [
-        (y + 1, x),
-        (y - 1, x),
-        (y, x + 1),
-        (y, x - 1),
-        (y + 1, x + 1),
-        (y + 1, x - 1),
-        (y - 1, x + 1),
-        (y - 1, x - 1),
-    ]
-    for _ in range(5):
-        for komsu in komsular:
-            if komsu[0] < 0 or komsu[0] > 8 - 1 or komsu[1] < 0 or komsu[1] > 8 - 1:
-                komsular.remove(komsu)
-    return komsular
-
-
-def isAllEmptyHasNumNeighbor(grid):
-    for y in range(len(grid)):
-        for x in range(len(grid)):
-            result = False
-            if grid[y][x] <= 0:
-                komsulr = komsular(y, x)
-                for k in komsulr:
-                    if grid[k[0]][k[1]] > 0:
-                        result = True
-                        break
-                if not result:
-                    return False
-    return True
-
-
-print(isAllEmptyHasNumNeighbor(grid))
+for i in combinations(cells, 14):
+    print(i)
