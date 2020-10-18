@@ -5,14 +5,16 @@ import SayiBulmaca.SayiBulmaca_4 as SayiBulmaca_4
 import Sudoku.Sudoku_6x6 as Sudoku_6x6
 import Sudoku.Sudoku_9x9 as Sudoku_9x9
 import Piramit.piramit_deneme as Piramit
-urlSudoku6Kolay = "http://127.0.0.1:5000/"+"Sudoku_6_KOLAY"
+
+
+urlSudoku6Kolay = "http://127.0.0.1:5000/"+"Sudoku_6_Kolay"
 urlSayiBulmaca3 = "http://127.0.0.1:5000/"+"SayiBulmaca_3"
 urlSayiBulmaca4 = "http://127.0.0.1:5000/"+"SayiBulmaca_4"
 urlPiramit_3 = "http://127.0.0.1:5000/"+"Piramit_6"
 token = "fx!Ay:;<p6Q?C8N{"
 
 
-def PostGame(num, url1, req="SORU", token1=None, game=None, level=None):
+def PostGame(num, url1, req=False, token1=None, game=None, level=None):
     data = []
     if level:
         for _ in range(num):
@@ -20,26 +22,31 @@ def PostGame(num, url1, req="SORU", token1=None, game=None, level=None):
     else:
         for _ in range(num):
             data.append(game.main())
-    post = {"Info": dumps({"Data": data, "Req": req}), "Token": token1}
+    post = {"Info": dumps({"Data": data}), "Req": req, "Token": token1}
     req = r.post(url1, data=post)
     print(req.status_code, req.json())
 
 
-def GetGame(num=None, req="SORU", token1=None, url1=None, where=None):
-    get = {"Info": num, "Where": where, "Token": token1, "Req": req}
+def GetGame(num=None, req=False, token1=None, url1=None):
+    get = {"Info": num, "Token": token1, "Req": req}
     req = r.get(url1, data=get)
     return req.status_code, req.json()
 
 
 def PrintSayiBulmaca(veri):
+    for i in range(len(veri)):
+        if len(veri[i]) == 1:
+            veri[i] = veri[i][0]
     for a in veri:
-        for _ in a:
-            for j in _:
-                print(j)
-            print("------------------")
+        for e in a:
+            print(e)
+        print("------------------")
 
 
 def PrintSudoku(veri):
+    for i in range(len(veri)):
+        if len(veri[i]) == 1:
+            veri[i] = veri[i][0]
     if len(veri[0][0]) == 6:
         for a in veri:
             for i in a:
@@ -71,16 +78,3 @@ def PrintSudoku(veri):
                 print(row9[0:3], row9[3:6], row9[6:9])
                 print("--------------------------------")
             print("--------------------------------")
-
-
-PostGame(num=5, url1=urlPiramit_3, token1=token, game=Piramit, level=6)
-info = GetGame(url1=urlPiramit_3, token1=token)
-print(info[0], info[1])
-# res = loads(info[1])["Info"]
-# PrintSayiBulmaca(res)
-# for i in res:
-#     for j in i:
-#         print(j)
-#     print("------------------")
-# print(info[0])
-
