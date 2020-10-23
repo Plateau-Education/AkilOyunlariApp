@@ -25,9 +25,9 @@ def CountDocs(col):
     return collection.count_documents(filter={})
 
 
-def Insert(col, value, cevap=False):
+def Insert(col, value, cevap=None):
     collection = db[col]
-    if cevap == True:
+    if cevap:
         num = getNextSeqValue("userid", collection)
         collection.insert_one({"_id": num, "soru": value[0], "cevap": value[1]})
     else:
@@ -35,12 +35,12 @@ def Insert(col, value, cevap=False):
         collection.insert_one({"_id": num, "soru": value})
 
 
-def Find(col, amount=None, cevap=False):
+def Find(col, amount=None, cevap=None):
     collection = db[col]
     response = []
     if amount:
         rangelist = [i for i in range(2, collection.count_documents(filter={}))]
-        if cevap == True:
+        if cevap:
             for i in range(amount):
                 randchoice = choice(rangelist)
                 rangelist.remove(randchoice)
@@ -55,7 +55,7 @@ def Find(col, amount=None, cevap=False):
                 response.append([[doc["soru"]]])
             return response
     else:
-        if cevap == True:
+        if cevap:
             doc = collection.find(filter={"_id": {"$type": 16}})
             for i in doc:
                 response.append([i["soru"], i["cevap"]])
@@ -112,6 +112,17 @@ class Sayi(Resource):
             return {"Message": "Unauthorized"}, 401
 
 
+class Init(Resource):
+    def get(self):
+        collist = db.list_collection_names()
+        collist.sort()
+        json = {}
+        for i in collist:
+            json[i] = db[i].find_one(filter={"_id": "userid"})["seq"]
+        return json
+
+
+api.add_resource(Init, "/")
 api.add_resource(Sayi, "/<string:game>")
 if __name__ == '__main__':
     app.run(debug=True)

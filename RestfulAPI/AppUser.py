@@ -1,33 +1,31 @@
 import requests as r
 from json import dumps, loads
-import SayiBulmaca.SayiBulmaca_3 as SayiBulmaca_3
-import SayiBulmaca.SayiBulmaca_4 as SayiBulmaca_4
-import Sudoku.Sudoku_6x6 as Sudoku_6x6
-import Sudoku.Sudoku_9x9 as Sudoku_9x9
-import Piramit.piramit_deneme as Piramit
+import SayiBulmaca_3
+import SayiBulmaca_4
+import sudoku6x6
+import sudoku9x9
 
-
-urlSudoku6Kolay = "http://127.0.0.1:5000/"+"Sudoku_6_Kolay"
-urlSayiBulmaca3 = "http://127.0.0.1:5000/"+"SayiBulmaca_3"
-urlSayiBulmaca4 = "http://127.0.0.1:5000/"+"SayiBulmaca_4"
-urlPiramit_3 = "http://127.0.0.1:5000/"+"Piramit_6"
+urlSudoku6Kolay = "https://akiloyunlariapp.herokuapp.com/"+"Sudoku_6_Kolay"
+urlSayiBulmaca3 = "https://akiloyunlariapp.herokuapp.com/SayiBulmaca_3"
+urlSayiBulmaca4 = "https://akiloyunlariapp.herokuapp.com/SayiBulmaca_4"
+sample = "http://127.0.0.1:5000/"+"Sudoku_6_Kolay"
 token = "fx!Ay:;<p6Q?C8N{"
 
 
-def PostGame(num, url1, req=False, token1=None, game=None, level=None):
-    data = []
+def PostGame(num, url1, req=None, token1=None, game=None, level=None):
+    data = set()
     if level:
         for _ in range(num):
-            data.append(game.main(level))
+            data.add(game.main(level))
     else:
         for _ in range(num):
-            data.append(game.main())
-    post = {"Info": dumps({"Data": data}), "Req": req, "Token": token1}
+            data.add(game.main())
+    post = {"Info": dumps({"Data": list(data)}), "Req": req, "Token": token1}
     req = r.post(url1, data=post)
     print(req.status_code, req.json())
 
 
-def GetGame(num=None, req=False, token1=None, url1=None):
+def GetGame(num=None, req=None, token1=None, url1=None):
     get = {"Info": num, "Token": token1, "Req": req}
     req = r.get(url1, data=get)
     return req.status_code, req.json()
@@ -78,3 +76,19 @@ def PrintSudoku(veri):
                 print(row9[0:3], row9[3:6], row9[6:9])
                 print("--------------------------------")
             print("--------------------------------")
+
+
+PostGame(num=10, url1=urlSudoku6Kolay, token1=token, game=sudoku6x6, req=True, level="Easy")
+# info = GetGame(url1=urlSayiBulmaca3, token1=token)
+# print(info[0])
+# res = loads(info[1])["Info"]
+# PrintSayiBulmaca(res)
+# res = loads(r.get(urlSayiBulmaca3, data={"Info": 1, "Token": token, "Req": False}).json())["Info"]
+# print(res, type(res))
+# PostGame(985, urlSayiBulmaca3, token1=token, game=SayiBulmaca_3)
+# for i in res:
+#     for j in i:
+#         print(j)
+#     print("------------------")
+# print(info[0])
+

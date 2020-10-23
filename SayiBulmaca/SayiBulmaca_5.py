@@ -108,8 +108,7 @@ def main():
     game.SetAnswer()
     game.PerfectGrid()
     game.ClueGuide()
-    for u in game.grid:
-        game.grid[game.grid.index(u)] = u[:6]
+    game.grid = [u[:6] for u in game.grid]
     if game.Solver():
         game.grid[-1].append((5, 0))
         return game.grid
