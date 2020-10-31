@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -35,9 +36,22 @@ public class GameListActivity extends AppCompatActivity {
         }
     }
 
+    public void goToHowtoplay(View view){
+        Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
+        if(currentExtendedRow % 2 == 1){
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)((ImageView)view).getParent()).getParent()).getChildAt(0)).getChildAt(1)).getText());
+        }
+        else{
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)((ImageView)view).getParent()).getParent()).getChildAt(0)).getChildAt(0)).getText());
+        }
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
     public void goToMainMenu(View view){
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
     public void goToGame(View view){
@@ -49,6 +63,7 @@ public class GameListActivity extends AppCompatActivity {
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)view).getParent()).getChildAt(0)).getChildAt(0)).getText());
         }
         startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     public void extendListItem(View view){
@@ -161,5 +176,11 @@ public class GameListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_list);
 //        adaptGameList();
 //        gameListListener();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

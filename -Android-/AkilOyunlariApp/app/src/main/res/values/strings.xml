@@ -4,4 +4,7 @@
     <string name="app_name2">Puzzles</string>
     <string name="play_button">Play</string>
     <string name="games">Games</string>
+    <string name="Back">Back</string>
+    <string name="Difficulty">Difficulty</string>
+    <string name="HowToPlay">How To Play?</string>
 </resources>

@@ -5,4 +5,7 @@
     <string name="app_name2">Oyunları</string>
     <string name="play_button">Oyna</string>
     <string name="games">Oyunlar</string>
+    <string name="Back">Geri</string>
+    <string name="Difficulty">Zorluk</string>
+    <string name="HowToPlay">Nasıl Oynanır?</string>
 </resources>

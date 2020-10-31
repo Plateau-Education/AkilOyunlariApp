@@ -20,7 +20,11 @@ public class GameActivity extends AppCompatActivity {
             Log.i("gameName", intent.getStringExtra("gameName"));
             Toast.makeText(this, gameName, Toast.LENGTH_SHORT).show();
         }
+    }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

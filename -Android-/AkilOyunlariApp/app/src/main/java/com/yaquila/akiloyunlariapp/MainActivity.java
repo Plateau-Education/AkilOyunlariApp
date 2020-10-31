@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
     public void goToGameList(View view){
         Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
 
@@ -19,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finishAffinity();
     }
 
 
