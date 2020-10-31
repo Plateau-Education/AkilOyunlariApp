@@ -8,4 +8,9 @@
     <string name="Back">Geri</string>
     <string name="Difficulty">Zorluk</string>
     <string name="HowToPlay">Nasıl Oynanır?</string>
+    <string name="Easy">Kolay</string>
+    <string name="Medium">Orta</string>
+    <string name="Hard">Zor</string>
+    <string name="VeryEasy">Çok Kolay</string>
+    <string name="VeryHard">Çok Zor</string>
 </resources>

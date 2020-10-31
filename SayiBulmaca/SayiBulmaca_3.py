@@ -86,7 +86,7 @@ class SayiBulmaca:
         for p in self.grid:
             print(p)
         # for i in self.grid:
-            # print(i)
+        # print(i)
 
     def Solver(self):
         nums = self.set.copy()
@@ -118,6 +118,7 @@ class SayiBulmaca:
 #     else:
 #         return main()
 
+
 def main():
     game = SayiBulmaca()
     game.SetAnswer()
@@ -133,6 +134,6 @@ def main():
 
 
 # start1 = timeit.default_timer()
-# main()
+print(main())
 # end1 = timeit.default_timer()
 # print(f"Süre: {end1-start1}")

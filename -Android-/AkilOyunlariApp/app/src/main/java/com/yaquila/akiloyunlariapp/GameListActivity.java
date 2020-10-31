@@ -24,18 +24,6 @@ public class GameListActivity extends AppCompatActivity {
     private ListView listView1;
     int currentExtendedRow = 0;
 
-    public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-            return listView.getAdapter().getView(pos, null, listView);
-        } else {
-            final int childIndex = pos - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
-    }
-
     public void goToHowtoplay(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         if(currentExtendedRow % 2 == 1){
@@ -54,8 +42,8 @@ public class GameListActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
-    public void goToGame(View view){
-        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+    public void goToDifficulty(View view){
+        Intent intent = new Intent(getApplicationContext(), DifficultyActivity.class);
         if(currentExtendedRow % 2 == 1){
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)view).getParent()).getChildAt(0)).getChildAt(1)).getText());
         }
@@ -114,68 +102,10 @@ public class GameListActivity extends AppCompatActivity {
 
     }
 
-//    public void adaptGameList(){
-//        String[] textString = {"Sudoku", "Hazine Avı", "Patika", "Sayı Bulmaca", "Sözcük Türü", "Piramit", "Pentomino", "Anagram", "Kakuro", "Köşeler"};
-//        int[] drawableIds = {R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.piramit_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image, R.drawable.hazineavi_gamelist_image};
-//
-//        CustomAdapter adapter = new CustomAdapter(this, textString, drawableIds);
-//
-//        listView1 = (ListView)findViewById(R.id.gameList);
-//        listView1.setAdapter(adapter);
-//    }
-//
-//    public void gameListListener(){
-//        final int[] clickedRow = {-1};
-//        final boolean[] noneClicked = {true};
-//
-//        listView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                if(clickedRow[0] == -1 || (clickedRow[0] == i && noneClicked[0])){
-//                    LinearLayout ll = (LinearLayout) view;
-//                    RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-//                    ll.setBackgroundColor(getResources().getColor(R.color.yellowish));
-//                    rl.setVisibility(View.VISIBLE);
-//                    clickedRow[0] = i;
-//                    noneClicked[0] = false;
-////                    if(i >= listView1.getChildCount()-2){
-////                        listView1.scrollTo(0,10);
-////                    }
-//                }
-//                else if(clickedRow[0] == i){
-//                    LinearLayout ll = (LinearLayout) view;
-//                    RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-//                    ll.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
-//                    rl.setVisibility(View.GONE);
-//                    noneClicked[0] = true;
-//                }
-//                else{
-//                    LinearLayout ll = (LinearLayout) getViewByPosition(clickedRow[0], listView1);
-//                    RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-//                    ll.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
-//                    rl.setVisibility(View.GONE);
-//                    LinearLayout ll_2 = (LinearLayout) view;
-//                    RelativeLayout rl_2 = (RelativeLayout) ll_2.getChildAt(1);
-//                    ll_2.setBackgroundColor(getResources().getColor(R.color.yellowish));
-//                    rl_2.setVisibility(View.VISIBLE);
-//                    clickedRow[0] = i;
-//                    noneClicked[0] = false;
-////                    if(i >= listView1.getChildCount()-2){
-////                        listView1.scrollTo(0,10);
-////                    }
-//
-//                }
-//
-//            }
-//        });
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_list);
-//        adaptGameList();
-//        gameListListener();
     }
 
     @Override

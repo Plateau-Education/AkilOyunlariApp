@@ -104,7 +104,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -170,7 +170,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -239,7 +239,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -305,7 +305,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -374,7 +374,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -440,7 +440,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/piramit_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -509,7 +509,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -575,7 +575,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -644,7 +644,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -710,7 +710,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone"
-                    android:onClick="goToGame"
+                    android:onClick="goToDifficulty"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 

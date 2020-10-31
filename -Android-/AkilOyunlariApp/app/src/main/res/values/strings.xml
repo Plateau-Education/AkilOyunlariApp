@@ -7,4 +7,9 @@
     <string name="Back">Back</string>
     <string name="Difficulty">Difficulty</string>
     <string name="HowToPlay">How To Play?</string>
+    <string name="Easy">Easy</string>
+    <string name="Medium">Medium</string>
+    <string name="Hard">Hard</string>
+    <string name="VeryEasy">Very Easy</string>
+    <string name="VeryHard">Very Hard</string>
 </resources>

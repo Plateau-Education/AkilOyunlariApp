@@ -9,16 +9,19 @@ import android.widget.Toast;
 
 public class GameActivity extends AppCompatActivity {
 
+    String gameName;
+    String difficulty;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
         Intent intent = getIntent();
-        String gameName = intent.getStringExtra("gameName");
-        if (gameName!=null){
-            Log.i("gameName", intent.getStringExtra("gameName"));
-            Toast.makeText(this, gameName, Toast.LENGTH_SHORT).show();
+        gameName = intent.getStringExtra("gameName");
+        difficulty = intent.getStringExtra("difficulty");
+        if (gameName != null && difficulty != null){
+            Toast.makeText(this, gameName+" / "+difficulty, Toast.LENGTH_SHORT).show();
         }
     }
 
