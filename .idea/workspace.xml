@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="ac257000-3e0c-45fc-9a45-123213c093aa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SayiBulmaca/SayiBulmaca_5.py" beforeDir="false" afterPath="$PROJECT_DIR$/SayiBulmaca/SayiBulmaca_5.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +22,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.SayiBulmaca_5">
+  <component name="RunManager" selected="Python.Pentomino_4">
     <configuration name="AppUser" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="AkilOyunlariApp" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -37,6 +36,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RestfulAPI/AppUser.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Pentomino_4" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="AkilOyunlariApp" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Pentomino" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Pentomino/Pentomino_4.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -89,6 +109,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Pentomino_4" />
         <item itemvalue="Python.SayiBulmaca_5" />
         <item itemvalue="Python.AppUser" />
         <item itemvalue="Python.RestfulAPI" />
@@ -125,29 +146,29 @@
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="463" y="125" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1603202772457" />
-    <state width="1345" height="147" key="GridCell.Tab.0.bottom" timestamp="1603202779195">
+    <state width="1345" height="119" key="GridCell.Tab.0.bottom" timestamp="1603735596862">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="147" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1603202779195" />
-    <state width="1345" height="147" key="GridCell.Tab.0.center" timestamp="1603202779195">
+    <state width="1345" height="119" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1603735596862" />
+    <state width="1345" height="119" key="GridCell.Tab.0.center" timestamp="1603735596862">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="147" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1603202779195" />
-    <state width="1345" height="147" key="GridCell.Tab.0.left" timestamp="1603202779195">
+    <state width="1345" height="119" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1603735596862" />
+    <state width="1345" height="119" key="GridCell.Tab.0.left" timestamp="1603735596862">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="147" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1603202779195" />
-    <state width="1345" height="147" key="GridCell.Tab.0.right" timestamp="1603202779195">
+    <state width="1345" height="119" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1603735596862" />
+    <state width="1345" height="119" key="GridCell.Tab.0.right" timestamp="1603735596862">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state width="1345" height="147" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1603202779195" />
+    <state width="1345" height="119" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1603735596862" />
     <state x="184" y="12" key="SettingsEditor" timestamp="1602849558323">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
     <state x="184" y="12" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1602849558323" />
-    <state x="379" y="194" key="com.intellij.ide.util.TipDialog" timestamp="1603202804385">
+    <state x="379" y="194" key="com.intellij.ide.util.TipDialog" timestamp="1603904962254">
       <screen x="0" y="0" width="1366" height="738" />
     </state>
-    <state x="379" y="194" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1603202804385" />
+    <state x="379" y="194" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1603904962254" />
   </component>
 </project>

@@ -86,7 +86,7 @@ class SayiBulmaca:
         for p in self.grid:
             print(p)
         # for i in self.grid:
-            # print(i)
+        # print(i)
 
     def Solver(self):
         nums = self.set.copy()
@@ -98,7 +98,7 @@ class SayiBulmaca:
             if [i[-1] for i in grid] == guide:
                 solve += 1
                 if solve > 1:
-                    return False
+                    return solve
         if solve == 1:
             return True
 
@@ -133,6 +133,16 @@ def main():
 
 
 # start1 = timeit.default_timer()
-# main()
+# a = main()
 # end1 = timeit.default_timer()
 # print(f"Süre: {end1-start1}")
+# for i in a:
+#     print(i)
+a = SayiBulmaca()
+a.grid = [[5, 1, 9, (0, -2)],
+          [3, 7, 8, (0, -1)],
+          [5, 0, 9, (0, -1)],
+          [9, 8, 1, (3, 0)]]
+a.set = {0, 1, 3, 5, 7, 8, 9}
+b = a.Solver()
+print(b)

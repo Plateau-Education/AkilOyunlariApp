@@ -73,7 +73,7 @@ class SayiBulmaca:
                 x = 0
                 y = 0
                 for j in answer:
-                    if j in i and j == i[answer.index(j)]:
+                    if j == i[answer.index(j)]:
                         x += 1
                     elif j in i:
                         y -= 1
@@ -117,7 +117,8 @@ def main():
         return main()
 
 
-# start1 = timeit.default_timer()
-# main()
-# end1 = timeit.default_timer()
-# print(f"Süre: {end1-start1}")
+start1 = timeit.default_timer()
+a = main()
+end1 = timeit.default_timer()
+print(f"Süre: {end1-start1}")
+
