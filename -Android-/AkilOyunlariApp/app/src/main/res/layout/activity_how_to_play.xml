@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f7f5fa"
+    tools:context=".HowToPlayActivity">
+
+
+    <ScrollView
+        android:id="@+id/scrollView_htp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:fadingEdgeLength="10dp"
+        android:requiresFadingEdge="vertical"
+        android:background="@color/f7f5fa">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/backButtonLL_htp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="3dp"
+                    android:onClick="goToGameList"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.1"
+                    app:layout_constraintVertical_bias="0.1">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/ic_arrowbutton" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/mohave_bold"
+                        android:padding="10dp"
+                        android:text="@string/Back"
+                        android:textColor="@color/near_black_blue"
+                        android:textSize="22sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/HowToPlayTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:fontFamily="@font/mohave_bold"
+                    android:text="@string/HowToPlay"
+                    android:textColor="@color/dark_red"
+                    android:textSize="47sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.497"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/backButtonLL_htp" />
+
+                <TextView
+                    android:id="@+id/gameNameTV_htp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:text="Hazine\nAvı"
+                    android:textColor="@color/near_black_blue"
+                    android:textSize="40sp"
+                    android:layout_margin="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/HowToPlayTV"
+                    app:layout_constraintVertical_bias="1.0" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_regular"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginEnd="50dp"
+                android:textSize="23sp"
+                android:text="Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content "/>
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="@color/yellowish"-->
+<!--                android:orientation="vertical" >-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:text="Easy"-->
+<!--                    android:textColor="@color/near_black_blue"-->
+<!--                    android:textSize="38sp"-->
+<!--                    android:fontFamily="@font/mohave_bold"/>-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    android:text="★Medium★"/>-->
+
+
+
+
+<!--            </LinearLayout>-->
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/sticky_button_gl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="howToPlayGameListOpen"
+        android:background="@drawable/ic_stickybutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/howToPlayGameListRL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_red"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:fadingEdgeLength="10dp"
+            android:requiresFadingEdge="vertical"
+            android:background="@color/dark_red">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/closebutton_htp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="howToPlayGameListClose"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_closebutton" />
+
+                <TextView
+                    android:id="@+id/sudoku_htpgl"
+                    android:tag="Sudoku"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Sudoku"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/hazineAvi_htpgl"
+                    android:tag="Hazine Avı"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Hazine Avı"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/patika_htpgl"
+                    android:tag="Patika"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Patika"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/sayiBulmaca_htpgl"
+                    android:tag="Sayı Bulmaca"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Sayı Bulmaca"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/sozcukTuru_htpgl"
+                    android:tag="Sözcük Türü"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Sözcük Türü"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/piramit_htpgl"
+                    android:tag="Piramit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Piramit"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/pentomino_htpgl"
+                    android:tag="Pentomino"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Pentomino"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/anagram_htpgl"
+                    android:tag="Anagram"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Anagram"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/kakuro_htpgl"
+                    android:tag="Kakuro"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Kakuro"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+                <TextView
+                    android:id="@+id/cit_htpgl"
+                    android:tag="Çit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="7dp"
+                    android:fontFamily="@font/mohave_regular"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:onClick="howToPlayChangeGame"
+                    android:text="Çit"
+                    android:textColor="@color/f7f5fa"
+                    android:textSize="37sp" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

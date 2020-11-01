@@ -1,0 +1,108 @@
+package com.yaquila.akiloyunlariapp;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Arrays;
+
+public class DifficultyActivity extends AppCompatActivity {
+
+    String gameName;
+
+    public void goToGameList(View view){
+        Intent intent = new Intent(this, GameListActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    public void goToGame(View view){
+        TextView tvdiff = (TextView) view;
+        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+        intent.putExtra("gameName", gameName);
+        intent.putExtra("difficulty",tvdiff.getText());
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
+    public void initDiffs(){
+        LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
+        for (int i = 0; i < 5; i++){
+            TextView currentTV = (TextView) ((RelativeLayout)diffList.getChildAt(i)).getChildAt(0);
+            currentTV.setBackground(null);
+            currentTV.setTextColor(getResources().getColor(R.color.near_black_blue));
+        }
+    }
+
+    public void arrangeDifficulties(){
+        LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
+        if (gameName.matches("Patika")){
+            int[] diffIds = {R.string.VeryEasy,R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
+            for (int i = 0; i < 5; i++){
+                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                currentTV.setText(diffIds[i]);
+                currentRL.setVisibility(View.VISIBLE);
+                currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 27);
+            }
+        }
+        else if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
+            int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
+            for (int i = 0; i < 4; i++){
+                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                currentTV.setText(diffIds[i]);
+                currentRL.setVisibility(View.VISIBLE);
+                currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
+            }
+        }
+        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9","Sudoku", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
+            int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
+            for (int i = 0; i < 3; i++){
+                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                currentTV.setText(diffIds[i]);}
+            }
+        else{
+            int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
+            for (int i = 0; i < 3; i++){
+                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                currentTV.setText(diffIds[i]);
+            }
+//            throw new IllegalArgumentException("Unknown game name: "+gameName);
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_difficulty);
+        initDiffs();
+        Intent intent = getIntent();
+        gameName = intent.getStringExtra("gameName");
+//        if (gameName!=null){
+////            Log.i("gameName", intent.getStringExtra("gameName"));
+//            Toast.makeText(this, gameName, Toast.LENGTH_SHORT).show();
+//        }
+        arrangeDifficulties();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+}

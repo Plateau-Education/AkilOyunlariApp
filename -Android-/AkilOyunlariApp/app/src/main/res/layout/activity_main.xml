@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_red"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/uygulama_ismi1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_bold"
+        android:gravity="bottom"
+        android:text="@string/app_name1"
+        android:textColor="@color/near_black_blue"
+        android:textSize="70sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.221" />
+
+    <TextView
+        android:id="@+id/uygulama_ismi2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name2"
+        android:textColor="@color/f7f5fa"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="@font/mohave_bold"
+        android:textSize="70sp"
+        app:layout_constraintBottom_toBottomOf="@id/circle_mm"
+        app:layout_constraintHorizontal_bias="0.124"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/uygulama_ismi1"
+        app:layout_constraintTop_toBottomOf="@+id/uygulama_ismi1"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/transparent_rectangle_mm"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@color/transparent" />
+
+        <TextView
+            android:id="@+id/playTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.9"
+            android:background="@color/yellowish"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="goToGameList"
+            android:text="@string/play_button"
+            android:textColor="@color/near_black_blue"
+            android:textSize="200sp" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/circle_mm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:onClick="goToGameList"
+        android:src="@drawable/main_menu_circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.35"
+        app:layout_constraintStart_toEndOf="@+id/uygulama_ismi2"
+        app:layout_constraintTop_toTopOf="@+id/uygulama_ismi2"
+        app:layout_constraintVertical_bias="0.09" />
+
+    <ImageView
+        android:id="@+id/playbutton_mm"
+        android:layout_width="40dp"
+        android:layout_height="47dp"
+        android:src="@drawable/ic_playbutton"
+        app:layout_constraintBottom_toBottomOf="@+id/circle_mm"
+        app:layout_constraintEnd_toEndOf="@+id/circle_mm"
+        app:layout_constraintHorizontal_bias="0.561"
+        app:layout_constraintStart_toStartOf="@+id/circle_mm"
+        app:layout_constraintTop_toTopOf="@+id/circle_mm"
+        app:layout_constraintVertical_bias="0.49" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AkilOyunlariApp</string>
+    <string name="app_name1">Akıl</string>
+    <string name="app_name2">Oyunları</string>
+    <string name="play_button">Oyna</string>
+    <string name="games">Oyunlar</string>
+    <string name="Back">Geri</string>
+    <string name="Difficulty">Zorluk</string>
+    <string name="HowToPlay">Nasıl Oynanır?</string>
+    <string name="Easy">Kolay</string>
+    <string name="Medium">Orta</string>
+    <string name="Hard">Zor</string>
+    <string name="VeryEasy">Çok Kolay</string>
+    <string name="VeryHard">Çok Zor</string>
+</resources>

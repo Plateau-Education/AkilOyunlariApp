@@ -118,6 +118,7 @@ class SayiBulmaca:
 #     else:
 #         return main()
 
+
 def main():
     game = SayiBulmaca()
     game.SetAnswer()
@@ -134,6 +135,7 @@ def main():
 
 # start1 = timeit.default_timer()
 # a = main()
+print(main())
 # end1 = timeit.default_timer()
 # print(f"Süre: {end1-start1}")
 # for i in a:

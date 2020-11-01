@@ -1,0 +1,755 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_blue_green"
+    tools:context=".GameListActivity">
+
+
+
+    <ScrollView
+        android:id="@+id/scrollView_gl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:fadingEdgeLength="10dp"
+        android:requiresFadingEdge="vertical"
+        android:background="@color/light_blue_green">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="45dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5">
+
+                <ImageView
+                    android:id="@+id/homebutton_gl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="goToMainMenu"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:padding="20dp"
+                    android:layout_margin="15dp"
+                    android:src="@drawable/ic_homebutton" />
+
+                <TextView
+                    android:id="@+id/gamesTV_gl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="100dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/mohave_bold"
+                    android:text="@string/games"
+                    android:textColor="@color/dark_blue_green"
+                    android:textSize="70sp" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:tag="1"
+                    android:onClick="extendListItem"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_extendbutton"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="15dp"/>
+
+                    <TextView android:id="@+id/sudokuTV_gl"
+                        android:text="Sudoku"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:tag="2"
+                    android:onClick="extendListItem"
+                    android:orientation="horizontal">
+
+                    <TextView android:id="@+id/hazineAviTV_gl"
+                        android:text="Hazine Avı"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|start"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+
+                        android:src="@drawable/ic_extendbutton" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="3">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_extendbutton"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="15dp"/>
+
+                    <TextView android:id="@+id/patikaTV_gl"
+                        android:text="Patika"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="4">
+
+                    <TextView android:id="@+id/sayiBulmacaTV_gl"
+                        android:text="Sayı Bulmaca"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|start"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+
+                        android:src="@drawable/ic_extendbutton" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_extendbutton"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="15dp"/>
+
+                    <TextView android:id="@+id/sozcukTuruTV_gl"
+                        android:text="Sözcük Türü"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="6">
+
+                    <TextView android:id="@+id/PiramitTV_gl"
+                        android:text="Piramit"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|start"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+
+                        android:src="@drawable/ic_extendbutton" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/piramit_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="7">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_extendbutton"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="15dp"/>
+
+                    <TextView android:id="@+id/pentominoTV_gl"
+                        android:text="Pentomino"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="8">
+
+                    <TextView android:id="@+id/anagramTV_gl"
+                        android:text="Anagram"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|start"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+
+                        android:src="@drawable/ic_extendbutton" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="9">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_extendbutton"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="15dp"/>
+
+                    <TextView android:id="@+id/kakuroTV_gl"
+                        android:text="Kakuro"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|right"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="7.5dp"
+                android:layout_marginTop="7.5dp"
+                android:padding="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:onClick="extendListItem"
+                    android:tag="10">
+
+                    <TextView android:id="@+id/citTV_gl"
+                        android:text="Çit"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center_vertical|start"
+                        android:textStyle="bold"
+                        android:textSize="35sp"
+                        android:textColor="@color/near_black_blue"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+
+                        android:src="@drawable/ic_extendbutton" />
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:onClick="goToDifficulty"
+                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:layout_weight="0.5">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:src="@drawable/ic_infobutton"
+                        android:onClick="goToHowtoplay"
+                        android:layout_marginEnd="15dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginRight="15dp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+            <!--        <ListView-->
+    <!--            android:id="@+id/gameList"-->
+    <!--            android:background="@color/light_blue_green"-->
+    <!--            android:cacheColorHint="@color/light_blue_green"-->
+    <!--            android:requiresFadingEdge="vertical"-->
+    <!--            android:fadingEdgeLength="10dp"-->
+    <!--            android:overScrollMode="never"-->
+    <!--            android:scrollbars="none"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            android:layout_margin="16dp"-->
+    <!--            android:layout_weight="0.5"-->
+    <!--            android:divider="@color/light_blue_green"-->
+    <!--            android:dividerHeight="15dp"-->
+    <!--            android:scrollbarTrackVertical="@color/light_blue_green" />-->
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

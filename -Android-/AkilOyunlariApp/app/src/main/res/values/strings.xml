@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AkilOyunlariApp</string>
+    <string name="app_name1">Mind</string>
+    <string name="app_name2">Puzzles</string>
+    <string name="play_button">Play</string>
+    <string name="games">Games</string>
+    <string name="Back">Back</string>
+    <string name="Difficulty">Difficulty</string>
+    <string name="HowToPlay">How To Play?</string>
+    <string name="Easy">Easy</string>
+    <string name="Medium">Medium</string>
+    <string name="Hard">Hard</string>
+    <string name="VeryEasy">Very Easy</string>
+    <string name="VeryHard">Very Hard</string>
+</resources>
