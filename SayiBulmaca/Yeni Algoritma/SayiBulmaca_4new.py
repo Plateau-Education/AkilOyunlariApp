@@ -184,3 +184,4 @@ for _ in range(100):
     print(a[1])
 endbase = timeit.default_timer()
 print(f"Toplam süre: {endbase - startbase} seconds.")
+input()

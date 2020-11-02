@@ -85,9 +85,17 @@ class SayiBulmaca:
                     continue
                 self.guide[b] = [x, y]
             if count == 0:
+                flag = 0
+                arti = 0
+                for n in self.guide:
+                    flag += n[0] - n[1]
+                    if n[1] == 0:
+                        arti += 1
+                if flag > 10 and arti == 0:
+                    return False
                 for i, row in enumerate(self.grid):
                     row.append(self.guide[i])
-            return
+            return True
 
     def isUnique(self, bas=0, gridx=None, setq=None, answerx=None, guidex=None):
         if self.solutions > 1:
@@ -157,14 +165,16 @@ def main():
     game = SayiBulmaca()
     game.SetAnswer()
     game.PerfectGrid()
-    game.ClueGuide()
-    game.isUnique()
-    if game.solutions == 1:
-        game.answer.append([5, 0])
-        if game.Solver():
-            return game.grid, game.answer
+    if game.ClueGuide():
+        game.isUnique()
+        if game.solutions == 1:
+            game.answer.append([5, 0])
+            if game.Solver():
+                return game.grid, game.answer
+            else:
+                print("hatalı")
+                return main()
         else:
-            print("hatalı")
             return main()
     else:
         return main()
@@ -181,4 +191,4 @@ for _ in range(100):
     print(a[1])
 endbase = timeit.default_timer()
 print(f"Toplam süre: {endbase - startbase} seconds.")
-
+input()

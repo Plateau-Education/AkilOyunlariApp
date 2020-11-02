@@ -1,0 +1,4 @@
+100 soru üretim süreleri
+5 li Toplam süre: 178.19496940000002 seconds.
+4 lü Toplam süre: 38.3124229 seconds.
+3 lü Toplam süre: 1.6027812000000001 seconds.
