@@ -12,6 +12,7 @@ class SayiBulmaca:
         self.grid = []
         self.set = set()
         self.solutions = 0
+        self.guide = [[0, 0], [0, 0], [0, 0]]
 
     def SetAnswer(self):
         for i in range(3):
@@ -57,84 +58,37 @@ class SayiBulmaca:
             self.PerfectGrid()
             return
 
-    def ClueGuide(self):
-        grid = deepcopy(self.grid)
-        answer = self.answer.copy()
-        for b, i in enumerate(grid):
-            x = 0
-            y = 0
-            for c, j in enumerate(answer):
-                if j == i[c]:
-                    x += 1
-                elif j in i:
-                    y -= 1
-            if x == 2:
-                rd.shuffle(self.grid[b])
-                self.ClueGuide()
-                continue
-            self.grid[b].append([x, y])
-        for i, row in enumerate(self.grid):
-            self.grid[i] = row[:4]
-        # grid = deepcopy(self.grid)
-        # answer = self.answer.copy()
-        # guide = [[0, 0]] * 3
-        # for i, row in enumerate(grid):
-        #     for j, n in enumerate(row):
-        #         if answer[j] == n:
-        #             guide[i][0] += 1
-        #         elif answer[j] in row:
-        #             guide[i][1] -= 1
-        #     if guide[i][0] == 2:
-        #         rd.shuffle(self.grid[i])
-        #         return self.ClueGuide()
-        # for i in range(3):
-        #     self.grid[i].append(guide[i])
-        # if rowx:
-        #     x = 0
-        #     y = 0
-        #     for j in range(3):
-        #         if grid[rowx][j] == answer[j]:
-        #             x += 1
-        #         elif j in grid[rowx]:
-        #             y -= 1
-        #     if x == 2:
-        #         rd.shuffle(self.grid[rowx])
-        #         self.ClueGuide(rowx)
-        #     else:
-        #         self.grid[rowx].append([x, y])
-        # else:
-        #     for i in range(3):
-        #         x = 0
-        #         y = 0
-        #         for j in range(3):
-        #             if grid[i][j] == answer[j]:
-        #                 x += 1
-        #             elif answer[j] in grid[i]:
-        #                 y -= 1
-        #         if x == 2:
-        #             rd.shuffle(self.grid[i])
-        #             self.ClueGuide(i)
-        #             continue
-        #         else:
-        #             self.grid[i].append([x, y])
-        # grid = deepcopy(self.grid)
-        # answer = self.answer.copy()
-        # sa = 0
-        # for row in self.grid:
-        #     x = 0
-        #     y = 0
-        #     for j, n in enumerate(row):
-        #         if n == answer[j]:
-        #             x += 1
-        #         elif n in answer:
-        #             y -= 1
-        #     if x == 2:
-        #         rd.shuffle(self.grid[sa])
-        #         self.ClueGuide()
-        #         continue
-        #     self.grid[sa].append([x, y])
-        #     self.grid[sa] = self.grid[sa][:4]
-        #     sa += 1
+    def ClueGuide(self, trygrid=None, tryanswer=None, count=0):
+        if trygrid:
+            for i in trygrid:
+                x = 0
+                y = 0
+                for j in tryanswer:
+                    if j in i and j == i[tryanswer.index(j)]:
+                        x += 1
+                    elif j in i:
+                        y -= 1
+                i[-1] = [x, y]
+        else:
+            grid = deepcopy(self.grid)
+            answer = self.answer.copy()
+            for b, i in enumerate(grid):
+                x = 0
+                y = 0
+                for c, j in enumerate(answer):
+                    if j == i[c]:
+                        x += 1
+                    elif j in i:
+                        y -= 1
+                if x == 3 or y == -3:
+                    rd.shuffle(self.grid[b])
+                    self.ClueGuide(count=1)
+                    continue
+                self.guide[b] = [x, y]
+            if count == 0:
+                for i, row in enumerate(self.grid):
+                    row.append(self.guide[i])
+            return
 
     def isUnique(self, bas=0, gridx=None, setq=None, answerx=None, guidex=None):
         if self.solutions > 1:
@@ -163,7 +117,7 @@ class SayiBulmaca:
                 answer[bas] = list(setx)[roundx]
             for i, row in enumerate(grid):
                 for j, n in enumerate(row):
-                    print(n, grid, setx, guide)
+                    # print(n, grid, setx, guide)
                     if n in setx:
                         if n == answer[j]:
                             guide[i][0] -= 1
@@ -184,19 +138,22 @@ class SayiBulmaca:
         # for i in self.grid:
             # print(i)
 
-    # def Solver(self):
-    #     nums = self.set.copy()
-    #     grid = [i for i in self.grid[:-1]]
-    #     guide = [i[-1] for i in self.grid[:-1]]
-    #     solve = 0
-    #     for a, b, c in itertools.permutations(nums, 3):
-    #         self.ClueGuide(grid, [a, b, c])
-    #         if [i[-1] for i in grid] == guide:
-    #             solve += 1
-    #             if solve > 1:
-    #                 return False
-    #     if solve == 1:
-    #         return True
+    def Solver(self):
+        nums = self.set.copy()
+        grid = [i[:-1] for i in self.grid]
+        for i in grid:
+            i.append([0, 0])
+        guide = [i[-1] for i in self.grid]
+        solve = 0
+        for a, b, c in itertools.permutations(nums, 3):
+            if a != 0:
+                self.ClueGuide(grid, [a, b, c])
+                if [i[-1] for i in grid] == guide:
+                    solve += 1
+                    if solve > 1:
+                        return False
+        if solve == 1:
+            return True
 
 
 # store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "a+")
@@ -221,21 +178,24 @@ def main():
     game.ClueGuide()
     game.isUnique()
     if game.solutions == 1:
-        game.answer.append((3, 0))
-        return game.grid, game.answer
+        game.answer.append([3, 0])
+        if game.Solver():
+            return game.grid, game.answer
+        else:
+            print("hatalı")
+            return main()
     else:
-        # print(game.solutions)
-        # for i in game.grid:
-        #     print(i)
-        # print(game.answer)
         return main()
 
 
+startbase = timeit.default_timer()
 for _ in range(100):
-    # start1 = timeit.default_timer()
+    start1 = timeit.default_timer()
     a = main()
-    # end1 = timeit.default_timer()
-    # print(f"Süre: {end1-start1}")
-    # for i in a[0]:
-    #     print(i)
-    # print(a[1])
+    end1 = timeit.default_timer()
+    print(f"Toplam süre: {end1 - start1} seconds.")
+    for i in a[0]:
+        print(i)
+    print(a[1])
+endbase = timeit.default_timer()
+print(f"Toplam süre: {endbase - startbase} seconds.")

@@ -133,18 +133,13 @@ def main():
         return main()
 
 
-# start1 = timeit.default_timer()
-# a = main()
-print(main())
-# end1 = timeit.default_timer()
-# print(f"Süre: {end1-start1}")
-# for i in a:
-#     print(i)
-a = SayiBulmaca()
-a.grid = [[5, 1, 9, (0, -2)],
-          [3, 7, 8, (0, -1)],
-          [5, 0, 9, (0, -1)],
-          [9, 8, 1, (3, 0)]]
-a.set = {0, 1, 3, 5, 7, 8, 9}
-b = a.Solver()
-print(b)
+startbase = timeit.default_timer()
+for _ in range(100):
+    # start1 = timeit.default_timer()
+    a = main()
+    # end1 = timeit.default_timer()
+    # print(f"Süre: {end1-start1}")
+    # for i in a:
+    #     print(i)
+endbase = timeit.default_timer()
+print(f"Toplam süre: {endbase - startbase} seconds.")
