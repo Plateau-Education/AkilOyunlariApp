@@ -12,4 +12,8 @@
     <string name="Hard">Hard</string>
     <string name="VeryEasy">Very Easy</string>
     <string name="VeryHard">Very Hard</string>
+    <string name="Undo">Undo</string>
+    <string name="Delete">Delete</string>
+    <string name="ResetUnderlined"><u>Reset</u></string>
+    <string name="ResetNormal">Reset</string>
 </resources>

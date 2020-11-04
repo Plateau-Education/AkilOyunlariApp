@@ -62,7 +62,7 @@ public class GameListActivity extends AppCompatActivity {
             ll.setBackgroundColor(getResources().getColor(R.color.yellowish));
             rl.setVisibility(View.VISIBLE);
             currentExtendedRow = rowNum;
-            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
+//            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
 
             final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView_gl);
             scrollView.post(new Runnable() {

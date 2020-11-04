@@ -13,4 +13,9 @@
     <string name="Hard">Zor</string>
     <string name="VeryEasy">Çok Kolay</string>
     <string name="VeryHard">Çok Zor</string>
+    <string name="Undo">Geri Al</string>
+    <string name="Delete">Sil</string>
+    <string name="ResetUnderlined"><u>Sıfırla</u></string>
+    <string name="ResetNormal">Sıfırla</string>
+
 </resources>
