@@ -50,10 +50,12 @@ public class GameActivity extends AppCompatActivity {
     String gameName;
     String difficulty;
     int clickedBox = -1;
+    int gridSize = 3;
     List<List<Integer>> operations = new ArrayList<>();
     boolean undoing=false;
     boolean[] draftModeActive={false,false,false};
     JSONArray answer;
+    LoadingDialog loadingDialog;
 
 
     public void wannaLeaveDialog(View view){
@@ -114,7 +116,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
         if(clickedBox != -1 && draftModeActive[clickedBox]){
-            for(int i = 1; i<10; i++){
+            for(int i = 0; i<10; i++){
                 ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
             }
         }
@@ -135,6 +137,7 @@ public class GameActivity extends AppCompatActivity {
                 currentBox.setText(btn.getTag().toString());
             }
             operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
+            checkAnswer(null);
             Log.i("operations",operations+"");
         }
     }
@@ -206,6 +209,51 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    public void checkAnswer(View view){
+        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        boolean checking=true;
+        for(int i = 0; i < gridSize; i++){
+            try {
+                if(!((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().equals(answer.get(i).toString())){
+                    checking=false;
+                }
+                Log.i("checking",((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().toString()+" / "+(answer.get(i).toString()));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        Log.i("check",checking+"  "+answer);
+        if(checking){
+            LayoutInflater factory = LayoutInflater.from(this);
+            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
+            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+            correctDialog.setView(leaveDialogView);
+
+            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //your business logic
+                    Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+                    intent.putExtra("gameName",gameName);
+                    intent.putExtra("difficulty",difficulty);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.enter, R.anim.exit);
+                    correctDialog.dismiss();
+                }
+            });
+            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                    correctDialog.dismiss();
+                }
+            });
+            correctDialog.show();
+        }
+    }
+
     public void draftClicked(View view){
         GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
@@ -214,14 +262,14 @@ public class GameActivity extends AppCompatActivity {
             if(currentClickedBox.getText().toString().length() == 1){
                 if(currentClickedBox.getTextSize() == 25){
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 1; i<10; i++){
+                    for(int i = 0; i<10; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                     }
                     draftModeActive[clickedBox] = true;
                 }
                 else{
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 1; i<10; i++){
+                    for(int i = 0; i<10; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                     }
                     draftModeActive[clickedBox] = false;
@@ -230,14 +278,14 @@ public class GameActivity extends AppCompatActivity {
             else if (currentClickedBox.getText().toString().length() == 0) {
                 if (draftModeActive[clickedBox]) {
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 1; i < 10; i++) {
+                    for (int i = 0; i < 10; i++) {
                         ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     }
                     draftModeActive[clickedBox] = false;
                 }
                 else{
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 1; i<10; i++){
+                    for(int i = 0; i<10; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                     }
                     draftModeActive[clickedBox] = true;
@@ -323,7 +371,9 @@ public class GameActivity extends AppCompatActivity {
                 }
                 TextView guideanswer = (TextView) gridLayout.findViewWithTag("answerguide");
                 guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
-                answer = (JSONArray) answer.remove(answer.length()-1);
+                answer.remove(answer.length()-1);
+
+                loadingDialog.dismissDialog();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -331,6 +381,10 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    public void loadingDialogFunc(){
+        loadingDialog = new LoadingDialog(GameActivity.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+        loadingDialog.startLoadingAnimation();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -343,8 +397,10 @@ public class GameActivity extends AppCompatActivity {
             setContentView(R.layout.activity_game_sayibulmaca);
             GetRequest getRequest = new GetRequest();
             getRequest.execute("https://akiloyunlariapp.herokuapp.com/SayiBulmaca3","fx!Ay:;<p6Q?C8N{");
+            loadingDialogFunc();
         }
         else {
+            Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
             throw new IllegalArgumentException("Not Sayı Bulmaca");
         }
 

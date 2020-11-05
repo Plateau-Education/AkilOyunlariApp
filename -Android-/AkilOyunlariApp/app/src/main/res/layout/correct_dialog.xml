@@ -5,7 +5,7 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="30dp"
@@ -15,36 +15,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/do_you_want_to_leave"
-            android:id="@+id/leaveDialogText"
+            android:text="@string/Correct"
+            android:textAllCaps="true"
+            android:id="@+id/correctDialogText"
             android:layout_gravity="center"
             android:gravity="center"
-            android:lines="2"
-            android:maxLines="2"
-            android:textColor="@color/near_black_blue"
+            android:textColor="@color/light_red"
             android:fontFamily="@font/mohave_bold"
-            android:textSize="36sp"/>
+            android:textSize="50sp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"            >
+            android:orientation="horizontal">
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/leaveDialogNo"
+                android:id="@+id/correctDialogGameMenu"
                 android:background="@drawable/nums_gl_bg"
                 android:textSize="25sp"
-                android:fontFamily="@font/mohave_bold"
                 android:layout_weight="1"
                 android:textColor="@color/f7f5fa"
                 android:padding="10dp"
+                android:fontFamily="@font/mohave_bold"
                 android:layout_marginEnd="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
-                android:text="@string/no"/>
+                android:text="@string/GameMenu"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -53,15 +52,15 @@
                 android:padding="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
-                android:id="@+id/leaveDialogYes"
+                android:id="@+id/correctDialogNext"
                 android:textColor="@color/f7f5fa"
                 android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
                 android:backgroundTint="@color/light_red"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
                 android:textSize="22sp"
-                android:fontFamily="@font/mohave_bold"
-                android:text="@string/yes"/>
+                android:text="@string/Next"/>
 
 
 

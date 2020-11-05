@@ -485,14 +485,19 @@
                 app:layout_column="3"
                 app:layout_row="1" />
 
-            <ImageButton
-                android:id="@+id/nums3_draft"
+            <Button
+                android:id="@+id/nums3_0"
+                android:tag="0"
+                android:onClick="numClicked"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_margin="5dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_draftbutton"
                 android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
                 app:layout_column="4"
                 app:layout_row="1" />
 

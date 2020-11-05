@@ -20,5 +20,9 @@
     <string name="do_you_want_to_leave">Çıkmak istiyor musun?</string>
     <string name="no">Hayır</string>
     <string name="yes">Evet</string>
+    <string name="loading">Yükleniyor...</string>
+    <string name="Correct">Doğru</string>
+    <string name="Next">Sonraki</string>
+    <string name="GameMenu">Oyun Menüsü</string>
 
 </resources>
