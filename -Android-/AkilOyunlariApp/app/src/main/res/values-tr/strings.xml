@@ -23,6 +23,6 @@
     <string name="loading">Yükleniyor...</string>
     <string name="Correct">Doğru</string>
     <string name="Next">Sonraki</string>
-    <string name="GameMenu">Oyun Menüsü</string>
+    <string name="GameMenu">Menü</string>
 
 </resources>

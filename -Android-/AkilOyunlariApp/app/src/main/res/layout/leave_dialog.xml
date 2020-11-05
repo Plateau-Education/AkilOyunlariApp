@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/leaveDialogNo"
                 android:background="@drawable/nums_gl_bg"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:fontFamily="@font/mohave_bold"
                 android:layout_weight="1"
                 android:textColor="@color/f7f5fa"
