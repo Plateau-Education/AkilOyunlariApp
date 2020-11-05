@@ -1,7 +1,5 @@
 # An algorithm to generate "Sayı Bulmaca"
 import random as rd
-import timeit
-import itertools
 from copy import deepcopy
 
 
@@ -131,46 +129,7 @@ class SayiBulmaca:
             self.isUnique(bas=bas + 1, gridx=grid, setq=setx, answerx=answer, guidex=guide)
         return
 
-    def PrintGrid(self):
-        # self.grid[-1].append((3, 0))
-        for p in self.grid:
-            print(p)
-        # for i in self.grid:
-            # print(i)
 
-    def Solver(self):
-        nums = self.set.copy()
-        grid = [i[:-1] for i in self.grid]
-        for i in grid:
-            i.append([0, 0])
-        guide = [i[-1] for i in self.grid]
-        solve = 0
-        for a, b, c in itertools.permutations(nums, 3):
-            if a != 0:
-                self.ClueGuide(grid, [a, b, c])
-                if [i[-1] for i in grid] == guide:
-                    solve += 1
-                    if solve > 1:
-                        return False
-        if solve == 1:
-            return True
-
-
-# store = open("C:/Users/Proper/PycharmProjects/untitled/Storage.txt", "a+")
-
-
-# def main():
-#     game = SayiBulmaca()
-#     game.SetAnswer()
-#     game.PerfectGrid()
-#     game.ClueGuide()
-#     for u in game.grid:
-#         game.grid[game.grid.index(u)] = u[:4]
-#     if game.Solver():
-#         game.PrintGrid()
-#     else:
-#         return main()
-# game.grid[game.grid.index(u)]
 def main():
     game = SayiBulmaca()
     game.SetAnswer()
@@ -179,24 +138,7 @@ def main():
     game.isUnique()
     if game.solutions == 1:
         game.answer.append([3, 0])
-        if game.Solver():
-            return game.grid, game.answer
-        else:
-            print("hatalı")
-            return main()
+        game.grid.append(game.answer)
+        return game.grid
     else:
         return main()
-
-
-startbase = timeit.default_timer()
-for _ in range(100):
-    start1 = timeit.default_timer()
-    a = main()
-    end1 = timeit.default_timer()
-    print(f"Toplam süre: {end1 - start1} seconds.")
-    for i in a[0]:
-        print(i)
-    print(a[1])
-endbase = timeit.default_timer()
-print(f"Toplam süre: {endbase - startbase} seconds.")
-input()
