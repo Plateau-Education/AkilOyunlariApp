@@ -80,7 +80,7 @@
         android:gravity="center"
         android:fontFamily="@font/mohave_medium"
         android:text="@string/ResetUnderlined"
-        android:textColor="@color/near_black_blue"
+        android:textColor="@color/reset_selector_tvcolor"
         android:textSize="20sp"
         android:clickable="true"
         android:focusable="true"
