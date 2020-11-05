@@ -3,9 +3,7 @@ package com.yaquila.akiloyunlariapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -29,7 +27,15 @@ public class DifficultyActivity extends AppCompatActivity {
         TextView tvdiff = (TextView) view;
         tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
         tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
-        Intent intent = new Intent(getApplicationContext(), GameActivity.class);
+        Intent intent = null;
+        if (gameName.matches("Sayı Bulmaca")) {
+            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
+        }
+        else{
+//            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
+            Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
+            throw new IllegalArgumentException("Not Sayı Bulmaca");
+        }
         intent.putExtra("gameName", gameName);
         intent.putExtra("difficulty",tvdiff.getText());
         startActivity(intent);
@@ -40,8 +46,8 @@ public class DifficultyActivity extends AppCompatActivity {
         LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
         for (int i = 0; i < 5; i++){
             TextView currentTV = (TextView) ((RelativeLayout)diffList.getChildAt(i)).getChildAt(0);
-            currentTV.setBackground(null);
-            currentTV.setTextColor(getResources().getColor(R.color.near_black_blue));
+            currentTV.setBackground(getResources().getDrawable(R.drawable.diff_selector_bg));
+            currentTV.setTextColor(getResources().getColorStateList(R.color.diff_selector_tvcolor));
         }
     }
 

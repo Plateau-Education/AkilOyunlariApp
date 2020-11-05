@@ -5,7 +5,7 @@
     android:background="@color/f7f5fa"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivity">
+    tools:context=".GameActivitySayiBulmaca">
 
     <LinearLayout
         android:id="@+id/backButtonLL_game"
@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/mohave_bold"
-        android:text="@string/Easy"
+        android:text="@string/Hard"
         android:textColor="@color/near_black_blue"
         android:textSize="36sp"
         app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game"
@@ -105,127 +105,335 @@
         app:layout_constraintVertical_bias="0.42">
 
         <TextView
-            android:id="@+id/grid3_00"
+            android:id="@+id/grid5_00"
             android:tag="00"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="0"
             app:layout_row="0" />
 
         <TextView
-            android:id="@+id/grid3_10"
+            android:id="@+id/grid5_10"
             android:tag="10"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="1"
             app:layout_row="0" />
 
         <TextView
-            android:id="@+id/grid3_20"
+            android:id="@+id/grid5_20"
             android:tag="20"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="2"
             app:layout_row="0" />
 
         <TextView
-            android:id="@+id/grid3_01"
+            android:id="@+id/grid5_30"
+            android:tag="30"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="0" />
+
+        <TextView
+            android:id="@+id/grid5_40"
+            android:tag="40"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="0" />
+
+        <TextView
+            android:id="@+id/grid5_01"
             android:tag="01"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="0"
             app:layout_row="1" />
 
         <TextView
-            android:id="@+id/grid3_11"
+            android:id="@+id/grid5_11"
             android:tag="11"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="1"
             app:layout_row="1" />
 
         <TextView
-            android:id="@+id/grid3_21"
+            android:id="@+id/grid5_21"
             android:tag="21"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="2"
             app:layout_row="1" />
 
         <TextView
-            android:id="@+id/grid3_02"
-            android:tag="02"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:id="@+id/grid5_31"
+            android:tag="31"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid5_41"
+            android:tag="41"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid5_02"
+            android:tag="02"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
             app:layout_column="0"
             app:layout_row="2" />
 
         <TextView
-            android:id="@+id/grid3_12"
+            android:id="@+id/grid5_12"
             android:tag="12"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="1"
             app:layout_row="2" />
 
         <TextView
-            android:id="@+id/grid3_22"
+            android:id="@+id/grid5_22"
             android:tag="22"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="2"
             app:layout_row="2" />
 
         <TextView
-            android:id="@+id/grid3_03"
+            android:id="@+id/grid5_32"
+            android:tag="32"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid5_42"
+            android:tag="42"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid5_03"
+            android:tag="03"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_13"
+            android:tag="13"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_23"
+            android:tag="23"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_33"
+            android:tag="33"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_43"
+            android:tag="43"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_04"
+            android:tag="04"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="0"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_14"
+            android:tag="14"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_24"
+            android:tag="24"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_34"
+            android:tag="34"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_44"
+            android:tag="44"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_05"
             android:tag="answer0"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:clickable="true"
             android:onClick="changeClicked"
             android:background="@drawable/strokebg_topbottomleft"
@@ -233,16 +441,16 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="0"
-            app:layout_row="3"
+            app:layout_row="5"
             android:focusable="true" />
 
         <TextView
-            android:id="@+id/grid3_13"
+            android:id="@+id/grid5_15"
             android:tag="answer1"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:clickable="true"
             android:onClick="changeClicked"
             android:background="@drawable/strokebg_topbottom"
@@ -250,16 +458,16 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="1"
-            app:layout_row="3"
+            app:layout_row="5"
             android:focusable="true" />
 
         <TextView
-            android:id="@+id/grid3_23"
+            android:id="@+id/grid5_25"
             android:tag="answer2"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:clickable="true"
             android:onClick="changeClicked"
             android:background="@drawable/strokebg_topbottom"
@@ -267,62 +475,122 @@
             android:gravity="center"
             android:text=""
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
+            android:textSize="20sp"
             app:layout_column="2"
-            app:layout_row="3"
+            app:layout_row="5"
             android:focusable="true" />
 
         <TextView
-            android:id="@+id/grid3_guide0"
+            android:id="@+id/grid5_35"
+            android:tag="answer3"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:onClick="changeClicked"
+            android:background="@drawable/strokebg_topbottom"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="5"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/grid5_45"
+            android:tag="answer4"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="true"
+            android:onClick="changeClicked"
+            android:background="@drawable/strokebg_topbottom"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="4"
+            app:layout_row="5"
+            android:focusable="true" />
+
+        <TextView
+            android:id="@+id/grid5_guide0"
             android:tag="g0"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/strokebg_shallow"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
-            app:layout_column="3"
+            android:textSize="20sp"
+            app:layout_column="5"
             app:layout_row="0" />
 
         <TextView
-            android:id="@+id/grid3_guide1"
+            android:id="@+id/grid5_guide1"
             android:tag="g1"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/strokebg_shallow"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
-            app:layout_column="3"
+            android:textSize="20sp"
+            app:layout_column="5"
             app:layout_row="1" />
 
         <TextView
-            android:id="@+id/grid3_guide2"
+            android:id="@+id/grid5_guide2"
             android:tag="g2"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/strokebg_shallow"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
-            app:layout_column="3"
+            android:textSize="20sp"
+            app:layout_column="5"
             app:layout_row="2" />
 
         <TextView
-            android:id="@+id/grid3_guide3"
+            android:id="@+id/grid5_guide3"
+            android:tag="g3"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/strokebg_shallow"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_guide4"
+            android:tag="g4"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:background="@drawable/strokebg_shallow"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_guide5"
             android:tag="answerguide"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
             android:background="@drawable/strokebg_shallow_topleft"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="25sp"
-            app:layout_column="3"
-            app:layout_row="3" />
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="5" />
 
     </androidx.gridlayout.widget.GridLayout>
 
@@ -342,7 +610,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/nums3_1"
+                android:id="@+id/nums5_1"
                 android:tag="1"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -358,7 +626,7 @@
                 app:layout_row="0" />
 
             <Button
-                android:id="@+id/nums3_2"
+                android:id="@+id/nums5_2"
                 android:tag="2"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -374,7 +642,7 @@
                 app:layout_row="0" />
 
             <Button
-                android:id="@+id/nums3_3"
+                android:id="@+id/nums5_3"
                 android:tag="3"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -390,7 +658,7 @@
                 app:layout_row="0" />
 
             <Button
-                android:id="@+id/nums3_4"
+                android:id="@+id/nums5_4"
                 android:tag="4"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -406,7 +674,7 @@
                 app:layout_row="0" />
 
             <Button
-                android:id="@+id/nums3_5"
+                android:id="@+id/nums5_5"
                 android:tag="5"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -422,7 +690,7 @@
                 app:layout_row="0" />
 
             <Button
-                android:id="@+id/nums3_6"
+                android:id="@+id/nums5_6"
                 android:tag="6"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -438,7 +706,7 @@
                 app:layout_row="1" />
 
             <Button
-                android:id="@+id/nums3_7"
+                android:id="@+id/nums5_7"
                 android:tag="7"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -454,7 +722,7 @@
                 app:layout_row="1" />
 
             <Button
-                android:id="@+id/nums3_8"
+                android:id="@+id/nums5_8"
                 android:tag="8"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -470,7 +738,7 @@
                 app:layout_row="1" />
 
             <Button
-                android:id="@+id/nums3_9"
+                android:id="@+id/nums5_9"
                 android:tag="9"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
@@ -486,7 +754,7 @@
                 app:layout_row="1" />
 
             <Button
-                android:id="@+id/nums3_0"
+                android:id="@+id/nums5_0"
                 android:tag="0"
                 android:onClick="numClicked"
                 android:layout_width="44dp"
