@@ -6,6 +6,7 @@ import tkinter.font as tkFont
 class SozcukTuru:
     def __init__(self):
         self.zorluk = "Easy"
+        self.tkinterOn = False
 
     def create_grid(self, canvas, genislik):
         if self.zorluk == "Easy":
@@ -41,7 +42,7 @@ class SozcukTuru:
         kelimeler = []
         for harf_sayisi in range(self.harf_range[0], self.harf_range[1] + 1):
             f = open(
-                f"C:\\Users\\ezrea\\Documents\\GitHub\\AkilOyunlariApp\\Kelime Oyunları\\{harf_sayisi}.txt",
+                f"{harf_sayisi}.txt",
                 encoding="utf-8",
             )
             lst = f.read()

@@ -422,8 +422,4 @@ def main(levelx):
         tek_cozumlu = q.tek_cozum()
         if tek_cozumlu:
             return [q.grid, answer]
-        # else:
-        #     print(tek_cozumlu)
-# end = timeit.default_timer()
-# print(f"Toplam süre: {end - start} seconds.")
-# print(main(level))
+

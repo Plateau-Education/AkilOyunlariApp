@@ -261,4 +261,8 @@ def main(size):
     return soru.class_main()
 
 
-# print(main(5))
+start = timeit.default_timer()
+for _ in range(10):
+    print(main(6))
+end = timeit.default_timer()
+print(end - start)

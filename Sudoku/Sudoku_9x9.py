@@ -437,6 +437,3 @@ def main(levelx):
         if tek_cozumlu:
             return [q.grid, answer]
 
-
-# print(main("Hard"))
-
