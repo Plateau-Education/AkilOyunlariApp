@@ -17,5 +17,8 @@
     <string name="Delete">Sil</string>
     <string name="ResetUnderlined"><u>Sıfırla</u></string>
     <string name="ResetNormal">Sıfırla</string>
+    <string name="do_you_want_to_leave">Çıkmak istiyor musun?</string>
+    <string name="no">Hayır</string>
+    <string name="yes">Evet</string>
 
 </resources>

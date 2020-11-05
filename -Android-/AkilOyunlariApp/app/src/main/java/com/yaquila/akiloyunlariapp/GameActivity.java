@@ -1,18 +1,24 @@
 package com.yaquila.akiloyunlariapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AlignmentSpan;
+import android.util.JsonReader;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -23,7 +29,8 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +40,7 @@ import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,10 +53,32 @@ public class GameActivity extends AppCompatActivity {
     List<List<Integer>> operations = new ArrayList<>();
     boolean undoing=false;
     boolean[] draftModeActive={false,false,false};
+    JSONArray answer;
 
 
     public void wannaLeaveDialog(View view){
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View leaveDialogView = factory.inflate(R.layout.leave_dialog, null);
+        final AlertDialog leaveDialog = new AlertDialog.Builder(this).create();
+        leaveDialog.setView(leaveDialogView);
 
+        leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //your business logic
+                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialogView.findViewById(R.id.leaveDialogNo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialog.show();
     }
 
     public void changeClicked(View view){
@@ -225,7 +255,7 @@ public class GameActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 String result = "";
-                URL reqURL = new URL(strings[0] + "?" + "Info=1&" +strings[1]);
+                URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -257,45 +287,44 @@ public class GameActivity extends AppCompatActivity {
             return null;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            JSONArray jsonArray = null;
-            int userRank = 0;
+//            JSONObject jsonObject = null;
+            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
             try {
-//                jsonArray = new JSONArray(result);
-//                Log.i("json",jsonArray.toString());
-//                ImageView iv = (ImageView) findViewById(R.id.leaderboardBackToMainMenuIcon);
-//                RelativeLayout rl = (RelativeLayout)  iv.getParent();
-//                int length = 10;
-//                if (length > jsonArray.length()){
-//                    length = jsonArray.length();
-//                }
-//                for (int i = 0; i<length; i++){
-//                    JSONObject aUser = jsonArray.getJSONObject(i);
-//                    double highscore = aUser.getDouble("highscore");
-//                    String username = aUser.getString("username");
-//
-//                    LinearLayout ll = (LinearLayout) ((LinearLayout) rl.getParent()).findViewWithTag(Integer.toString(i));
-//                    TextView tvName;
-//                    TextView tvScore;
-//                    if (i==0){
-//                        tvName = (TextView) ((LinearLayout)(ll.getChildAt(1))).getChildAt(1);
-//                        tvScore = (TextView) ((LinearLayout)(ll.getChildAt(1))).getChildAt(3);
-//
-//                    }
-//                    else{
-//                        tvName = (TextView) ((LinearLayout)(ll.getChildAt(0))).getChildAt(1);
-//                        tvScore = (TextView) ((LinearLayout)(ll.getChildAt(0))).getChildAt(3);
-//                    }
-//                    tvName.setText(username);
-//                    tvScore.setText(Double.toString(highscore));
-//                    SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila04.typeagainst",MODE_PRIVATE);
-//                    if(aUser.getString("_id").matches(sharedPreferences.getString("id","none"))){
-//                        userRank = i+1;
-//                    }
-//                }
+                org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
+//                JSONObject jsonObject = (JSONObject) parser.parse(result);
+//                jsonArray = new JSONObject();
+//                Log.i("jsonArray",jsonArray.toString());
+//                JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(jsonArray.getString(0));
+                JSONArray gridArray = (JSONArray) ((JSONArray)((JSONArray)((JSONArray)jb.get("Info")).get(0)).get(0)).get(0);
+                answer = (JSONArray) gridArray.get(gridArray.length()-1);
+                Log.i("jsonGrid",""+gridArray);
+                for (int i = 0; i < gridArray.length()-1; i++){
+                    JSONArray row = (JSONArray) gridArray.get(i);
+                    for (int j = 0; j< row.length()-1; j++){
+                        TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j)+ i);
+                        tv.setText(row.get(j).toString());
+                    }
+                    JSONArray rguide = (JSONArray)row.get(row.length()-1);
+                    TextView rGuideTV = (TextView) gridLayout.findViewWithTag("g"+i);
+                    if(rguide.get(0).toString().equals("0")){
+                        rGuideTV.setText(rguide.get(1).toString());
+                    }
+                    else if(rguide.get(1).toString().equals("0")){
+                        rGuideTV.setText("+"+rguide.get(0).toString());
+                    }
+                    else{
+                        rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
+                    }
+                }
+                TextView guideanswer = (TextView) gridLayout.findViewWithTag("answerguide");
+                guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
+                answer = (JSONArray) answer.remove(answer.length()-1);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -319,15 +348,16 @@ public class GameActivity extends AppCompatActivity {
             throw new IllegalArgumentException("Not Sayı Bulmaca");
         }
 
-        if (gameName != null && difficulty != null){
-            Toast.makeText(this, gameName+" / "+difficulty, Toast.LENGTH_SHORT).show();
-        }
+//        if (gameName != null && difficulty != null){
+//            Toast.makeText(this, gameName+" / "+difficulty, Toast.LENGTH_SHORT).show();
+//        }
 
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+//        super.onBackPressed();
+        wannaLeaveDialog(null);
+//        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

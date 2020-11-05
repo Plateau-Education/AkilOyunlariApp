@@ -16,4 +16,7 @@
     <string name="Delete">Delete</string>
     <string name="ResetUnderlined"><u>Reset</u></string>
     <string name="ResetNormal">Reset</string>
+    <string name="do_you_want_to_leave">Do you want to leave?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
 </resources>
