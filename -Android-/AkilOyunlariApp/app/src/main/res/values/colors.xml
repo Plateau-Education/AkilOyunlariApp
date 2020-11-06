@@ -13,4 +13,6 @@
     <color name="dark_red">#903531</color>
     <color name="shallow_near_black_blue">#1C162C42</color>
     <color name="shallow2_near_black_blue">#80162C42</color>
+    <color name="shallow_light_red">#99E46C66</color>
+    <color name="shallow_light_blue_green">#999BCCC5</color>
 </resources>
