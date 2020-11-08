@@ -348,11 +348,6 @@ class HazineAvi:
         return cozulmus
 
 
-soru = HazineAvi()
-soru.boyut = 10
-print(np.matrix(soru.class_main()))
-
-
 def main(size, count):
     datacontrol = set()
     data = []
