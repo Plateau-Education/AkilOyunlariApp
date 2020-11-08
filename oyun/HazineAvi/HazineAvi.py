@@ -235,15 +235,32 @@ class HazineAvi:
 
         return grid
 
+    def sayi_adedi(self, grid):
+        return len(
+            [
+                grid[y][x]
+                for y in range(self.boyut)
+                for x in range(self.boyut)
+                if grid[y][x] > 0
+            ]
+        )
+
     def sayi_azaltma2(self):
-        if self.boyut == 8:
+        if self.boyut == 5:
+            cozulmus = self.sayi_belirleme(
+                self.elmas_yerlestirme(6, 13, np.zeros((self.boyut, self.boyut)))
+            )
+            turKatsayisi = 2
+        elif self.boyut == 8:
             cozulmus = self.sayi_belirleme(
                 self.elmas_yerlestirme(15, 30, np.zeros((self.boyut, self.boyut)))
             )
+            turKatsayisi = 2.25
         elif self.boyut == 10:
             cozulmus = self.sayi_belirleme(
                 self.elmas_yerlestirme(25, 40, np.zeros((self.boyut, self.boyut)))
             )
+            turKatsayisi = 2.5
         else:
             raise ValueError("Boyut 5, 8 ya da 10 olabilir.")
         cozulmemis = []
@@ -269,16 +286,17 @@ class HazineAvi:
             grid[rndIndex[0]][rndIndex[1]] = 0
             self.solutions = []
             if self.solver2(copy.deepcopy(grid)) == "Wrong Question":
-                if tur >= self.boyut * 3 - 12 and self.isAllEmptyHasNumNeighbor(
-                    previous_grid
-                ):
+                if tur >= self.sayi_adedi(
+                    cozulmemis
+                ) // turKatsayisi and self.isAllEmptyHasNumNeighbor(previous_grid):
+                    print(self.sayi_adedi(cozulmemis), f"tur:{tur}")
                     cozulmemis = copy.deepcopy(previous_grid)
                     self.solver2(previous_grid)
                     cozulmus = previous_grid
                     return cozulmus, cozulmemis
                 break
             previous_grid = copy.deepcopy(grid)
-        self.sayi_azaltma2()
+        return self.sayi_azaltma2()
 
     def sayi_azaltma1(self):
         cozulmus = self.sayi_belirleme(
@@ -323,15 +341,16 @@ class HazineAvi:
     def class_main(self):
         while True:
             try:
-                if self.boyut == 5:
-                    cozulmus, cozulmemis = self.sayi_azaltma1()
-
-                else:
-                    cozulmus, cozulmemis = self.sayi_azaltma2()
-                    break
+                cozulmus, cozulmemis = self.sayi_azaltma2()
+                break
             except:
                 pass
         return cozulmus
+
+
+soru = HazineAvi()
+soru.boyut = 10
+print(np.matrix(soru.class_main()))
 
 
 def main(size, count):

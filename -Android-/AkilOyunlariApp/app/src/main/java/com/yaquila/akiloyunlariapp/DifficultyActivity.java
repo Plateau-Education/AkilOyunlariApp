@@ -31,10 +31,13 @@ public class DifficultyActivity extends AppCompatActivity {
         if (gameName.matches("Sayı Bulmaca")) {
             intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
         }
+        else if (gameName.matches("Piramit")){
+            intent = new Intent(getApplicationContext(), GameActivityPiramit.class);
+        }
         else{
 //            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
-            throw new IllegalArgumentException("Not Sayı Bulmaca");
+//            throw new IllegalArgumentException("Not Sayı Bulmaca");
         }
         intent.putExtra("gameName", gameName);
         intent.putExtra("difficulty",tvdiff.getText());

@@ -15,7 +15,7 @@
         android:gravity="bottom"
         android:text="@string/app_name1"
         android:textColor="@color/near_black_blue"
-        android:textSize="70sp"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,7 +31,7 @@
         android:textColor="@color/f7f5fa"
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/mohave_bold"
-        android:textSize="70sp"
+        android:textSize="60sp"
         app:layout_constraintBottom_toBottomOf="@id/circle_mm"
         app:layout_constraintHorizontal_bias="0.124"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -64,7 +64,7 @@
             android:onClick="goToGameList"
             android:text="@string/play_button"
             android:textColor="@color/near_black_blue"
-            android:textSize="200sp" />
+            android:textSize="160sp" />
 
     </LinearLayout>
 

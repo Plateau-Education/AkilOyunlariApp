@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center"
     android:gravity="center">
 
@@ -12,17 +14,53 @@
         android:background="@color/f7f5fa"
         android:gravity="center">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/Correct"
-            android:textAllCaps="true"
-            android:id="@+id/correctDialogText"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:textColor="@color/light_red"
-            android:fontFamily="@font/mohave_bold"
-            android:textSize="50sp"/>
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:src="@drawable/ic_correcticon"
+                app:layout_constraintEnd_toStartOf="@id/correctDialogText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.4"
+                android:layout_marginEnd="15dp"
+                android:layout_marginRight="15dp"
+                android:tint="@color/light_red" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Correct"
+                android:textAllCaps="true"
+                android:id="@+id/correctDialogText"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/light_red"
+                android:fontFamily="@font/mohave_bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="50sp"/>
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:src="@drawable/ic_correcticon"
+                app:layout_constraintStart_toEndOf="@id/correctDialogText"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintVertical_bias="0.4"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:tint="@color/light_red" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <TextView
