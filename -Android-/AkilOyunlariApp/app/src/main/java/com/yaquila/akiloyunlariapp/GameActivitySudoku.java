@@ -2,7 +2,6 @@ package com.yaquila.akiloyunlariapp;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
 
 import android.app.AlertDialog;
@@ -11,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -32,19 +30,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GameActivitySayiBulmaca extends AppCompatActivity {
+public class GameActivitySudoku extends AppCompatActivity {
+
+
 
     String gameName;
     String difficulty;
-    int clickedBox = -1;
-    int gridSize = 3;
+    String clickedBox = "-1";
+    List<String> clueIndexes = new ArrayList<>();
+    int gridSize = 6;
     int timerInSeconds = 0;
     boolean timerStopped=false;
     boolean undoing=false;
     boolean paused = false;
-    boolean[] draftModeActive= new boolean[5];
+    boolean[] draftModeActive= new boolean[81];
 
-    List<List<Integer>> operations = new ArrayList<>();
+    List<List<String>> operations = new ArrayList<>();
+    JSONArray question;
     JSONArray answer;
     LoadingDialog loadingDialog;
     Handler timerHandler;
@@ -78,66 +80,54 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     public void changeClicked(View view){
         TextView box = (TextView) view;
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-        int answerIndex = Integer.parseInt((box.getTag().toString()).substring(box.getTag().toString().length()-1));
-        if (clickedBox != answerIndex){
-            if (clickedBox != -1){
-                if (clickedBox == 0){
-                    ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        String answerIndex = box.getTag().toString();
+        if(!clueIndexes.contains(answerIndex)) {
+            if (!clickedBox.equals(answerIndex)) {
+                if (!clickedBox.equals("-1")) {
+                    gridLayout.findViewWithTag(clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                 }
-                else{
-                    ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
+                box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
+                clickedBox = answerIndex;
+            } else {
+                if (!undoing) {
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
+                    clickedBox = "-1";
                 }
             }
-            if(answerIndex == 0){
-                box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft_shallow2));
-            }
-            else{
-                box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom_shallow2));
-            }
-            clickedBox = answerIndex;
-        }
-        else{
-            if(!undoing){
-                if (answerIndex == 0){
-                    box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-                }
-                else{
-                    box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-                }
-                clickedBox = -1;
-            }
-        }
-        if(clickedBox != -1 && draftModeActive[clickedBox]){
-            for(int i = 0; i<10; i++){
-                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-            }
+//        if(!clickedBox.equals("-1") && draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
+//            for(int i = 1; i<gridSize+1; i++){
+//                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+//            }
+//        }
         }
     }
 
     public void numClicked(View view){
         Button btn = (Button) view;
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox));
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        if(!clickedBox.equals("-1")){
+            TextView currentBox = gridLayout.findViewWithTag(clickedBox);
             if(currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox,-1)));
+                operations.add(new ArrayList<>(Arrays.asList(clickedBox,"-1")));
             }
-            if(draftModeActive[clickedBox]){
-                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-            }
-            else{
-                currentBox.setText(btn.getTag().toString());
-            }
-            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
+//            if(draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
+//                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+//            }
+//            else{
+            currentBox.setText(btn.getTag().toString());
+//            }
+            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
             if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
+                operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
             }
             boolean isFull = true;
             for (int i = 0; i<gridSize; i++){
-                if (((TextView)gridLayout.findViewWithTag("answer"+i)).getText().toString().equals("")){
-                    isFull = false;
-                    break;
+                for (int j = 0; j<gridSize; j++){
+                    if (((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString().equals("")){
+                        isFull = false;
+                        break;
+                    }
                 }
             }
             if (isFull) checkAnswer(null);
@@ -147,10 +137,10 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     public void deleteNum(View view){
         GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox));
+        if(!clickedBox.equals("-1")){
+            TextView currentBox = ((TextView)gridLayout.findViewWithTag(clickedBox));
             if(!currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, -1)));
+                operations.add(new ArrayList<>(Arrays.asList(clickedBox, "-1")));
                 Log.i("operations",operations+"");
                 currentBox.setText("");
             }
@@ -160,17 +150,17 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     public void undoOperation(View view){
         if(operations.size() > 1){
             operations = operations.subList(0,operations.size()-1);
-            List<Integer> tuple = operations.get(operations.size()-1);
-            int co = tuple.get(0);
-            int num = tuple.get(1);
+            List<String> tuple = operations.get(operations.size()-1);
+            String co = tuple.get(0);
+            String num = tuple.get(1);
             Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ co));
-            if(num == -1){
+            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+            TextView currentBox = gridLayout.findViewWithTag(co);
+            if(num.equals("-1")){
                 currentBox.setText("");
             }
             else{
-                currentBox.setText(Integer.toString(num));
+                currentBox.setText(num);
             }
             undoing=true;
             changeClicked(currentBox);
@@ -195,18 +185,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
             operations = new ArrayList<>();
             GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            for (int i = 0; i < gridSize; i++) {
-                TextView currentBox = gridLayout.findViewWithTag("answer" + i);
-                currentBox.setText("");
-            }
-            if(clickedBox!=-1) {
-                if (clickedBox == 0) {
-                    gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-                } else {
-                    gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-                }
-            }
-            clickedBox = -1;
+            clickedBox = "-1";
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
@@ -219,57 +198,20 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         }
     }
 
-    public void notesOnGrid(View view) {
-        TextView clickedTV = (TextView) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        String clickedNum = clickedTV.getText().toString();
-//        Log.i("debugLog","beforeIfs");
-        if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
-//            Log.i("debugLog","stroke_bg");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-                    }
-                }
-            }
-        }
-        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
-//            Log.i("debugLog","stroke_bg_red");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
-                    }
-                }
-            }
-        }
-        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_bluegreen).getConstantState())) {
-//            Log.i("debugLog","stroke_bg_bluegreen");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    }
-                }
-            }
-        }
-    }
-
     public void checkAnswer(View view){
+        //TODO change the whole checking algorithm for sudoku.
         GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < gridSize; i++){
-            try {
-                if(!((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().equals(answer.get(i).toString())){
-                    checking=false;
+            for(int j = 0; j <  gridSize; j++){
+                try {
+                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(answer.get(i).toString())){
+                        checking=false;
+                    }
+                    Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                Log.i("checking",((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().toString()+" / "+(answer.get(i).toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
         }
         Log.i("check",checking+"  "+answer);
@@ -287,13 +229,12 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
             for (int i = 0; i < gridSize; i++) {
-                gridLayout.findViewWithTag("answer" + i).setEnabled(false);
                 for (int j = 0; j < gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
             }
-            for(int i = 0; i<10; i++){
-                ((Button)numsLayout.findViewWithTag(Integer.toString(i))).setEnabled(false);
+            for(int i = 1; i<gridSize+1; i++){
+                numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(false);
             }
             undoTV.setEnabled(false);
             deleteTV.setEnabled(false);
@@ -302,12 +243,6 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //your business logic
-//                    Intent intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
-//                    intent.putExtra("gameName",gameName);
-//                    intent.putExtra("difficulty",difficulty);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.enter, R.anim.exit);
                     mainFunc();
                     correctDialog.dismiss();
                 }
@@ -328,42 +263,42 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     public void draftClicked(View view){
         GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag("answer"+ clickedBox);
+        if(!clickedBox.equals("-1")){
+            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag(clickedBox);
             if(currentClickedBox.getText().toString().length() == 1){
                 if(currentClickedBox.getTextSize() == 25){
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
+                    for(int i = 1; i<gridSize+1; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                     }
-                    draftModeActive[clickedBox] = true;
+                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
                 }
                 else{
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 0; i<10; i++){
+                    for(int i = 1; i<gridSize+1; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                     }
-                    draftModeActive[clickedBox] = false;
+                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
                 }
             }
             else if (currentClickedBox.getText().toString().length() == 0) {
-                if (draftModeActive[clickedBox]) {
+                if (draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]) {
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 0; i < 10; i++) {
+                    for (int i = 1; i < 10; i++) {
                         ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     }
-                    draftModeActive[clickedBox] = false;
+                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
                 }
                 else{
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
+                    for(int i = 1; i<gridSize+1; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                     }
-                    draftModeActive[clickedBox] = true;
+                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
                 }
             }
             else{
-                draftModeActive[clickedBox] = true;
+                draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
             }
         }
     }
@@ -374,7 +309,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 String result = "";
-                URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
+                URL reqURL = new URL(strings[0] + "?" + "Info=1&Req=True&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -412,37 +347,24 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
-//                JSONObject jsonObject = (JSONObject) parser.parse(result);
-//                jsonArray = new JSONObject();
-//                Log.i("jsonArray",jsonArray.toString());
-//                JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(jsonArray.getString(0));
-                JSONArray gridArray = (JSONArray) ((JSONArray)((JSONArray)((JSONArray)jb.get("Info")).get(0)).get(0)).get(0);
-                answer = (JSONArray) gridArray.get(gridArray.length()-1);
-                Log.i("jsonGrid",""+gridArray);
-                for (int i = 0; i < gridArray.length()-1; i++){
-                    JSONArray row = (JSONArray) gridArray.get(i);
-                    for (int j = 0; j< row.length()-1; j++){
-                        TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j)+ i);
-                        tv.setText(row.get(j).toString());
-                    }
-                    JSONArray rguide = (JSONArray)row.get(row.length()-1);
-                    TextView rGuideTV = (TextView) gridLayout.findViewWithTag("g"+i);
-                    if(rguide.get(0).toString().equals("0")){
-                        rGuideTV.setText(rguide.get(1).toString());
-                    }
-                    else if(rguide.get(1).toString().equals("0")){
-                        rGuideTV.setText("+"+rguide.get(0).toString());
-                    }
-                    else{
-                        rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
+                JSONArray gottenArray = (JSONArray)((JSONArray)jb.get("Info")).get(0);
+                answer = (JSONArray) gottenArray.get(1);
+                question = (JSONArray) gottenArray.get(0);
+                Log.i("jsonGrid",""+gottenArray);
+                for (int i = 0; i < question.length(); i++){
+                    JSONArray row = (JSONArray) question.get(i);
+                    for (int j = 0; j< row.length(); j++){
+                        if(!row.get(j).toString().equals("0")) {
+                            TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
+                            tv.setText(row.get(j).toString());
+                            tv.setTextColor(getResources().getColor(R.color.near_black_blue));
+                            clueIndexes.add(Integer.toString(j)+i);
+                        }
                     }
                 }
-                TextView guideanswer = (TextView) gridLayout.findViewWithTag("answerguide");
-                guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
-                answer.remove(answer.length()-1);
                 timerStopped=false;
                 timerFunc();
                 loadingDialog.dismissDialog();
@@ -474,32 +396,19 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void loadingDialogFunc(){
-        loadingDialog = new LoadingDialog(GameActivitySayiBulmaca.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+        loadingDialog = new LoadingDialog(GameActivitySudoku.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
 
     public void initDraftModeActiveVar(){
-        for(int i = 0; i<gridSize; i++){
+        for(int i = 0; i<gridSize*gridSize; i++){
             draftModeActive[i] = false;
         }
     }
 
     public void clearGrid(){
         operations = new ArrayList<>();
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            TextView currentBox = ((TextView) gridLayout.findViewWithTag("answer" + i));
-            currentBox.setText("");
-            currentBox.setEnabled(true);
-        }
-        if(clickedBox != -1){
-            if (clickedBox == 0) {
-                ((TextView) gridLayout.findViewWithTag("answer" + clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-            } else {
-                ((TextView) gridLayout.findViewWithTag("answer" + clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-            }
-        }
-
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
@@ -507,7 +416,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 tv.setEnabled(true);
             }
         }
-        clickedBox = -1;
+        clickedBox = "-1";
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -517,8 +426,8 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView deleteTV = findViewById(R.id.deleteTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
-        for(int i = 0; i<10; i++){
-            ((Button)numsLayout.findViewWithTag(Integer.toString(i))).setEnabled(true);
+        for(int i = 1; i<gridSize+1; i++){
+            numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
         }
         undoTV.setEnabled(true);
         deleteTV.setEnabled(true);
@@ -526,7 +435,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         clearGrid();
         initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/SayiBulmaca"+gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku"+gridSize+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -538,17 +447,29 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
-            setContentView(R.layout.activity_game_sayibulmaca3);
-            gridSize=3;
+        if(gameName.matches("Sudoku6")){
+            setContentView(R.layout.activity_game_sudoku6);
+            gridSize=6;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-            setContentView(R.layout.activity_game_sayibulmaca4);
-            gridSize=4;
-        }
+//        else if(gameName.matches("Sudoku9")){
+//            setContentView(R.layout.activity_game_sudoku9);
+//            gridSize=9;
         else{
-            setContentView(R.layout.activity_game_sayibulmaca5);
-            gridSize=5;
+            setContentView(R.layout.activity_game_sudoku6);
+            gridSize=6;
+        }
+
+        if(difficulty.equals("Easy") || difficulty.equals("Kolay")) {
+            ((TextView)findViewById(R.id.diffTV_game)).setText(R.string.Easy);
+            difficulty = "Easy";
+        }
+        else if(difficulty.equals("Medium") || difficulty.equals("Orta")) {
+            ((TextView)findViewById(R.id.diffTV_game)).setText(R.string.Medium);
+            difficulty = "Medium";
+        }
+        else {
+            ((TextView)findViewById(R.id.diffTV_game)).setText(R.string.Hard);
+            difficulty = "Hard";
         }
 
         mainFunc();

@@ -153,7 +153,14 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
             if(!newOp.equals(operations.get(operations.size() - 1))){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
             }
-            checkAnswer(null);
+            boolean isFull = true;
+            for (int i = 0; i<answerCount; i++){
+                if (((TextView)gridLayout.findViewWithTag("answer"+i)).getText().toString().equals("")){
+                    isFull = false;
+                    break;
+                }
+            }
+            if (isFull) checkAnswer(null);
             Log.i("operations",operations+"");
         }
     }
