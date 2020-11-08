@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp"
+        android:background="@color/f7f5fa"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Correct"
+            android:textAllCaps="true"
+            android:id="@+id/correctDialogText"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/light_red"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="50sp"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textAllCaps="true"
+            android:id="@+id/timeTV_correctDialog"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="30sp"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/correctDialogGameMenu"
+                android:background="@drawable/nums_gl_bg"
+                android:textSize="22sp"
+                android:layout_weight="1"
+                android:textColor="@color/f7f5fa"
+                android:padding="10dp"
+                android:fontFamily="@font/mohave_bold"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="false"
+                android:text="@string/GameMenu"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/correctDialogNext"
+                android:textColor="@color/f7f5fa"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:backgroundTint="@color/light_red"
+                android:layout_marginTop="20dp"
+                android:textAllCaps="false"
+                android:textSize="22sp"
+                android:text="@string/Next"/>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

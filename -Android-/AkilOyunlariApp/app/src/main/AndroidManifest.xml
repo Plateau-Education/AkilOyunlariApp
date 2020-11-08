@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".DifficultyActivity"></activity>
         <activity android:name=".HowToPlayActivity" />
-        <activity android:name=".GameActivity" />
+        <activity android:name=".GameActivitySayiBulmaca" />
         <activity android:name=".GameListActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
