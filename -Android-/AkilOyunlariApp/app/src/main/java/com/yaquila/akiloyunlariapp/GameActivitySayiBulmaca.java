@@ -228,18 +228,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 //            Log.i("debugLog","stroke_bg");
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-                    }
-                }
-            }
-        }
-        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
-//            Log.i("debugLog","stroke_bg_red");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
+                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                     if (tv.getText().toString().equals(clickedNum)) {
                         tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
                     }
@@ -247,10 +236,21 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             }
         }
         else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_bluegreen).getConstantState())) {
+//            Log.i("debugLog","stroke_bg_red");
+            for (int i = 0; i < gridSize; i++) {
+                for (int j = 0; j < gridSize; j++) {
+                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
+                    if (tv.getText().toString().equals(clickedNum)) {
+                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                    }
+                }
+            }
+        }
+        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
 //            Log.i("debugLog","stroke_bg_bluegreen");
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
-                    TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j) + i);
+                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                     if (tv.getText().toString().equals(clickedNum)) {
                         tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                     }

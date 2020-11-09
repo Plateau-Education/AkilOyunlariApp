@@ -18,7 +18,9 @@ public class DifficultyActivity extends AppCompatActivity {
     String gameName;
 
     public void goToGameList(View view){
-        Intent intent = new Intent(this, GameListActivity.class);
+        Intent intent;
+        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        else intent = new Intent(this, GameListActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -34,7 +36,7 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.matches("Piramit")){
             intent = new Intent(getApplicationContext(), GameActivityPiramit.class);
         }
-        else if (gameName.matches("Sudoku")){
+        else if (gameName.contains("Sudoku")){
             intent = new Intent(getApplicationContext(), GameActivitySudoku.class);
         }
         else{
@@ -42,6 +44,7 @@ public class DifficultyActivity extends AppCompatActivity {
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 //            throw new IllegalArgumentException("Not Sayı Bulmaca");
         }
+        assert intent != null;
         intent.putExtra("gameName", gameName);
         intent.putExtra("difficulty",tvdiff.getText());
         startActivity(intent);
@@ -79,7 +82,7 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
             }
         }
-        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9","Sudoku", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
+        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
                 RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
@@ -108,13 +111,17 @@ public class DifficultyActivity extends AppCompatActivity {
 ////            Log.i("gameName", intent.getStringExtra("gameName"));
 //            Toast.makeText(this, gameName, Toast.LENGTH_SHORT).show();
 //        }
+
         arrangeDifficulties();
 
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Intent intent;
+        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        else intent = new Intent(this, GameListActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

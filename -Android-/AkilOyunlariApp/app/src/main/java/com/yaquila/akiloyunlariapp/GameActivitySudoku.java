@@ -52,7 +52,6 @@ public class GameActivitySudoku extends AppCompatActivity {
     Handler timerHandler;
     Runnable runnable;
 
-
     public void wannaLeaveDialog(View view){
         LayoutInflater factory = LayoutInflater.from(this);
         final View leaveDialogView = factory.inflate(R.layout.leave_dialog, null);
@@ -81,25 +80,36 @@ public class GameActivitySudoku extends AppCompatActivity {
     public void changeClicked(View view){
         TextView box = (TextView) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout numsLayout = findViewById(R.id.numsGL_ga);
         String answerIndex = box.getTag().toString();
         if(!clueIndexes.contains(answerIndex)) {
             if (!clickedBox.equals(answerIndex)) {
                 if (!clickedBox.equals("-1")) {
                     gridLayout.findViewWithTag(clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
                 }
                 box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
+                box.setTextColor(getResources().getColor(R.color.f7f5fa));
                 clickedBox = answerIndex;
             } else {
                 if (!undoing) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    box.setTextColor(getResources().getColor(R.color.light_red));
                     clickedBox = "-1";
                 }
             }
-//        if(!clickedBox.equals("-1") && draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
-//            for(int i = 1; i<gridSize+1; i++){
-//                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-//            }
-//        }
+            if (!clickedBox.equals("-1")){
+                if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))]) {
+                    for (int i = 1; i < gridSize + 1; i++) {
+                        ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    }
+                }
+                else{
+                    for (int i = 1; i < gridSize + 1; i++) {
+                        ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                    }
+                }
+            }
         }
     }
 
@@ -111,12 +121,23 @@ public class GameActivitySudoku extends AppCompatActivity {
             if(currentBox.getText().toString().equals("")){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox,"-1")));
             }
-//            if(draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
-//                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-//            }
-//            else{
-            currentBox.setText(btn.getTag().toString());
-//            }
+            if(draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
+                if(currentBox.getText().toString().length() == 0){
+                    currentBox.setText(btn.getTag().toString());
+                    currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+                else{
+                    if(currentBox.getText().toString().contains(btn.getTag().toString())){
+                        currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
+                    }
+                    else{
+                        if(currentBox.getText().toString().length() <= 10) currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+                    }
+                }
+            }
+            else{
+                currentBox.setText(btn.getTag().toString());
+            }
             ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
             if(!newOp.equals(operations.get(operations.size() - 1))){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
@@ -190,6 +211,9 @@ public class GameActivitySudoku extends AppCompatActivity {
                 for (int j = 0; j < gridSize; j++) {
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                     tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    if(!clueIndexes.contains(Integer.toString(j)+i)){
+                        tv.setText("");
+                    }
                 }
             }
         }
@@ -205,7 +229,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++){
                 try {
-                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(answer.get(i).toString())){
+                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(((JSONArray)answer.get(i)).get(j).toString())){
                         checking=false;
                     }
                     Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
@@ -261,45 +285,64 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout numGrid = findViewById(R.id.numsGL_ga);
+        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
+        TextView currentClickedBox = questionGrid.findViewWithTag(clickedBox);
         if(!clickedBox.equals("-1")){
-            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag(clickedBox);
-            if(currentClickedBox.getText().toString().length() == 1){
-                if(currentClickedBox.getTextSize() == 25){
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 1; i<gridSize+1; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
+            int boxIndex = Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1));
+            if(!draftModeActive[boxIndex]){
+                if(currentClickedBox.getText().toString().length() == 1) {
+                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 1; i<gridSize+1; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-                    }
-                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+                for(int i = 1; i<gridSize+1; i++){
+                    ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 }
-            }
-            else if (currentClickedBox.getText().toString().length() == 0) {
-                if (draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 1; i < 10; i++) {
-                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    }
-                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
-                }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 1; i<gridSize+1; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
-                }
+                draftModeActive[boxIndex] = true;
             }
             else{
-                draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
+                if(currentClickedBox.getText().toString().length() <= 1) {
+                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    for(int i = 1; i<gridSize+1; i++){
+                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                    }
+                    draftModeActive[boxIndex] = false;
+                }
             }
+//            if(currentClickedBox.getText().toString().length() == 1){
+//                if(currentClickedBox.getTextSize() == 25){
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+//                    for(int i = 1; i<gridSize+1; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+//                    }
+//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
+//                }
+//                else{
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+//                    for(int i = 1; i<gridSize+1; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+//                    }
+//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+//                }
+//            }
+//            else if (currentClickedBox.getText().toString().length() == 0) {
+//                if (draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]) {
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+//                    for (int i = 1; i < 10; i++) {
+//                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+//                    }
+//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+//                }
+//                else{
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+//                    for(int i = 1; i<gridSize+1; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+//                    }
+//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
+//                }
+//            }
+//            else{
+//                draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
+//            }
         }
     }
 
@@ -353,7 +396,8 @@ public class GameActivitySudoku extends AppCompatActivity {
                 JSONArray gottenArray = (JSONArray)((JSONArray)jb.get("Info")).get(0);
                 answer = (JSONArray) gottenArray.get(1);
                 question = (JSONArray) gottenArray.get(0);
-                Log.i("jsonGrid",""+gottenArray);
+                Log.i("question",""+question);
+                Log.i("answer",""+answer);
                 for (int i = 0; i < question.length(); i++){
                     JSONArray row = (JSONArray) question.get(i);
                     for (int j = 0; j< row.length(); j++){
@@ -412,11 +456,13 @@ public class GameActivitySudoku extends AppCompatActivity {
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
+                tv.setText("");
                 tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                 tv.setEnabled(true);
             }
         }
         clickedBox = "-1";
+        clueIndexes = new ArrayList<>();
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -451,12 +497,13 @@ public class GameActivitySudoku extends AppCompatActivity {
             setContentView(R.layout.activity_game_sudoku6);
             gridSize=6;
         }
-//        else if(gameName.matches("Sudoku9")){
-//            setContentView(R.layout.activity_game_sudoku9);
-//            gridSize=9;
+        else if(gameName.matches("Sudoku9")) {
+            setContentView(R.layout.activity_game_sudoku9);
+            gridSize = 9;
+        }
         else{
-            setContentView(R.layout.activity_game_sudoku6);
-            gridSize=6;
+            setContentView(R.layout.activity_game_sudoku9);
+            gridSize=9;
         }
 
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")) {

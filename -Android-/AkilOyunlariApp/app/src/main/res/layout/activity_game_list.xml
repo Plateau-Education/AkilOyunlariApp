@@ -61,7 +61,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -109,6 +109,7 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -130,7 +131,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -175,6 +176,8 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -196,7 +199,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -244,6 +247,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -265,7 +270,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -310,6 +315,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -331,7 +338,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -379,6 +386,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -400,7 +409,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -445,6 +454,8 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/piramit_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -466,7 +477,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -514,6 +525,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -535,7 +548,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -580,6 +593,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -601,7 +616,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -649,6 +664,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 
@@ -670,7 +687,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffffff"
+                android:background="@drawable/rounded_f7f5fa_bg"
                 android:layout_weight="1"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
@@ -715,6 +732,8 @@
                     android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
+                    android:layout_marginBottom="15dp"
+
                     android:background="@drawable/hazineavi_gamelist_image"
                     android:layout_weight="0.5">
 

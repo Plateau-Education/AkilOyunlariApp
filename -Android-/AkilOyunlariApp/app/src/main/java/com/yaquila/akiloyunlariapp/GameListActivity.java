@@ -44,7 +44,10 @@ public class GameListActivity extends AppCompatActivity {
 
     public void goToDifficulty(View view){
         Intent intent = new Intent(getApplicationContext(), DifficultyActivity.class);
-        if(currentExtendedRow % 2 == 1){
+        if(currentExtendedRow == 1){
+            intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        }
+        else if(currentExtendedRow % 2 == 1){
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)view).getParent()).getChildAt(0)).getChildAt(1)).getText());
         }
         else{
@@ -59,7 +62,7 @@ public class GameListActivity extends AppCompatActivity {
         if(currentExtendedRow == 0){
             final LinearLayout ll = (LinearLayout) view.getParent();
             RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackgroundColor(getResources().getColor(R.color.yellowish));
+            ll.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
             rl.setVisibility(View.VISIBLE);
             currentExtendedRow = rowNum;
 //            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
@@ -76,18 +79,18 @@ public class GameListActivity extends AppCompatActivity {
         else if(currentExtendedRow == rowNum){
             LinearLayout ll = (LinearLayout) view.getParent();
             RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
+            ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
             rl.setVisibility(View.GONE);
             currentExtendedRow = 0;
         }
         else {
             final LinearLayout ll = (LinearLayout) ((LinearLayout) ((LinearLayout)view.getParent()).getParent()).getChildAt(currentExtendedRow);
             RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
+            ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
             rl.setVisibility(View.GONE);
             final LinearLayout ll_2 = (LinearLayout) view.getParent();
             RelativeLayout rl_2 = (RelativeLayout) ll_2.getChildAt(1);
-            ll_2.setBackgroundColor(getResources().getColor(R.color.yellowish));
+            ll_2.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
             rl_2.setVisibility(View.VISIBLE);
             currentExtendedRow = rowNum;
             Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
