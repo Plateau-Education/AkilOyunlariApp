@@ -98,7 +98,6 @@
         android:id="@+id/gridGL_ga"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/strokebg_fullwide"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -118,9 +117,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_10"
@@ -135,9 +134,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_20"
@@ -152,9 +151,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_30"
@@ -169,9 +168,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_40"
@@ -186,9 +185,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_01"
@@ -203,9 +202,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="2" />
 
         <TextView
             android:id="@+id/grid6_11"
@@ -220,9 +219,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="2" />
 
         <TextView
             android:id="@+id/grid6_21"
@@ -237,9 +236,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="2" />
 
         <TextView
             android:id="@+id/grid6_31"
@@ -254,9 +253,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="2" />
 
         <TextView
             android:id="@+id/grid6_41"
@@ -271,9 +270,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="2" />
         
         <TextView
             android:id="@+id/grid6_02"
@@ -288,9 +287,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_12"
@@ -305,9 +304,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_22"
@@ -322,9 +321,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_32"
@@ -339,9 +338,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_42"
@@ -356,9 +355,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_03"
@@ -373,9 +372,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="5" />
 
         <TextView
             android:id="@+id/grid6_13"
@@ -390,9 +389,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="5" />
 
         <TextView
             android:id="@+id/grid6_23"
@@ -407,9 +406,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="5" />
 
         <TextView
             android:id="@+id/grid6_33"
@@ -424,9 +423,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="5" />
 
         <TextView
             android:id="@+id/grid6_43"
@@ -441,9 +440,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="5" />
 
         <TextView
             android:id="@+id/grid6_04"
@@ -458,9 +457,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_14"
@@ -475,9 +474,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_24"
@@ -492,9 +491,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_34"
@@ -509,9 +508,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_44"
@@ -526,9 +525,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_05"
@@ -543,9 +542,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="0"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="1"
+            app:layout_row="8" />
 
         <TextView
             android:id="@+id/grid6_15"
@@ -560,9 +559,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="1"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="2"
+            app:layout_row="8" />
 
         <TextView
             android:id="@+id/grid6_25"
@@ -577,9 +576,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="2"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="3"
+            app:layout_row="8" />
 
         <TextView
             android:id="@+id/grid6_35"
@@ -594,9 +593,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="4"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="5"
+            app:layout_row="8" />
 
         <TextView
             android:id="@+id/grid6_45"
@@ -611,9 +610,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="5"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="6"
+            app:layout_row="8" />
         <TextView
             android:id="@+id/grid6_50"
             android:tag="50"
@@ -628,9 +627,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="0" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="1" />
 
         <TextView
             android:id="@+id/grid6_51"
@@ -646,9 +645,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="1" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="2" />
 
         <TextView
             android:id="@+id/grid6_52"
@@ -664,9 +663,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="3" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="4" />
 
         <TextView
             android:id="@+id/grid6_53"
@@ -682,9 +681,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="4" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="5" />
         
         <TextView
             android:id="@+id/grid6_54"
@@ -700,9 +699,9 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="6" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="7" />
 
         <TextView
             android:id="@+id/grid6_55"
@@ -718,50 +717,116 @@
             android:gravity="center"
             app:layout_gravity="center"
             android:textColor="@color/light_red"
-            android:textSize="20sp"
-            app:layout_column="6"
-            app:layout_row="7" />
+            android:textSize="28sp"
+            app:layout_column="7"
+            app:layout_row="8" />
 
         <ImageView
-            android:layout_width="270dp"
-            android:layout_height="2dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="2"
-            app:layout_column="0"
-            app:layout_columnSpan="7"/>
-        
-        <ImageView
-            android:layout_width="270dp"
-            android:layout_height="2dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="5"
-            app:layout_column="0"
-            app:layout_columnSpan="7"/>
-        
-        <ImageView
-            android:layout_width="2dp"
-            android:layout_height="90dp"
+            android:layout_width="278dp"
+            android:layout_height="3dp"
             android:src="@color/near_black_blue"
             app:layout_row="0"
-            app:layout_column="3"
-            app:layout_rowSpan="2"/>
-
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+        
         <ImageView
-            android:layout_width="2dp"
-            android:layout_height="90dp"
+            android:layout_width="278dp"
+            android:layout_height="2dp"
             android:src="@color/near_black_blue"
             app:layout_row="3"
-            app:layout_column="3"
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+        
+        <ImageView
+            android:layout_width="278dp"
+            android:layout_height="2dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="6"
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+
+        <ImageView
+            android:layout_width="278dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="9"
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+        
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="4"
             app:layout_rowSpan="2"/>
 
         <ImageView
             android:layout_width="2dp"
             android:layout_height="90dp"
             android:src="@color/near_black_blue"
-            app:layout_row="6"
-            app:layout_column="3"
+            app:layout_row="4"
+            app:layout_column="4"
+            app:layout_rowSpan="2"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="7"
+            app:layout_column="4"
+            app:layout_rowSpan="2"/>
+
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="0"
+            app:layout_rowSpan="2"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="4"
+            app:layout_column="0"
+            app:layout_rowSpan="2"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="7"
+            app:layout_column="0"
             app:layout_rowSpan="2"/>
         
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            
+            app:layout_row="1"
+            app:layout_column="8"
+            app:layout_rowSpan="2"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="4"
+            app:layout_column="8"
+            app:layout_rowSpan="2"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="90dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="7"
+            app:layout_column="8"
+            app:layout_rowSpan="2"/>
+
     </androidx.gridlayout.widget.GridLayout>
 
     <LinearLayout

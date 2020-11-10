@@ -124,23 +124,43 @@ public class GameActivitySudoku extends AppCompatActivity {
             if(draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
                 if(currentBox.getText().toString().length() == 0){
                     currentBox.setText(btn.getTag().toString());
-                    currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+                    ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                    if(!newOp.equals(operations.get(operations.size() - 1))){
+                        operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
+                    }
                 }
                 else{
                     if(currentBox.getText().toString().contains(btn.getTag().toString())){
                         currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
+                        ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                        if(!newOp.equals(operations.get(operations.size() - 1))){
+                            operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
+                        }
+                        if(currentBox.getText().toString().length() == 1){
+                            if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                            else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
+                            draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+                        }
                     }
                     else{
-                        if(currentBox.getText().toString().length() <= 10) currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+                        if(currentBox.getText().toString().length() <= 10) {
+                            currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+                            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                            if(!newOp.equals(operations.get(operations.size() - 1))){
+                                operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
+                            }
+                        }
                     }
                 }
             }
             else{
                 currentBox.setText(btn.getTag().toString());
-            }
-            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
+                ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                if(!newOp.equals(operations.get(operations.size() - 1))){
+                    operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
+                }
             }
             boolean isFull = true;
             for (int i = 0; i<gridSize; i++){
@@ -292,7 +312,8 @@ public class GameActivitySudoku extends AppCompatActivity {
             int boxIndex = Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1));
             if(!draftModeActive[boxIndex]){
                 if(currentClickedBox.getText().toString().length() == 1) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    if(gridSize == 9)currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
                 }
                 for(int i = 1; i<gridSize+1; i++){
                     ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
@@ -301,48 +322,14 @@ public class GameActivitySudoku extends AppCompatActivity {
             }
             else{
                 if(currentClickedBox.getText().toString().length() <= 1) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    if(gridSize == 9)currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                     for(int i = 1; i<gridSize+1; i++){
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
                     }
                     draftModeActive[boxIndex] = false;
                 }
             }
-//            if(currentClickedBox.getText().toString().length() == 1){
-//                if(currentClickedBox.getTextSize() == 25){
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-//                    for(int i = 1; i<gridSize+1; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-//                    }
-//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
-//                }
-//                else{
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-//                    for(int i = 1; i<gridSize+1; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-//                    }
-//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
-//                }
-//            }
-//            else if (currentClickedBox.getText().toString().length() == 0) {
-//                if (draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]) {
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-//                    for (int i = 1; i < 10; i++) {
-//                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-//                    }
-//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
-//                }
-//                else{
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-//                    for(int i = 1; i<gridSize+1; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-//                    }
-//                    draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
-//                }
-//            }
-//            else{
-//                draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = true;
-//            }
         }
     }
 

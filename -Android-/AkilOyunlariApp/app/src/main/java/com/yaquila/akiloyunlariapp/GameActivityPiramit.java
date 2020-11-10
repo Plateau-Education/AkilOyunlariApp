@@ -31,11 +31,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class GameActivityPiramit extends AppCompatActivity implements View.OnClickListener {
+public class GameActivityPiramit extends AppCompatActivity{
 
     String gameName;
     String difficulty;
-    int clickedBox = -1;
+    String clickedBox = "-1";
     int gridSize = 3;
     int answerCount = 3;
     int timerInSeconds = 0;
@@ -45,46 +45,46 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     boolean gotQuestion = false;
     boolean[] draftModeActive= new boolean[14];
 
-    List<List<Integer>> operations = new ArrayList<>();
+    List<List<String>> operations = new ArrayList<>();
     JSONArray answer;
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
 
-    @Override
-    public void onClick(View view) {
-        if(view.getId() != R.id.backButtonLL_game){
-            LayoutInflater factory = LayoutInflater.from(this);
-            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-            timerTV.setText(formatTime(timerInSeconds));
-            correctDialog.setView(leaveDialogView);
-            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //your business logic
-//                    Intent intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
-//                    intent.putExtra("gameName",gameName);
-//                    intent.putExtra("difficulty",difficulty);
+//    @Override
+//    public void onClick(View view) {
+//        if(view.getId() != R.id.backButtonLL_game){
+//            LayoutInflater factory = LayoutInflater.from(this);
+//            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
+//            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+//            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+//            timerTV.setText(formatTime(timerInSeconds));
+//            correctDialog.setView(leaveDialogView);
+//            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //your business logic
+////                    Intent intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
+////                    intent.putExtra("gameName",gameName);
+////                    intent.putExtra("difficulty",difficulty);
+////                    startActivity(intent);
+////                    overridePendingTransition(R.anim.enter, R.anim.exit);
+//                    mainFunc();
+//                    correctDialog.dismiss();
+//                }
+//            });
+//            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
 //                    startActivity(intent);
-//                    overridePendingTransition(R.anim.enter, R.anim.exit);
-                    mainFunc();
-                    correctDialog.dismiss();
-                }
-            });
-            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-                    correctDialog.dismiss();
-                }
-            });
-            correctDialog.show();
-        }
-    }
+//                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+//                    correctDialog.dismiss();
+//                }
+//            });
+//            correctDialog.show();
+//        }
+//    }
 
     public void wannaLeaveDialog(View view){
         LayoutInflater factory = LayoutInflater.from(this);
@@ -114,23 +114,35 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     public void changeClicked(View view){
         TextView box = (TextView) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        int answerIndex = Integer.parseInt((box.getTag().toString()).replace("answer",""));
-        if (clickedBox != answerIndex){
-            if (clickedBox != -1){
+        GridLayout numsLayout = findViewById(R.id.numsGL_ga);
+        String answerIndex = (box.getTag().toString()).replace("answer","");
+        if (!clickedBox.equals(answerIndex)){
+            if (!clickedBox.equals("-1")){
                 gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
+
             }
             box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+            box.setTextColor(getResources().getColor(R.color.f7f5fa));
             clickedBox = answerIndex;
         }
         else{
             if(!undoing){
                 box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                clickedBox = -1;
+                box.setTextColor(getResources().getColor(R.color.light_red));
+                clickedBox = "-1";
             }
         }
-        if(clickedBox != -1 && draftModeActive[clickedBox]){
-            for(int i = 0; i<10; i++){
-                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+        if (!clickedBox.equals("-1")){
+            if (draftModeActive[Integer.parseInt(clickedBox)]) {
+                for (int i = 1; i < 10; i++) {
+                    ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+            }
+            else{
+                for (int i = 1; i < 10; i++) {
+                    ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
+                }
             }
         }
     }
@@ -138,20 +150,51 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     public void numClicked(View view){
         Button btn = (Button) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
+        if(!clickedBox.equals("-1")){
             TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox,-1)));
+                operations.add(new ArrayList<>(Arrays.asList(clickedBox,"-1")));
             }
-            if(draftModeActive[clickedBox]){
-                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+            if(draftModeActive[Integer.parseInt(clickedBox)]){
+                if(currentBox.getText().toString().length() == 0){
+                    currentBox.setText(btn.getTag().toString());
+                    if(gridSize<=4) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                    else if(gridSize==5) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                    ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                    if(!newOp.equals(operations.get(operations.size() - 1))){
+                        operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
+                    }
+                }
+                else{
+                    if(currentBox.getText().toString().contains(btn.getTag().toString())){
+                        currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
+                        ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                        if(!newOp.equals(operations.get(operations.size() - 1))){
+                            operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
+                        }
+                        if(currentBox.getText().toString().length() == 1){
+                            currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                            draftModeActive[Integer.parseInt(clickedBox)] = false;
+                        }
+                    }
+                    else{
+                        if(currentBox.getText().toString().length() <= 8) {
+                            currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
+                            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                            if(!newOp.equals(operations.get(operations.size() - 1))){
+                                operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
+                            }
+                        }
+                    }
+                }
             }
             else{
                 currentBox.setText(btn.getTag().toString());
-            }
-            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
+                ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                if(!newOp.equals(operations.get(operations.size() - 1))){
+                    operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
+                }
             }
             boolean isFull = true;
             for (int i = 0; i<answerCount; i++){
@@ -166,11 +209,11 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox));
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        if(!clickedBox.equals("-1")){
+            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(!currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, -1)));
+                operations.add(new ArrayList<>(Arrays.asList(clickedBox, "-1")));
                 Log.i("operations",operations+"");
                 currentBox.setText("");
             }
@@ -180,17 +223,17 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     public void undoOperation(View view){
         if(operations.size() > 1){
             operations = operations.subList(0,operations.size()-1);
-            List<Integer> tuple = operations.get(operations.size()-1);
-            int co = tuple.get(0);
-            int num = tuple.get(1);
+            List<String> tuple = operations.get(operations.size()-1);
+            String co = tuple.get(0);
+            String num = tuple.get(1);
             Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ co));
-            if(num == -1){
+            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+            TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
+            if(num.equals("-1")){
                 currentBox.setText("");
             }
             else{
-                currentBox.setText(Integer.toString(num));
+                currentBox.setText(num);
             }
             undoing=true;
             changeClicked(currentBox);
@@ -219,10 +262,10 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 TextView currentBox = gridLayout.findViewWithTag("answer" + i);
                 currentBox.setText("");
             }
-            if(clickedBox!=-1) {
+            if(!clickedBox.equals("-1")) {
                 gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
             }
-            clickedBox = -1;
+            clickedBox = "-1";
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
@@ -236,7 +279,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     }
 
     public void checkAnswer(View view){
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < answerCount; i++){
             try {
@@ -266,7 +309,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 gridLayout.findViewWithTag("answer" + i).setEnabled(false);
             }
             for(int i = 1; i<10; i++){
-                ((Button)numsLayout.findViewWithTag(Integer.toString(i))).setEnabled(false);
+                numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(false);
             }
             findViewById(R.id.draftbutton_ga).setEnabled(false);
             undoTV.setEnabled(false);
@@ -300,46 +343,70 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
     }
 
     public void draftClicked(View view){
-        GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag("answer"+ clickedBox);
-            if(currentClickedBox.getText().toString().length() == 1){
-                if(currentClickedBox.getTextSize() == 25){
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
+        GridLayout numGrid = findViewById(R.id.numsGL_ga);
+        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
+        TextView currentClickedBox = questionGrid.findViewWithTag("answer"+clickedBox);
+        if(!clickedBox.equals("-1")) {
+            if (!draftModeActive[Integer.parseInt(clickedBox)]) {
+                if (currentClickedBox.getText().toString().length() == 1) {
+                    if(gridSize<=4) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                    else if(gridSize==5) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-                    }
-                    draftModeActive[clickedBox] = false;
+                for (int i = 1; i < 10; i++) {
+                    ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 }
-            }
-            else if (currentClickedBox.getText().toString().length() == 0) {
-                if (draftModeActive[clickedBox]) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 0; i < 10; i++) {
-                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                draftModeActive[Integer.parseInt(clickedBox)] = true;
+            } else {
+                if (currentClickedBox.getText().toString().length() <= 1) {
+                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                    for (int i = 1; i < 10; i++) {
+                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                     }
-                    draftModeActive[clickedBox] = false;
+                    draftModeActive[Integer.parseInt(clickedBox)] = false;
                 }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
-                }
-            }
-            else{
-                draftModeActive[clickedBox] = true;
             }
         }
+//        GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
+//        GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
+//        if(clickedBox != -1){
+//            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag("answer"+ clickedBox);
+//            if(currentClickedBox.getText().toString().length() == 1){
+//                if(currentClickedBox.getTextSize() == 25){
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+//                    for(int i = 0; i<10; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+//                    }
+//                    draftModeActive[clickedBox] = true;
+//                }
+//                else{
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+//                    for(int i = 0; i<10; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+//                    }
+//                    draftModeActive[clickedBox] = false;
+//                }
+//            }
+//            else if (currentClickedBox.getText().toString().length() == 0) {
+//                if (draftModeActive[clickedBox]) {
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
+//                    for (int i = 0; i < 10; i++) {
+//                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+//                    }
+//                    draftModeActive[clickedBox] = false;
+//                }
+//                else{
+//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
+//                    for(int i = 0; i<10; i++){
+//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
+//                    }
+//                    draftModeActive[clickedBox] = true;
+//                }
+//            }
+//            else{
+//                draftModeActive[clickedBox] = true;
+//            }
+//        }
     }
 
     public class GetRequest extends AsyncTask<String, Void, String> {
@@ -347,7 +414,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String result = "";
+                StringBuilder result = new StringBuilder();
                 URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
@@ -367,11 +434,11 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 while (data != -1) {
 
                     char current = (char) data;
-                    result += current;
+                    result.append(current);
                     data = reader.read();
                 }
-                Log.i("result",result);
-                return result;
+                Log.i("result", result.toString());
+                return result.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -386,7 +453,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+//            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
 //                JSONObject jsonObject = (JSONObject) parser.parse(result);
@@ -413,14 +480,14 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("02")).setText(((JSONArray) grid.get(2)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("22")).setText(((JSONArray) grid.get(2)).get(2).toString());
-                answer = new JSONArray(new ArrayList<String>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(),((JSONArray) grid.get(1)).get(1).toString(),((JSONArray) grid.get(2)).get(1).toString())));
+                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString())));
             }
             else if (gridSize == 4){
                 ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("12")).setText(((JSONArray) grid.get(2)).get(1).toString());
                 ((TextView) gridLayout.findViewWithTag("03")).setText(((JSONArray) grid.get(3)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("33")).setText(((JSONArray) grid.get(3)).get(3).toString());
-                answer = new JSONArray(new ArrayList<String>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(),((JSONArray) grid.get(1)).get(1).toString(),((JSONArray) grid.get(2)).get(0).toString(),((JSONArray) grid.get(2)).get(2).toString(),((JSONArray) grid.get(3)).get(1).toString(),((JSONArray) grid.get(3)).get(2).toString())));
+                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(0).toString(), ((JSONArray) grid.get(2)).get(2).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString())));
             }
             else if (gridSize == 5){
                 ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
@@ -429,7 +496,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 ((TextView) gridLayout.findViewWithTag("04")).setText(((JSONArray) grid.get(4)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("24")).setText(((JSONArray) grid.get(4)).get(2).toString());
                 ((TextView) gridLayout.findViewWithTag("44")).setText(((JSONArray) grid.get(4)).get(4).toString());
-                answer = new JSONArray(new ArrayList<String>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(),((JSONArray) grid.get(1)).get(1).toString(),((JSONArray) grid.get(2)).get(1).toString(),((JSONArray) grid.get(3)).get(0).toString(),((JSONArray) grid.get(3)).get(1).toString(),((JSONArray) grid.get(3)).get(2).toString(),((JSONArray) grid.get(3)).get(3).toString(),((JSONArray) grid.get(4)).get(1).toString(),((JSONArray) grid.get(4)).get(3).toString())));
+                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString(), ((JSONArray) grid.get(3)).get(0).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString(), ((JSONArray) grid.get(3)).get(3).toString(), ((JSONArray) grid.get(4)).get(1).toString(), ((JSONArray) grid.get(4)).get(3).toString())));
             }
             else{
                 ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
@@ -439,7 +506,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
                 ((TextView) gridLayout.findViewWithTag("34")).setText(((JSONArray) grid.get(4)).get(3).toString());
                 ((TextView) gridLayout.findViewWithTag("05")).setText(((JSONArray) grid.get(5)).get(0).toString());
                 ((TextView) gridLayout.findViewWithTag("55")).setText(((JSONArray) grid.get(5)).get(5).toString());
-                answer = new JSONArray(new ArrayList<String>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(),((JSONArray) grid.get(1)).get(1).toString(),((JSONArray) grid.get(2)).get(1).toString(),((JSONArray) grid.get(3)).get(0).toString(),((JSONArray) grid.get(3)).get(1).toString(),((JSONArray) grid.get(3)).get(2).toString(),((JSONArray) grid.get(3)).get(3).toString(),((JSONArray) grid.get(4)).get(0).toString(),((JSONArray) grid.get(4)).get(2).toString(),((JSONArray) grid.get(4)).get(4).toString(),((JSONArray) grid.get(5)).get(1).toString(),((JSONArray) grid.get(5)).get(2).toString(),((JSONArray) grid.get(5)).get(3).toString(),((JSONArray) grid.get(5)).get(4).toString())));
+                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString(), ((JSONArray) grid.get(3)).get(0).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString(), ((JSONArray) grid.get(3)).get(3).toString(), ((JSONArray) grid.get(4)).get(0).toString(), ((JSONArray) grid.get(4)).get(2).toString(), ((JSONArray) grid.get(4)).get(4).toString(), ((JSONArray) grid.get(5)).get(1).toString(), ((JSONArray) grid.get(5)).get(2).toString(), ((JSONArray) grid.get(5)).get(3).toString(), ((JSONArray) grid.get(5)).get(4).toString())));
             }
 
         } catch (Exception e){
@@ -449,7 +516,7 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
 
     public void timerFunc(){
         timerHandler = new Handler();
-        final TextView timerTV = (TextView) findViewById(R.id.timeTV_game);
+        final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -486,10 +553,10 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
             currentBox.setText("");
             currentBox.setEnabled(true);
         }
-        if(clickedBox != -1){
+        if(!clickedBox.equals("-1")){
             gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
         }
-        clickedBox = -1;
+        clickedBox = "-1";
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -519,25 +586,31 @@ public class GameActivityPiramit extends AppCompatActivity implements View.OnCli
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
-            setContentView(R.layout.activity_game_piramit3);
-            gridSize=3;
-            answerCount=3;
-        }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-            setContentView(R.layout.activity_game_piramit4);
-            gridSize=4;
-            answerCount=6;
-        }
-        else if (difficulty.equals("Hard") || difficulty.equals("Zor")){
-            setContentView(R.layout.activity_game_piramit5);
-            gridSize=5;
-            answerCount=9;
-        }
-        else{
-            setContentView(R.layout.activity_game_piramit6);
-            gridSize=6;
-            answerCount=14;
+        assert difficulty != null;
+        switch (difficulty) {
+            case "Easy":
+            case "Kolay":
+                setContentView(R.layout.activity_game_piramit3);
+                gridSize = 3;
+                answerCount = 3;
+                break;
+            case "Medium":
+            case "Orta":
+                setContentView(R.layout.activity_game_piramit4);
+                gridSize = 4;
+                answerCount = 6;
+                break;
+            case "Hard":
+            case "Zor":
+                setContentView(R.layout.activity_game_piramit5);
+                gridSize = 5;
+                answerCount = 9;
+                break;
+            default:
+                setContentView(R.layout.activity_game_piramit6);
+                gridSize = 6;
+                answerCount = 14;
+                break;
         }
 
         mainFunc();
