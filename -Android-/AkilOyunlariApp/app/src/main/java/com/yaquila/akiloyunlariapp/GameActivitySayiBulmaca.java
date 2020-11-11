@@ -1,23 +1,22 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.gridlayout.widget.GridLayout;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -80,15 +79,15 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     public void changeClicked(View view){
         TextView box = (TextView) view;
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         int answerIndex = Integer.parseInt((box.getTag().toString()).substring(box.getTag().toString().length()-1));
         if (clickedBox != answerIndex){
             if (clickedBox != -1){
                 if (clickedBox == 0){
-                    ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
+                    gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
                 }
                 else{
-                    ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
+                    gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
                 }
             }
             if(answerIndex == 0){
@@ -97,6 +96,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             else{
                 box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom_shallow2));
             }
+            box.setTextColor(getResources().getColor(R.color.f7f5fa));
             clickedBox = answerIndex;
         }
         else{
@@ -107,6 +107,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 else{
                     box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
                 }
+                box.setTextColor(getResources().getColor(R.color.light_red));
                 clickedBox = -1;
             }
         }
@@ -117,11 +118,12 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void numClicked(View view){
         Button btn = (Button) view;
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         if(clickedBox != -1){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox));
+            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(currentBox.getText().toString().equals("")){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox,-1)));
             }
@@ -131,7 +133,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             else{
                 currentBox.setText(btn.getTag().toString());
             }
-            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
+            List<Integer> newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
             if(!newOp.equals(operations.get(operations.size() - 1))){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
             }
@@ -148,9 +150,9 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         if(clickedBox != -1){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ clickedBox));
+            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(!currentBox.getText().toString().equals("")){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, -1)));
                 Log.i("operations",operations+"");
@@ -159,6 +161,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void undoOperation(View view){
         if(operations.size() > 1){
             operations = operations.subList(0,operations.size()-1);
@@ -166,8 +169,8 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             int co = tuple.get(0);
             int num = tuple.get(1);
             Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag("answer"+ co));
+            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+            TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
             if(num == -1){
                 currentBox.setText("");
             }
@@ -263,7 +266,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void checkAnswer(View view){
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < gridSize; i++){
             try {
@@ -281,7 +284,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-            TextView timerTV = (TextView) leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
@@ -296,7 +299,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 }
             }
             for(int i = 0; i<10; i++){
-                ((Button)numsLayout.findViewWithTag(Integer.toString(i))).setEnabled(false);
+                numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(false);
             }
             undoTV.setEnabled(false);
             deleteTV.setEnabled(false);
@@ -329,10 +332,10 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout numGrid = findViewById(R.id.numsGL_ga);
+        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
         if(clickedBox != -1){
-            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag("answer"+ clickedBox);
+            TextView currentClickedBox = questionGrid.findViewWithTag("answer"+ clickedBox);
             if(currentClickedBox.getText().toString().length() == 1){
                 if(currentClickedBox.getTextSize() == 25){
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
@@ -376,7 +379,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String result = "";
+                StringBuilder result = new StringBuilder();
                 URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
@@ -396,11 +399,11 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 while (data != -1) {
 
                     char current = (char) data;
-                    result += current;
+                    result.append(current);
                     data = reader.read();
                 }
-                Log.i("result",result);
-                return result;
+                Log.i("result", result.toString());
+                return result.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -409,13 +412,14 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             return null;
         }
 
+        @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
-            GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
 //                JSONObject jsonObject = (JSONObject) parser.parse(result);
@@ -428,11 +432,11 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 for (int i = 0; i < gridArray.length()-1; i++){
                     JSONArray row = (JSONArray) gridArray.get(i);
                     for (int j = 0; j< row.length()-1; j++){
-                        TextView tv = (TextView) gridLayout.findViewWithTag(Integer.toString(j)+ i);
+                        TextView tv = gridLayout.findViewWithTag(Integer.toString(j)+ i);
                         tv.setText(row.get(j).toString());
                     }
                     JSONArray rguide = (JSONArray)row.get(row.length()-1);
-                    TextView rGuideTV = (TextView) gridLayout.findViewWithTag("g"+i);
+                    TextView rGuideTV = gridLayout.findViewWithTag("g"+i);
                     if(rguide.get(0).toString().equals("0")){
                         rGuideTV.setText(rguide.get(1).toString());
                     }
@@ -443,7 +447,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                         rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
                     }
                 }
-                TextView guideanswer = (TextView) gridLayout.findViewWithTag("answerguide");
+                TextView guideanswer = gridLayout.findViewWithTag("answerguide");
                 guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
                 answer.remove(answer.length()-1);
                 timerStopped=false;
@@ -459,7 +463,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     public void timerFunc(){
         timerHandler = new Handler();
-        final TextView timerTV = (TextView) findViewById(R.id.timeTV_game);
+        final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -473,10 +477,12 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     }
 
+    @SuppressLint("DefaultLocale")
     public static String formatTime(int secs) {
         return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
     }
 
+    @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
         loadingDialog = new LoadingDialog(GameActivitySayiBulmaca.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
@@ -490,17 +496,17 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     public void clearGrid(){
         operations = new ArrayList<>();
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         for (int i = 0; i < gridSize; i++) {
-            TextView currentBox = ((TextView) gridLayout.findViewWithTag("answer" + i));
+            TextView currentBox = gridLayout.findViewWithTag("answer" + i);
             currentBox.setText("");
             currentBox.setEnabled(true);
         }
         if(clickedBox != -1){
             if (clickedBox == 0) {
-                ((TextView) gridLayout.findViewWithTag("answer" + clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
+                gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
             } else {
-                ((TextView) gridLayout.findViewWithTag("answer" + clickedBox)).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
+                gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
             }
         }
 
@@ -522,7 +528,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         TextView deleteTV = findViewById(R.id.deleteTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
         for(int i = 0; i<10; i++){
-            ((Button)numsLayout.findViewWithTag(Integer.toString(i))).setEnabled(true);
+            numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
         }
         undoTV.setEnabled(true);
         deleteTV.setEnabled(true);

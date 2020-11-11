@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -14,7 +15,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -39,13 +39,10 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     int gridSize = 6;
     int timerInSeconds = 0;
     boolean timerStopped=false;
-    boolean undoing=false;
     boolean paused = false;
     boolean gotQuestion = false;
-    boolean[] draftModeActive= new boolean[81];
 
     List<List<String>> operations = new ArrayList<>();
-    JSONArray question;
     List<String> clueIndexes = new ArrayList<>();
     List<String> answer = new ArrayList<>();
     LoadingDialog loadingDialog;
@@ -78,7 +75,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked(View view) throws JSONException {
+    public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
         if(!clueIndexes.contains(answerIndex)) {
@@ -96,7 +93,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 op = "0";
             }
             clickedBox = answerIndex;
-            ArrayList newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
+            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
             if(!newOp.equals(operations.get(operations.size() - 1))){
                 operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
             }
@@ -112,9 +109,8 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             List<String> tuple1 = operations.get(operations.size()-1);
             operations = operations.subList(0,operations.size()-1);
             String co1 = tuple1.get(0);
-            String num1 = tuple1.get(1);
             String num2 = "0";
-            String co2 = "00";
+            String co2;
             for(int i = operations.size()-1; i>0; i--){
                 List<String> tuple2 = operations.get(i);
                 co2 = tuple2.get(0);
@@ -173,7 +169,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view) throws JSONException {
+    public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i<gridSize; i++){
@@ -207,7 +203,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-            TextView timerTV = (TextView) leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
@@ -247,7 +243,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                URL reqURL = new URL(strings[0]);
+                URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -284,8 +280,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-//            JSONObject jsonObject = null;
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
                 JSONArray gridArray = (JSONArray) ((JSONArray)((JSONArray)((JSONArray)jb.get("Info")).get(0)).get(0)).get(0);
@@ -294,25 +288,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 gotQuestion = true;
                 timerFunc();
                 loadingDialog.dismissDialog();
-//                JSONArray gottenArray = (JSONArray)((JSONArray)jb.get("Info")).get(0);
-//                answer = (JSONArray) gottenArray.get(1);
-//                question = (JSONArray) gottenArray.get(0);
-//                Log.i("question",""+question);
-//                Log.i("answer",""+answer);
-//                for (int i = 0; i < question.length(); i++){
-//                    JSONArray row = (JSONArray) question.get(i);
-//                    for (int j = 0; j< row.length(); j++){
-//                        if(!row.get(j).toString().equals("0")) {
-//                            TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-//                            tv.setText(row.get(j).toString());
-//                            tv.setTextColor(getResources().getColor(R.color.near_black_blue));
-//                            clueIndexes.add(Integer.toString(j)+i);
-//                        }
-//                    }
-//                }
-//                timerStopped=false;
-//                timerFunc();
-//                loadingDialog.dismissDialog();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -322,7 +297,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        int answerCount = 0;
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++) {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
@@ -332,7 +306,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 }
                 else if(n.equals("-1")){
                     answer.add(Integer.toString(j)+i);
-                    answerCount++;
                 }
             }
         }
@@ -340,7 +313,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
     public void timerFunc(){
         timerHandler = new Handler();
-        final TextView timerTV = (TextView) findViewById(R.id.timeTV_game);
+        final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -354,10 +327,12 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
     }
 
+    @SuppressLint("DefaultLocale")
     public static String formatTime(int secs) {
         return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
     }
 
+    @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
         loadingDialog = new LoadingDialog(GameActivityHazineAvi.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
@@ -382,11 +357,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         timerStopped=true;
     }
 
-    public void initDraftModeActiveVar(){
-        for(int i = 0; i<gridSize*gridSize; i++){
-            draftModeActive[i] = false;
-        }
-    }
 
     public void mainFunc(){
         TextView undoTV = findViewById(R.id.undoTV_ga);
@@ -394,9 +364,8 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/HazineAvi5?Info=1&Token=fx!Ay:;%3Cp6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/HazineAvi"+gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -412,14 +381,14 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             setContentView(R.layout.activity_game_hazine_avi5);
             gridSize=5;
         }
-//        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-//            setContentView(R.layout.activity_game_hazine_avi8);
-//            gridSize=8;
-//        }
-//        else{
-//            setContentView(R.layout.activity_game_hazine_avi10);
-//            gridSize=10;
-//        }
+        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+            setContentView(R.layout.activity_game_hazine_avi8);
+            gridSize=8;
+        }
+        else{
+            setContentView(R.layout.activity_game_hazine_avi10);
+            gridSize=10;
+        }
 
         mainFunc();
 

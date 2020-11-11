@@ -1,10 +1,6 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.gridlayout.widget.GridLayout;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -15,9 +11,12 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,6 +147,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void numClicked(View view){
         Button btn = (Button) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
@@ -162,7 +162,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                     if(gridSize<=4) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     else if(gridSize==5) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
                     else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-                    ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                    List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
                     if(!newOp.equals(operations.get(operations.size() - 1))){
                         operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
                     }
@@ -170,7 +170,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                 else{
                     if(currentBox.getText().toString().contains(btn.getTag().toString())){
                         currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
-                        ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                        List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
                         if(!newOp.equals(operations.get(operations.size() - 1))){
                             operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
                         }
@@ -182,7 +182,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                     else{
                         if(currentBox.getText().toString().length() <= 8) {
                             currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-                            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                            List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
                             if(!newOp.equals(operations.get(operations.size() - 1))){
                                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
                             }
@@ -192,7 +192,7 @@ public class GameActivityPiramit extends AppCompatActivity{
             }
             else{
                 currentBox.setText(btn.getTag().toString());
-                ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
                 if(!newOp.equals(operations.get(operations.size() - 1))){
                     operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
                 }
@@ -531,10 +531,12 @@ public class GameActivityPiramit extends AppCompatActivity{
 
     }
 
+    @SuppressLint("DefaultLocale")
     public static String formatTime(int secs) {
         return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
     }
 
+    @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
         loadingDialog = new LoadingDialog(GameActivityPiramit.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();

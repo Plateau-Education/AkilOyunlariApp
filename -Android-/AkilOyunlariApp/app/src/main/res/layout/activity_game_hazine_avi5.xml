@@ -570,7 +570,7 @@
             android:fontFamily="@font/mohave_bold"
             android:background="@drawable/nums_gl_bg"/>
 
-        </LinearLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

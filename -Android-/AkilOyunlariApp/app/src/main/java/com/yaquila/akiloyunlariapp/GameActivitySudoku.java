@@ -4,6 +4,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -114,6 +115,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void numClicked(View view){
         Button btn = (Button) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
@@ -127,7 +129,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                     currentBox.setText(btn.getTag().toString());
                     if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                    ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                    List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
                     if(!newOp.equals(operations.get(operations.size() - 1))){
                         operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
                     }
@@ -135,7 +137,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                 else{
                     if(currentBox.getText().toString().contains(btn.getTag().toString())){
                         currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
-                        ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                        List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
                         if(!newOp.equals(operations.get(operations.size() - 1))){
                             operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
                         }
@@ -148,7 +150,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                     else{
                         if(currentBox.getText().toString().length() <= 10) {
                             currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-                            ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
+                            List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
                             if(!newOp.equals(operations.get(operations.size() - 1))){
                                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
                             }
@@ -158,7 +160,7 @@ public class GameActivitySudoku extends AppCompatActivity {
             }
             else{
                 currentBox.setText(btn.getTag().toString());
-                ArrayList newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
+                List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
                 if(!newOp.equals(operations.get(operations.size() - 1))){
                     operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
                 }
@@ -178,9 +180,9 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         if(!clickedBox.equals("-1")){
-            TextView currentBox = ((TextView)gridLayout.findViewWithTag(clickedBox));
+            TextView currentBox = gridLayout.findViewWithTag(clickedBox);
             if(!currentBox.getText().toString().equals("")){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, "-1")));
                 Log.i("operations",operations+"");
@@ -264,7 +266,7 @@ public class GameActivitySudoku extends AppCompatActivity {
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-            TextView timerTV = (TextView) leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
@@ -338,7 +340,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String result = "";
+                StringBuilder result = new StringBuilder();
                 URL reqURL = new URL(strings[0] + "?" + "Info=1&Req=True&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
@@ -358,11 +360,11 @@ public class GameActivitySudoku extends AppCompatActivity {
                 while (data != -1) {
 
                     char current = (char) data;
-                    result += current;
+                    result.append(current);
                     data = reader.read();
                 }
-                Log.i("result",result);
-                return result;
+                Log.i("result", result.toString());
+                return result.toString();
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -409,7 +411,7 @@ public class GameActivitySudoku extends AppCompatActivity {
 
     public void timerFunc(){
         timerHandler = new Handler();
-        final TextView timerTV = (TextView) findViewById(R.id.timeTV_game);
+        final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -423,10 +425,12 @@ public class GameActivitySudoku extends AppCompatActivity {
 
     }
 
+    @SuppressLint("DefaultLocale")
     public static String formatTime(int secs) {
         return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
     }
 
+    @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
         loadingDialog = new LoadingDialog(GameActivitySudoku.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
