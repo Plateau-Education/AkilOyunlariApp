@@ -39,6 +39,9 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.contains("Sudoku")){
             intent = new Intent(getApplicationContext(), GameActivitySudoku.class);
         }
+        else if (gameName.matches("Hazine Avı")){
+            intent = new Intent(getApplicationContext(), GameActivityHazineAvi.class);
+        }
         else{
 //            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();

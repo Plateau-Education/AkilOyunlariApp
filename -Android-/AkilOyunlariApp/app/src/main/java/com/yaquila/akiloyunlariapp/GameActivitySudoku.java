@@ -43,6 +43,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     boolean timerStopped=false;
     boolean undoing=false;
     boolean paused = false;
+    boolean gotQuestion = false;
     boolean[] draftModeActive= new boolean[81];
 
     List<List<String>> operations = new ArrayList<>();
@@ -243,8 +244,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void checkAnswer(View view){
-        //TODO change the whole checking algorithm for sudoku.
-        GridLayout gridLayout = (GridLayout) findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++){
@@ -397,6 +397,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                     }
                 }
                 timerStopped=false;
+                gotQuestion=true;
                 timerFunc();
                 loadingDialog.dismissDialog();
 
@@ -536,7 +537,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        timerInSeconds = pausedTime;
-        if(paused){
+        if(paused&&gotQuestion){
             timerStopped=false;
             paused=false;
             timerFunc();

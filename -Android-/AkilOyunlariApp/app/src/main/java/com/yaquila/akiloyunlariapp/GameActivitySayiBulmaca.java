@@ -31,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class GameActivitySayiBulmaca extends AppCompatActivity {
 
@@ -42,6 +43,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     boolean timerStopped=false;
     boolean undoing=false;
     boolean paused = false;
+    boolean gotQuestion = false;
     boolean[] draftModeActive= new boolean[5];
 
     List<List<Integer>> operations = new ArrayList<>();
@@ -219,12 +221,13 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void notesOnGrid(View view) {
         TextView clickedTV = (TextView) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         String clickedNum = clickedTV.getText().toString();
 //        Log.i("debugLog","beforeIfs");
-        if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
+        if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
 //            Log.i("debugLog","stroke_bg");
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -235,7 +238,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 }
             }
         }
-        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_bluegreen).getConstantState())) {
+        else if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg_bluegreen).getConstantState())) {
 //            Log.i("debugLog","stroke_bg_red");
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -246,7 +249,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 }
             }
         }
-        else if (clickedTV.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
+        else if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
 //            Log.i("debugLog","stroke_bg_bluegreen");
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -444,6 +447,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
                 answer.remove(answer.length()-1);
                 timerStopped=false;
+                gotQuestion=true;
                 timerFunc();
                 loadingDialog.dismissDialog();
 
@@ -581,7 +585,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        timerInSeconds = pausedTime;
-        if(paused){
+        if(paused&&gotQuestion){
             timerStopped=false;
             paused=false;
             timerFunc();

@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SizeActivityForTwoSizedGames"></activity>
+        <activity android:name=".GameActivityHazineAvi"></activity>
+        <activity android:name=".SizeActivityForTwoSizedGames" />
         <activity android:name=".GameActivitySudoku" />
         <activity android:name=".GameActivityPiramit" />
         <activity android:name=".DifficultyActivity" />
