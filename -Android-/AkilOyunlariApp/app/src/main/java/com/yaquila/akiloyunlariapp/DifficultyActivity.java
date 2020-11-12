@@ -42,6 +42,9 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.matches("Hazine Avı")){
             intent = new Intent(getApplicationContext(), GameActivityHazineAvi.class);
         }
+        else if (gameName.matches("Patika")){
+            intent = new Intent(getApplicationContext(), GameActivityPatika.class);
+        }
         else{
 //            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
@@ -65,17 +68,7 @@ public class DifficultyActivity extends AppCompatActivity {
 
     public void arrangeDifficulties(){
         LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
-        if (gameName.matches("Patika")){
-            int[] diffIds = {R.string.VeryEasy,R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
-            for (int i = 0; i < 5; i++){
-                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
-                TextView currentTV = (TextView) currentRL.getChildAt(0);
-                currentTV.setText(diffIds[i]);
-                currentRL.setVisibility(View.VISIBLE);
-                currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 27);
-            }
-        }
-        else if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
+        if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
             for (int i = 0; i < 4; i++){
                 RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
@@ -85,7 +78,7 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
             }
         }
-        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
+        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Patika", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
                 RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));

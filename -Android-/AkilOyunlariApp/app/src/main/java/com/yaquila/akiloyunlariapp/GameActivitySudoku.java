@@ -277,6 +277,8 @@ public class GameActivitySudoku extends AppCompatActivity {
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
+                    if (gridSize==9)((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    else ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                 }
             }
             for(int i = 1; i<gridSize+1; i++){

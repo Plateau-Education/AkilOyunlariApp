@@ -89,6 +89,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 else{
                     gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
                 }
+                ((TextView) gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
             }
             if(answerIndex == 0){
                 box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft_shallow2));

@@ -161,7 +161,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                     currentBox.setText(btn.getTag().toString());
                     if(gridSize<=4) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     else if(gridSize==5) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                     List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
                     if(!newOp.equals(operations.get(operations.size() - 1))){
                         operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
@@ -308,6 +308,7 @@ public class GameActivityPiramit extends AppCompatActivity{
             TextView resetTV = findViewById(R.id.resetTV_game);
             for (int i = 0; i < answerCount; i++) {
                 gridLayout.findViewWithTag("answer" + i).setEnabled(false);
+                ((TextView) gridLayout.findViewWithTag("answer"+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
             }
             for(int i = 1; i<10; i++){
                 numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(false);
@@ -368,46 +369,6 @@ public class GameActivityPiramit extends AppCompatActivity{
                 }
             }
         }
-//        GridLayout numGrid = (GridLayout) findViewById(R.id.numsGL_ga);
-//        GridLayout questionGrid = (GridLayout) findViewById(R.id.gridGL_ga);
-//        if(clickedBox != -1){
-//            TextView currentClickedBox = (TextView) questionGrid.findViewWithTag("answer"+ clickedBox);
-//            if(currentClickedBox.getText().toString().length() == 1){
-//                if(currentClickedBox.getTextSize() == 25){
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-//                    for(int i = 0; i<10; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-//                    }
-//                    draftModeActive[clickedBox] = true;
-//                }
-//                else{
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-//                    for(int i = 0; i<10; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-//                    }
-//                    draftModeActive[clickedBox] = false;
-//                }
-//            }
-//            else if (currentClickedBox.getText().toString().length() == 0) {
-//                if (draftModeActive[clickedBox]) {
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-//                    for (int i = 0; i < 10; i++) {
-//                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-//                    }
-//                    draftModeActive[clickedBox] = false;
-//                }
-//                else{
-//                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-//                    for(int i = 0; i<10; i++){
-//                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-//                    }
-//                    draftModeActive[clickedBox] = true;
-//                }
-//            }
-//            else{
-//                draftModeActive[clickedBox] = true;
-//            }
-//        }
     }
 
     public class GetRequest extends AsyncTask<String, Void, String> {
