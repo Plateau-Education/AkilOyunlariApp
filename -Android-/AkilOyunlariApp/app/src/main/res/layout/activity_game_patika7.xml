@@ -65,14 +65,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/mohave_bold"
-        android:text="@string/Easy"
+        android:text="@string/Medium"
         android:textColor="@color/near_black_blue"
         android:textSize="36sp"
-        app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game"
-        app:layout_constraintStart_toStartOf="@id/gridGL_ga"
-        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintBottom_toTopOf="@+id/gridGL_ga"
         app:layout_constraintEnd_toEndOf="@id/gridGL_ga"
-        app:layout_constraintBottom_toTopOf="@+id/gridGL_ga" />
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintStart_toStartOf="@id/gridGL_ga"
+        app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game" />
 
     <TextView
         android:id="@+id/resetTV_game"
@@ -98,6 +98,8 @@
         android:id="@+id/gridGL_ga"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -110,14 +112,14 @@
             android:layout_height="wrap_content"
             app:layout_row="1"
             app:layout_column="1"
-            app:layout_rowSpan="5"
-            app:layout_columnSpan="5"/>
+            app:layout_rowSpan="7"
+            app:layout_columnSpan="7"/>
 
         <TextView
             android:id="@+id/grid5_00"
             android:tag="00"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
@@ -129,8 +131,8 @@
         <TextView
             android:id="@+id/grid5_10"
             android:tag="10"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
@@ -142,8 +144,8 @@
         <TextView
             android:id="@+id/grid5_20"
             android:tag="20"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
@@ -155,12 +157,9 @@
         <TextView
             android:id="@+id/grid5_30"
             android:tag="30"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -171,12 +170,9 @@
         <TextView
             android:id="@+id/grid5_40"
             android:tag="40"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -185,14 +181,37 @@
             app:layout_row="1" />
 
         <TextView
+            android:id="@+id/grid5_50"
+            android:tag="50"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid5_60"
+            android:tag="60"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="1" />
+
+        <TextView
             android:id="@+id/grid5_01"
             android:tag="01"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -203,12 +222,9 @@
         <TextView
             android:id="@+id/grid5_11"
             android:tag="11"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -219,12 +235,9 @@
         <TextView
             android:id="@+id/grid5_21"
             android:tag="21"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -235,12 +248,9 @@
         <TextView
             android:id="@+id/grid5_31"
             android:tag="31"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -251,12 +261,9 @@
         <TextView
             android:id="@+id/grid5_41"
             android:tag="41"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -265,14 +272,37 @@
             app:layout_row="2" />
 
         <TextView
+            android:id="@+id/grid5_51"
+            android:tag="51"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid5_61"
+            android:tag="61"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="2" />
+
+        <TextView
             android:id="@+id/grid5_02"
             android:tag="02"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -283,12 +313,9 @@
         <TextView
             android:id="@+id/grid5_12"
             android:tag="12"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -299,12 +326,9 @@
         <TextView
             android:id="@+id/grid5_22"
             android:tag="22"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -315,12 +339,9 @@
         <TextView
             android:id="@+id/grid5_32"
             android:tag="32"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -331,12 +352,9 @@
         <TextView
             android:id="@+id/grid5_42"
             android:tag="42"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -345,14 +363,37 @@
             app:layout_row="3" />
 
         <TextView
+            android:id="@+id/grid5_52"
+            android:tag="52"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid5_62"
+            android:tag="62"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="3" />
+
+        <TextView
             android:id="@+id/grid5_03"
             android:tag="03"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -363,12 +404,9 @@
         <TextView
             android:id="@+id/grid5_13"
             android:tag="13"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -379,12 +417,9 @@
         <TextView
             android:id="@+id/grid5_23"
             android:tag="23"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -395,12 +430,9 @@
         <TextView
             android:id="@+id/grid5_33"
             android:tag="33"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -411,12 +443,9 @@
         <TextView
             android:id="@+id/grid5_43"
             android:tag="43"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -425,14 +454,37 @@
             app:layout_row="4" />
 
         <TextView
+            android:id="@+id/grid5_53"
+            android:tag="53"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="4" />
+
+        <TextView
+            android:id="@+id/grid5_63"
+            android:tag="63"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="4" />
+
+        <TextView
             android:id="@+id/grid5_04"
             android:tag="04"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -443,12 +495,9 @@
         <TextView
             android:id="@+id/grid5_14"
             android:tag="14"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -459,12 +508,9 @@
         <TextView
             android:id="@+id/grid5_24"
             android:tag="24"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -475,12 +521,9 @@
         <TextView
             android:id="@+id/grid5_34"
             android:tag="34"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -491,12 +534,9 @@
         <TextView
             android:id="@+id/grid5_44"
             android:tag="44"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
             android:background="@drawable/stroke_bg"
-
-
-
             android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
@@ -504,37 +544,245 @@
             app:layout_column="5"
             app:layout_row="5" />
 
-        <ImageView
-            android:layout_width="306dp"
-            android:layout_height="3dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="0"
-            app:layout_column="0"
-            app:layout_columnSpan="7"/>
-
-        <ImageView
-            android:layout_width="306dp"
-            android:layout_height="3dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="6"
-            app:layout_column="0"
-            app:layout_columnSpan="7"/>
-
-        <ImageView
-            android:layout_width="3dp"
-            android:layout_height="306dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="0"
-            app:layout_column="0"
-            app:layout_rowSpan="7"/>
-
-        <ImageView
-            android:layout_width="3dp"
-            android:layout_height="306dp"
-            android:src="@color/near_black_blue"
-            app:layout_row="0"
+        <TextView
+            android:id="@+id/grid5_54"
+            android:tag="54"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
             app:layout_column="6"
-            app:layout_rowSpan="7"/>
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid5_64"
+            android:tag="64"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid5_05"
+            android:tag="05"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_15"
+            android:tag="15"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_25"
+            android:tag="25"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_35"
+            android:tag="35"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_45"
+            android:tag="45"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_55"
+            android:tag="55"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_65"
+            android:tag="65"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid5_06"
+            android:tag="06"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_16"
+            android:tag="16"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_26"
+            android:tag="26"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_36"
+            android:tag="36"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_46"
+            android:tag="46"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_56"
+            android:tag="56"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="6"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid5_66"
+            android:tag="66"
+            android:layout_width="42.857dp"
+            android:layout_height="42.857dp"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="7"
+            app:layout_row="7" />
+
+        <ImageView
+            android:layout_width="306dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="0"
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+
+        <ImageView
+            android:layout_width="306dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="8"
+            app:layout_column="0"
+            app:layout_columnSpan="9"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="306dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="0"
+            app:layout_column="0"
+            app:layout_rowSpan="9"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="306dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="0"
+            app:layout_column="8"
+            app:layout_rowSpan="9"/>
 
 
 

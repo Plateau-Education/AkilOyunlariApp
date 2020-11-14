@@ -36,6 +36,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,16 +48,18 @@ public class GameActivityPatika extends AppCompatActivity {
     String previousCoor;
     String[] rowColumn;
     String[][] lineGrid = new String[81][81];
-    int gridSize = 6;
+    int gridSize = 5;
     int timerInSeconds = 0;
+    int pxHeight = 900;
     boolean timerStopped=false;
     boolean paused = false;
     boolean gotQuestion = false;
     boolean is_moving = false;
+    boolean solvedQuestion = false;
 
     List<String> operations = new ArrayList<>();
+    List<String> opsForUndo = new ArrayList<>();
     List<String> clueIndexes = new ArrayList<>();
-    List<String> answer = new ArrayList<>();
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
@@ -98,10 +101,46 @@ public class GameActivityPatika extends AppCompatActivity {
         leaveDialog.show();
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//    public void undoOperation(View view){
-//        if(operations.size() > 1){
-////            operations = operations.subList(0,operations.size()-1);
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void undoOperation(View view){
+        if(opsForUndo.size() > 2){
+            String op = opsForUndo.get(opsForUndo.size()-1);
+            String previousC = op.substring(0,2);
+            String currentC = op.substring(2,4);
+            int[] firstMP = middlePoint(previousC);
+            int[] secondMP = middlePoint(currentC);
+            if(op.charAt(4) == '+'){
+                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1]);
+                removeLine(previousC,currentC);
+                for(int i = operations.size()-1; i >= 0; i--){
+                    if(operations.get(i).equals(previousC + currentC)){
+                        operations.remove(i);
+                        break;
+                    }
+                }
+                removeLine(currentC,previousC);
+                for(int i = operations.size()-1; i >= 0; i--){
+                    if(operations.get(i).equals(currentC + previousC)){
+                        operations.remove(i);
+                        break;
+                    }
+                }
+                paint.setXfermode(null);
+
+            } else {
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1]);
+                addLine(previousC, currentC);
+                operations.add(previousC+currentC);
+            }
+            for(int i = opsForUndo.size()-1; i >= 0; i--){
+                if(opsForUndo.get(i).equals(op)){
+                    opsForUndo.remove(i);
+                    break;
+                }
+            }
+            Log.i("opsforUndo",opsForUndo.toString());
+//            operations = operations.subList(0,operations.size()-1);
 //            List<String> tuple1 = operations.get(operations.size()-1);
 //            operations = operations.subList(0,operations.size()-1);
 //            String co1 = tuple1.get(0);
@@ -127,8 +166,8 @@ public class GameActivityPatika extends AppCompatActivity {
 //            else{
 //                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
 //            }
-//        }
-//    }
+        }
+    }
 
     public void resetGrid(View view){
         try {
@@ -148,6 +187,10 @@ public class GameActivityPatika extends AppCompatActivity {
             operations = new ArrayList<>();
             operations.add("--");
             operations.add("--");
+            opsForUndo = new ArrayList<>();
+            opsForUndo.add("--");
+            opsForUndo.add("--");
+
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
 
@@ -176,7 +219,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 break;
             }
         }
-        Log.i("checking","RD"+checking);
         if(checking){
             for(String s : answerCornerRU){
                 int r = Integer.parseInt(String.valueOf(s.charAt(0)));
@@ -187,7 +229,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 }
             }
         }
-        Log.i("checking","RU"+checking);
         if(checking){
             for(String s : answerCornerLD){
                 int r = Integer.parseInt(String.valueOf(s.charAt(0)));
@@ -198,7 +239,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 }
             }
         }
-        Log.i("checking","LD"+checking);
         if(checking){
             for(String s : answerCornerLU){
                 int r = Integer.parseInt(String.valueOf(s.charAt(0)));
@@ -209,7 +249,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 }
             }
         }
-        Log.i("checking","LU"+checking);
         if(checking){
             for(String s : answerEdgeRL){
                 int r = Integer.parseInt(String.valueOf(s.charAt(0)));
@@ -220,7 +259,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 }
             }
         }
-        Log.i("checking","RL"+checking);
         if(checking){
             for(String s : answerEdgeUD){
                 int r = Integer.parseInt(String.valueOf(s.charAt(0)));
@@ -231,35 +269,9 @@ public class GameActivityPatika extends AppCompatActivity {
                 }
             }
         }
-        Log.i("checking","UD"+checking);
-//        for(int i = 0; i<gridSize; i++){
-//            for(int j = 0; j<gridSize; j++){
-//                String co = Integer.toString(j)+i;
-//                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-//                    checking=false;
-//                    break;
-//                }
-//                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-//                    checking=false;
-//                    break;
-//                }
-//            }
-//        }
-//        for(int i = 0; i < gridSize; i++){
-//            for(int j = 0; j <  gridSize; j++){
-//                try {
-//                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(((JSONArray)answer.get(i)).get(j).toString())){
-//                        checking=false;
-//                    }
-//                    Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-        Log.i("check",checking+"  "+answer);
         if(checking){
-            timerStopped=true;
+            timerStopped = true;
+            solvedQuestion = true;
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
@@ -345,6 +357,7 @@ public class GameActivityPatika extends AppCompatActivity {
                 JSONArray gridArray = (JSONArray) ((JSONArray)((JSONArray)((JSONArray)jb.get("Info")).get(0)).get(0)).get(0);
                 seperateGridAnswer(gridArray);
                 timerStopped=false;
+                solvedQuestion=false;
                 gotQuestion = true;
                 timerFunc();
                 loadingDialog.dismissDialog();
@@ -441,6 +454,10 @@ public class GameActivityPatika extends AppCompatActivity {
         operations = new ArrayList<>();
         operations.add("--");
         operations.add("--");
+        opsForUndo = new ArrayList<>();
+        opsForUndo.add("--");
+        opsForUndo.add("--");
+
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
@@ -452,11 +469,15 @@ public class GameActivityPatika extends AppCompatActivity {
         }
         clickedBox = "-1";
         clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
         timerInSeconds = 0;
         timerStopped=true;
-        bitmap.eraseColor(Color.TRANSPARENT);
-        canvas = new Canvas(bitmap);
+        try{
+            bitmap.eraseColor(Color.TRANSPARENT);
+            canvas = new Canvas(bitmap);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
         for (int i = 0; i < gridSize; i++){
             for(int j = 0; j < gridSize; j++){
                 lineGrid[i][j] = "";
@@ -484,13 +505,13 @@ public class GameActivityPatika extends AppCompatActivity {
     }
 
     public void initSomeVar(){
-        bitmap = Bitmap.createBitmap(900, 900, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(pxHeight, pxHeight, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         canvas.drawColor(getResources().getColor(R.color.transparent));
         paint = new Paint();
         paint.setColor(getResources().getColor(R.color.near_black_blue));
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(12);
+        paint.setStrokeWidth((float)pxHeight/75);
         paint.setAntiAlias(true);
 
         for (int i = 0; i < gridSize; i++){
@@ -503,8 +524,9 @@ public class GameActivityPatika extends AppCompatActivity {
 
     public String[] xyToRowColumn(float x, float y){
         String[] rowColumn = new String[2];
-        rowColumn[0] = Integer.toString((int) Math.floor((x/180)));
-        rowColumn[1] = Integer.toString((int) Math.floor(y/180));
+        float coef = (float)pxHeight/gridSize;
+        rowColumn[0] = Integer.toString((int) Math.floor(x/coef));
+        rowColumn[1] = Integer.toString((int) Math.floor(y/coef));
         return rowColumn;
     }
 
@@ -512,20 +534,22 @@ public class GameActivityPatika extends AppCompatActivity {
         int x = Integer.parseInt(String.valueOf(coor.charAt(0)));
         int y = Integer.parseInt(String.valueOf(coor.charAt(1)));
         int[] middle_point = new int[2];
-        middle_point[0] = 180*x+90;
-        middle_point[1] = 180*y+90;
+        float coef = (float)pxHeight/gridSize;
+        middle_point[0] = (int) (coef*x+coef/2);
+        middle_point[1] = (int) (coef*y+coef/2);
         return middle_point;
     }
 
     public void drawALine(float startX, float startY, float stopX, float stopY){
         ImageView imageView = findViewById(R.id.canvasIV);
 //        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
+        int offset = pxHeight/150;
         if(startY-stopY==0){
-            if(startX<stopX) canvas.drawLine(startX-6, startY, stopX+6, stopY, paint);
-            else canvas.drawLine(startX+6, startY, stopX-6, stopY, paint);
+            if(startX<stopX) canvas.drawLine(startX-offset, startY, stopX+offset, stopY, paint);
+            else canvas.drawLine(startX+offset, startY, stopX-offset, stopY, paint);
         } else {
-            if(startY<stopY) canvas.drawLine(startX, startY-6, stopX, stopY-6, paint);
-            else canvas.drawLine(startX, startY+6, stopX, stopY-6, paint);
+            if(startY<stopY) canvas.drawLine(startX, startY-offset, stopX, stopY+offset, paint);
+            else canvas.drawLine(startX, startY+offset, stopX, stopY-offset, paint);
         }
         imageView.setImageBitmap(bitmap);
     }
@@ -583,11 +607,13 @@ public class GameActivityPatika extends AppCompatActivity {
 
             }
         }
+//        Log.i("eraseModeRemoveLine",r1+" "+c1+" "+lineGrid[r1][c1]+" / "+r2+" "+c2+" "+lineGrid[r2][c2]);
     }
 
     public boolean isMoreLineCanBeAdded(String coor){
         int r = Integer.parseInt(String.valueOf(coor.charAt(0)));
         int c = Integer.parseInt(String.valueOf(coor.charAt(1)));
+        Log.i("rc",r+"  "+c);
         if(lineGrid[r][c].length() < 2){
             return true;
         }
@@ -597,13 +623,24 @@ public class GameActivityPatika extends AppCompatActivity {
     }
 
     public boolean lineCanBeDrawn(String currentC, String previousC){
-        return (!currentC.equals(previousCoor)
+//        Log.i("eraseModeLineCanBeDrawn","---------------------------"+previousC+"--"+currentC);
+//        Log.i("eraseModeLineCanBeDrawn","!currentC.equals(previousC)"+ !currentC.equals(previousC));
+//        Log.i("eraseModeLineCanBeDrawn","not cross or more than one box"+ ((currentC.charAt(0) == previousC.charAt(0)
+//                && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
+//                ||      (currentC.charAt(1) == previousC.charAt(1)
+//                && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
+//        ));
+//        Log.i("eraseModeLineCanBeDrawn","isMoreLineCanBeAdded(previousC)"+ !isMoreLineCanBeAdded(previousC));
+//        Log.i("eraseModeLineCanBeDrawn","isMoreLineCanBeAdded(currentC)"+ !isMoreLineCanBeAdded(currentC));
+//
+
+        return (!currentC.equals(previousC)
                 && (
-                (currentC.charAt(0) == previousCoor.charAt(0)
+                (currentC.charAt(0) == previousC.charAt(0)
                         && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
                         ||      (currentC.charAt(1) == previousC.charAt(1)
                         && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
-        )
+                    )
                 && isMoreLineCanBeAdded(previousC) && isMoreLineCanBeAdded(currentC));
     }
 
@@ -631,20 +668,32 @@ public class GameActivityPatika extends AppCompatActivity {
         assert difficulty != null;
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
             setContentView(R.layout.activity_game_patika5);
+            Log.i("diff","easy");
             gridSize=5;
         }
-//        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-//            setContentView(R.layout.activity_game_hazine_avi8);
-//            gridSize=8;
-//        }
-//        else{
-//            setContentView(R.layout.activity_game_hazine_avi10);
-//            gridSize=10;
-//        }
-
-        initSomeVar();
+        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+            setContentView(R.layout.activity_game_patika7);
+            gridSize=7;
+            Log.i("diff","medium");
+        }
+        else{
+            setContentView(R.layout.activity_game_patika9);
+            gridSize=9;
+            Log.i("diff","hard");
+        }
 
         final GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+
+        Handler uiHandler = new Handler();
+        uiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                pxHeight = (gridLayout.getHeight()/306)*300;
+                initSomeVar();
+                Log.i("pxheight",pxHeight+"");
+            }
+        }, 200);
+
         gridLayout.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
@@ -652,7 +701,7 @@ public class GameActivityPatika extends AppCompatActivity {
                 float mx = motionEvent.getX();
                 float my = motionEvent.getY();
                 Log.i("x / y",mx + " / " + my);
-                if(mx >= 0 && mx <= 900 && my >= 0 && my <= 900){
+                if(mx >= 0 && mx <= pxHeight && my >= 0 && my <= pxHeight){
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
                             rowColumn = xyToRowColumn(mx,my);
@@ -662,49 +711,52 @@ public class GameActivityPatika extends AppCompatActivity {
                         case MotionEvent.ACTION_MOVE:
                             rowColumn = xyToRowColumn(mx,my);
                             String currentCoor = rowColumn[0] + rowColumn[1];
-                            Log.i("coor",currentCoor);
-                            if(lineCanBeDrawn(currentCoor,previousCoor)){
+//                            Log.i("coor",currentCoor);
+                            if(lineCanBeDrawn(currentCoor,previousCoor) || (operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
                                 is_moving=true;
                                 int[] firstMP = middlePoint(previousCoor);
                                 int[] secondMP = middlePoint(currentCoor);
-                                if(currentCoor.equals(operations.get(operations.size() - 2))){
+                                if((operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
+//                                    Log.i("eraseMode","ON");
                                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                                     drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1]);
-                                    removeLine(previousCoor,currentCoor);
+                                    if(operations.contains(previousCoor+currentCoor)){
+                                        removeLine(previousCoor,currentCoor);
+                                        operations.remove(previousCoor+currentCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
+                                    }
+                                    else{
+                                        removeLine(currentCoor,previousCoor);
+                                        operations.remove(currentCoor+previousCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
+                                    }
                                     paint.setXfermode(null);
                                 }
                                 else{
+                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ previousCoor);
                                     drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1]);
                                     addLine(previousCoor, currentCoor);
+                                    operations.add(previousCoor+currentCoor);
+                                    opsForUndo.add(previousCoor+currentCoor+"+");
                                 }
-                                operations.add(currentCoor);
                                 previousCoor = currentCoor;
+                                if(isGridFull()){
+                                    checkAnswer(null);
+                                }
                                 Log.i("LineGrid", Arrays.deepToString(lineGrid));
                             }
                             break;
                         case MotionEvent.ACTION_UP:
                             if(!is_moving){
                                 Log.i("Pressed","Pressed");
-//                                rowColumn = xyToRowColumn(mx,my);
-//                                currentCoor = rowColumn[0] + rowColumn[1];
-//                                int[] firstMP = middlePoint(previousCoor);
-//                                int[] secondMP = middlePoint(currentCoor);
-//                                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1]);
-//                                paint.setXfermode(null);
                             }
-                            if(isGridFull()){
-                                checkAnswer(null);
-                            }
+//                            if(isGridFull()){
+//                                checkAnswer(null);
+//                            }
                             break;
                     }
-
-//                    String[] rowColumn = xyToRowColumn(mx,my);
-//                    String currentCoor = rowColumn[0] + rowColumn[1];
-//                    Log.i("coor",currentCoor);
-//                    if (Objects.equals(currentBox.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg).getConstantState()))
-//                        currentBox.setBackground(getResources().getDrawable(R.color.near_black_blue));
                 }
+
                 return true;
             }
         });
