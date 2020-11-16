@@ -24,5 +24,6 @@
     <string name="Correct">Doğru</string>
     <string name="Next">Sonraki</string>
     <string name="GameMenu">Menü</string>
+    <string name="Size">Boyut</string>
 
 </resources>

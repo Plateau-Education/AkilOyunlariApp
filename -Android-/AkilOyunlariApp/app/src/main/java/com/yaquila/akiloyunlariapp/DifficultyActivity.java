@@ -18,7 +18,9 @@ public class DifficultyActivity extends AppCompatActivity {
     String gameName;
 
     public void goToGameList(View view){
-        Intent intent = new Intent(this, GameListActivity.class);
+        Intent intent;
+        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        else intent = new Intent(this, GameListActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -34,11 +36,21 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.matches("Piramit")){
             intent = new Intent(getApplicationContext(), GameActivityPiramit.class);
         }
+        else if (gameName.contains("Sudoku")){
+            intent = new Intent(getApplicationContext(), GameActivitySudoku.class);
+        }
+        else if (gameName.matches("Hazine Avı")){
+            intent = new Intent(getApplicationContext(), GameActivityHazineAvi.class);
+        }
+        else if (gameName.matches("Patika")){
+            intent = new Intent(getApplicationContext(), GameActivityPatika.class);
+        }
         else{
 //            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 //            throw new IllegalArgumentException("Not Sayı Bulmaca");
         }
+        assert intent != null;
         intent.putExtra("gameName", gameName);
         intent.putExtra("difficulty",tvdiff.getText());
         startActivity(intent);
@@ -56,17 +68,7 @@ public class DifficultyActivity extends AppCompatActivity {
 
     public void arrangeDifficulties(){
         LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
-        if (gameName.matches("Patika")){
-            int[] diffIds = {R.string.VeryEasy,R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
-            for (int i = 0; i < 5; i++){
-                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
-                TextView currentTV = (TextView) currentRL.getChildAt(0);
-                currentTV.setText(diffIds[i]);
-                currentRL.setVisibility(View.VISIBLE);
-                currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 27);
-            }
-        }
-        else if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
+        if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
             for (int i = 0; i < 4; i++){
                 RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
@@ -76,7 +78,7 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
             }
         }
-        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9","Sudoku", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
+        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Patika", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
                 RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
@@ -105,13 +107,17 @@ public class DifficultyActivity extends AppCompatActivity {
 ////            Log.i("gameName", intent.getStringExtra("gameName"));
 //            Toast.makeText(this, gameName, Toast.LENGTH_SHORT).show();
 //        }
+
         arrangeDifficulties();
 
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Intent intent;
+        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        else intent = new Intent(this, GameListActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

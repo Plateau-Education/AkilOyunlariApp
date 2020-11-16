@@ -1,0 +1,1884 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/f7f5fa"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameActivitySudoku">
+
+    <LinearLayout
+        android:id="@+id/backButtonLL_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:onClick="wannaLeaveDialog"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/gridGL_ga"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.35">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:tint="@color/light_red"
+            android:src="@drawable/ic_arrowbutton" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mohave_bold"
+            android:padding="10dp"
+            android:text="@string/Back"
+            android:textColor="@color/light_red"
+            android:textSize="22sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/timeTV_game"
+        android:layout_width="90dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_light_red_bg"
+        android:fontFamily="@font/mohave_bold"
+        android:text="00:00"
+        android:gravity="center"
+        android:textColor="@color/f7f5fa"
+        android:textSize="25sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="3dp"
+        android:paddingBottom="2dp"
+        app:layout_constraintBottom_toBottomOf="@+id/backButtonLL_game"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintStart_toEndOf="@id/backButtonLL_game"
+        app:layout_constraintTop_toTopOf="@+id/backButtonLL_game" />
+
+    <TextView
+        android:id="@+id/diffTV_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_bold"
+        android:text="@string/Hard"
+        android:textColor="@color/near_black_blue"
+        android:textSize="36sp"
+        app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game"
+        app:layout_constraintStart_toStartOf="@id/gridGL_ga"
+        app:layout_constraintHorizontal_bias="0.11"
+        app:layout_constraintEnd_toEndOf="@id/gridGL_ga"
+        app:layout_constraintBottom_toTopOf="@+id/gridGL_ga" />
+
+    <TextView
+        android:id="@+id/resetTV_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/mohave_medium"
+        android:text="@string/ResetUnderlined"
+        android:textColor="@color/reset_selector_tvcolor"
+        android:textSize="20sp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="resetGrid"
+        app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game"
+        app:layout_constraintStart_toStartOf="@id/gridGL_ga"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintVertical_bias="0.7"
+        app:layout_constraintEnd_toEndOf="@id/gridGL_ga"
+        app:layout_constraintBottom_toTopOf="@+id/gridGL_ga" />
+
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridGL_ga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.42">
+
+        <TextView
+            android:id="@+id/grid6_00"
+            android:tag="00"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:textColor="@color/light_red"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_10"
+            android:tag="10"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_20"
+            android:tag="20"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_30"
+            android:tag="30"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_40"
+            android:tag="40"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_50"
+            android:tag="50"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_60"
+            android:tag="60"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_70"
+            android:tag="70"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_80"
+            android:tag="80"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/grid6_01"
+            android:tag="01"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_11"
+            android:tag="11"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_21"
+            android:tag="21"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_31"
+            android:tag="31"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_41"
+            android:tag="41"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="2" />
+
+
+        <TextView
+            android:id="@+id/grid6_51"
+            android:tag="51"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="2" />
+
+
+        <TextView
+            android:id="@+id/grid6_61"
+            android:tag="61"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_71"
+            android:tag="71"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="2" />
+
+
+        <TextView
+            android:id="@+id/grid6_81"
+            android:tag="81"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="2" />
+
+        <TextView
+            android:id="@+id/grid6_02"
+            android:tag="02"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_12"
+            android:tag="12"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_22"
+            android:tag="22"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_32"
+            android:tag="32"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_42"
+            android:tag="42"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="3" />
+
+
+        <TextView
+            android:id="@+id/grid6_52"
+            android:tag="52"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_62"
+            android:tag="62"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_72"
+            android:tag="72"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_82"
+            android:tag="82"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="3" />
+
+        <TextView
+            android:id="@+id/grid6_03"
+            android:tag="03"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_13"
+            android:tag="13"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_23"
+            android:tag="23"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_33"
+            android:tag="33"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_43"
+            android:tag="43"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="5" />
+
+
+        <TextView
+            android:id="@+id/grid6_53"
+            android:tag="53"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_63"
+            android:tag="63"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_73"
+            android:tag="73"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="5" />
+
+
+        <TextView
+            android:id="@+id/grid6_83"
+            android:tag="83"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="5" />
+
+        <TextView
+            android:id="@+id/grid6_04"
+            android:tag="04"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_14"
+            android:tag="14"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_24"
+            android:tag="24"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_34"
+            android:tag="34"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_44"
+            android:tag="44"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="6" />
+
+
+        <TextView
+            android:id="@+id/grid6_54"
+            android:tag="54"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_64"
+            android:tag="64"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="6" />
+
+        <TextView
+            android:id="@+id/grid6_74"
+            android:tag="74"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="6" />
+
+
+        <TextView
+            android:id="@+id/grid6_84"
+            android:tag="84"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="6" />
+
+
+        <TextView
+            android:id="@+id/grid6_05"
+            android:tag="05"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_15"
+            android:tag="15"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_25"
+            android:tag="25"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_35"
+            android:tag="35"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_45"
+            android:tag="45"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="7" />
+
+
+        <TextView
+            android:id="@+id/grid6_55"
+            android:tag="55"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_65"
+            android:tag="65"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_75"
+            android:tag="75"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="7" />
+
+
+        <TextView
+            android:id="@+id/grid6_85"
+            android:tag="85"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="7" />
+
+        <TextView
+            android:id="@+id/grid6_06"
+            android:tag="06"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_16"
+            android:tag="16"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_26"
+            android:tag="26"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_36"
+            android:tag="36"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_46"
+            android:tag="46"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="9" />
+
+
+        <TextView
+            android:id="@+id/grid6_56"
+            android:tag="56"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_66"
+            android:tag="66"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_76"
+            android:tag="76"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="9" />
+
+
+        <TextView
+            android:id="@+id/grid6_86"
+            android:tag="86"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="9" />
+
+        <TextView
+            android:id="@+id/grid6_07"
+            android:tag="07"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_17"
+            android:tag="17"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_27"
+            android:tag="27"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_37"
+            android:tag="37"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_47"
+            android:tag="47"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="10" />
+
+
+        <TextView
+            android:id="@+id/grid6_57"
+            android:tag="57"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="10" />
+
+
+        <TextView
+            android:id="@+id/grid6_67"
+            android:tag="67"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_77"
+            android:tag="77"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="10" />
+
+
+        <TextView
+            android:id="@+id/grid6_87"
+            android:tag="87"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="10" />
+
+        <TextView
+            android:id="@+id/grid6_08"
+            android:tag="08"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="1"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_18"
+            android:tag="18"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="2"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_28"
+            android:tag="28"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="3"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_38"
+            android:tag="38"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="5"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_48"
+            android:tag="48"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="6"
+            app:layout_row="11" />
+
+
+        <TextView
+            android:id="@+id/grid6_58"
+            android:tag="58"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="7"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_68"
+            android:tag="68"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="9"
+            app:layout_row="11" />
+
+        <TextView
+            android:id="@+id/grid6_78"
+            android:tag="78"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeClicked"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="10"
+            app:layout_row="11" />
+
+
+        <TextView
+            android:id="@+id/grid6_88"
+            android:tag="88"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:text=""
+            android:onClick="changeClicked"
+            android:background="@drawable/stroke_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            app:layout_gravity="center"
+            android:textColor="@color/light_red"
+            android:textSize="20sp"
+            app:layout_column="11"
+            app:layout_row="11" />
+
+        <ImageView
+            android:layout_width="298dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="0"
+            app:layout_column="0"
+            app:layout_columnSpan="13"/>
+
+        <ImageView
+            android:layout_width="298dp"
+            android:layout_height="2dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="4"
+            app:layout_column="0"
+            app:layout_columnSpan="13"/>
+        
+        <ImageView
+            android:layout_width="298dp"
+            android:layout_height="2dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="8"
+            app:layout_column="0"
+            app:layout_columnSpan="13"/>
+
+        <ImageView
+            android:layout_width="298dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="12"
+            app:layout_column="0"
+            app:layout_columnSpan="13"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="0"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="5"
+            app:layout_column="0"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="9"
+            app:layout_column="0"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="4"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="5"
+            app:layout_column="4"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="9"
+            app:layout_column="4"
+            app:layout_rowSpan="3"/>
+
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="8"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="5"
+            app:layout_column="8"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="2dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="9"
+            app:layout_column="8"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="1"
+            app:layout_column="12"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="5"
+            app:layout_column="12"
+            app:layout_rowSpan="3"/>
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:src="@color/near_black_blue"
+            app:layout_row="9"
+            app:layout_column="12"
+            app:layout_rowSpan="3"/>
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridGL_ga"
+        app:layout_constraintVertical_bias="0.4">
+
+        <androidx.gridlayout.widget.GridLayout
+            android:id="@+id/numsGL_ga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/nums6_1"
+                android:tag="1"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="1"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="0"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/nums6_2"
+                android:tag="2"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="2"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="1"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/nums6_3"
+                android:tag="3"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="3"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="2"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/nums6_4"
+                android:tag="4"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="4"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="3"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/nums6_5"
+                android:tag="5"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="5"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="4"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/nums6_6"
+                android:tag="6"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="6"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="0"
+                app:layout_row="1" />
+
+            <Button
+                android:id="@+id/nums6_7"
+                android:tag="7"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="7"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="1"
+                app:layout_row="1" />
+
+            <Button
+                android:id="@+id/nums6_8"
+                android:tag="8"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="8"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="2"
+                app:layout_row="1" />
+
+            <Button
+                android:id="@+id/nums6_9"
+                android:tag="9"
+                android:onClick="numClicked"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+            app:layout_gravity="center"
+                android:text="9"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                app:layout_column="3"
+                app:layout_row="1" />
+
+            <ImageButton
+                android:id="@+id/draftbutton_ga"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/nums_gl_bg"
+                android:src="@drawable/ic_draftbutton"
+                android:gravity="center"
+                app:layout_gravity="center"
+                android:onClick="draftClicked"
+                app:layout_column="4"
+                app:layout_row="1" />
+
+
+        </androidx.gridlayout.widget.GridLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp">
+
+            <Button
+                android:id="@+id/undoTV_ga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="35dp"
+                android:paddingEnd="35dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:onClick="undoOperation"
+                android:text="@string/Undo"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                android:textAllCaps="false"
+                android:fontFamily="@font/mohave_bold"
+                android:background="@drawable/nums_gl_bg"/>
+
+            <Button
+                android:id="@+id/deleteTV_ga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingStart="30dp"
+                android:paddingEnd="30dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:onClick="deleteNum"
+                android:text="@string/Delete"
+                android:textAllCaps="false"
+                android:textColor="@color/f7f5fa"
+                android:textSize="22sp"
+                android:fontFamily="@font/mohave_bold"
+                android:background="@drawable/nums_gl_bg"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
