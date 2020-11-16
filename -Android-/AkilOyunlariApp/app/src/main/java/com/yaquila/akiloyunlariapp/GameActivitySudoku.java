@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -88,7 +89,9 @@ public class GameActivitySudoku extends AppCompatActivity {
             if (!clickedBox.equals(answerIndex)) {
                 if (!clickedBox.equals("-1")) {
                     gridLayout.findViewWithTag(clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
+                    if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))])
+                        ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.draft_grey));
+                    else ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
                 }
                 box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
                 box.setTextColor(getResources().getColor(R.color.f7f5fa));
@@ -96,20 +99,25 @@ public class GameActivitySudoku extends AppCompatActivity {
             } else {
                 if (!undoing) {
                     box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    box.setTextColor(getResources().getColor(R.color.light_red));
+                    if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))])
+                        box.setTextColor(getResources().getColor(R.color.draft_grey));
+                    else box.setTextColor(getResources().getColor(R.color.light_red));
                     clickedBox = "-1";
                 }
             }
             if (!clickedBox.equals("-1")){
+                ImageView draftBtn = findViewById(R.id.draftbutton_ga);
                 if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))]) {
                     for (int i = 1; i < gridSize + 1; i++) {
                         ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     }
+                    draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
                 }
                 else{
                     for (int i = 1; i < gridSize + 1; i++) {
                         ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                     }
+                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                 }
             }
         }
@@ -145,6 +153,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                             if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                             else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                             draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+                            findViewById(R.id.draftbutton_ga).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                         }
                     }
                     else{
@@ -309,6 +318,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
+        ImageView draftBtn = findViewById(R.id.draftbutton_ga);
         GridLayout numGrid = findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = findViewById(R.id.gridGL_ga);
         TextView currentClickedBox = questionGrid.findViewWithTag(clickedBox);
@@ -323,6 +333,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                     ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
                 }
                 draftModeActive[boxIndex] = true;
+                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
             }
             else{
                 if(currentClickedBox.getText().toString().length() <= 1) {
@@ -332,6 +343,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                         ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
                     }
                     draftModeActive[boxIndex] = false;
+                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                 }
             }
         }

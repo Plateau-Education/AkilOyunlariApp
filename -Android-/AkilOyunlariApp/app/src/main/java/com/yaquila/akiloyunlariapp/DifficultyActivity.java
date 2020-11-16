@@ -45,6 +45,9 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.matches("Patika")){
             intent = new Intent(getApplicationContext(), GameActivityPatika.class);
         }
+        else if (gameName.matches("Sözcük Türü")){
+            intent = new Intent(getApplicationContext(), GameActivitySozcukTuru.class);
+        }
         else{
 //            intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
             Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
@@ -58,7 +61,7 @@ public class DifficultyActivity extends AppCompatActivity {
     }
 
     public void initDiffs(){
-        LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
+        LinearLayout diffList = findViewById(R.id.diffList_d);
         for (int i = 0; i < 5; i++){
             TextView currentTV = (TextView) ((RelativeLayout)diffList.getChildAt(i)).getChildAt(0);
             currentTV.setBackground(getResources().getDrawable(R.drawable.diff_selector_bg));
@@ -67,7 +70,7 @@ public class DifficultyActivity extends AppCompatActivity {
     }
 
     public void arrangeDifficulties(){
-        LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
+        LinearLayout diffList = findViewById(R.id.diffList_d);
         if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
             for (int i = 0; i < 4; i++){

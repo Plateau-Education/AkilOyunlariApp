@@ -1,5 +1,9 @@
 package com.yaquila.akiloyunlariapp;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,10 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -36,9 +36,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-public class GameActivityPatika extends AppCompatActivity {
+public class GameActivitySozcukTuru extends AppCompatActivity {
 
     String gameName;
     String difficulty;
@@ -110,7 +112,7 @@ public class GameActivityPatika extends AppCompatActivity {
             if(op.charAt(4) == '+'){
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 paint.setStrokeWidth((float)pxHeight/60);
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], true);
                 removeLine(previousC,currentC);
                 for(int i = operations.size()-1; i >= 0; i--){
                     if(operations.get(i).equals(previousC + currentC)){
@@ -125,11 +127,11 @@ public class GameActivityPatika extends AppCompatActivity {
                         break;
                     }
                 }
-                paint.setStrokeWidth((float)pxHeight/75);
                 paint.setXfermode(null);
+                paint.setStrokeWidth((float)pxHeight/75);
 
             } else {
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], false);
                 addLine(previousC, currentC);
                 operations.add(previousC+currentC);
             }
@@ -446,7 +448,7 @@ public class GameActivityPatika extends AppCompatActivity {
 
     @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
-        loadingDialog = new LoadingDialog(GameActivityPatika.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+        loadingDialog = new LoadingDialog(GameActivitySozcukTuru.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
 
@@ -499,9 +501,9 @@ public class GameActivityPatika extends AppCompatActivity {
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        GetRequest getRequest = new GetRequest();
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika"+gridSize+"x"+gridSize,"fx!Ay:;<p6Q?C8N{");
-        loadingDialogFunc();
+//        GetRequest getRequest = new GetRequest();
+//        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika"+gridSize+"x"+gridSize,"fx!Ay:;<p6Q?C8N{");
+//        loadingDialogFunc();
     }
 
     public void initSomeVar(){
@@ -566,20 +568,20 @@ public class GameActivityPatika extends AppCompatActivity {
             int offset2 = pxHeight / 120;
             if (startY - stopY == 0) {
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/140;
+                    offset1 = -pxHeight/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/140;
+                    offset2 = -pxHeight/120;
                 }
                 if (startX < stopX)
                     canvas.drawLine(startX - offset1, startY, stopX + offset2, stopY, paint);
                 else canvas.drawLine(startX + offset1, startY, stopX - offset2, stopY, paint);
             } else {
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/140;
+                    offset1 = -pxHeight/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/140;
+                    offset2 = -pxHeight/120;
                 }
                 if (startY < stopY)
                     canvas.drawLine(startX, startY - offset1, stopX, stopY + offset2, paint);
@@ -666,11 +668,10 @@ public class GameActivityPatika extends AppCompatActivity {
 
         return (!currentC.equals(previousC)
                 && (
-                (currentC.charAt(0) == previousC.charAt(0)
-                        && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
-                        ||      (currentC.charAt(1) == previousC.charAt(1)
-                        && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
-                    )
+                (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) <= 1)
+
+                        && (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) <= 1)
+        )
                 && isMoreLineCanBeAdded(previousC) && isMoreLineCanBeAdded(currentC));
     }
 
@@ -697,18 +698,23 @@ public class GameActivityPatika extends AppCompatActivity {
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
-            setContentView(R.layout.activity_game_patika5);
+            setContentView(R.layout.activity_game_sozcuk_turu34);
             Log.i("diff","easy");
-            gridSize=5;
+            gridSize=34;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-            setContentView(R.layout.activity_game_patika7);
-            gridSize=7;
-            Log.i("diff","medium");
-        }
+//        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+//            setContentView(R.layout.activity_game_patika7);
+//            gridSize=35;
+//            Log.i("diff","medium");
+//        }
+//        else if(difficulty.equals("Hard") || difficulty.equals("Zor")){
+//            setContentView(R.layout.activity_game_patika7);
+//            gridSize=45;
+//            Log.i("diff","medium");
+//        }
         else{
-            setContentView(R.layout.activity_game_patika9);
-            gridSize=9;
+            setContentView(R.layout.activity_game_sozcuk_turu55);
+            gridSize=5;
             Log.i("diff","hard");
         }
 
@@ -724,6 +730,7 @@ public class GameActivityPatika extends AppCompatActivity {
 //            }
 //        }, 200);
         pxHeight = (int) (300 * getResources().getDisplayMetrics().density);
+        Log.i("pxheight",pxHeight+"");
         initSomeVar();
         gridLayout.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -750,18 +757,19 @@ public class GameActivityPatika extends AppCompatActivity {
                                 if((operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
 //                                    Log.i("eraseMode","ON");
                                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    paint.setColor(Color.TRANSPARENT);
+//                                    paint.setColor(getResources().getColor(R.color.f7f5fa));
                                     paint.setStrokeWidth((float)pxHeight/60);
                                     drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
                                     if(operations.contains(previousCoor+currentCoor)){
                                         removeLine(previousCoor,currentCoor);
                                         operations.remove(previousCoor+currentCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
                                     else{
                                         removeLine(currentCoor,previousCoor);
                                         operations.remove(currentCoor+previousCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
-                                    opsForUndo.add(previousCoor+currentCoor+"-");
                                     paint.setXfermode(null);
 //                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
                                     paint.setStrokeWidth((float)pxHeight/75);
@@ -790,7 +798,6 @@ public class GameActivityPatika extends AppCompatActivity {
                             break;
                     }
                 }
-
                 return true;
             }
         });

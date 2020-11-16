@@ -5,7 +5,7 @@
     android:background="@color/f7f5fa"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivityPatika">
+    tools:context=".GameActivitySozcukTuru">
 
     <LinearLayout
         android:id="@+id/backButtonLL_game"
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/mohave_bold"
-        android:text="@string/Easy"
+        android:text="@string/VeryHard"
         android:textColor="@color/near_black_blue"
         android:textSize="36sp"
         app:layout_constraintTop_toBottomOf="@+id/backButtonLL_game"
@@ -162,7 +162,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/stroke_bg"
-            android:fontFamily="@font/mohave_bold"
+android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:textSize="30sp"
@@ -175,7 +175,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/stroke_bg"
-            android:fontFamily="@font/mohave_bold"
+android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:textSize="30sp"
@@ -188,7 +188,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/stroke_bg"
-            android:fontFamily="@font/mohave_bold"
+android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:textSize="30sp"
@@ -201,7 +201,7 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:background="@drawable/stroke_bg"
-            android:fontFamily="@font/mohave_bold"
+android:fontFamily="@font/mohave_bold"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:textSize="30sp"

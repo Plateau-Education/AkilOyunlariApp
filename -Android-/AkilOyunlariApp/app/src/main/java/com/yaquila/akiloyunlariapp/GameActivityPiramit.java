@@ -12,6 +12,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -119,7 +120,9 @@ public class GameActivityPiramit extends AppCompatActivity{
         if (!clickedBox.equals(answerIndex)){
             if (!clickedBox.equals("-1")){
                 gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
+                if (draftModeActive[Integer.parseInt(clickedBox)])
+                    ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.draft_grey));
+                else ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
 
             }
             box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
@@ -129,20 +132,25 @@ public class GameActivityPiramit extends AppCompatActivity{
         else{
             if(!undoing){
                 box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                box.setTextColor(getResources().getColor(R.color.light_red));
+                if (draftModeActive[Integer.parseInt(clickedBox)])
+                    box.setTextColor(getResources().getColor(R.color.draft_grey));
+                else box.setTextColor(getResources().getColor(R.color.light_red));
                 clickedBox = "-1";
             }
         }
         if (!clickedBox.equals("-1")){
+            ImageView draftBtn = findViewById(R.id.draftbutton_ga);
             if (draftModeActive[Integer.parseInt(clickedBox)]) {
                 for (int i = 1; i < 10; i++) {
                     ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 }
+                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
             }
             else{
                 for (int i = 1; i < 10; i++) {
                     ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                 }
+                draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
             }
         }
     }
@@ -177,6 +185,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                         if(currentBox.getText().toString().length() == 1){
                             currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
                             draftModeActive[Integer.parseInt(clickedBox)] = false;
+                            findViewById(R.id.draftbutton_ga).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                         }
                     }
                     else{
@@ -345,6 +354,7 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void draftClicked(View view){
+        ImageView draftBtn = findViewById(R.id.draftbutton_ga);
         GridLayout numGrid = findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = findViewById(R.id.gridGL_ga);
         TextView currentClickedBox = questionGrid.findViewWithTag("answer"+clickedBox);
@@ -359,6 +369,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                     ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 }
                 draftModeActive[Integer.parseInt(clickedBox)] = true;
+                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
             } else {
                 if (currentClickedBox.getText().toString().length() <= 1) {
                     currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
@@ -366,6 +377,7 @@ public class GameActivityPiramit extends AppCompatActivity{
                         ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                     }
                     draftModeActive[Integer.parseInt(clickedBox)] = false;
+                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                 }
             }
         }

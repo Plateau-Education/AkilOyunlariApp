@@ -72,7 +72,7 @@ class SozcukTuru:
                 text=kelimeler[0][0],
                 font=tkFont.Font(family="Poppins", size=20),
             )
-        harf_koordinat_list = [(suanki[0], suanki[1], kelimeler[0][0])]
+        harf_koordinat_list = [(suanki[0], suanki[1], ord(kelimeler[0][0]))]
         for h in range(self.harf_range[0], self.harf_range[1] + 1):
             if h == self.harf_range[0]:
                 h = self.harf_range[0] - 1
@@ -110,7 +110,7 @@ class SozcukTuru:
                             font=tkFont.Font(family="Poppins", size=20),
                         )
                     harf_koordinat_list.append(
-                        (suanki[0], suanki[1], kelimeler[0][i + 1])
+                        (suanki[0], suanki[1], ord(kelimeler[0][i + 1]))
                     )
                 else:
                     if self.tkinterOn:
@@ -120,7 +120,11 @@ class SozcukTuru:
                             font=tkFont.Font(family="Poppins", size=20),
                         )
                     harf_koordinat_list.append(
-                        (suanki[0], suanki[1], kelimeler[h - self.harf_range[0]][i])
+                        (
+                            suanki[0],
+                            suanki[1],
+                            ord(kelimeler[h - self.harf_range[0]][i]),
+                        )
                     )
         return harf_koordinat_list
         # is_solvable = all([(r,c) in dolu_kareler for r in range(self.boyut[0]) for c in range(self.boyut[1])])
@@ -179,4 +183,4 @@ def main(level):
     return obj.class_main()
 
 
-# print(main("Easy"))
+print(main("Easy"))
