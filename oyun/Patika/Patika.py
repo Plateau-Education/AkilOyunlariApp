@@ -1,5 +1,4 @@
 import random, time, timeit
-import pandas as pd
 import numpy as np
 
 
@@ -7,7 +6,7 @@ def blacklist(patika_boyutu=6, siyah_kare_sayisi=0):
     if siyah_kare_sayisi == 0:
         siyah_kare_sayisi = patika_boyutu
     blackList = set()
-    while True:
+    for _ in range(10000):
         rows = [random.randint(0, patika_boyutu - 1) for i in range(siyah_kare_sayisi)]
         columns = [
             random.randint(0, patika_boyutu - 1) for i in range(siyah_kare_sayisi)
@@ -37,24 +36,14 @@ def orta_nokta(row, column, genislik):
     return ortanokta_x, ortanokta_y
 
 
-def create_grid(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
+def create_grid(patika_boyutu=6, siyah_kare_sayisi=0):
     blackList = blacklist(patika_boyutu, siyah_kare_sayisi)
     return blackList
 
 
-def tracking_check(
-        kose_sag_asagi,
-        kose_sag_yukari,
-        kose_sol_asagi,
-        kose_sol_yukari,
-        kenar_sag_sol,
-        kenar_yukari_asagi,
-        patika_boyutu=6,
-        siyah_kare_sayisi=0,
-):
+def tracking_check(kose_sag_asagi, kose_sag_yukari, kose_sol_asagi, kose_sol_yukari, kenar_sag_sol, kenar_yukari_asagi, patika_boyutu=6, siyah_kare_sayisi=0,):
     current = (0, 1)
     gelis = "yukari"
-    # print(current)
     current_degisti = True
     counter = 0
     while (current != (0, 0)) and (
@@ -131,7 +120,7 @@ def tracking_check(
         return True
 
 
-def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
+def koseleri_bul(blackList, genislik, patika_boyutu=6):
     kose_sol_asagi = []
     kose_sag_asagi = []
     kose_sol_yukari = []
@@ -454,11 +443,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                         degismeme_count = "degisti"
                         kose_sag_yukari.append(asagi)
         if degismeme_count == "degismedi":
-            # print(f"{tur} tur gecti, bulunabilen koseler bulundu.")
 
             for row in range(patika_boyutu):
                 for column in range(patika_boyutu):
-                    # print(row,column)
                     if (
                             (row, column) not in blackList
                             and (row, column) not in kose_sag_asagi
@@ -553,6 +540,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                             elif rc in yukari_cizgi:
                                 current = yukari
                                 gelis = "asagi"
+                        key = 0
                         while (
                                 current in kose_sol_asagi
                                 or current in kose_sol_yukari
@@ -561,6 +549,9 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
                                 or current in kenar_sag_sol
                                 or current in kenar_yukari_asagi
                         ):
+                            key += 1
+                            if key > 1000:
+                                return "Wrong Question"
                             current_degisti = False
                             if gelis == "sag":
                                 if current in kose_sag_asagi:
@@ -1270,8 +1261,8 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6):
     )
 
 
-def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
-    sonuc = koseleri_bul(canvas, blackList, genislik, patika_boyutu)
+def solver(blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
+    sonuc = koseleri_bul(blackList, genislik, patika_boyutu)
     if sonuc == "Wrong Question":
         is_solvable = False
     else:
@@ -1335,23 +1326,18 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
     return is_solvable, []
 
 
-def class_main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
+def class_main(genislik, patika_boyutu=6, siyah_kare_sayisi=0):
     if siyah_kare_sayisi == 0:
         siyah_kare_sayisi = patika_boyutu
-    # blackList = create_grid(c,genislik, patika_boyutu, siyah_kare_sayisi)
-    # solver(c, blackList, genislik,patika_boyutu, siyah_kare_sayisi)
-    # start = timeit.default_timer()
     for _ in range(1000000):
-        blackList = create_grid(c, genislik, patika_boyutu, siyah_kare_sayisi)
-        is_solvable = solver(c, blackList, genislik, patika_boyutu, siyah_kare_sayisi)
+        blackList = create_grid(patika_boyutu, siyah_kare_sayisi)
+        is_solvable = solver(blackList, genislik, patika_boyutu, siyah_kare_sayisi)
         if is_solvable[0]:
-            # print("BlackList: ", blackList, "is solvable")
             break
     return is_solvable[1]
 
 
 def gen(size):
-    c = None
     genislik = 40
     patika_boyutu = size
     if patika_boyutu == 5:
@@ -1367,7 +1353,6 @@ def gen(size):
     else:
         raise ValueError("Size should be in between 5 and 9")
     result = class_main(
-        c,
         genislik,
         patika_boyutu=patika_boyutu,
         siyah_kare_sayisi=siyah_kare_sayisi
@@ -1381,10 +1366,12 @@ def main(size, count):
     database = []
     for i in range(count):
         a = gen(size)
-        data.append(a)
-        datacontrol.add(str(a))
+        if a:
+            data.append(a)
+            datacontrol.add(str(a))
     for i in data:
         if str(i) in datacontrol:
             datacontrol.discard(str(i))
             database.append(i)
     return database
+
