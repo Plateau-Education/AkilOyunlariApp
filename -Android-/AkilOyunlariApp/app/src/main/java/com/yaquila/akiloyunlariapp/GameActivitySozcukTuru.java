@@ -1,5 +1,9 @@
 package com.yaquila.akiloyunlariapp;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -21,10 +25,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -34,11 +34,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
-public class GameActivityPatika extends AppCompatActivity {
+public class GameActivitySozcukTuru extends AppCompatActivity {
 
     String gameName;
     String difficulty;
@@ -64,14 +67,6 @@ public class GameActivityPatika extends AppCompatActivity {
     Bitmap bitmap;
     Canvas canvas;
     Paint paint;
-
-    List<String> blackList = new ArrayList<>();
-    List<String> answerCornerRD = new ArrayList<>();
-    List<String> answerCornerRU = new ArrayList<>();
-    List<String> answerCornerLD = new ArrayList<>();
-    List<String> answerCornerLU = new ArrayList<>();
-    List<String> answerEdgeRL = new ArrayList<>();
-    List<String> answerEdgeUD = new ArrayList<>();
 
 
     public void wannaLeaveDialog(View view){
@@ -110,7 +105,7 @@ public class GameActivityPatika extends AppCompatActivity {
             if(op.charAt(4) == '+'){
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 paint.setStrokeWidth((float)pxHeight/60);
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], true);
                 removeLine(previousC,currentC);
                 for(int i = operations.size()-1; i >= 0; i--){
                     if(operations.get(i).equals(previousC + currentC)){
@@ -125,11 +120,11 @@ public class GameActivityPatika extends AppCompatActivity {
                         break;
                     }
                 }
-                paint.setStrokeWidth((float)pxHeight/75);
                 paint.setXfermode(null);
+                paint.setStrokeWidth((float)pxHeight/75);
 
             } else {
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
+                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], false);
                 addLine(previousC, currentC);
                 operations.add(previousC+currentC);
             }
@@ -211,64 +206,6 @@ public class GameActivityPatika extends AppCompatActivity {
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
-        for(String s : answerCornerRD){
-            int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-            int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-            if(!lineGrid[r][c].equals("rd") && !lineGrid[r][c].equals("dr")){
-                checking = false;
-                break;
-            }
-        }
-        if(checking){
-            for(String s : answerCornerRU){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!lineGrid[r][c].equals("ru") && !lineGrid[r][c].equals("ur")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : answerCornerLD){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!lineGrid[r][c].equals("ld") && !lineGrid[r][c].equals("dl")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : answerCornerLU){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!lineGrid[r][c].equals("lu") && !lineGrid[r][c].equals("ul")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : answerEdgeRL){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!lineGrid[r][c].equals("rl") && !lineGrid[r][c].equals("lr")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : answerEdgeUD){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!lineGrid[r][c].equals("ud") && !lineGrid[r][c].equals("du")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
         if(checking){
             timerStopped = true;
             solvedQuestion = true;
@@ -370,56 +307,11 @@ public class GameActivityPatika extends AppCompatActivity {
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-
-        JSONArray bl = (JSONArray) grid.get(0);
-        for(int bli = 0; bli < bl.length(); bli++){
-            JSONArray co = (JSONArray) bl.get(bli);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            gridLayout.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
-            blackList.add(cos);
-            lineGrid[co.getInt(0)][co.getInt(1)] = "rldu";
-        }
-
-        JSONArray rd = (JSONArray) grid.get(1);
-        for(int rdi = 0; rdi < rd.length(); rdi++){
-            JSONArray co = (JSONArray) rd.get(rdi);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerCornerRD.add(cos);
-        }
-
-        JSONArray ru = (JSONArray) grid.get(2);
-        for(int rui = 0; rui < ru.length(); rui++){
-            JSONArray co = (JSONArray) ru.get(rui);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerCornerRU.add(cos);
-        }
-
-        JSONArray ld = (JSONArray) grid.get(3);
-        for(int ldi = 0; ldi < ld.length(); ldi++){
-            JSONArray co = (JSONArray) ld.get(ldi);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerCornerLD.add(cos);
-        }
-
-        JSONArray lu = (JSONArray) grid.get(4);
-        for(int lui = 0; lui < lu.length(); lui++){
-            JSONArray co = (JSONArray) lu.get(lui);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerCornerLU.add(cos);
-        }
-
-        JSONArray rl = (JSONArray) grid.get(5);
-        for(int rli = 0; rli < rl.length(); rli++){
-            JSONArray co = (JSONArray) rl.get(rli);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerEdgeRL.add(cos);
-        }
-
-        JSONArray ud = (JSONArray) grid.get(6);
-        for(int udi = 0; udi < ud.length(); udi++){
-            JSONArray co = (JSONArray) ud.get(udi);
-            String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            answerEdgeUD.add(cos);
+        for (int i = 0; i <grid.length(); i++){
+            JSONArray box = (JSONArray) grid.get(i);
+            Log.i("asd",Integer.toString(box.getInt(1))+box.getInt(0));
+            TextView currentTV = (TextView) gridLayout.findViewWithTag(Integer.toString(box.getInt(1))+box.getInt(0));
+            currentTV.setText(Character.toString((char)box.getInt(2)));
         }
     }
 
@@ -446,7 +338,7 @@ public class GameActivityPatika extends AppCompatActivity {
 
     @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
-        loadingDialog = new LoadingDialog(GameActivityPatika.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+        loadingDialog = new LoadingDialog(GameActivitySozcukTuru.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
 
@@ -483,14 +375,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 lineGrid[i][j] = "";
             }
         }
-        blackList = new ArrayList<>();
-        answerCornerRD = new ArrayList<>();
-        answerCornerRU = new ArrayList<>();
-        answerCornerLD = new ArrayList<>();
-        answerCornerLU = new ArrayList<>();
-        answerEdgeRL = new ArrayList<>();
-        answerEdgeUD = new ArrayList<>();
-
     }
 
     public void mainFunc(){
@@ -500,7 +384,8 @@ public class GameActivityPatika extends AppCompatActivity {
         resetTV.setEnabled(true);
         clearGrid();
         GetRequest getRequest = new GetRequest();
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika"+gridSize+"x"+gridSize,"fx!Ay:;<p6Q?C8N{");
+        //noinspection deprecation
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/SozcukTuru"+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -509,7 +394,7 @@ public class GameActivityPatika extends AppCompatActivity {
         canvas = new Canvas(bitmap);
         canvas.drawColor(getResources().getColor(R.color.transparent));
         paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.near_black_blue));
+        paint.setColor(getResources().getColor(R.color.shallow_light_red2));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth((float)pxHeight/75);
         paint.setAntiAlias(true);
@@ -566,20 +451,20 @@ public class GameActivityPatika extends AppCompatActivity {
             int offset2 = pxHeight / 120;
             if (startY - stopY == 0) {
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/140;
+                    offset1 = -pxHeight/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/140;
+                    offset2 = -pxHeight/120;
                 }
                 if (startX < stopX)
                     canvas.drawLine(startX - offset1, startY, stopX + offset2, stopY, paint);
                 else canvas.drawLine(startX + offset1, startY, stopX - offset2, stopY, paint);
             } else {
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/140;
+                    offset1 = -pxHeight/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/140;
+                    offset2 = -pxHeight/120;
                 }
                 if (startY < stopY)
                     canvas.drawLine(startX, startY - offset1, stopX, stopY + offset2, paint);
@@ -594,17 +479,17 @@ public class GameActivityPatika extends AppCompatActivity {
         int c1 = Integer.parseInt(String.valueOf(firstRC.charAt(1)));
         int r2 = Integer.parseInt(String.valueOf(secondRC.charAt(0)));
         int c2 = Integer.parseInt(String.valueOf(secondRC.charAt(1)));
-        if(r1 == r2){ // vertical line
+        if(r1 == r2 && c1 != c2){ // vertical line
             if(c1 < c2){ // first one is above second
                 lineGrid[r1][c1] += "d";
                 lineGrid[r2][c2] += "u";
             }
-            else if(c1 > c2){ // first one is below second
+            else { // first one is below second
                 lineGrid[r1][c1] += "u";
                 lineGrid[r2][c2] += "d";
             }
         }
-        else if(c1 == c2){ // horizontal line
+        else if(c1 == c2 && r1 != r2){ // horizontal line
             if(r1 < r2){ // first one is left of second
                 lineGrid[r1][c1] += "r";
                 lineGrid[r2][c2] += "l";
@@ -612,6 +497,28 @@ public class GameActivityPatika extends AppCompatActivity {
             else { // first one is right of second
                 lineGrid[r1][c1] += "l";
                 lineGrid[r2][c2] += "r";
+            }
+        }
+        else{
+            if(c1 < c2){ // first one is above second
+                if(r1 < r2){ // first one is left of second
+                    lineGrid[r1][c1] += "s";
+                    lineGrid[r2][c2] += "n";
+                }
+                else { // first one is right of second
+                    lineGrid[r1][c1] += "n";
+                    lineGrid[r2][c2] += "s";
+                }
+            }
+            else { // first one is below second
+                if(r1 < r2){ // first one is left of second
+                    lineGrid[r1][c1] += "e";
+                    lineGrid[r2][c2] += "w";
+                }
+                else { // first one is right of second
+                    lineGrid[r1][c1] += "w";
+                    lineGrid[r2][c2] += "e";
+                }
             }
         }
     }
@@ -666,11 +573,10 @@ public class GameActivityPatika extends AppCompatActivity {
 
         return (!currentC.equals(previousC)
                 && (
-                (currentC.charAt(0) == previousC.charAt(0)
-                        && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
-                        ||      (currentC.charAt(1) == previousC.charAt(1)
-                        && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
-                    )
+                (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) <= 1)
+
+                        && (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) <= 1)
+        )
                 && isMoreLineCanBeAdded(previousC) && isMoreLineCanBeAdded(currentC));
     }
 
@@ -697,18 +603,27 @@ public class GameActivityPatika extends AppCompatActivity {
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
-            setContentView(R.layout.activity_game_patika5);
+            setContentView(R.layout.activity_game_sozcuk_turu34);
             Log.i("diff","easy");
-            gridSize=5;
+            difficulty="Easy";
+            gridSize=34;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-            setContentView(R.layout.activity_game_patika7);
-            gridSize=7;
-            Log.i("diff","medium");
-        }
+//        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+//            setContentView(R.layout.activity_game_patika7);
+//            gridSize=35;
+//            difficulty="Medium";
+//            Log.i("diff","medium");
+//        }
+//        else if(difficulty.equals("Hard") || difficulty.equals("Zor")){
+//            setContentView(R.layout.activity_game_patika7);
+//            gridSize=45;
+//            difficulty="Hard";
+//            Log.i("diff","medium");
+//        }
         else{
-            setContentView(R.layout.activity_game_patika9);
-            gridSize=9;
+            setContentView(R.layout.activity_game_sozcuk_turu55);
+            gridSize=5;
+            difficulty="Hardest";
             Log.i("diff","hard");
         }
 
@@ -724,6 +639,7 @@ public class GameActivityPatika extends AppCompatActivity {
 //            }
 //        }, 200);
         pxHeight = (int) (300 * getResources().getDisplayMetrics().density);
+        Log.i("pxheight",pxHeight+"");
         initSomeVar();
         gridLayout.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -750,18 +666,19 @@ public class GameActivityPatika extends AppCompatActivity {
                                 if((operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
 //                                    Log.i("eraseMode","ON");
                                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    paint.setColor(Color.TRANSPARENT);
+//                                    paint.setColor(getResources().getColor(R.color.f7f5fa));
                                     paint.setStrokeWidth((float)pxHeight/60);
                                     drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
                                     if(operations.contains(previousCoor+currentCoor)){
                                         removeLine(previousCoor,currentCoor);
                                         operations.remove(previousCoor+currentCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
                                     else{
                                         removeLine(currentCoor,previousCoor);
                                         operations.remove(currentCoor+previousCoor);
+                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
-                                    opsForUndo.add(previousCoor+currentCoor+"-");
                                     paint.setXfermode(null);
 //                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
                                     paint.setStrokeWidth((float)pxHeight/75);
@@ -790,7 +707,6 @@ public class GameActivityPatika extends AppCompatActivity {
                             break;
                     }
                 }
-
                 return true;
             }
         });

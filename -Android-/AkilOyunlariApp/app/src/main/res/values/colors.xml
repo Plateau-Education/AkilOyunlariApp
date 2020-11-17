@@ -16,4 +16,6 @@
     <color name="shallow_light_red">#99E46C66</color>
     <color name="shallow_light_blue_green">#999BCCC5</color>
     <color name="shallow_dark_blue_green">#993D6571</color>
+    <color name="draft_grey">#9bccc5</color>
+    <color name="shallow_light_red2">#AFE46C66</color>
 </resources>
