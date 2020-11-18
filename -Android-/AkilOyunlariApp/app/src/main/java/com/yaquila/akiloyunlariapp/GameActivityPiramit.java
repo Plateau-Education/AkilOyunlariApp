@@ -383,6 +383,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         @Override
@@ -424,6 +425,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
+            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -489,6 +491,7 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void timerFunc(){
+        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -551,6 +554,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         clearGrid();
         initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
+        //noinspection deprecation
         getRequest.execute("https://akiloyunlariapp.herokuapp.com/Piramit"+gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }

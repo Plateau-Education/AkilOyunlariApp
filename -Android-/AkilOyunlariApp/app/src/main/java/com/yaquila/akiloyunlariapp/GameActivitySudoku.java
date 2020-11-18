@@ -349,6 +349,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         @Override
@@ -390,6 +391,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
+            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -424,6 +426,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void timerFunc(){
+        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -487,6 +490,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         clearGrid();
         initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
+        //noinspection deprecation
         getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku"+gridSize+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
