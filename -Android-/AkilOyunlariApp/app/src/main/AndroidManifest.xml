@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".GameActivityPentomino"></activity>
         <activity android:name=".GameActivitySozcukTuru" />
         <activity android:name=".GameActivityPatika" />
         <activity android:name=".GameActivityHazineAvi" />

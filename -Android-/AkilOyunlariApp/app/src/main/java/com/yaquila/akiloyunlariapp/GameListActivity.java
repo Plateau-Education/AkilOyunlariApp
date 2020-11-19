@@ -104,7 +104,9 @@ public class GameListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }
