@@ -15,6 +15,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -36,6 +37,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     String gameName;
     String difficulty;
     String clickedBox = "-1";
+    String switchPosition = "diamond";
     int gridSize = 6;
     int timerInSeconds = 0;
     boolean timerStopped=false;
@@ -79,18 +81,24 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
         if(!clueIndexes.contains(answerIndex)) {
-            String op;
-            if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
-                box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                op = "-1";
+            String op = null;
+            if (switchPosition.equals("diamond")) {
+                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    op = "0";
+                } else {
+                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                    op = "-1";
+                }
             }
-            else if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
-                box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                op = "-2";
-            }
-            else {
-                box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                op = "0";
+            else if (switchPosition.equals("cross")) {
+                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    op = "0";
+                } else {
+                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                    op = "-2";
+                }
             }
             clickedBox = answerIndex;
             List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
@@ -99,6 +107,18 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             }
             Log.i("operations",operations+"");
             checkAnswer(null);
+        }
+    }
+
+    public void changeSwitch(View view){
+        ImageView switchTV = (ImageView) view;
+        if(switchPosition.equals("diamond")){
+            switchTV.setImageResource(R.drawable.ic_cross);
+            switchPosition = "cross";
+        }
+        else if(switchPosition.equals("cross")){
+            switchTV.setImageResource(R.drawable.ic_diamond);
+            switchPosition = "diamond";
         }
     }
 

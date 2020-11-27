@@ -15,8 +15,8 @@
     <TextView
         android:id="@+id/grid5_00"
         android:tag="00"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -28,8 +28,8 @@
     <TextView
         android:id="@+id/grid5_10"
         android:tag="10"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -41,8 +41,8 @@
     <TextView
         android:id="@+id/grid5_20"
         android:tag="20"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -54,8 +54,8 @@
     <TextView
         android:id="@+id/grid5_30"
         android:tag="30"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -67,8 +67,8 @@
     <TextView
         android:id="@+id/grid5_40"
         android:tag="40"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -80,8 +80,8 @@
     <TextView
         android:id="@+id/grid5_50"
         android:tag="50"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -93,8 +93,8 @@
     <TextView
         android:id="@+id/grid5_01"
         android:tag="01"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -106,8 +106,8 @@
     <TextView
         android:id="@+id/grid5_11"
         android:tag="11"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -119,8 +119,8 @@
     <TextView
         android:id="@+id/grid5_21"
         android:tag="21"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -132,8 +132,8 @@
     <TextView
         android:id="@+id/grid5_31"
         android:tag="31"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -145,8 +145,8 @@
     <TextView
         android:id="@+id/grid5_41"
         android:tag="41"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -158,8 +158,8 @@
     <TextView
         android:id="@+id/grid5_51"
         android:tag="51"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -171,8 +171,8 @@
     <TextView
         android:id="@+id/grid5_02"
         android:tag="02"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -184,8 +184,8 @@
     <TextView
         android:id="@+id/grid5_12"
         android:tag="12"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -197,8 +197,8 @@
     <TextView
         android:id="@+id/grid5_22"
         android:tag="22"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -210,8 +210,8 @@
     <TextView
         android:id="@+id/grid5_32"
         android:tag="32"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -223,8 +223,8 @@
     <TextView
         android:id="@+id/grid5_42"
         android:tag="42"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -236,8 +236,8 @@
     <TextView
         android:id="@+id/grid5_52"
         android:tag="52"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -249,8 +249,8 @@
     <TextView
         android:id="@+id/grid5_03"
         android:tag="03"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -262,8 +262,8 @@
     <TextView
         android:id="@+id/grid5_13"
         android:tag="13"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -275,8 +275,8 @@
     <TextView
         android:id="@+id/grid5_23"
         android:tag="23"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -288,8 +288,8 @@
     <TextView
         android:id="@+id/grid5_33"
         android:tag="33"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -301,8 +301,8 @@
     <TextView
         android:id="@+id/grid5_43"
         android:tag="43"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -314,8 +314,8 @@
     <TextView
         android:id="@+id/grid5_53"
         android:tag="53"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -327,8 +327,8 @@
     <TextView
         android:id="@+id/grid5_04"
         android:tag="04"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -340,8 +340,8 @@
     <TextView
         android:id="@+id/grid5_14"
         android:tag="14"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -353,8 +353,8 @@
     <TextView
         android:id="@+id/grid5_24"
         android:tag="24"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -366,8 +366,8 @@
     <TextView
         android:id="@+id/grid5_34"
         android:tag="34"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -379,8 +379,8 @@
     <TextView
         android:id="@+id/grid5_44"
         android:tag="44"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -392,8 +392,8 @@
     <TextView
         android:id="@+id/grid5_54"
         android:tag="54"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="42.857142857142dp"
+        android:layout_height="42.857142857142dp"
         android:background="@drawable/stroke_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
@@ -403,7 +403,7 @@
         app:layout_row="5" />
 
     <ImageView
-        android:layout_width="306dp"
+        android:layout_width="263.14285714285dp"
         android:layout_height="3dp"
         android:src="@color/near_black_blue"
         app:layout_row="0"
@@ -412,7 +412,7 @@
         tools:ignore="ContentDescription" />
 
     <ImageView
-        android:layout_width="306dp"
+        android:layout_width="263.14285714285dp"
         android:layout_height="3dp"
         android:src="@color/near_black_blue"
         app:layout_row="6"
@@ -422,7 +422,7 @@
 
     <ImageView
         android:layout_width="3dp"
-        android:layout_height="256dp"
+        android:layout_height="220.28571428571dp"
         android:src="@color/near_black_blue"
         app:layout_row="0"
         app:layout_column="0"
@@ -431,7 +431,7 @@
 
     <ImageView
         android:layout_width="3dp"
-        android:layout_height="256dp"
+        android:layout_height="220.28571428571dp"
         android:src="@color/near_black_blue"
         app:layout_row="0"
         app:layout_column="7"

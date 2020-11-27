@@ -18,4 +18,16 @@
     <color name="shallow_dark_blue_green">#993D6571</color>
     <color name="draft_grey">#9bccc5</color>
     <color name="shallow_light_red2">#AFE46C66</color>
+    <color name="orange_L">#F19E0C</color>
+    <color name="yellow_U">#EFEB05</color>
+    <color name="darkblue_N">#6323C8</color>
+    <color name="darkgreen_T">#3fcb72</color>
+    <color name="green_W">#CEE372</color>
+    <color name="pink_P">#eb36d9</color>
+    <color name="lightblue_Z">#45bedd</color>
+    <color name="red_X">#f32108</color>
+    <color name="grey_F">#90a09a</color>
+    <color name="brown_Y">#806047</color>
+    <color name="blue_V">#1e9fd7</color>
+    <color name="blue_I">#1c74e1</color>
 </resources>
