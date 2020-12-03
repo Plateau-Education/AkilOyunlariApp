@@ -11,7 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameActivityPentomino"></activity>
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".GameActivityPentomino" />
         <activity android:name=".GameActivitySozcukTuru" />
         <activity android:name=".GameActivityPatika" />
         <activity android:name=".GameActivityHazineAvi" />
@@ -22,13 +29,7 @@
         <activity android:name=".HowToPlayActivity" />
         <activity android:name=".GameActivitySayiBulmaca" />
         <activity android:name=".GameListActivity" />
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import androidx.gridlayout.widget.GridLayout;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -279,7 +280,9 @@ public class GameActivityPentomino extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
+                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                String id = sharedPreferences.getString("id", "non");
+                URL reqURL = new URL(strings[0] + "/" + id + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -464,8 +467,8 @@ public class GameActivityPentomino extends AppCompatActivity {
         resetTV.setEnabled(true);
 //        clearGrid();
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Pentomino"+difficulty,"fx!Ay:;<p6Q?C8N{");
+        //noinspection deprecationre
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Pentomino."+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -494,83 +497,82 @@ public class GameActivityPentomino extends AppCompatActivity {
                 if(inverse.equals("+")){
                     switch (rotation) {
                         case "0":
-                            boxes[0] = Integer.toString(row) + (column + 1);
-                            boxes[1] = Integer.toString(row) + (column + 2);
-                            boxes[3] = Integer.toString((row + 2)) + (column + 1);
-                            boxes[4] = Integer.toString((row + 1)) + column;
+                            boxes[0] = (column + 1) + Integer.toString(row);
+                            boxes[1] = (column + 2) + Integer.toString(row);
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = column + Integer.toString((row + 1));
                             break;
                         case "90":
-                            boxes[0] = Integer.toString(row) + (column + 1);
-                            boxes[1] = Integer.toString((row + 1)) + column;
-                            boxes[3] = Integer.toString((row + 1)) + (column + 2);
-                            boxes[4] = Integer.toString((row + 2)) + (column + 2);
+                            boxes[0] = (column + 1) + Integer.toString(row);
+                            boxes[1] = column + Integer.toString((row + 1));
+                            boxes[3] = (column + 2) + Integer.toString((row + 1));
+                            boxes[4] = (column + 2) + Integer.toString((row + 2));
                             break;
                         case "180":
-                            boxes[0] = Integer.toString(row) + (column + 1);
-                            boxes[1] = Integer.toString((row + 2)) + column;
-                            boxes[3] = Integer.toString((row + 1)) + (column + 2);
-                            boxes[4] = Integer.toString((row + 2)) + (column + 1);
+                            boxes[0] = (column + 1) + Integer.toString(row);
+                            boxes[1] = column + Integer.toString((row + 2));
+                            boxes[3] = (column + 2) + Integer.toString((row + 1));
+                            boxes[4] = (column + 1) + Integer.toString((row + 2));
                             break;
                         case "270":
-                            boxes[0] = Integer.toString(row) + column;
-                            boxes[1] = Integer.toString((row + 1)) + column;
-                            boxes[3] = Integer.toString((row + 1)) + (column + 2);
-                            boxes[4] = Integer.toString((row + 2)) + (column + 1);
+                            boxes[0] = column + Integer.toString(row);
+                            boxes[1] = column + Integer.toString((row + 1));
+                            boxes[3] = (column + 2) + Integer.toString((row + 1));
+                            boxes[4] = (column + 1) + Integer.toString((row + 2));
                             break;
                     }
                 }
                 else{
                     switch (rotation) {
                         case "0":
-                            boxes[0] = Integer.toString(row) + (column + 1);
-                            boxes[1] = Integer.toString(row) + column;
-                            boxes[3] = Integer.toString((row + 2)) + (column + 1);
-                            boxes[4] = Integer.toString((row + 1)) + (column + 2);
+                            boxes[0] = (column + 1) + Integer.toString(row);
+                            boxes[1] = column + Integer.toString(row);
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = (column + 2) + Integer.toString((row + 1));
                             break;
                         case "90":
-                            boxes[0] = Integer.toString((row + 2)) + (column + 1);
-                            boxes[1] = Integer.toString((row + 1)) + column;
-                            boxes[3] = Integer.toString((row + 1)) + (column + 2);
-                            boxes[4] = Integer.toString(row) + (column + 2);
+                            boxes[0] = (column + 1) + Integer.toString((row + 2));
+                            boxes[1] = column + Integer.toString((row + 1));
+                            boxes[3] = (column + 2) + Integer.toString((row + 1));
+                            boxes[4] = (column + 2) + Integer.toString(row);
                             break;
                         case "180":
-                            boxes[0] = Integer.toString(row) + (column + 1);
-                            boxes[1] = Integer.toString(row) + (column + 2);
-                            boxes[3] = Integer.toString((row + 1)) + column;
-                            boxes[4] = Integer.toString((row + 2)) + (column + 1);
+                            boxes[0] = (column + 1) + Integer.toString(row);
+                            boxes[1] = (column + 2) + Integer.toString(row);
+                            boxes[3] = column + Integer.toString((row + 1));
+                            boxes[4] = (column + 1) + Integer.toString((row + 2));
                             break;
                         case "270":
-                            boxes[0] = Integer.toString((row + 2)) + column;
-                            boxes[1] = Integer.toString((row + 1)) + column;
-                            boxes[3] = Integer.toString((row + 1)) + (column + 2);
-                            boxes[4] = Integer.toString(row) + (column + 1);
+                            boxes[0] = column + Integer.toString((row + 2));
+                            boxes[1] = column + Integer.toString((row + 1));
+                            boxes[3] = (column + 2) + Integer.toString((row + 1));
+                            boxes[4] = (column + 1) + Integer.toString(row);
                             break;
                     }
                 }
-                boxes[2] = Integer.toString((row+1)) + (column+1);
+                boxes[2] = (column+1) + Integer.toString((row+1));
                 break;
             case "i":
                 switch (rotation) {
                     case "0":
                     case "180":
-                        boxes[0] = Integer.toString(row) + column;
-                        boxes[1] = Integer.toString((row + 1)) + column;
-                        boxes[3] = Integer.toString((row + 3)) + column;
-                        boxes[4] = Integer.toString((row + 4)) + column;
+                        boxes[0] = column + Integer.toString(row);
+                        boxes[1] = column + Integer.toString((row + 1));
+                        boxes[2] = column + Integer.toString((row + 2));
+                        boxes[3] = column + Integer.toString((row + 3));
+                        boxes[4] = column + Integer.toString((row + 4));
                         break;
                     case "90":
                     case "270":
-                        boxes[0] = Integer.toString(row) + (column - 2);
-                        boxes[1] = Integer.toString(row) + (column - 1);
-                        boxes[3] = Integer.toString(row) + (column + 1);
-                        boxes[4] = Integer.toString(row) + (column + 2);
+                        boxes[0] = (column - 2) + Integer.toString(row);
+                        boxes[1] = (column - 1) + Integer.toString(row);
+                        boxes[2] = column + Integer.toString(row);
+                        boxes[3] = (column + 1) + Integer.toString(row);
+                        boxes[4] = (column + 2) + Integer.toString(row);
                         break;
                     }
-                boxes[2] = Integer.toString((row+2)) + column;
-
                 break;
             case "l":
-
                 break;
             case "n":
 
@@ -585,7 +587,70 @@ public class GameActivityPentomino extends AppCompatActivity {
 
                 break;
             case "v":
-
+                if(inverse.equals("+")){
+                    switch (rotation) {
+                        case "0":
+                            boxes[0] = (column + 2) + Integer.toString(row);
+                            boxes[1] = (column + 2) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row+2));
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = column + Integer.toString((row + 2));
+                            break;
+                        case "90":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row+2));
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = column + Integer.toString((row + 2));
+                            break;
+                        case "180":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row));
+                            boxes[3] = (column + 1) + Integer.toString((row));
+                            boxes[4] = column + Integer.toString((row+2));
+                            break;
+                        case "270":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column+2) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row));
+                            boxes[3] = (column + 1) + Integer.toString((row));
+                            boxes[4] = (column + 2) + Integer.toString((row+2));
+                            break;
+                    }
+                }
+                else{
+                    switch (rotation) {
+                        case "0":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row+2));
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = column + Integer.toString((row + 2));
+                            break;
+                        case "90":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row));
+                            boxes[3] = (column + 1) + Integer.toString((row));
+                            boxes[4] = column + Integer.toString((row+2));
+                            break;
+                        case "180":
+                            boxes[0] = (column) + Integer.toString(row);
+                            boxes[1] = (column+2) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row));
+                            boxes[3] = (column + 1) + Integer.toString((row));
+                            boxes[4] = (column + 2) + Integer.toString((row+2));
+                            break;
+                        case "270":
+                            boxes[0] = (column + 2) + Integer.toString(row);
+                            boxes[1] = (column + 2) + Integer.toString(row+1);
+                            boxes[2] = (column + 2) + Integer.toString((row+2));
+                            boxes[3] = (column + 1) + Integer.toString((row + 2));
+                            boxes[4] = column + Integer.toString((row + 2));
+                            break;
+                    }
+                }
                 break;
             case "w":
 
@@ -636,6 +701,7 @@ public class GameActivityPentomino extends AppCompatActivity {
             @Override
             public boolean onLongClick(View view) {
 //                View.DragShadowBuilder dragShadowBuilder = new View.DragShadowBuilder(view);
+
                 if(!view.getParent().equals(gridLayoutGrid)){
                     view.startDragAndDrop(null, new CustomDragShadowBuilder(view, (300f/7)), view,View.DRAG_FLAG_OPAQUE);
                 } else {
@@ -701,6 +767,7 @@ public class GameActivityPentomino extends AppCompatActivity {
 //                    destination.addView(v);
 
 
+
                     int rowSpan = (int) ((v.getHeight()) / (16 * getResources().getDisplayMetrics().density));
                     int columnSpan = (int) ((v.getWidth()) / (16 * getResources().getDisplayMetrics().density));
                     Log.i("spans",rowSpan+" / "+columnSpan);
@@ -712,17 +779,27 @@ public class GameActivityPentomino extends AppCompatActivity {
                         cRowSpan = rowSpan;
                         cColumnSpan = columnSpan;
 
+                        String figInfo = clickedFigure + xyToRowColumn(xCoor, yCoor)[1] + xyToRowColumn(xCoor, yCoor)[0] + "+" + "0";
+                        String[] boxes = firstBoxToFigure(figInfo);
+                        for (String box : boxes) {
+                            try {
+                                gridLayoutGrid.findViewWithTag(box).setBackgroundColor(getResources().getColor(R.color.shallow_light_red));
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+
 //                        gridLayoutGrid.addView(v, new GridLayout.LayoutParams(GridLayout.spec(Integer.parseInt(xyToRowColumn(xCoor, yCoor)[1]) + 1, rowSpan, GridLayout.CENTER), GridLayout.spec(Integer.parseInt(xyToRowColumn(xCoor, yCoor)[0]) + 1, columnSpan, GridLayout.CENTER)));
 //                    gridLayoutGrid.addView(v, new GridLayout.LayoutParams(GridLayout.spec(Integer.parseInt(xyToRowColumn(dragEvent.getX(),dragEvent.getY())[0]),5,GridLayout.CENTER),GridLayout.spec(Integer.parseInt(xyToRowColumn(dragEvent.getX(),dragEvent.getY())[1]),1,GridLayout.CENTER)));
 
-                        if(!owner.equals(gridLayoutGrid)) {
-                            v.getLayoutParams().width = (int) (v.getWidth() * ((300f / 7) / 15f));
-                            v.getLayoutParams().height = (int) (v.getHeight() * ((300f / 7) / 15f));
-                        } else{
-                            v.getLayoutParams().width = (int) (v.getWidth() * (15 / 15f));
-                            v.getLayoutParams().height = (int) (v.getHeight() * (15 / 15f));
-                        }
-                        v.setVisibility(View.VISIBLE);
+//                        if(!owner.equals(gridLayoutGrid)) {
+//                            v.getLayoutParams().width = (int) (v.getWidth() * ((300f / 7) / 15f));
+//                            v.getLayoutParams().height = (int) (v.getHeight() * ((300f / 7) / 15f));
+//                        } else{
+//                            v.getLayoutParams().width = (int) (v.getWidth() * (15 / 15f));
+//                            v.getLayoutParams().height = (int) (v.getHeight() * (15 / 15f));
+//                        }
+//                        v.setVisibility(View.VISIBLE);
                     }
 //                    v.setX(dragEvent.getX()-((v.getWidth()/2f) * getResources().getDisplayMetrics().density));
 //                    v.setY(dragEvent.getY()-((v.getHeight()/2f) * getResources().getDisplayMetrics().density));

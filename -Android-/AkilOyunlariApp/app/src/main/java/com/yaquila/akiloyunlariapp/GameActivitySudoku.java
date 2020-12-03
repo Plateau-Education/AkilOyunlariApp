@@ -7,6 +7,7 @@ import androidx.gridlayout.widget.GridLayout;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -356,7 +357,9 @@ public class GameActivitySudoku extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                URL reqURL = new URL(strings[0] + "?" + "Info=1&Req=True&Token=" +strings[1]);
+                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                String id = sharedPreferences.getString("id", "non");
+                URL reqURL = new URL(strings[0] + "/" + id + "?" + "Info=1&Req=True&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -491,7 +494,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku"+gridSize+difficulty,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku."+gridSize+"."+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 

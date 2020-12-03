@@ -25,5 +25,10 @@
     <string name="Next">Sonraki</string>
     <string name="GameMenu">Menü</string>
     <string name="Size">Boyut</string>
+    <string name="SignIn">Giriş Yap</string>
+    <string name="SignUp">Kayıt Ol</string>
+    <string name="Username">Kullanıcı Adı</string>
+    <string name="Password">Şifre</string>
+    <string name="HaveAccount">Zaten bir hesabın var mı?</string>
 
 </resources>

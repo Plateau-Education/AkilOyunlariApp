@@ -24,4 +24,9 @@
     <string name="Next">Next</string>
     <string name="GameMenu">Menu</string>
     <string name="Size">Size</string>
+    <string name="SignIn">Sign In</string>
+    <string name="SignUp">Sign Up</string>
+    <string name="Username">Username</string>
+    <string name="Password">Password</string>
+    <string name="HaveAccount">Already have an account?</string>
 </resources>

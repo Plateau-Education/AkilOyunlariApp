@@ -3,6 +3,7 @@ package com.yaquila.akiloyunlariapp;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -316,7 +317,9 @@ public class GameActivityPatika extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                URL reqURL = new URL(strings[0] + "?" + "Info=1&Token=" +strings[1]);
+                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                String id = sharedPreferences.getString("id", "non");
+                URL reqURL = new URL(strings[0] + "/" + id + "?" + "Info=1&Token=" +strings[1]);
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -504,7 +507,7 @@ public class GameActivityPatika extends AppCompatActivity {
         clearGrid();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika"+gridSize+"x"+gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika."+gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
