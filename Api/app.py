@@ -93,7 +93,7 @@ def signUp(user_id, password):
 
 def getSolved(user_id, query):
     query = query.split(".")
-    query.insert(0, "solved.")
+    query.insert(0, "solved")
     ids = userdb["Users"].find_one({"_id": user_id})
     for key in query:
         ids = ids[key]
@@ -117,7 +117,7 @@ def Insert(col, value, cevap=None):
 
 def Find(col, userid, amount=1, cevap=None, query=None):
     collection = db[col]
-    rangelist = [i for i in range(2, collection.find_one(filter={"_id": "userid"}["seq"] + 1))]
+    rangelist = [i for i in range(2, collection.find_one(filter={"_id": "userid"})["seq"] + 1)]
     if cevap:
         solved = getSolved(userid, query)
         for n in solved:
@@ -132,7 +132,7 @@ def Find(col, userid, amount=1, cevap=None, query=None):
             rangelist.remove(int(n))
         randchoice = choices(rangelist, k=amount)
         docs = collection.find(filter={"_id": {"$in": randchoice}})
-        response = [[i["soru"]] for i in docs]
+        response = [[[i["soru"]]] for i in docs]
         return response, randchoice
 
 
