@@ -1,36 +1,27 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class GameListActivity extends AppCompatActivity {
 
-    private ListView listView1;
     int currentExtendedRow = 0;
 
     public void goToHowtoplay(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         if(currentExtendedRow % 2 == 1){
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)((ImageView)view).getParent()).getParent()).getChildAt(0)).getChildAt(1)).getText());
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout) view.getParent()).getParent()).getChildAt(0)).getChildAt(1)).getText());
         }
         else{
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)((ImageView)view).getParent()).getParent()).getChildAt(0)).getChildAt(0)).getText());
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout) view.getParent()).getParent()).getChildAt(0)).getChildAt(0)).getText());
         }
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -48,10 +39,10 @@ public class GameListActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
         }
         else if(currentExtendedRow % 2 == 1){
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)view).getParent()).getChildAt(0)).getChildAt(1)).getText());
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(1)).getText());
         }
         else{
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout)view).getParent()).getChildAt(0)).getChildAt(0)).getText());
+            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(0)).getText());
         }
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
@@ -67,7 +58,7 @@ public class GameListActivity extends AppCompatActivity {
             currentExtendedRow = rowNum;
 //            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
 
-            final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView_gl);
+            final ScrollView scrollView = findViewById(R.id.scrollView_gl);
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -94,7 +85,7 @@ public class GameListActivity extends AppCompatActivity {
             rl_2.setVisibility(View.VISIBLE);
             currentExtendedRow = rowNum;
             Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
-            final ScrollView scrollView = (ScrollView) findViewById(R.id.scrollView_gl);
+            final ScrollView scrollView = findViewById(R.id.scrollView_gl);
             scrollView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -113,7 +104,9 @@ public class GameListActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

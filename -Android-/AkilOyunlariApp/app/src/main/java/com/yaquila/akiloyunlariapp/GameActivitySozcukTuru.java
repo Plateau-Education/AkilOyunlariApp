@@ -1,9 +1,5 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -25,6 +21,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -34,24 +34,22 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 public class GameActivitySozcukTuru extends AppCompatActivity {
 
     String gameName;
     String difficulty;
-    String clickedBox = "-1";
     String previousCoor;
+    String answer = "";
     String[] rowColumn;
     String[][] lineGrid = new String[81][81];
-    int gridSize = 5;
+    int gridSizeX = 5;
+    int gridSizeY = 5;
     int timerInSeconds = 0;
-    int pxHeight = 900;
+    int pxHeightX = 900;
+    int pxHeightY = 900;
     boolean timerStopped=false;
     boolean paused = false;
     boolean gotQuestion = false;
@@ -60,7 +58,6 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     List<String> operations = new ArrayList<>();
     List<String> opsForUndo = new ArrayList<>();
-    List<String> clueIndexes = new ArrayList<>();
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
@@ -104,7 +101,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             int[] secondMP = middlePoint(currentC);
             if(op.charAt(4) == '+'){
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-                paint.setStrokeWidth((float)pxHeight/60);
+                paint.setStrokeWidth((float)pxHeightY/60);
                 drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], true);
                 removeLine(previousC,currentC);
                 for(int i = operations.size()-1; i >= 0; i--){
@@ -121,7 +118,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                     }
                 }
                 paint.setXfermode(null);
-                paint.setStrokeWidth((float)pxHeight/75);
+                paint.setStrokeWidth((float)pxHeightY/75);
 
             } else {
                 drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], false);
@@ -135,32 +132,6 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 }
             }
             Log.i("opsforUndo",opsForUndo.toString());
-//            operations = operations.subList(0,operations.size()-1);
-//            List<String> tuple1 = operations.get(operations.size()-1);
-//            operations = operations.subList(0,operations.size()-1);
-//            String co1 = tuple1.get(0);
-//            String num2 = "0";
-//            String co2;
-//            for(int i = operations.size()-1; i>0; i--){
-//                List<String> tuple2 = operations.get(i);
-//                co2 = tuple2.get(0);
-//                if(co1.equals(co2)){
-//                    num2 = tuple2.get(1);
-//                    break;
-//                }
-//            }
-//            Log.i("co/num",co1+" / "+num2);
-//            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-//            TextView currentBox = gridLayout.findViewWithTag(co1);
-//            if(num2.equals("-1")){
-//                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-//            }
-//            else if(num2.equals("-2")){
-//                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-//            }
-//            else{
-//                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-//            }
         }
     }
 
@@ -189,8 +160,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
 
-            for (int i = 0; i < gridSize; i++){
-                for(int j = 0; j < gridSize; j++){
+            for (int i = 0; i < gridSizeX; i++){
+                for(int j = 0; j < gridSizeY; j++){
                     if(lineGrid[i][j].length() <=2){
                         lineGrid[i][j] = "";
                     }
@@ -206,6 +177,14 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
+        for(String s : operations.subList(2,operations.size())){
+            String sR = s.substring(2) + s.substring(0,2);
+            checking = answer.contains(s) || answer.contains(sR);
+            Log.i("answer / s / sR",s + " / " + sR + " / " + answer);
+            if(!checking) break;
+        }
+//        Log.i("answerComparison",opAnswer.toString()+" // "+answer);
+
         if(checking){
             timerStopped = true;
             solvedQuestion = true;
@@ -218,8 +197,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
+            for (int i = 0; i < gridSizeY; i++) {
+                for (int j = 0; j < gridSizeX; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
             }
@@ -246,6 +225,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         @Override
@@ -287,6 +267,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
+            //noinspection deprecation
             super.onPostExecute(result);
 
             try {
@@ -307,15 +288,27 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i <grid.length(); i++){
-            JSONArray box = (JSONArray) grid.get(i);
-            Log.i("asd",Integer.toString(box.getInt(1))+box.getInt(0));
-            TextView currentTV = (TextView) gridLayout.findViewWithTag(Integer.toString(box.getInt(1))+box.getInt(0));
+        StringBuilder answerSB = new StringBuilder();
+        answer = answer + ((JSONArray) grid.get(0)).getInt(0)+((JSONArray) grid.get(0)).getInt(1);
+        StringBuilder words = new StringBuilder();
+        for (int i = 0; i < grid.length(); i++){
+            JSONArray box = ((JSONArray) grid.get(i));
+            if(i != 0 && i != grid.length()-1)
+                answerSB.append(box.getInt(0)).append(box.getInt(1)).append(" ").append(box.getInt(0)).append(box.getInt(1));
+//                answer = answer + box.getInt(0)+box.getInt(1) + " " + box.getInt(0)+box.getInt(1);
+            TextView currentTV = gridLayout.findViewWithTag(Integer.toString(box.getInt(0))+box.getInt(1));
             currentTV.setText(Character.toString((char)box.getInt(2)));
+            words.append((char) box.getInt(2));
         }
+        answer += answerSB.toString();
+        answer = answer + ((JSONArray) grid.get(grid.length()-1)).getInt(0)+((JSONArray) grid.get(grid.length()-1)).getInt(1);
+
+        Log.i("answerWords", words.toString());
+
     }
 
     public void timerFunc(){
+        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -323,6 +316,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             public void run() {
                 timerInSeconds+=1;
                 Log.i("timerInSeconds",timerInSeconds+"");
+//                Log.i("answer",answer);
                 timerTV.setText(formatTime(timerInSeconds));
                 if(!timerStopped) timerHandler.postDelayed(this,1000);
             }
@@ -351,16 +345,15 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         opsForUndo.add("--");
 
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
+        for (int i = 0; i < gridSizeY; i++) {
+            for (int j = 0; j < gridSizeX; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                 tv.setText("");
                 tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                 tv.setEnabled(true);
             }
         }
-        clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
+        answer = "";
         timerInSeconds = 0;
         timerStopped=true;
         try{
@@ -370,8 +363,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        for (int i = 0; i < gridSize; i++){
-            for(int j = 0; j < gridSize; j++){
+        for (int i = 0; i < gridSizeX; i++){
+            for(int j = 0; j < gridSizeY; j++){
                 lineGrid[i][j] = "";
             }
         }
@@ -390,17 +383,17 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     public void initSomeVar(){
-        bitmap = Bitmap.createBitmap(pxHeight, pxHeight, Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(pxHeightX, pxHeightY, Bitmap.Config.ARGB_8888);
         canvas = new Canvas(bitmap);
         canvas.drawColor(getResources().getColor(R.color.transparent));
         paint = new Paint();
         paint.setColor(getResources().getColor(R.color.shallow_light_red2));
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth((float)pxHeight/75);
+        paint.setStrokeWidth((float)pxHeightY/75);
         paint.setAntiAlias(true);
 
-        for (int i = 0; i < gridSize; i++){
-            for(int j = 0; j < gridSize; j++){
+        for (int i = 0; i < gridSizeX; i++){
+            for(int j = 0; j < gridSizeY; j++){
                 lineGrid[j][i] = "";
             }
         }
@@ -409,9 +402,16 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     public String[] xyToRowColumn(float x, float y){
         String[] rowColumn = new String[2];
-        float coef = (float)pxHeight/gridSize;
-        rowColumn[0] = Integer.toString((int) Math.floor(x/coef));
-        rowColumn[1] = Integer.toString((int) Math.floor(y/coef));
+        float coefX = (float)pxHeightX/gridSizeX;
+        float coefY = (float)pxHeightY/gridSizeY;
+        if((((x / coefX) - Math.floor(x / coefX)) >= 0.2f) && (((y / coefY) - Math.floor(y / coefY)) >= 0.2f)){
+            rowColumn[0] = Integer.toString((int) Math.floor(x/coefX));
+            rowColumn[1] = Integer.toString((int) Math.floor(y/coefY));
+        }
+        else{
+            rowColumn[0] = "";
+            rowColumn[1] = "";
+        }
         return rowColumn;
     }
 
@@ -419,9 +419,10 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         int x = Integer.parseInt(String.valueOf(coor.charAt(0)));
         int y = Integer.parseInt(String.valueOf(coor.charAt(1)));
         int[] middle_point = new int[2];
-        float coef = (float)pxHeight/gridSize;
-        middle_point[0] = (int) (coef*x+coef/2);
-        middle_point[1] = (int) (coef*y+coef/2);
+        float coefX = (float)pxHeightX/gridSizeX;
+        float coefY = (float)pxHeightY/gridSizeY;
+        middle_point[0] = (int) (coefX*x+coefX/2);
+        middle_point[1] = (int) (coefY*y+coefY/2);
         return middle_point;
     }
 
@@ -429,15 +430,27 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         ImageView imageView = findViewById(R.id.canvasIV);
 //        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
         if(!erasing) {
-            int offset = pxHeight / 150;
-            if (startY - stopY == 0) {
+            int offset = pxHeightY / 150;
+            if (startY - stopY == 0 && startX - stopX != 0) {
                 if (startX < stopX)
                     canvas.drawLine(startX - offset, startY, stopX + offset, stopY, paint);
                 else canvas.drawLine(startX + offset, startY, stopX - offset, stopY, paint);
-            } else {
+            } else if (startX - stopX == 0 && startY - stopY != 0){
                 if (startY < stopY)
                     canvas.drawLine(startX, startY - offset, stopX, stopY + offset, paint);
                 else canvas.drawLine(startX, startY + offset, stopX, stopY - offset, paint);
+            }
+            else {
+                canvas.drawLine(startX,startY,stopX,stopY,paint);
+//                if (startX < stopX) {
+//                    if (startY < stopY)
+//                        canvas.drawLine(startX-offset, startY - offset, stopX+offset, stopY + offset, paint);
+//                    else canvas.drawLine(startX-offset, startY + offset, stopX+offset, stopY - offset, paint);
+//                } else {
+//                    if (startY < stopY)
+//                        canvas.drawLine(startX+offset, startY - offset, stopX-offset, stopY + offset, paint);
+//                    else canvas.drawLine(startX+offset, startY + offset, stopX-offset, stopY - offset, paint);
+//                }
             }
         }
         else{
@@ -447,28 +460,50 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             String[] currentC = xyToRowColumn(stopX,stopY);
             int cx = Integer.parseInt(currentC[0]);
             int cy = Integer.parseInt(currentC[1]);
-            int offset1 = pxHeight / 120;
-            int offset2 = pxHeight / 120;
-            if (startY - stopY == 0) {
+
+            if (startY - stopY == 0 && startX - stopX != 0) {
+                int offset1 = pxHeightY / 120;
+                int offset2 = pxHeightY / 120;
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/120;
+                    offset1 = -pxHeightY/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/120;
+                    offset2 = -pxHeightY/120;
                 }
                 if (startX < stopX)
                     canvas.drawLine(startX - offset1, startY, stopX + offset2, stopY, paint);
                 else canvas.drawLine(startX + offset1, startY, stopX - offset2, stopY, paint);
-            } else {
+            } else if (startX - stopX == 0 && startY - stopY != 0){
+                int offset1 = pxHeightY / 120;
+                int offset2 = pxHeightY / 120;
                 if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeight/120;
+                    offset1 = -pxHeightY/120;
                 }
                 if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeight/120;
+                    offset2 = -pxHeightY/120;
                 }
                 if (startY < stopY)
                     canvas.drawLine(startX, startY - offset1, stopX, stopY + offset2, paint);
                 else canvas.drawLine(startX, startY + offset1, stopX, stopY - offset2, paint);
+            } else {
+                int offset1 = pxHeightY / 120;
+                int offset2 = pxHeightY / 120;
+                if(lineGrid[px][py].length() == 2){
+                    offset1 = -pxHeightY/120;
+                }
+                if(lineGrid[cx][cy].length() == 2){
+                    offset2 = -pxHeightY/120;
+                }
+
+                if (startX < stopX) {
+                    if (startY < stopY)
+                        canvas.drawLine(startX-offset1, startY - offset1, stopX+offset2, stopY + offset2, paint);
+                    else canvas.drawLine(startX-offset1, startY + offset1, stopX+offset2, stopY - offset2, paint);
+                } else {
+                    if (startY < stopY)
+                        canvas.drawLine(startX+offset1, startY - offset1, stopX-offset2, stopY + offset2, paint);
+                    else canvas.drawLine(startX + offset1, startY + offset1, stopX-offset2, stopY - offset2, paint);
+                }
             }
         }
         imageView.setImageBitmap(bitmap);
@@ -528,17 +563,17 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         int c1 = Integer.parseInt(String.valueOf(firstRC.charAt(1)));
         int r2 = Integer.parseInt(String.valueOf(secondRC.charAt(0)));
         int c2 = Integer.parseInt(String.valueOf(secondRC.charAt(1)));
-        if(r1 == r2){ // vertical line
+        if(r1 == r2 && c1 != c2){ // vertical line
             if(c1 < c2){ // first one is above second
                 lineGrid[r1][c1] = lineGrid[r1][c1].replace("d","");
                 lineGrid[r2][c2] = lineGrid[r2][c2].replace("u","");
             }
-            else if(c1 > c2){ // first one is below second
+            else { // first one is below second
                 lineGrid[r1][c1] = lineGrid[r1][c1].replace("u","");
                 lineGrid[r2][c2] = lineGrid[r2][c2].replace("d","");
             }
         }
-        else if(c1 == c2){ // horizontal line
+        else if(c1 == c2 && r1 != r2){ // horizontal line
             if(r1 < r2){ // first one is left of second
                 lineGrid[r1][c1] = lineGrid[r1][c1].replace("r","");
                 lineGrid[r2][c2] = lineGrid[r2][c2].replace("l","");
@@ -547,6 +582,28 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 lineGrid[r1][c1] = lineGrid[r1][c1].replace("l","");
                 lineGrid[r2][c2] = lineGrid[r2][c2].replace("r","");
 
+            }
+        }
+        else{
+            if(c1 < c2){ // first one is above second
+                if(r1 < r2){ // first one is left of second
+                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("s","");
+                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("n","");
+                }
+                else { // first one is right of second
+                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("n","");
+                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("s","");
+                }
+            }
+            else { // first one is below second
+                if(r1 < r2){ // first one is left of second
+                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("e","");
+                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("w","");
+                }
+                else { // first one is right of second
+                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("w","");
+                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("e","");
+                }
             }
         }
 //        Log.i("eraseModeRemoveLine",r1+" "+c1+" "+lineGrid[r1][c1]+" / "+r2+" "+c2+" "+lineGrid[r2][c2]);
@@ -572,6 +629,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 //
 
         return (!currentC.equals(previousC)
+                && !currentC.equals("")
+                && !previousC.equals("")
                 && (
                 (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) <= 1)
 
@@ -582,11 +641,18 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     public boolean isGridFull(){
         boolean isfull = true;
-        for(int i = 0; i < gridSize; i++){
-            for(int j = 0; j < gridSize; j++){
+        int notfullCount = 0;
+        for(int i = 0; i < gridSizeX; i++){
+            if(!isfull) break;
+            for(int j = 0; j < gridSizeY; j++){
                 if(lineGrid[i][j].length() < 2){
-                    isfull=false;
-                    break;
+                    if(lineGrid[i][j].length() <= 1){
+                        notfullCount += 1;
+                    }
+                    if(notfullCount > 2){
+                        isfull=false;
+                        break;
+                    }
                 }
             }
         }
@@ -602,29 +668,38 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
-            setContentView(R.layout.activity_game_sozcuk_turu34);
-            Log.i("diff","easy");
-            difficulty="Easy";
-            gridSize=34;
-        }
-//        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
-//            setContentView(R.layout.activity_game_patika7);
-//            gridSize=35;
-//            difficulty="Medium";
-//            Log.i("diff","medium");
-//        }
-//        else if(difficulty.equals("Hard") || difficulty.equals("Zor")){
-//            setContentView(R.layout.activity_game_patika7);
-//            gridSize=45;
-//            difficulty="Hard";
-//            Log.i("diff","medium");
-//        }
-        else{
-            setContentView(R.layout.activity_game_sozcuk_turu55);
-            gridSize=5;
-            difficulty="Hardest";
-            Log.i("diff","hard");
+        switch (difficulty) {
+            case "Easy":
+            case "Kolay":
+                setContentView(R.layout.activity_game_sozcuk_turu34);
+                Log.i("diff", "easy");
+                difficulty = "Easy";
+                gridSizeX = 3;
+                gridSizeY = 4;
+                break;
+            case "Medium":
+            case "Orta":
+                setContentView(R.layout.activity_game_sozcuk_turu35);
+                gridSizeX = 3;
+                gridSizeY = 5;
+                difficulty = "Medium";
+                Log.i("diff", "medium");
+                break;
+            case "Hard":
+            case "Zor":
+                setContentView(R.layout.activity_game_sozcuk_turu45);
+                gridSizeX = 4;
+                gridSizeY = 5;
+                difficulty = "Hard";
+                Log.i("diff", "medium");
+                break;
+            default:
+                setContentView(R.layout.activity_game_sozcuk_turu55);
+                gridSizeX = 5;
+                gridSizeY = 5;
+                difficulty = "Hardest";
+                Log.i("diff", "hard");
+                break;
         }
 
         final GridLayout gridLayout = findViewById(R.id.gridGL_ga);
@@ -638,8 +713,11 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 //                Log.i("pxheight",pxHeight+"");
 //            }
 //        }, 200);
-        pxHeight = (int) (300 * getResources().getDisplayMetrics().density);
-        Log.i("pxheight",pxHeight+"");
+        pxHeightY = (int) (300 * getResources().getDisplayMetrics().density);
+        pxHeightX = (int) ((300*gridSizeX/gridSizeY) * getResources().getDisplayMetrics().density);
+//        Log.i("asd", +"");
+        Log.i("pxheightX",pxHeightX+"");
+        Log.i("pxheightY",pxHeightY+"");
         initSomeVar();
         gridLayout.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -647,8 +725,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 float mx = motionEvent.getX();
                 float my = motionEvent.getY();
-                Log.i("x / y",mx + " / " + my);
-                if(mx >= 0 && mx <= pxHeight && my >= 0 && my <= pxHeight){
+//                Log.i("x / y",mx + " / " + my);
+                if(mx >= 0 && mx <= pxHeightX && my >= 0 && my <= pxHeightY){
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
                             rowColumn = xyToRowColumn(mx,my);
@@ -667,21 +745,20 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 //                                    Log.i("eraseMode","ON");
                                     paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
 //                                    paint.setColor(getResources().getColor(R.color.f7f5fa));
-                                    paint.setStrokeWidth((float)pxHeight/60);
+                                    paint.setStrokeWidth((float)pxHeightY/60);
                                     drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
                                     if(operations.contains(previousCoor+currentCoor)){
                                         removeLine(previousCoor,currentCoor);
                                         operations.remove(previousCoor+currentCoor);
-                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
                                     else{
                                         removeLine(currentCoor,previousCoor);
                                         operations.remove(currentCoor+previousCoor);
-                                        opsForUndo.add(previousCoor+currentCoor+"-");
                                     }
+                                    opsForUndo.add(previousCoor+currentCoor+"-");
                                     paint.setXfermode(null);
 //                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
-                                    paint.setStrokeWidth((float)pxHeight/75);
+                                    paint.setStrokeWidth((float)pxHeightY/75);
                                 }
                                 else{
                                     Log.i("eraseMode","OFF  "+currentCoor+ "  "+ previousCoor);
@@ -691,16 +768,18 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                                     opsForUndo.add(previousCoor+currentCoor+"+");
                                 }
                                 previousCoor = currentCoor;
+                                Log.i("operations",operations+"      /      "+answer);
                                 if(isGridFull()){
+                                    Log.i("isGridFull","grid is full");
                                     checkAnswer(null);
                                 }
-                                Log.i("LineGrid", Arrays.deepToString(lineGrid));
+//                                Log.i("LineGrid", Arrays.deepToString(lineGrid));
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            if(!is_moving){
-                                Log.i("Pressed","Pressed");
-                            }
+//                            if(!is_moving){
+//                                Log.i("Pressed","Pressed");
+//                            }
 //                            if(isGridFull()){
 //                                checkAnswer(null);
 //                            }

@@ -1183,6 +1183,17 @@
         app:layout_constraintTop_toBottomOf="@+id/gridGL_ga"
         app:layout_constraintVertical_bias="0.3">
 
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginEnd="30dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeSwitch"
+            android:src="@drawable/ic_diamond"
+            tools:ignore="ContentDescription" />
+
         <Button
             android:id="@+id/undoTV_ga"
             android:layout_width="wrap_content"

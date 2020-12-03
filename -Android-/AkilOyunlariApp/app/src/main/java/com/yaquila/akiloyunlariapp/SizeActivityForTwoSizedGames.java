@@ -29,7 +29,7 @@ public class SizeActivityForTwoSizedGames extends AppCompatActivity {
 
 
     public void initDiffs(){
-        LinearLayout diffList = (LinearLayout) findViewById(R.id.diffList_d);
+        LinearLayout diffList = findViewById(R.id.diffList_d);
         for (int i = 0; i < 2; i++){
             TextView currentTV = (TextView) ((RelativeLayout)diffList.getChildAt(i)).getChildAt(0);
             currentTV.setBackground(getResources().getDrawable(R.drawable.diff_selector_bg));
