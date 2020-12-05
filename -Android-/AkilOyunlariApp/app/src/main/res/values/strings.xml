@@ -29,4 +29,8 @@
     <string name="Username">Username</string>
     <string name="Password">Password</string>
     <string name="HaveAccount">Already have an account?</string>
+    <string name="DontHaveAccount">Don\'t have an account yet?</string>
+    <string name="PleaseWait">Please Wait...</string>
+    <string name="Submit">Submit</string>
+    <string name="Nickname">Nickname</string>
 </resources>

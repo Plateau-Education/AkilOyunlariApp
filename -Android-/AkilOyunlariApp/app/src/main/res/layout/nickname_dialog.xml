@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_marginLeft="40dp"
+    android:layout_marginRight="40dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginStart="40dp"
+    android:background="@drawable/cornered_grey_background"
+    android:id="@+id/usernameLinearLayout"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/nicknameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="35sp"
+        android:textColor="@color/near_black_blue"
+        android:fontFamily="@font/mohave_bold"
+        android:text="@string/Nickname"/>
+
+    <EditText
+        android:id="@+id/nicknameET"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_bold"
+        android:ems="10"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shadowwhite"
+        android:inputType="textPersonName"
+        android:textColor="@color/near_black_blue"
+        android:textSize="18sp"
+        android:hint="@string/Nickname"
+        android:padding="25dp"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/nicknameButton"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shadowblack"
+        android:textColor="#ffffff"
+        android:fontFamily="@font/mohave_bold"
+        android:textAllCaps="false"
+        android:padding="15dp"
+        android:textSize="20sp"
+        android:text="@string/Submit" />
+</LinearLayout>

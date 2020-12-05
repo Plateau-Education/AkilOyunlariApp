@@ -30,5 +30,9 @@
     <string name="Username">Kullanıcı Adı</string>
     <string name="Password">Şifre</string>
     <string name="HaveAccount">Zaten bir hesabın var mı?</string>
+    <string name="DontHaveAccount">Hesabın Yok Mu?</string>
+    <string name="PleaseWait">Lütfen Bekleyiniz...</string>
+    <string name="Submit">Kaydet</string>
+    <string name="Nickname">Takma ad</string>
 
 </resources>
