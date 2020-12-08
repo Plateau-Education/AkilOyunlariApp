@@ -2,7 +2,7 @@ from pymongo import MongoClient
 from random import choices
 from flask import Flask, render_template, send_from_directory
 from flask_restful import Api, Resource, reqparse
-from json import dumps
+from json import dumps, loads
 import os
 import uuid
 from b64uuid import B64UUID
@@ -19,10 +19,6 @@ request.add_argument("Info", required=False)
 request.add_argument("Token", required=False)
 request.add_argument("Req", required=False)
 request.add_argument("Query", required=False)
-request.add_argument("SignIn", required=False)
-request.add_argument("SignUp", required=False)
-request.add_argument("Google", required=False)
-request.add_argument("Nick", required=False)
 request.add_argument("Ids", required=False)
 cluster = MongoClient(key)
 cluster2 = MongoClient(key2)
@@ -30,53 +26,32 @@ db = cluster["AkilOyunlariDB"]
 userdb = cluster2["AkilOyunlariUsers"]
 
 
-def findUser(user_id):
-    return userdb["Users"].find_one(filter={"_id": user_id})
-
-
-def isIdTaken(user_id):
+def isTaken(info, query):
     col = userdb["User_ids"]
-    ids = [i["_id"] for i in col.find()]
+    qs = [i[query] for i in col.find()]
+    for q in qs:
+        if info == q:
+            return True
+    return False
+
+
+def signIn(email, password):
+    col = userdb["User_ids"]
+    ids = [(i["email"], i["password"], i["_id"]) for i in col.find()]
     for idx in ids:
-        if user_id == idx:
-            return False
-    return True
-
-
-def isNameTaken(username):
-    col = userdb["User_ids"]
-    names = [i["username"] for i in col.find()]
-    for name in names:
-        if username == name:
-            return False
-    return True
-
-
-def isNickTaken(nick):
-    col = userdb["Users"]
-    nicks = [i["nick"] for i in col.find()]
-    for nickx in nicks:
-        if nick == nickx:
-            return False
-    return True
-
-def signIn(user_id, password):
-    col = userdb["User_ids"]
-    ids = [(i["_id"], i["password"], i["_id"]) for i in col.find()]
-    for idx in ids:
-        if user_id == idx[0]:
+        if email == idx[0]:
             if password == idx[1]:
                 return {"Message": idx[2]}, 200
     return False
 
 
-def signUp(user_id, password):
+def signUp(displayname, username, email, password):
     flag = True
     idx = None
     while flag:
         idx = B64UUID(uuid.uuid4()).string
-        flag = not isIdTaken(idx)                   
-    userdb["Users"].insert_one({"_id": idx, "solved": {
+        flag = isTaken(idx, "_id")                   
+    userdb["Users"].insert_one({"_id": idx, "username": username, "solved": {
         "Sudoku": {"6": {"Easy": [], "Medium": [], "Hard": []}, "9": {"Easy": [],
                                                                         "Medium": [], "Hard": []}},
         "SozcukTuru": {"Easy": [], "Medium": [], "Hard": [], "Hardest": []},
@@ -85,8 +60,9 @@ def signUp(user_id, password):
                         "8": [], "10": []}, "Piramit": {"3": [], "4": [], "5": [], "6": []},
         "Pentomino": {"Easy": [],
                         "Medium": [], "Hard": []}, "Anagram": {"Easy": [], "Medium": [], "Hard": []}},
-                                "puan": 0})
-    userdb["User_ids"].insert_one({"_id": idx, "password": password, "username": user_id})
+                                "puan": {"Sudoku": 0, "SayiBulmaca": 0, "Piramit": 0, "Patika": 0, "HazineAvi": 0, "Pentomino": 0,
+                                         "SozcukTuru": 0, "Anagram":0,}})
+    userdb["User_ids"].insert_one({"_id": idx, "displayname": displayname, "username": username, "email": email, "password": password})
     userdb["User_ids"].find_one_and_update({"_id": "userid"}, update={"$inc": {"seq": 1}}, new=True)
     return idx
 
@@ -97,6 +73,8 @@ def getSolved(user_id, query):
     ids = userdb["Users"].find_one({"_id": user_id})
     for key in query:
         ids = ids[key]
+    for n, i in enumerate(ids):
+        ids[n] = int(i[0])
     return ids
 
 
@@ -154,103 +132,106 @@ def favicon():
 class Games(Resource):
     def get(self, game, user):
         args = request.parse_args()
-        if args["Token"] == token:
-            if not isIdTaken(user):
-                if args["Info"]:
-                    try:
-                        num = int(args["Info"])
-                    except ValueError:
-                        return {"Message": "Unprocessable Entity"}, 422
-                    if num > 20:
-                        return {"Message": "Method not allowed"}, 405
-                    response = Find(col=game, userid=user, cevap=args["Req"], amount=num, query=game)
-                    return dumps({"Info": response[0], "Ids": response[1]}), 200
-                return {"Message": "Method not allowed"}, 405
-            else:
-                return {"Message": "Not Found"}, 404
-        else:
-            return {"Message": "Method not allowed"}, 405
+        if args["Token"] == token and args["Info"]:
+            if isTaken(user, "_id"):
+                try:
+                    num = int(args["Info"])
+                except ValueError:
+                    return {"Message": "Unprocessable Entity"}, 422
+                if num > 20:
+                    return {"Message": "Method not allowed"}, 405
+                response = Find(col=game, userid=user, cevap=args["Req"], amount=num, query=game)
+                return dumps({"Info": response[0], "Ids": response[1]}), 200
+            return {"Message": "Not Found"}, 404
+        return {"Message": "Method not allowed"}, 405
 
 
 class User(Resource):
-    def get(self, username):
+    def get(self, userinfo):
         args = request.parse_args()
-        if args["Token"] == token:
-            user = userdb["Users"].find_one(filter={"_id": username})
-            return dumps(user), 200
-        else:
+        if args["Token"] == token and args["Info"] and userinfo == "userGet":
+            json = args["Info"]
+            if json["Id"]:
+                user = userdb["Users"].find_one(filter={"_id": json["Id"]})
+                return dumps(user), 200
             return {"Message": "Method not allowed"}, 405
+        return {"Message": "Method not allowed"}, 405
 
-    def post(self, username):
+    def post(self, userinfo):
         args = request.parse_args()
-        if args["Token"] == token:
-            if args["Nick"]:
-                nickname = b85encode(args["Nick"].encode()).decode()
-                if isNickTaken(nickname):
-                    userdb["Users"].find_one_and_update(filter={"_id": username}, update={"$set": {"nick": nickname}})
-                    return {"Message": "Ok"}, 200
-                return {"Message": "This Nick Already Exists"}, 422
-            if args["Google"]:
-                password = b85encode(args["Google"].encode()).decode()
-                google = b85encode(username.encode()).decode()
-                if not isNameTaken(google):
-                    return {"Message": userdb["User_ids"].find_one({"username": google})["_id"]}, 200
-                idx = signUp(google, password)
-                return {"Message": idx}, 201
-            if args["SignIn"]:
-                usernamez = b85encode(username.encode()).decode()
-                password = b85encode(args["SignIn"].encode()).decode()
-                return signIn(usernamez, password)
-            if args["SignUp"]:
-                usernamez = b85encode(username.encode()).decode()
-                password = b85encode(args["SignUp"].encode()).decode()      
-                if isNameTaken(usernamez):
-                    idx = signUp(usernamez, password)
+        if args["Token"] == token and args["Info"]:
+            if userinfo == "userGoogle":
+                google = b85encode(args["Info"].encode()).decode()
+                if isTaken(google, "email"):
+                    return {"Message": userdb["User_ids"].find_one({"email": google})["_id"]}, 200
+                return {"Message": "Not Found"}, 200
+            elif userinfo == "userSignIn":
+                json = loads(args["Info"].replace("'", '"'))
+                password = b85encode(json["password"].encode()).decode()  
+                email = b85encode(json["email"].encode()).decode()     
+                return signIn(email, password)
+            elif userinfo == "userSignUp":
+                json = loads(args["Info"].replace("'", '"'))
+                username = b85encode(json["username"].encode()).decode() 
+                displayname = b85encode(json["displayname"].encode()).decode()  
+                password = b85encode(json["password"].encode()).decode()  
+                email = b85encode(json["email"].encode()).decode()                    
+                if not isTaken(email, "email"):
+                    idx = signUp(displayname=displayname, username=username, email=email, password=password)
                     return {"Message": idx}, 201
-                else:
-                    return {"Message": "Username Already Exists!"}, 422
+                return {"Message": "User Already Exists!"}, 200
             return {"Message": "Method not allowed"}, 405
-        else:
-            return {"Message": "Method not allowed"}, 405
+        return {"Message": "Method not allowed"}, 405
 
-    def put(self, username):
+    def put(self, userinfo):
+        puan_dict =  {"Sudoku.6.Easy": 0.1, "Sudoku.6.Medium": 0.4, "Sudoku.6.Hard": 0.6, "Sudoku.9.Easy": 0.3, "Sudoku.9.Medium": 0.8,
+                    "Sudoku.9.Hard": 1.3, "SayiBulmaca.3": 0.1, "SayiBulmaca.4": 0.3, "SayiBulmaca.5": 0.7, "Piramit.3": 0.1,
+                    "Piramit.4": 0.25, "Piramit.5": 0.6, "Piramit.6": 1.2, "Patika.5": 0.1, "Patika.7": 0.3, "Patika.9": 0.8,
+                    "HazineAvi.5": 0.1, "HazineAvi.8": 0.2, "HazineAvi.10": 0.7, "Pentomino.Easy": 0.1, "Pentomino.Medium": 0.3,
+                    "Pentomino.Hard": 1, "SozcukTuru.Easy": 0.1, "SozcukTuru.Medium": 0.25, "SozcukTuru.Hard": 0.5,
+                    "SozcukTuru.Hardest": 1, "Anagram.Easy": 0.1, "Anagram.Medium": 0.3, "Anagram.Hard": 0.8}
         args = request.parse_args()
-        if args["Token"] == token:
-            ids = args["Ids"]
-            if not isIdTaken(username):
-                userdb["Users"].find_one_and_update({"_id": username},
-                                                    update={"$addToSet": {"solved." + args["Query"]: {"$each": ids}}})
+        if args["Token"] == token and args["Info"] and userinfo == "userUpdate":
+            info = loads(args["Info"].replace("'", '"'))
+            idx = info["Id"]
+            game_ideas = info["Ids"]
+            total = 0
+            if isTaken(idx, "_id"):
+                for n, i in enumerate(game_ideas):
+                    game_ideas[n] = i.split("-")
+                    if game_ideas[n][1]:
+                        total += puan_dict[info["Query"]] * 1000 / game_ideas[n][1]
+                game = info["Query"].split("-")[0]
+                userdb["Users"].find_one_and_update({"_id": idx},
+                                                    update={"$addToSet": {"solved." + info["Query"]: {"$each": info["Ids"]}}, "$inc": {f"puan.{game}": total}})
                 return {"Message": "Ok"}, 200
-            else:
-                return {"Message": "Not Found"}, 404
-        else:
-            return {"Message": "Method not allowed"}, 405
+            return {"Message": "Not Found"}, 200
+        return {"Message": "Method not allowed"}, 405
 
-    def delete(self, username):
+    def delete(self, userinfo):
         args = request.parse_args()
-        if args["Token"] == token:
-            if not isIdTaken(username):
+        if args["Token"] == token and args["Info"] and userinfo == "userDelete":
+            idx = loads(args["Info"].replace("'", '"'))["Id"]
+            if isTaken(idx, "_id"):
                 ids = userdb["User_ids"]
                 users = userdb["Users"]
-                ids.find_one_and_delete({"_id": username})
-                users.find_one_and_delete({"_id": username})
+                ids.find_one_and_delete({"_id": idx})
+                users.find_one_and_delete({"_id": idx})
                 ids.find_one_and_update({"_id": "userid"}, update={"$inc": {"seq": -1}})
-                return {"message": "deleted"}, 200
-            else:
-                return {"Message": "Not Found"}, 404
-        else:
-            return {"Message": "Method not allowed"}, 405
+                return {"message": "User Deleted"}, 200
+            return {"Message": "Not Found"}, 200
+        return {"Message": "Method not allowed"}, 405
 
 
 class LeaderBoard(Resource):
     def __init__(self):
-        self.leader_list = []
+        self.leader_list_dict = {}
 
     def get(self):
         args = request.parse_args()
         if args["Token"] == token:
             self.makeList()
-            return dumps(self.leader_list), 200
+            return dumps(self.leader_list_dict), 200
         else:
             return {"Message": "Method not allowed"}, 405
 
@@ -259,11 +240,16 @@ class LeaderBoard(Resource):
             return orn[1]
         users = userdb["Users"]
         first = users.find()
+        games = ["Sudoku", "SayiBulmaca", "Piramit", "Patika", "HazineAvi", "Pentomino", "SozcukTuru", "Anagram"]
+        for game in games:
+            self.leader_list_dict[game] = [] 
         for i in first:
-            self.leader_list.append([b85decode(i["nickame"].encode()).decode(), i["puan"]])
-        self.leader_list.sort(key=sort, reverse=True)
+            for game in games:
+                self.leader_list_dict[game].append([b85decode(i["username"].encode()).decode(), i[f"puan.{game}"]])
+        for game in self.leader_list_dict.values():
+            game.sort(key=sort, reverse=True)
 
 
 api.add_resource(Games, "/<string:game>/<string:user>")
-api.add_resource(User, "/<string:username>")
+api.add_resource(User, "/<string:userinfo>")
 api.add_resource(LeaderBoard, "/leaderboard/board")
