@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from random import choices
+from random import choices, randint
 from flask import Flask, render_template, send_from_directory
 from flask_restful import Api, Resource, reqparse
 from json import dumps, loads
@@ -7,12 +7,21 @@ import os
 import uuid
 from b64uuid import B64UUID
 from base64 import b85encode, b85decode
+from flask_mail import Mail, Message
 
 key = os.environ.get("MONGO_URI")
 key2 = os.environ.get("MONGO_URI2")
 token = os.environ.get("TOKEN")
 app = Flask(__name__, template_folder="templates")
 app.env = "development"
+app.config["DEBUG"] = True
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = os.environ.get("email_user")
+app.config['MAIL_PASSWORD'] = os.environ.get("email_password")
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
 api = Api(app)
 request = reqparse.RequestParser()
 request.add_argument("Info", required=False)
@@ -25,6 +34,19 @@ cluster2 = MongoClient(key2)
 db = cluster["AkilOyunlariDB"]
 userdb = cluster2["AkilOyunlariUsers"]
 
+def randomN(n):
+    range_start = 10**(n-1)
+    range_end = (10**n)-1
+    return randint(range_start, range_end)
+
+
+def send_Mail(receiver, name):
+    kod = randomN(6)
+    members = [[name, kod]]
+    msg = Message('Mind Puzzles', sender=os.environ.get("email_user"), recipients=[receiver])
+    msg.html = str(render_template("email.htm", members=members))
+    mail.send(msg)
+    return kod
 
 def isTaken(info, query):
     col = userdb["User_ids"]
@@ -175,10 +197,17 @@ class User(Resource):
                 username = b85encode(json["username"].encode()).decode() 
                 displayname = b85encode(json["displayname"].encode()).decode()  
                 password = b85encode(json["password"].encode()).decode()  
-                email = b85encode(json["email"].encode()).decode()                    
+                email = b85encode(json["email"].encode()).decode()
                 if not isTaken(email, "email"):
                     idx = signUp(displayname=displayname, username=username, email=email, password=password)
-                    return {"Message": idx}, 201
+                    return {"Message": idx}, 200
+                return {"Message": "User Already Exists!"}, 200
+            elif userinfo == "userSend":
+                json = loads(args["Info"].replace("'", '"'))                
+                email = b85encode(json["email"].encode()).decode()
+                if not isTaken(email, "email"):
+                    kod = send_Mail(json["email"], json["displayname"])
+                    return {"Message": kod}, 200
                 return {"Message": "User Already Exists!"}, 200
             return {"Message": "Method not allowed"}, 405
         return {"Message": "Method not allowed"}, 405
