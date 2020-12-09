@@ -94,8 +94,12 @@ public class MainActivity extends AppCompatActivity {
             sP.edit().putString("Piramit.4",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
             sP.edit().putString("Piramit.5",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
             sP.edit().putString("Piramit.6",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
-
-            Map<String,ArrayList<String>> solvedQuestions = new HashMap<>();
+        }
+        Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sP.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+        assert solvedQuestions != null;
+        Log.i("solveque",solvedQuestions+"\n  "+solvedQuestions.size());
+        if(solvedQuestions.size()<5){
+            solvedQuestions = new HashMap<>();
             solvedQuestions.put("Sudoku.6.Easy",new ArrayList<String>());
             solvedQuestions.put("Sudoku.6.Medium",new ArrayList<String>());
             solvedQuestions.put("Sudoku.6.Hard",new ArrayList<String>());
@@ -121,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
             solvedQuestions.put("Piramit.6",new ArrayList<String>());
 
             sP.edit().putString("SolvedQuestions",ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
-
         }
     }
 
@@ -133,16 +136,18 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                Map<String,String> info = new HashMap<>();
+//                Map<String,String> info = new HashMap<>();
+//
+//                info.put("Id", strings[3]);
+//
+////                Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(strings[4]);
+//                info.put("Query",strings[4]);
+//                info.put("Ids",strings[5]);
+//                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
 
-                info.put("Id", strings[3]);
+                result = "{\"Info\":"+ "{\"Id\":\"" + strings[3] + "\", \"Query\":\"" + strings[4] + "\", \"Ids\":"+ new JSONArray(strings[5]) + "}, \"Token\":"+ "\""+strings[2]+ "\"}";
 
-                ArrayList<String> solvedQuestions = (ArrayList<String>) ObjectSerializer.deserialize(strings[4]);
-
-                info.put("Query",strings[4]);
-                info.put("Ids",strings[5]);
-                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
-
+                Log.i("request",result);
                 String URL = strings[0]+strings[1];
                 requestQueue = Volley.newRequestQueue(getApplicationContext());
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
@@ -159,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley",error.getMessage());
+                        Log.e("Volley",error.getMessage()+"");
                     }
                 }) {
                     @Override
@@ -197,17 +202,21 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         try{
-            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlari", MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
+            String id = sharedPreferences.getString("id", "non");
             Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+            Log.i("solvedQuestions1",solvedQuestions+"");
             assert solvedQuestions != null;
             for(String s : solvedQuestions.keySet()) {
-                if(Objects.requireNonNull(solvedQuestions.get(s)).size() == 1)
+                if(Objects.requireNonNull(solvedQuestions.get(s)).size() == 0)
                     continue;
                 PutRequest putRequest = new PutRequest();
                 //noinspection deprecation
-                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", );
-            
+                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", id, s, Objects.requireNonNull(solvedQuestions.get(s)).toString());
+                Objects.requireNonNull(solvedQuestions.get(s)).clear();
             }
+            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+            Log.i("solvedQuestions2",solvedQuestions+"");
 
 
 

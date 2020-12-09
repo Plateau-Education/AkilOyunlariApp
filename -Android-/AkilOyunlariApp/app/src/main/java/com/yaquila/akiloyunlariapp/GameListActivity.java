@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -100,6 +101,13 @@ public class GameListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_list);
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra("message");
+        if(message!=null){
+            Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override

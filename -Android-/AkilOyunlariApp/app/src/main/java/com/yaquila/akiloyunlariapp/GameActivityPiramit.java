@@ -26,12 +26,16 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class GameActivityPiramit extends AppCompatActivity{
 
@@ -95,8 +99,32 @@ public class GameActivityPiramit extends AppCompatActivity{
         leaveDialog.setView(leaveDialogView);
 
         leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                try {
+                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+
+                    assert questions != null;
+                    questions.remove(0);
+
+                    assert solvedQuestions != null;
+                    assert gameIds != null;
+                    Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+
+                    Log.i("solvedQuestions",solvedQuestions+"");
+
+                    sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                    sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -156,6 +184,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
         Button btn = (Button) view;
@@ -289,6 +318,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
@@ -304,6 +334,30 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
         Log.i("check",checking+"  "+answer);
         if(checking){
+
+            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+            try {
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+
+                assert questions != null;
+                questions.remove(0);
+
+                assert solvedQuestions != null;
+                assert gameIds != null;
+                Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
+
+                Log.i("solvedQuestions",solvedQuestions+"");
+
+                sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             timerStopped=true;
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
@@ -387,13 +441,30 @@ public class GameActivityPiramit extends AppCompatActivity{
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
+        ArrayList<String> questions = new ArrayList<>();
+        ArrayList<Integer> gameIds = new ArrayList<>();
+        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+
         @Override
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
-                URL reqURL = new URL(strings[0] + "/" + id + "?" + "Info=1&Token=" +strings[1]);
+                try {
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit." + gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                assert gameIds != null;
+                URL reqURL;
+                if(gameIds.size() > 10) {
+                    reqURL = new URL(strings[0] + "/" + id + "?" + "Info=" + (1) + "&Token=" + strings[1]);
+                }else{
+                    reqURL = new URL(strings[0] + "/" + id + "?" + "Info=" + (Math.abs(10 - gameIds.size()) + 1) + "&Token=" + strings[1]);
+                }
+
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -435,20 +506,49 @@ public class GameActivityPiramit extends AppCompatActivity{
 //            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
-//                JSONObject jsonObject = (JSONObject) parser.parse(result);
-//                jsonArray = new JSONObject();
-//                Log.i("jsonArray",jsonArray.toString());
-//                JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(jsonArray.getString(0));
-                JSONArray gridArray = (JSONArray) ((JSONArray)((JSONArray)((JSONArray)jb.get("Info")).get(0)).get(0)).get(0);
-                seperateGridAnswer(gridArray);
-                timerStopped=false;
-                gotQuestion = true;
-                timerFunc();
-                loadingDialog.dismissDialog();
+                JSONArray gridArrays = (JSONArray)jb.get("Info");
+                JSONArray idArray = (JSONArray)jb.get("Ids");
+                Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
+                for(int i = 0; i < idArray.length(); i++){
+                    questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
+                    gameIds.add(idArray.getInt(i));
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            if(questions.size() == 0){
+                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                intent.putExtra("message","Need internet connection to view " + gameName +" "+ difficulty);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                timerStopped=true;
+                loadingDialog.dismissDialog();
+            }
+
+            try {
+                seperateGridAnswer(new JSONArray(questions.get(0)));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            timerStopped=false;
+            gotQuestion = true;
+            timerFunc();
+            loadingDialog.dismissDialog();
         }
     }
 
@@ -628,10 +728,33 @@ public class GameActivityPiramit extends AppCompatActivity{
         }
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        timerInSeconds = 0;
-//        timerStopped=true;
-//    }
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    protected void onDestroy() {
+        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+        try {
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+
+            assert questions != null;
+            questions.remove(0);
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+
+            Log.i("solvedQuestions",solvedQuestions+"");
+
+            sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
+            sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        super.onDestroy();
+    }
 }

@@ -246,6 +246,30 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 //        }
         Log.i("check",checking+"  "+answer);
         if(checking){
+
+            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+            try {
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+
+                assert questions != null;
+                questions.remove(0);
+
+                assert solvedQuestions != null;
+                assert gameIds != null;
+                Objects.requireNonNull(solvedQuestions.get("HazineAvi." + gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
+
+                Log.i("solvedQuestions++++",solvedQuestions+"");
+
+                sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             timerStopped=true;
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
@@ -358,6 +382,15 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+
+            if(questions.size() == 0){
+                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                intent.putExtra("message","Need internet connection to view " + gameName +" "+ difficulty);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                timerStopped=true;
+                loadingDialog.dismissDialog();
             }
 
             try {
