@@ -33,4 +33,6 @@
     <string name="PleaseWait">Please Wait...</string>
     <string name="Submit">Submit</string>
     <string name="Nickname">Nickname</string>
+    <string name="Email">E-mail</string>
+    <string name="NameandSurname">Name and Surname</string>
 </resources>

@@ -34,5 +34,7 @@
     <string name="PleaseWait">Lütfen Bekleyiniz...</string>
     <string name="Submit">Kaydet</string>
     <string name="Nickname">Takma ad</string>
+    <string name="Email">E-posta</string>
+    <string name="NameandSurname">İsim Soyisim</string>
 
 </resources>
