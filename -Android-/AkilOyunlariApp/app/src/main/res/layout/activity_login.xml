@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,6 +20,31 @@
         android:background="@color/transparent"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/signTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/SignUp"
+            android:textSize="40sp"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"/>
+
+        <EditText
+            android:id="@+id/displaynameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/light_red_rounded_bg"
+            android:ems="10"
+            android:fontFamily="@font/mohave_bold"
+            android:hint="@string/NameandSurname"
+            android:inputType="textFilter|textPersonName"
+            android:padding="15dp"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:autofillHints="@string/Username"/>
+
         <EditText
             android:id="@+id/usernameEditText"
             android:layout_width="match_parent"
@@ -27,12 +52,28 @@
             android:ems="10"
             android:layout_marginTop="30dp"
             android:background="@drawable/light_red_rounded_bg"
-            android:inputType="textPersonName"
+            android:inputType="textFilter"
             android:textColor="#000000"
             android:textSize="18sp"
             android:fontFamily="@font/mohave_bold"
-            android:hint="Username"
-            android:padding="25dp"/>
+            android:hint="@string/Username"
+            android:padding="15dp"/>
+
+        <EditText
+            android:id="@+id/emailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/light_red_rounded_bg"
+            android:inputType="textFilter"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:fontFamily="@font/mohave_bold"
+            android:hint="@string/Email"
+            android:autofillHints="@string/Username"
+            android:padding="15dp"
+            tools:ignore="TextFields" />
 
         <EditText
             android:id="@+id/passwordEditText"
@@ -45,13 +86,13 @@
             android:inputType="textPassword"
             android:textColor="#000000"
             android:textSize="18sp"
-            android:hint="Password"
-            android:padding="25dp" />
+            android:hint="@string/Password"
+            android:padding="15dp" />
 
         <TextView
             android:id="@+id/signInChangeButton"
             android:layout_width="wrap_content"
-            android:layout_gravity="center|right"
+            android:layout_gravity="center|end"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/mohave_bold"
             android:layout_marginRight="10dp"
@@ -88,8 +129,7 @@
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            android:layout_gravity="center" />
 
     </LinearLayout>
 
