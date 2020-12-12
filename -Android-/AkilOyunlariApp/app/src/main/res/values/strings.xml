@@ -35,4 +35,6 @@
     <string name="Nickname">Nickname</string>
     <string name="Email">E-mail</string>
     <string name="NameandSurname">Name and Surname</string>
+    <string name="Info">Info</string>
+    <string name="Stats">Statistics</string>
 </resources>

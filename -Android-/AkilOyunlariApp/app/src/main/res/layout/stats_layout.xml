@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/statsCL_Profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="0.2">
+
+    <LinearLayout
+        android:id="@+id/sudokuLL_St"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@drawable/rounded_f7f5fa_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/sudokuTV1_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Sudoku"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@color/near_black_blue"/>
+
+        <TextView
+            android:id="@+id/sudokuTV2_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_medium"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/hazineAviLL_St"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:gravity="center"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/rounded_f7f5fa_bg"
+        app:layout_constraintTop_toBottomOf="@id/sudokuLL_St"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/hazineAviTV1_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Hazine Avı"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@color/near_black_blue"/>
+
+        <TextView
+            android:id="@+id/hazineAviTV2_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_medium"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/patikaLL_St"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@drawable/rounded_f7f5fa_bg"
+        app:layout_constraintTop_toBottomOf="@id/hazineAviLL_St"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/patikaTV1_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Patika"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@color/near_black_blue"/>
+
+        <TextView
+            android:id="@+id/patikaTV2_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_medium"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/sayiBulmacaLL_St"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:padding="20dp"
+        android:gravity="center"
+        android:background="@drawable/rounded_f7f5fa_bg"
+        app:layout_constraintTop_toBottomOf="@id/patikaLL_St"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/sayiBulmacaTV1_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Sayı Bulmaca"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_bold"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:background="@color/near_black_blue"/>
+
+        <TextView
+            android:id="@+id/sayiBulmacaTV2_St"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center"
+            android:gravity="start"
+            android:textColor="@color/near_black_blue"
+            android:fontFamily="@font/mohave_medium"
+            android:textSize="30sp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

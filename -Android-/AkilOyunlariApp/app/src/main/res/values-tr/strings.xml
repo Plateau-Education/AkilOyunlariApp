@@ -36,5 +36,7 @@
     <string name="Nickname">Takma ad</string>
     <string name="Email">E-posta</string>
     <string name="NameandSurname">İsim Soyisim</string>
+    <string name="Info">Bilgi</string>
+    <string name="Stats">İstatistik</string>
 
 </resources>

@@ -11,25 +11,52 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity" android:screenOrientation="portrait">
+        <activity android:name=".ProfileActivity"></activity>
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GameActivityPentomino" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivitySozcukTuru" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivityPatika" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivityHazineAvi" android:screenOrientation="portrait"/>
-        <activity android:name=".SizeActivityForTwoSizedGames" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivitySudoku" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivityPiramit" android:screenOrientation="portrait"/>
-        <activity android:name=".DifficultyActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".HowToPlayActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".GameActivitySayiBulmaca" android:screenOrientation="portrait"/>
-        <activity android:name=".GameListActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".MainActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".GameActivityPentomino"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivitySozcukTuru"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivityPatika"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivityHazineAvi"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SizeActivityForTwoSizedGames"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivitySudoku"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivityPiramit"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".DifficultyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HowToPlayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameActivitySayiBulmaca"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".GameListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
