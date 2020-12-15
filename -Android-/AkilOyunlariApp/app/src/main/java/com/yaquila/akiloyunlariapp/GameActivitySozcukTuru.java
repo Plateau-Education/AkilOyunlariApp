@@ -307,6 +307,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
