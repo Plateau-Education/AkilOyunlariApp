@@ -1,19 +1,16 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -29,7 +26,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToGameList(View view){
         Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
+    public void goToProfile(View view){
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
@@ -128,6 +131,56 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void transferBests(JSONObject jo) throws JSONException {
+        SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+
+        JSONObject sudoku = jo.getJSONObject("sudoku");
+        JSONObject hazineAvi = jo.getJSONObject("hazineAvi");
+        JSONObject patika = jo.getJSONObject("patika");
+        JSONObject sayiBulmaca = jo.getJSONObject("sayiBulmaca");
+        JSONObject sozcukTuru = jo.getJSONObject("sozcukTuru");
+        JSONObject piramit = jo.getJSONObject("piramit");
+
+        sP.edit().putString("ScoreSudoku",Integer.toString(sudoku.getInt("score"))).apply();
+        sP.edit().putString("ScoreHazineAvi",Integer.toString(hazineAvi.getInt("score"))).apply();
+        sP.edit().putString("ScorePatika",Integer.toString(patika.getInt("score"))).apply();
+        sP.edit().putString("ScoreSayiBulmaca",Integer.toString(sayiBulmaca.getInt("score"))).apply();
+        sP.edit().putString("ScoreSozcukTuru",Integer.toString(sozcukTuru.getInt("score"))).apply();
+        sP.edit().putString("ScorePiramit",Integer.toString(piramit.getInt("score"))).apply();
+
+
+        sP.edit().putString("BestSudoku.6.Easy",Integer.toString(sudoku.getInt("6Easy"))).apply();
+        sP.edit().putString("BestSudoku.6.Medium",Integer.toString(sudoku.getInt("6Medium"))).apply();
+        sP.edit().putString("BestSudoku.6.Hard",Integer.toString(sudoku.getInt("6Hard"))).apply();
+        sP.edit().putString("BestSudoku.9.Easy",Integer.toString(sudoku.getInt("9Easy"))).apply();
+        sP.edit().putString("BestSudoku.9.Medium",Integer.toString(sudoku.getInt("9Medium"))).apply();
+        sP.edit().putString("BestSudoku.9.Hard",Integer.toString(sudoku.getInt("9Hard"))).apply();
+
+        sP.edit().putString("BestHazineAvi.Easy",Integer.toString(hazineAvi.getInt("5"))).apply();
+        sP.edit().putString("BestHazineAvi.Medium",Integer.toString(hazineAvi.getInt("8"))).apply();
+        sP.edit().putString("BestHazineAvi.Hard",Integer.toString(hazineAvi.getInt("10"))).apply();
+
+        sP.edit().putString("BestPatika.Easy",Integer.toString(patika.getInt("5"))).apply();
+        sP.edit().putString("BestPatika.Medium",Integer.toString(patika.getInt("7"))).apply();
+        sP.edit().putString("BestPatika.Hard",Integer.toString(patika.getInt("9"))).apply();
+
+        sP.edit().putString("BestSayiBulmaca.Easy",Integer.toString(sayiBulmaca.getInt("3"))).apply();
+        sP.edit().putString("BestSayiBulmaca.Medium",Integer.toString(sayiBulmaca.getInt("4"))).apply();
+        sP.edit().putString("BestSayiBulmaca.Hard",Integer.toString(sayiBulmaca.getInt("5"))).apply();
+
+        sP.edit().putString("BestSozcukTuru.Easy",Integer.toString(sozcukTuru.getInt("Easy"))).apply();
+        sP.edit().putString("BestSozcukTuru.Medium",Integer.toString(sozcukTuru.getInt("Medium"))).apply();
+        sP.edit().putString("BestSozcukTuru.Hard",Integer.toString(sozcukTuru.getInt("Hard"))).apply();
+        sP.edit().putString("BestSozcukTuru.VeryHard",Integer.toString(sozcukTuru.getInt("Hardest"))).apply();
+
+        sP.edit().putString("BestPiramit.Easy",Integer.toString(piramit.getInt("Easy"))).apply();
+        sP.edit().putString("BestPiramit.Medium",Integer.toString(piramit.getInt("Medium"))).apply();
+        sP.edit().putString("BestPİramit.Hard",Integer.toString(piramit.getInt("Hard"))).apply();
+        sP.edit().putString("BestPiramit.VeryHard",Integer.toString(piramit.getInt("Hardest"))).apply();
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
     public class PutRequest extends AsyncTask<String, Void, String> {
 
         RequestQueue requestQueue;
@@ -144,7 +197,6 @@ public class MainActivity extends AppCompatActivity {
 //                info.put("Query",strings[4]);
 //                info.put("Ids",strings[5]);
 //                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
-
                 result = "{\"Info\":"+ "{\"Id\":\"" + strings[3] + "\", \"Query\":\"" + strings[4] + "\", \"Ids\":"+ new JSONArray(strings[5]) + "}, \"Token\":"+ "\""+strings[2]+ "\"}";
 
                 Log.i("request",result);
@@ -172,14 +224,10 @@ public class MainActivity extends AppCompatActivity {
                         return "application/json; charset=utf-8";
                     }
 
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public byte[] getBody() throws AuthFailureError {
-                        try {
-                            return result == null ? null: result.getBytes("utf-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
+                        return result == null ? null: result.getBytes(StandardCharsets.UTF_8);
                     }
                 };
                 requestQueue.add(stringRequest);
@@ -200,7 +248,8 @@ public class MainActivity extends AppCompatActivity {
             checkSavedQuestions();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }//checkSavedQuestions
+
         try{
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
             String id = sharedPreferences.getString("id", "non");
@@ -223,7 +272,9 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (Exception e){
             e.printStackTrace();
-        }
+        }//putRequest
+
+
 
 //        try{
 //            Intent intent = getIntent();

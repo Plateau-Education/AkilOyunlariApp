@@ -119,6 +119,35 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         leaveDialog.show();
     }
 
+    public void nextQuestion(View view){
+        if(timerStopped){
+            LayoutInflater factory = LayoutInflater.from(this);
+            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
+            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            timerTV.setText(formatTime(timerInSeconds));
+            correctDialog.setView(leaveDialogView);
+
+            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mainFunc();
+                    correctDialog.dismiss();
+                }
+            });
+            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                    correctDialog.dismiss();
+                }
+            });
+            correctDialog.show();
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void undoOperation(View view){
         if(opsForUndo.size() > 2){
@@ -247,6 +276,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
+            findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
             for (int i = 0; i < gridSizeY; i++) {
@@ -277,6 +307,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
@@ -475,6 +506,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     public void mainFunc(){
+        findViewById(R.id.clickView).setVisibility(View.GONE);
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
         undoTV.setEnabled(true);

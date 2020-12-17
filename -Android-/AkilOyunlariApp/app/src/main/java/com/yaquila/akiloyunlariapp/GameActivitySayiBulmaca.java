@@ -105,6 +105,35 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         leaveDialog.show();
     }
 
+    public void nextQuestion(View view){
+        if(timerStopped){
+            LayoutInflater factory = LayoutInflater.from(this);
+            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
+            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            timerTV.setText(formatTime(timerInSeconds));
+            correctDialog.setView(leaveDialogView);
+
+            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mainFunc();
+                    correctDialog.dismiss();
+                }
+            });
+            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                    correctDialog.dismiss();
+                }
+            });
+            correctDialog.show();
+        }
+    }
+
     public void changeClicked(View view){
         TextView box = (TextView) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
@@ -343,6 +372,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
+            findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             GridLayout numsLayout = findViewById(R.id.numsGL_ga);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
@@ -636,6 +666,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void mainFunc(){
+        findViewById(R.id.clickView).setVisibility(View.GONE);
         GridLayout numsLayout = findViewById(R.id.numsGL_ga);
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView deleteTV = findViewById(R.id.deleteTV_ga);

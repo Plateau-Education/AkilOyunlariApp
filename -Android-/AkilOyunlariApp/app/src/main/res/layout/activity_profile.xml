@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_red"
+    tools:context=".ProfileActivity"
+    android:orientation="vertical">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:fadingEdgeLength="10dp"
+        android:requiresFadingEdge="vertical"
+        android:background="@color/light_red">
+
+        <LinearLayout
+            android:id="@+id/scrollViewLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="25dp"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_002man"
+                    android:background="@drawable/circlef7f5fa"
+                    android:padding="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    tools:ignore="ContentDescription" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/tabCL_Profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id="@+id/tabLL_Profile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/info_tabTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Info"
+                        android:textColor="@color/light_blue_green"
+                        android:textSize="40sp"
+                        android:fontFamily="@font/mohave_bold"
+                        android:background="@drawable/more_rounded_f7f5fa_bg"
+                        android:layout_margin="10dp"
+                        android:paddingStart="25dp"
+                        android:paddingEnd="25dp"
+                        android:paddingTop="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="profileInfoChange"/>
+
+                    <TextView
+                        android:id="@+id/stats_tabTV"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/Stats"
+                        android:textColor="@color/tab_selector_tvcolor"
+                        android:textSize="40sp"
+                        android:fontFamily="@font/mohave_bold"
+                        android:background="@drawable/tab_selector_bg"
+                        android:layout_margin="10dp"
+                        android:paddingStart="25dp"
+                        android:paddingEnd="25dp"
+                        android:paddingTop="10dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:onClick="profileInfoChange"/>
+
+
+                </LinearLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

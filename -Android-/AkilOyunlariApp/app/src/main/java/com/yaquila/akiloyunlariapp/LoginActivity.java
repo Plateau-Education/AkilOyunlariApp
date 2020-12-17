@@ -57,9 +57,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         RequestQueue requestQueue;
         String result = null;
         String resId;
+        String resUsername="unknown";
+        String resDisplayname="unknown";
 
         @Override
-        protected String doInBackground(String... strings) {
+        protected String doInBackground(final String... strings) {
             try {
                 Map<String,String> info = new HashMap<>();
                 if(strings[1].equals("Google")){
@@ -86,7 +88,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         loadingDialog.dismissDialog();
                         try {
                             JSONObject objres = new JSONObject(response);
-                            resId = objres.getString("Message");
+                            Log.i("Objres",objres+"");
+                            if(strings[1].equals("SignUp")){
+                                resId = objres.getString("Message");
+                            } else{
+                                try {
+                                    resId = objres.getString("Id");
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                    resId = objres.getString("Message");
+                                }
+                            }
                             if(resId.contains("User Already")){
                                 Toast.makeText(LoginActivity.this, "A user with this email already exists.", Toast.LENGTH_SHORT).show();
                                 usernameET.setText("");
@@ -94,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 displaynameET.setText("");
                                 emailET.setText("");
                                 return;
-                            } else if (resId.contains("Not Found")){
+                            } else if (objres.getString("Message").contains("Not Found")){
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.usernameJoinButton)).setText(R.string.SignUp);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
@@ -109,11 +121,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 passwordET.setText(getAlphaNumericString(20));
                                 return;
                             }
+                            try{
+                                resUsername = objres.getString("Username");
+                                resDisplayname = objres.getString("Displayname");
+                                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                                sharedPreferences.edit().putString("displayname",resDisplayname).apply();
+                                sharedPreferences.edit().putString("username",resUsername).apply();
+                            } catch (Exception e){
+                                e.printStackTrace();
+                                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                                sharedPreferences.edit().putString("displayname",displaynameET.getText().toString()).apply();
+                                sharedPreferences.edit().putString("username",usernameET.getText().toString()).apply();
+                            }
                             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                             sharedPreferences.edit().putString("id",resId).apply();
+                            if(emailET.getText().toString().length()<1){
+                                sharedPreferences.edit().putString("email",signInAccount.getEmail()).apply();
+                            }
+                            else{
+                                sharedPreferences.edit().putString("email",emailET.getText().toString()).apply();
+                            }
+
+                            Log.i("ResId",resId);
+                            Log.i("ResUsername",resUsername);
+                            Log.i("ResDisplayname",resDisplayname);
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             startActivity(intent);
-                            Log.i("ResId",resId);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(LoginActivity.this, "Wrong Username or Password", Toast.LENGTH_SHORT).show();
