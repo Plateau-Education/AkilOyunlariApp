@@ -76,98 +76,228 @@
             android:layout_weight="0.67">
 
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
+
+
+                <TextView
+                    android:id="@+id/easyTimeTV_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:elevation="10dp"
+                    android:rotation="45"
+                    android:text="00:00"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2"
+                    app:layout_constraintHorizontal_bias="1" />
+
 
                 <TextView
                     android:id="@+id/firstTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/mohave_bold"
-                    android:text="@string/Easy"
-                    android:textColor="@color/diff_selector_tvcolor"
-                    android:textSize="40sp"
+                    android:layout_gravity="center"
                     android:background="@drawable/diff_selector_bg"
                     android:clickable="true"
                     android:focusable="true"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
                     android:onClick="goToGame"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/Easy"
+                    android:textColor="@color/diff_selector_tvcolor"
+                    android:textSize="40sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </RelativeLayout>
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    android:layout_margin="0dp"
+                    android:rotation="-90"
+                    android:padding="0dp"
+                    android:src="@drawable/triangle_shape"/>
 
-            <RelativeLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/mediumTimeTV_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:elevation="10dp"
+                    android:padding="4dp"
+                    android:rotation="-45"
+                    android:text="00:00"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2"
+                    app:layout_constraintHorizontal_bias="0" />
+
 
                 <TextView
                     android:id="@+id/secondTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:background="@drawable/diff_selector_bg"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:onClick="goToGame"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/Medium"
                     android:textColor="@color/diff_selector_tvcolor"
                     android:textSize="40sp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="goToGame"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </RelativeLayout>
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    android:layout_margin="0dp"
+                    android:rotation="180"
+                    android:padding="0dp"
+                    android:src="@drawable/triangle_shape"/>
 
-            <RelativeLayout
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/hardTimeTV_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:elevation="10dp"
+                    android:rotation="45"
+                    android:text="00:00"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2"
+                    app:layout_constraintHorizontal_bias="1"/>
+
+                <TextView
                     android:id="@+id/thirdTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/mohave_bold"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:background="@drawable/diff_selector_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:onClick="goToGame"
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
                     android:text="@string/Hard"
                     android:textColor="@color/diff_selector_tvcolor"
                     android:textSize="40sp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:onClick="goToGame"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </RelativeLayout>
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    android:layout_margin="0dp"
+                    android:rotation="-90"
+                    android:padding="0dp"
+                    android:src="@drawable/triangle_shape"/>
 
-            <RelativeLayout
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/hardestTimeTV_d"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:elevation="10dp"
+                    android:rotation="-45"
+                    android:text="00:00"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.2"
+                    app:layout_constraintHorizontal_bias="0" />
+
+                <TextView
                     android:id="@+id/fourthTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
                     android:paddingTop="10dp"
                     android:paddingBottom="10dp"
                     android:layout_height="wrap_content"
@@ -179,35 +309,26 @@
                     android:onClick="goToGame"
                     android:layout_gravity="center"
                     android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_weight="1">
+                <ImageView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0"
+                    android:layout_margin="0dp"
+                    android:rotation="180"
+                    android:padding="0dp"
+                    android:src="@drawable/triangle_shape"/>
 
-                <TextView
-                    android:id="@+id/fifthTV_d"
-                    android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/mohave_bold"
-                    android:text="@string/VeryHard"
-                    android:textColor="@color/near_black_blue"
-                    android:textSize="40sp"
-                    android:clickable="true"
-                    android:onClick="goToGame"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
-
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 

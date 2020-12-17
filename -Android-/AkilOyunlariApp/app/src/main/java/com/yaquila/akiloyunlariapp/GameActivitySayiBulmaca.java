@@ -459,6 +459,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 

@@ -12,7 +12,6 @@ import android.view.View;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -25,7 +24,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,6 +101,68 @@ public class MainActivity extends AppCompatActivity {
             sP.edit().putString("Piramit.4",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
             sP.edit().putString("Piramit.5",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
             sP.edit().putString("Piramit.6",ObjectSerializer.serialize(new ArrayList<Integer>())).apply();
+
+
+            sP.edit().putString("ScoreSudoku.6.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSudoku.6.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSudoku.6.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSudoku.9.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSudoku.9.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSudoku.9.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("ScoreHazineAvi.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreHazineAvi.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreHazineAvi.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("ScorePatika.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScorePatika.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScorePatika.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("ScoreSayiBulmaca.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSayiBulmaca.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSayiBulmaca.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("ScoreSozcukTuru.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSozcukTuru.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSozcukTuru.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("ScoreSozcukTuru.VeryHard",Integer.toString(0)).apply();
+
+            sP.edit().putString("ScorePiramit.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("ScorePiramit.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("ScorePİramit.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("ScorePiramit.VeryHard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestSudoku.6.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestSudoku.6.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestSudoku.6.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("BestSudoku.9.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestSudoku.9.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestSudoku.9.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestHazineAvi.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestHazineAvi.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestHazineAvi.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestPatika.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestPatika.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestPatika.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestSayiBulmaca.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestSayiBulmaca.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestSayiBulmaca.Hard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestSozcukTuru.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestSozcukTuru.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestSozcukTuru.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("BestSozcukTuru.VeryHard",Integer.toString(0)).apply();
+
+            sP.edit().putString("BestPiramit.Easy",Integer.toString(0)).apply();
+            sP.edit().putString("BestPiramit.Medium",Integer.toString(0)).apply();
+            sP.edit().putString("BestPiramit.Hard",Integer.toString(0)).apply();
+            sP.edit().putString("BestPiramit.VeryHard",Integer.toString(0)).apply();
+
+
+
         }
         Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sP.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
         assert solvedQuestions != null;
@@ -131,112 +197,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void transferBests(JSONObject jo) throws JSONException {
-        SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-
-        JSONObject sudoku = jo.getJSONObject("sudoku");
-        JSONObject hazineAvi = jo.getJSONObject("hazineAvi");
-        JSONObject patika = jo.getJSONObject("patika");
-        JSONObject sayiBulmaca = jo.getJSONObject("sayiBulmaca");
-        JSONObject sozcukTuru = jo.getJSONObject("sozcukTuru");
-        JSONObject piramit = jo.getJSONObject("piramit");
-
-        sP.edit().putString("ScoreSudoku",Integer.toString(sudoku.getInt("score"))).apply();
-        sP.edit().putString("ScoreHazineAvi",Integer.toString(hazineAvi.getInt("score"))).apply();
-        sP.edit().putString("ScorePatika",Integer.toString(patika.getInt("score"))).apply();
-        sP.edit().putString("ScoreSayiBulmaca",Integer.toString(sayiBulmaca.getInt("score"))).apply();
-        sP.edit().putString("ScoreSozcukTuru",Integer.toString(sozcukTuru.getInt("score"))).apply();
-        sP.edit().putString("ScorePiramit",Integer.toString(piramit.getInt("score"))).apply();
-
-
-        sP.edit().putString("BestSudoku.6.Easy",Integer.toString(sudoku.getInt("6Easy"))).apply();
-        sP.edit().putString("BestSudoku.6.Medium",Integer.toString(sudoku.getInt("6Medium"))).apply();
-        sP.edit().putString("BestSudoku.6.Hard",Integer.toString(sudoku.getInt("6Hard"))).apply();
-        sP.edit().putString("BestSudoku.9.Easy",Integer.toString(sudoku.getInt("9Easy"))).apply();
-        sP.edit().putString("BestSudoku.9.Medium",Integer.toString(sudoku.getInt("9Medium"))).apply();
-        sP.edit().putString("BestSudoku.9.Hard",Integer.toString(sudoku.getInt("9Hard"))).apply();
-
-        sP.edit().putString("BestHazineAvi.Easy",Integer.toString(hazineAvi.getInt("5"))).apply();
-        sP.edit().putString("BestHazineAvi.Medium",Integer.toString(hazineAvi.getInt("8"))).apply();
-        sP.edit().putString("BestHazineAvi.Hard",Integer.toString(hazineAvi.getInt("10"))).apply();
-
-        sP.edit().putString("BestPatika.Easy",Integer.toString(patika.getInt("5"))).apply();
-        sP.edit().putString("BestPatika.Medium",Integer.toString(patika.getInt("7"))).apply();
-        sP.edit().putString("BestPatika.Hard",Integer.toString(patika.getInt("9"))).apply();
-
-        sP.edit().putString("BestSayiBulmaca.Easy",Integer.toString(sayiBulmaca.getInt("3"))).apply();
-        sP.edit().putString("BestSayiBulmaca.Medium",Integer.toString(sayiBulmaca.getInt("4"))).apply();
-        sP.edit().putString("BestSayiBulmaca.Hard",Integer.toString(sayiBulmaca.getInt("5"))).apply();
-
-        sP.edit().putString("BestSozcukTuru.Easy",Integer.toString(sozcukTuru.getInt("Easy"))).apply();
-        sP.edit().putString("BestSozcukTuru.Medium",Integer.toString(sozcukTuru.getInt("Medium"))).apply();
-        sP.edit().putString("BestSozcukTuru.Hard",Integer.toString(sozcukTuru.getInt("Hard"))).apply();
-        sP.edit().putString("BestSozcukTuru.VeryHard",Integer.toString(sozcukTuru.getInt("Hardest"))).apply();
-
-        sP.edit().putString("BestPiramit.Easy",Integer.toString(piramit.getInt("Easy"))).apply();
-        sP.edit().putString("BestPiramit.Medium",Integer.toString(piramit.getInt("Medium"))).apply();
-        sP.edit().putString("BestPİramit.Hard",Integer.toString(piramit.getInt("Hard"))).apply();
-        sP.edit().putString("BestPiramit.VeryHard",Integer.toString(piramit.getInt("Hardest"))).apply();
-    }
-
-    @SuppressWarnings("deprecation")
-    @SuppressLint("StaticFieldLeak")
-    public class PutRequest extends AsyncTask<String, Void, String> {
-
-        RequestQueue requestQueue;
-        String result = null;
-        String responseMessage = null;
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-//                Map<String,String> info = new HashMap<>();
-//
-//                info.put("Id", strings[3]);
-//
-////                Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(strings[4]);
-//                info.put("Query",strings[4]);
-//                info.put("Ids",strings[5]);
-//                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
-                result = "{\"Info\":"+ "{\"Id\":\"" + strings[3] + "\", \"Query\":\"" + strings[4] + "\", \"Ids\":"+ new JSONArray(strings[5]) + "}, \"Token\":"+ "\""+strings[2]+ "\"}";
-
-                Log.i("request",result);
-                String URL = strings[0]+strings[1];
-                requestQueue = Volley.newRequestQueue(getApplicationContext());
-                StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject objres = new JSONObject(result);
-                            responseMessage = response;
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.i("Volley", response);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("Volley",error.getMessage()+"");
-                    }
-                }) {
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8";
-                    }
-
-                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-                    @Override
-                    public byte[] getBody() throws AuthFailureError {
-                        return result == null ? null: result.getBytes(StandardCharsets.UTF_8);
-                    }
-                };
-                requestQueue.add(stringRequest);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
 
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -249,32 +209,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }//checkSavedQuestions
-
-        try{
-            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
-            String id = sharedPreferences.getString("id", "non");
-            Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
-            Log.i("solvedQuestions1",solvedQuestions+"");
-            assert solvedQuestions != null;
-            for(String s : solvedQuestions.keySet()) {
-                if(Objects.requireNonNull(solvedQuestions.get(s)).size() == 0)
-                    continue;
-                PutRequest putRequest = new PutRequest();
-                //noinspection deprecation
-                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", id, s, Objects.requireNonNull(solvedQuestions.get(s)).toString());
-                Objects.requireNonNull(solvedQuestions.get(s)).clear();
-            }
-            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
-            Log.i("solvedQuestions2",solvedQuestions+"");
-
-
-
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }//putRequest
-
-
 
 //        try{
 //            Intent intent = getIntent();

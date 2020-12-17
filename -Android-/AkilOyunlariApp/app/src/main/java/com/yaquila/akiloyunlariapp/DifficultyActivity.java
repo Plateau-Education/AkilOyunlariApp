@@ -1,9 +1,15 @@
 package com.yaquila.akiloyunlariapp;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -12,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 public class DifficultyActivity extends AppCompatActivity {
 
@@ -65,43 +72,69 @@ public class DifficultyActivity extends AppCompatActivity {
 
     public void initDiffs(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
-        for (int i = 0; i < 5; i++){
-            TextView currentTV = (TextView) ((RelativeLayout)diffList.getChildAt(i)).getChildAt(0);
+        for (int i = 0; i < 4; i++){
+            TextView currentTV = (TextView) ((ConstraintLayout)diffList.getChildAt(i)).getChildAt(1);
             currentTV.setBackground(getResources().getDrawable(R.drawable.diff_selector_bg));
             currentTV.setTextColor(getResources().getColorStateList(R.color.diff_selector_tvcolor));
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void arrangeDifficulties(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
+        SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
+            String[] diffs = {"Easy","Medium","Hard","VeryHard"};
             for (int i = 0; i < 4; i++){
-                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
-                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(1);
                 currentTV.setText(diffIds[i]);
                 currentRL.setVisibility(View.VISIBLE);
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
+                if(gameName.equals("Sözcük Türü"))
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSozcukTuru."+diffIds[i], "0")))));
+                else
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
+
+                Log.i("piramit"+diffs[i],Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")));
             }
         }
         else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Patika", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
-                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
-                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(1);
                 currentTV.setText(diffIds[i]);}
             }
         else{
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
-                RelativeLayout currentRL = ((RelativeLayout)diffList.getChildAt(i));
-                TextView currentTV = (TextView) currentRL.getChildAt(0);
+                ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i));
+                TextView currentTV = (TextView) currentRL.getChildAt(1);
                 currentTV.setText(diffIds[i]);
             }
-//            throw new IllegalArgumentException("Unknown game name: "+gameName);
+        }
+
+        TextView easyTime = (TextView) findViewById(R.id.easyTimeTV_d);
+        TextView mediumTime = (TextView) findViewById(R.id.mediumTimeTV_d);
+        TextView hardTime = (TextView) findViewById(R.id.hardTimeTV_d);
+        TextView hardestTime = (TextView) findViewById(R.id.hardestTimeTV_d);
+
+        if(gameName.equals("Sudoku6")){
+            easyTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
+            mediumTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
+            easyTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
+
         }
     }
 
+    @SuppressLint("DefaultLocale")
+    public static String formatTime(int secs) {
+        return String.format("%02d:%02d", (secs % 3600) / 60, secs % 60);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
