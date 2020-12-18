@@ -93,20 +93,30 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentRL.setVisibility(View.VISIBLE);
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
                 if(gameName.equals("Sözcük Türü"))
-                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSozcukTuru."+diffIds[i], "0")))));
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSozcukTuru."+diffs[i], "0")))));
                 else
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
-
-                Log.i("piramit"+diffs[i],Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")));
             }
         }
         else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Patika", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
+            String[] diffs = {"Easy","Medium","Hard"};
             for (int i = 0; i < 3; i++){
                 ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i));
                 TextView currentTV = (TextView) currentRL.getChildAt(1);
-                currentTV.setText(diffIds[i]);}
+                currentTV.setText(diffIds[i]);
+                if(gameName.contains("Sudoku"))
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSudoku."+gameName.charAt(gameName.length()-1)+"."+diffs[i], "0")))));
+                else if(gameName.equals("Patika"))
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPatika."+diffs[i], "0")))));
+                else if(gameName.equals("Hazine Avı"))
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestHazineAvi."+diffs[i], "0")))));
+                else if(gameName.equals("Sayı Bulmaca"))
+                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSayiBulmaca."+diffs[i], "0")))));
+
             }
+        }
+
         else{
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
