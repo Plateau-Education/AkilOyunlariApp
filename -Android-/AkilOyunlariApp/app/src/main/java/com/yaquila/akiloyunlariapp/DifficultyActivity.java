@@ -125,18 +125,6 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setText(diffIds[i]);
             }
         }
-
-        TextView easyTime = (TextView) findViewById(R.id.easyTimeTV_d);
-        TextView mediumTime = (TextView) findViewById(R.id.mediumTimeTV_d);
-        TextView hardTime = (TextView) findViewById(R.id.hardTimeTV_d);
-        TextView hardestTime = (TextView) findViewById(R.id.hardestTimeTV_d);
-
-        if(gameName.equals("Sudoku6")){
-            easyTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
-            mediumTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
-            easyTime.setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("Sudoku.6.Easy", "0")))));
-
-        }
     }
 
     @SuppressLint("DefaultLocale")
