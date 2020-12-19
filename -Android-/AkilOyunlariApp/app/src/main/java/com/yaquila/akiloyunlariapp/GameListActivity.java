@@ -360,6 +360,17 @@ public class GameListActivity extends AppCompatActivity {
         }
 
         try{
+            Log.i("getReq","in onCreate");
+            GetRequest getRequest = new GetRequest();
+            //noinspection deprecation
+            getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        try{
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
             String id = sharedPreferences.getString("id", "non");
             Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));

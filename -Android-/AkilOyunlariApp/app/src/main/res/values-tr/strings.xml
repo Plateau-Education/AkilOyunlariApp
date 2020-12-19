@@ -38,5 +38,6 @@
     <string name="NameandSurname">İsim Soyisim</string>
     <string name="Info">Bilgi</string>
     <string name="Stats">İstatistik</string>
+    <string name="avgTime">Ort. Süre</string>
 
 </resources>

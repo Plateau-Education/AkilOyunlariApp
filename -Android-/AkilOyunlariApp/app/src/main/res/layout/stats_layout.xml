@@ -47,7 +47,7 @@
             android:id="@+id/sudokuTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -56,6 +56,14 @@
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
 
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphSudoku"
+            android:tag="SudokuG"
+            android:layout_marginTop="10dp"/>
+        
+        
     </LinearLayout>
 
     <LinearLayout
@@ -97,7 +105,7 @@
             android:id="@+id/hazineAviTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -105,6 +113,13 @@
             android:fontFamily="@font/mohave_medium"
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphHazineAvi"
+            android:tag="HazineAviG"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -146,7 +161,7 @@
             android:id="@+id/patikaTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -155,8 +170,21 @@
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
 
-    </LinearLayout>
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphPatika"
+            android:tag="PatikaG"
+            android:layout_marginTop="10dp"/>
+<!--        <com.jjoe64.graphview.helper.GraphViewXML-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="200dp"-->
+<!--            android:background="@color/near_black_blue"-->
+<!--            app:seriesData="1=8;2=7.5;3=6;4=5.7"-->
+<!--            app:seriesType="line"-->
+<!--            app:seriesColor="#ee0000" />-->
 
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/sayiBulmacaLL_St"
@@ -196,7 +224,7 @@
             android:id="@+id/sayiBulmacaTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -204,6 +232,13 @@
             android:fontFamily="@font/mohave_medium"
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphSayiBulmaca"
+            android:tag="SayiBulmacaG"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -245,7 +280,7 @@
             android:id="@+id/sozcukTuruTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -253,6 +288,13 @@
             android:fontFamily="@font/mohave_medium"
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphSozcukTuru"
+            android:tag="SozcukTuruG"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 
@@ -294,7 +336,7 @@
             android:id="@+id/piramitTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40\nAvg. Time: 00.40\nBest Time: 00.15"
+            android:text="Point: 40"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -302,6 +344,13 @@
             android:fontFamily="@font/mohave_medium"
             android:textSize="30sp"
             tools:ignore="HardcodedText" />
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphPiramit"
+            android:tag="PiramitG"
+            android:layout_marginTop="10dp"/>
 
     </LinearLayout>
 

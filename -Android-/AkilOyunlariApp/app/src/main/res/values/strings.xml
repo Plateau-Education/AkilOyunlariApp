@@ -37,4 +37,5 @@
     <string name="NameandSurname">Name and Surname</string>
     <string name="Info">Info</string>
     <string name="Stats">Statistics</string>
+    <string name="avgTime">Avg. Time</string>
 </resources>
