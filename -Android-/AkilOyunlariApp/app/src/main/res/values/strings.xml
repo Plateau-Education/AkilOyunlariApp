@@ -38,4 +38,10 @@
     <string name="Info">Info</string>
     <string name="Stats">Statistics</string>
     <string name="avgTime">Avg. Time</string>
+    <string name="numques">Num. Ques.</string>
+    <string name="score">Score</string>
+    <string name="ConfirmationCode">Confirmation Code</string>
+    <string name="Send">Send</string>
+    <string name="Wrong">Wrong</string>
+    <string name="Login">Log in</string>
 </resources>

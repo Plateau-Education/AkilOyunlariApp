@@ -45,9 +45,10 @@
 
         <TextView
             android:id="@+id/sudokuTV2_St"
+            android:tag="SudokuS"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -59,9 +60,16 @@
         <com.jjoe64.graphview.GraphView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:id="@+id/graphSudoku"
-            android:tag="SudokuG"
+            android:id="@+id/graphSudoku6"
+            android:tag="Sudoku.6G"
             android:layout_marginTop="10dp"/>
+
+        <com.jjoe64.graphview.GraphView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:id="@+id/graphSudoku9"
+            android:tag="Sudoku.9G"
+            android:layout_marginTop="20dp"/>
         
         
     </LinearLayout>
@@ -105,7 +113,8 @@
             android:id="@+id/hazineAviTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
+            android:tag="HazineAviS"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -161,7 +170,8 @@
             android:id="@+id/patikaTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
+            android:tag="PatikaS"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -224,7 +234,8 @@
             android:id="@+id/sayiBulmacaTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
+            android:tag="SayiBulmacaS"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -280,7 +291,8 @@
             android:id="@+id/sozcukTuruTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
+            android:tag="SozcukTuruS"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"
@@ -336,7 +348,8 @@
             android:id="@+id/piramitTV2_St"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Point: 40"
+            android:text="Score:"
+            android:tag="PiramitS"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="start"

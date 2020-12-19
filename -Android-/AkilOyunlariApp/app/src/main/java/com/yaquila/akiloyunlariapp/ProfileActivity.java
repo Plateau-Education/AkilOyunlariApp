@@ -18,14 +18,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LabelFormatter;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
 import com.jjoe64.graphview.series.PointsGraphSeries;
+import com.jjoe64.graphview.series.Series;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,8 +44,9 @@ import java.net.URL;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static com.jjoe64.graphview.LegendRenderer.LegendAlign.TOP;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -93,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
             return null;
         }
-
+        @SuppressLint("SetTextI18n")
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
@@ -103,10 +108,14 @@ public class ProfileActivity extends AppCompatActivity {
 //            JSONObject jsonObject = null;
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
-//                drawGraph("Sudoku",jb);
-                drawGraph("Patika",jb);
-
-
+                JSONObject scores = jb.getJSONObject("puan");
+                List<String> games = new ArrayList<String>(Arrays.asList("Sudoku.6", "Sudoku.9","HazineAvi","Patika","SayiBulmaca","SozcukTuru","Piramit","Sudoku"));
+                for(String g: games.subList(2,games.size())){
+                    ((TextView)statsCl.findViewWithTag(g+"S")).setText(getString(R.string.score)+": "+scores.getDouble(g));
+                }
+                for(String g2: games.subList(0,games.size()-1)){
+                    drawGraph(g2,jb);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,42 +157,26 @@ public class ProfileActivity extends AppCompatActivity {
     PointsGraphSeries<DataPoint> pseries1;
     PointsGraphSeries<DataPoint> pseries2;
     PointsGraphSeries<DataPoint> pseries3;
-    List<Integer> pxs = new ArrayList<>();
 
-    public void drawGraph(String gameName, JSONObject jb) throws JSONException {
-        if(gameName.contains("Sudoku")){
+    LineGraphSeries<DataPoint> series4;
+    PointsGraphSeries<DataPoint> pseries4;
 
-            JSONArray sudoku6Easy = jb.getJSONArray("Sudoku.6.Easy");
-            JSONArray sudoku6Medium = jb.getJSONArray("Sudoku.6.Medium");
-            JSONArray sudoku6Hard = jb.getJSONArray("Sudoku.6.Hard");
-            JSONArray sudoku9Easy = jb.getJSONArray("Sudoku.9.Easy");
-            JSONArray sudoku9Medium = jb.getJSONArray("Sudoku.9.Medium");
-            JSONArray sudoku9Hard = jb.getJSONArray("Sudoku.9.Hard");
+    Toast mToast;
+    int maxX = 0;
 
-            double x,y;
-            x = 0;
-            GraphView graphView = statsCl.findViewWithTag(gameName+"G");
-            series1 = new LineGraphSeries<>();
-            series1.appendData(new DataPoint(0,0),true,100);
-//            int numDataPoints = 20;
-            for(int i = 0; i < sudoku6Easy.length(); i++){
-                x = (double) sudoku6Easy.getJSONArray(i).getInt(1);
-                y = (double) sudoku6Easy.getJSONArray(i).getInt(0);
-                series1.appendData(new DataPoint(x,y),true,100);
-                series1.setColor(getResources().getColor(R.color.f7f5fa));
-            }
-            graphView.setBackgroundColor(getResources().getColor(R.color.near_black_blue));
-            graphView.addSeries(series1);
-        }
+    @SuppressLint("DefaultLocale")
+    public void drawGraph(final String gameName, JSONObject jb) throws JSONException {
+        if(gameName.contains("Sudoku")) {
+            String dif1,dif2,dif3;
+            dif1 = ".Easy"; dif2 = ".Medium"; dif3 = ".Hard";
+            final String gameSize = Character.toString(gameName.charAt(gameName.length()-1));
 
-        else if(gameName.contains("Patika")){
+            JSONArray game1 = jb.getJSONArray(gameName+dif1);
+            JSONArray game2= jb.getJSONArray(gameName+dif2);
+            JSONArray game3 = jb.getJSONArray(gameName+dif3);
 
-            JSONArray patika5 = jb.getJSONArray("Patika.5");
-            JSONArray patika7= jb.getJSONArray("Patika.7");
-            JSONArray patika9 = jb.getJSONArray("Patika.9");
-
-
-
+            mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
+            maxX=0;
             double x,y;
             x = 0;
             GraphView graphView = statsCl.findViewWithTag(gameName+"G");
@@ -193,100 +186,480 @@ public class ProfileActivity extends AppCompatActivity {
             pseries1 = new PointsGraphSeries<>();
             pseries2 = new PointsGraphSeries<>();
             pseries3 = new PointsGraphSeries<>();
-            LineGraphSeries<DataPoint> s2 = new LineGraphSeries<>();
-            s2.appendData(new DataPoint(0,0),true,100);
+//            LineGraphSeries<DataPoint> s2 = new LineGraphSeries<>();
+//            s2.appendData(new DataPoint(0,0),true,100);
 //            s2.appendData(new DataPoint(50,0),true,100);
 
-            s2.setColor(getResources().getColor(R.color.transparent));
+//            s2.setColor(getResources().getColor(R.color.transparent));
             series1.appendData(new DataPoint(0,0),true,100);
             series2.appendData(new DataPoint(0,0),true,100);
             series3.appendData(new DataPoint(0,0),true,100);
-            pxs.add(0);
 //            int numDataPoints = 20;
-            for(int i = 0; i < patika5.length(); i++){
-                x = (double) patika5.getJSONArray(i).getInt(1);
-                y = (double) patika5.getJSONArray(i).getInt(0);
+            for(int i = 0; i < game1.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(0)).replace(",","."));
                 series1.appendData(new DataPoint(x,y),true,100);
                 Log.i("series1",series1.getHighestValueX()+"");
-                series1.setColor(getResources().getColor(R.color.f7f5fa));
+                series1.setColor(getResources().getColor(R.color.darkgreen_T));
                 pseries1.appendData(new DataPoint(x,y),true,100);
-                pseries1.setColor(Color.WHITE);
+                pseries1.setColor(getResources().getColor(R.color.green_W));
                 pseries1.setSize(10f);
-                if(!pxs.contains((int)x)){
-                    pxs.add((int)x);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            for(int i = 0; i < patika7.length(); i++){
-                x = (double) patika7.getJSONArray(i).getInt(1);
-                y = (double) patika7.getJSONArray(i).getInt(0);
+            series1.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Easy));
+            pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game2.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(0)).replace(",","."));
                 series2.appendData(new DataPoint(x,y),true,100);
                 Log.i("series2",series2.getHighestValueX()+"");
-                series2.setColor(getResources().getColor(R.color.light_red));
+                series2.setColor(getResources().getColor(R.color.dark_red));
                 pseries2.appendData(new DataPoint(x,y),true,100);
-                pseries2.setColor(getResources().getColor(R.color.dark_red));
+                pseries2.setColor(getResources().getColor(R.color.light_red));
                 pseries2.setSize(10f);
-                if(!pxs.contains((int)x)){
-                    pxs.add((int)x);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            for(int i = 0; i < patika9.length(); i++){
-                x = (double) patika9.getJSONArray(i).getInt(1);
-                y = (double) patika9.getJSONArray(i).getInt(0);
+            series2.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Medium));
+            pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game3.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(0)).replace(",","."));
                 series3.appendData(new DataPoint(x,y),true,100);
                 Log.i("series3",series3.getHighestValueX()+"");
-                series3.setColor(getResources().getColor(R.color.light_blue_green));
+                series3.setColor(getResources().getColor(R.color.dark_blue_green));
                 pseries3.appendData(new DataPoint(x,y),true,100);
-                pseries3.setColor(getResources().getColor(R.color.dark_blue_green));
+                pseries3.setColor(getResources().getColor(R.color.light_blue_green));
                 pseries3.setSize(10f);
-                if(!pxs.contains((int)x)){
-                    pxs.add((int)x);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            Collections.sort(pxs);
-            List<String> newpxs = new ArrayList<>();
-            for(int i : pxs){
-                newpxs.add(Integer.toString(i));
-            }
-            s2.appendData(new DataPoint((double)pxs.get(pxs.size()-1)+5,0),true,100);
+            series3.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Hard));
+            pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
 
-            graphView.setBackgroundColor(getResources().getColor(R.color.near_black_blue));
+            graphView.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
+            graphView.getGridLabelRenderer().setGridColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(R.color.near_black_blue));
+
             graphView.addSeries(series1);
             graphView.addSeries(series2);
             graphView.addSeries(series3);
-            graphView.addSeries(s2);
+//            graphView.addSeries(s2);
             graphView.addSeries(pseries1);
             graphView.addSeries(pseries2);
             graphView.addSeries(pseries3);
 
-            graphView.setTitle(getString(R.string.avgTime));
+            graphView.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+            graphView.setTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getLegendRenderer().setVisible(true);
+//            graphView.getLegendRenderer().setAlign(TOP);
 
             // activate horizontal and vertical zooming and scrolling
-//            graphView.getViewport().setScalableY(true);
+            graphView.getViewport().setScalableY(true);
 
-            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
-            staticLabelsFormatter.setHorizontalLabels(newpxs.toArray(new String[0]));
-//            staticLabelsFormatter.setVerticalLabels(new String[] {"0","15", "30", "45", "60","75", "90"});
-            graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-//            NumberFormat nf = NumberFormat.getInstance();
-//            nf.setMaximumIntegerDigits(2);
+//            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+//            staticLabelsFormatter.setHorizontalLabels(new String[] {"0","5", "10", "15", "20", "25", "30","35", "40", "45","50"});
+//            staticLabelsFormatter.setVerticalLabels(new String[] {"0","10", "20", "30", "40", "50", "60","70", "80", "90","100"});
+//            graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMaximumFractionDigits(3);
 //
-//            graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(){
-//                @Override
-//                public String formatLabel(double value, boolean isValueX) {
-//                    if (isValueX) {
-//                        // show normal x values
+            graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(nf,nf){
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        // show normal x values
 //                        Log.i("normalX",value+"");
-//                        return super.formatLabel(value, isValueX);
-//                    } else {
-//                        // show currency for y values
+                        return super.formatLabel(value, isValueX);
+                    } else {
+                        // show currency for y values
 //                        Log.i("currencyY",value+"");
-//                        return super.formatLabel(value, isValueX)+"s";
-//                    }
-//                }
-//            });
+                        return super.formatLabel(value, isValueX)+"s";
+                    }
+                }
+            });
+
+            graphView.getViewport().setMinX(0);
+            graphView.getViewport().setMaxX(maxX);
+            graphView.getViewport().setMaxXAxisSize(maxX);
+            graphView.getViewport().setXAxisBoundsManual(true);
+
         }
 
+        else if("Patika HazineAvi SayiBulmaca".contains(gameName)){
+            String dif1,dif2,dif3;
+            if(gameName.contains("HazineAvi")){
+                dif1 = ".5"; dif2 = ".8"; dif3 = ".10";
+            } else if(gameName.contains("Patika")) {
+                dif1 = ".5"; dif2 = ".7"; dif3 = ".9";
+            } else {
+                dif1 = ".3"; dif2 = ".4"; dif3 = ".5";
+            }
+            JSONArray game1 = jb.getJSONArray(gameName+dif1);
+            JSONArray game2= jb.getJSONArray(gameName+dif2);
+            JSONArray game3 = jb.getJSONArray(gameName+dif3);
+
+            mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
+            maxX=0;
+            double x,y;
+            x = 0;
+            GraphView graphView = statsCl.findViewWithTag(gameName+"G");
+            series1 = new LineGraphSeries<>();
+            series2 = new LineGraphSeries<>();
+            series3 = new LineGraphSeries<>();
+            pseries1 = new PointsGraphSeries<>();
+            pseries2 = new PointsGraphSeries<>();
+            pseries3 = new PointsGraphSeries<>();
+//            LineGraphSeries<DataPoint> s2 = new LineGraphSeries<>();
+//            s2.appendData(new DataPoint(0,0),true,100);
+//            s2.appendData(new DataPoint(50,0),true,100);
+
+//            s2.setColor(getResources().getColor(R.color.transparent));
+            series1.appendData(new DataPoint(0,0),true,100);
+            series2.appendData(new DataPoint(0,0),true,100);
+            series3.appendData(new DataPoint(0,0),true,100);
+//            int numDataPoints = 20;
+            for(int i = 0; i < game1.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(0)).replace(",","."));
+                series1.appendData(new DataPoint(x,y),true,100);
+                Log.i("series1",series1.getHighestValueX()+"");
+                series1.setColor(getResources().getColor(R.color.darkgreen_T));
+                pseries1.appendData(new DataPoint(x,y),true,100);
+                pseries1.setColor(getResources().getColor(R.color.green_W));
+                pseries1.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series1.setTitle(gameName+" "+getString(R.string.Easy));
+            pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game2.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(0)).replace(",","."));
+                series2.appendData(new DataPoint(x,y),true,100);
+                Log.i("series2",series2.getHighestValueX()+"");
+                series2.setColor(getResources().getColor(R.color.dark_red));
+                pseries2.appendData(new DataPoint(x,y),true,100);
+                pseries2.setColor(getResources().getColor(R.color.light_red));
+                pseries2.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series2.setTitle(gameName+" "+getString(R.string.Medium));
+            pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game3.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(0)).replace(",","."));
+                series3.appendData(new DataPoint(x,y),true,100);
+                Log.i("series3",series3.getHighestValueX()+"");
+                series3.setColor(getResources().getColor(R.color.dark_blue_green));
+                pseries3.appendData(new DataPoint(x,y),true,100);
+                pseries3.setColor(getResources().getColor(R.color.light_blue_green));
+                pseries3.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series3.setTitle(gameName+" "+getString(R.string.Hard));
+            pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+
+            graphView.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
+            graphView.getGridLabelRenderer().setGridColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(R.color.near_black_blue));
+
+            graphView.addSeries(series1);
+            graphView.addSeries(series2);
+            graphView.addSeries(series3);
+//            graphView.addSeries(s2);
+            graphView.addSeries(pseries1);
+            graphView.addSeries(pseries2);
+            graphView.addSeries(pseries3);
+
+            graphView.setTitle(gameName+" "+getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+            graphView.setTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getLegendRenderer().setVisible(true);
+//            graphView.getLegendRenderer().setAlign(TOP);
+
+            // activate horizontal and vertical zooming and scrolling
+            graphView.getViewport().setScalableY(true);
+
+
+//            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+//            staticLabelsFormatter.setHorizontalLabels(new String[] {"0","5", "10", "15", "20", "25", "30","35", "40", "45","50"});
+//            staticLabelsFormatter.setVerticalLabels(new String[] {"0","10", "20", "30", "40", "50", "60","70", "80", "90","100"});
+//            graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMaximumFractionDigits(3);
+//
+            graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(nf,nf){
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        // show normal x values
+//                        Log.i("normalX",value+"");
+                        return super.formatLabel(value, isValueX);
+                    } else {
+                        // show currency for y values
+//                        Log.i("currencyY",value+"");
+                        return super.formatLabel(value, isValueX)+"s";
+                    }
+                }
+            });
+
+            graphView.getViewport().setMinX(0);
+            graphView.getViewport().setMaxX(maxX);
+            graphView.getViewport().setMaxXAxisSize(maxX);
+            graphView.getViewport().setXAxisBoundsManual(true);
+
+
+
+        }
+
+        else{
+            String dif1,dif2,dif3,dif4;
+            if(gameName.contains("SozcukTuru")){
+                dif1 = ".Easy"; dif2 = ".Medium"; dif3 = ".Hard"; dif4 = ".Hardest";
+            } else {
+                dif1 = ".3"; dif2 = ".4"; dif3 = ".5"; dif4 = ".6";
+            }
+            JSONArray game1 = jb.getJSONArray(gameName+dif1);
+            JSONArray game2= jb.getJSONArray(gameName+dif2);
+            JSONArray game3 = jb.getJSONArray(gameName+dif3);
+            JSONArray game4 = jb.getJSONArray(gameName+dif4);
+
+
+            mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
+            maxX=0;
+            double x,y;
+            x = 0;
+            GraphView graphView = statsCl.findViewWithTag(gameName+"G");
+            series1 = new LineGraphSeries<>();
+            series2 = new LineGraphSeries<>();
+            series3 = new LineGraphSeries<>();
+            series4 = new LineGraphSeries<>();
+            pseries1 = new PointsGraphSeries<>();
+            pseries2 = new PointsGraphSeries<>();
+            pseries3 = new PointsGraphSeries<>();
+            pseries4 = new PointsGraphSeries<>();
+//            LineGraphSeries<DataPoint> s2 = new LineGraphSeries<>();
+//            s2.appendData(new DataPoint(0,0),true,100);
+//            s2.appendData(new DataPoint(50,0),true,100);
+
+//            s2.setColor(getResources().getColor(R.color.transparent));
+            series1.appendData(new DataPoint(0,0),true,100);
+            series2.appendData(new DataPoint(0,0),true,100);
+            series3.appendData(new DataPoint(0,0),true,100);
+            series4.appendData(new DataPoint(0,0),true,100);
+//            int numDataPoints = 20;
+            for(int i = 0; i < game1.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game1.getJSONArray(i).getDouble(0)).replace(",","."));
+                series1.appendData(new DataPoint(x,y),true,100);
+                Log.i("series1",series1.getHighestValueX()+"");
+                series1.setColor(getResources().getColor(R.color.darkgreen_T));
+                pseries1.appendData(new DataPoint(x,y),true,100);
+                pseries1.setColor(getResources().getColor(R.color.green_W));
+                pseries1.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series1.setTitle(gameName+" "+getString(R.string.Easy));
+            pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game2.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game2.getJSONArray(i).getDouble(0)).replace(",","."));
+                series2.appendData(new DataPoint(x,y),true,100);
+                Log.i("series2",series2.getHighestValueX()+"");
+                series2.setColor(getResources().getColor(R.color.dark_red));
+                pseries2.appendData(new DataPoint(x,y),true,100);
+                pseries2.setColor(getResources().getColor(R.color.light_red));
+                pseries2.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series2.setTitle(gameName+" "+getString(R.string.Medium));
+            pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+            for(int i = 0; i < game3.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game3.getJSONArray(i).getDouble(0)).replace(",","."));
+                series3.appendData(new DataPoint(x,y),true,100);
+                Log.i("series3",series3.getHighestValueX()+"");
+                series3.setColor(getResources().getColor(R.color.dark_blue_green));
+                pseries3.appendData(new DataPoint(x,y),true,100);
+                pseries3.setColor(getResources().getColor(R.color.light_blue_green));
+                pseries3.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series3.setTitle(gameName+" "+getString(R.string.Hard));
+            pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+
+            for(int i = 0; i < game4.length(); i++){
+                x = Double.parseDouble(String.format("%.2f",game4.getJSONArray(i).getDouble(1)).replace(",","."));
+                y = Double.parseDouble(String.format("%.2f",game4.getJSONArray(i).getDouble(0)).replace(",","."));
+                series4.appendData(new DataPoint(x,y),true,100);
+                Log.i("series4",series4.getHighestValueX()+"");
+                series4.setColor(Color.parseColor("#af01b5"));
+                pseries4.appendData(new DataPoint(x,y),true,100);
+                pseries4.setColor(Color.parseColor("#f700ff"));
+                pseries4.setSize(10f);
+                if(x > maxX){
+                    maxX = (int)(Math.ceil(x/10)*10);
+                }
+            }
+            series4.setTitle(gameName+" "+getString(R.string.VeryHard));
+            pseries4.setOnDataPointTapListener(new OnDataPointTapListener() {
+                @Override
+                public void onTap(Series series, DataPointInterface dataPoint) {
+                    mToast.cancel();
+                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.VeryHard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast.show();
+                }
+            });
+
+            graphView.setBackgroundColor(getResources().getColor(R.color.f7f5fa));
+            graphView.getGridLabelRenderer().setGridColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setHorizontalLabelsColor(getResources().getColor(R.color.near_black_blue));
+            graphView.getGridLabelRenderer().setVerticalLabelsColor(getResources().getColor(R.color.near_black_blue));
+
+            graphView.addSeries(series1);
+            graphView.addSeries(series2);
+            graphView.addSeries(series3);
+            graphView.addSeries(series4);
+//            graphView.addSeries(s2);
+            graphView.addSeries(pseries1);
+            graphView.addSeries(pseries2);
+            graphView.addSeries(pseries3);
+            graphView.addSeries(pseries4);
+
+            graphView.setTitle(gameName+" "+getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
+            graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getGridLabelRenderer().setVerticalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
+            graphView.setTitleColor(getResources().getColor(R.color.near_black_blue));
+//            graphView.getLegendRenderer().setVisible(true);
+//            graphView.getLegendRenderer().setAlign(TOP);
+
+            // activate horizontal and vertical zooming and scrolling
+            graphView.getViewport().setScalableY(true);
+
+
+//            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphView);
+//            staticLabelsFormatter.setHorizontalLabels(new String[] {"0","5", "10", "15", "20", "25", "30","35", "40", "45","50"});
+//            staticLabelsFormatter.setVerticalLabels(new String[] {"0","10", "20", "30", "40", "50", "60","70", "80", "90","100"});
+//            graphView.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMaximumFractionDigits(3);
+//
+            graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter(nf,nf){
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        // show normal x values
+//                        Log.i("normalX",value+"");
+                        return super.formatLabel(value, isValueX);
+                    } else {
+                        // show currency for y values
+//                        Log.i("currencyY",value+"");
+                        return super.formatLabel(value, isValueX)+"s";
+                    }
+                }
+            });
+
+            graphView.getViewport().setMinX(0);
+            graphView.getViewport().setMaxX(maxX);
+            graphView.getViewport().setMaxXAxisSize(maxX);
+            graphView.getViewport().setXAxisBoundsManual(true);
+
+
+        }
     }
 
     @Override

@@ -1,13 +1,17 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,7 +36,10 @@ import com.google.android.gms.tasks.Task;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -106,7 +113,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 displaynameET.setText("");
                                 emailET.setText("");
                                 return;
-                            } else if (objres.getString("Message").contains("Not Found")){
+                            } else if (resId.contains("Not Found")){
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.usernameJoinButton)).setText(R.string.SignUp);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
@@ -201,6 +208,149 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    public class CodePostRequest extends AsyncTask<String, Void, String> {
+
+        RequestQueue requestQueue;
+        String result = null;
+        String resId;
+        String resUsername="unknown";
+        String resDisplayname="unknown";
+
+        @Override
+        protected String doInBackground(final String... strings) {
+            try {
+                Map<String,String> info = new HashMap<>();
+                info.put("username",strings[3]);
+                info.put("email",strings[4]);
+                result = "{\"Info\":"+ (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
+
+                Log.i("request",result);
+                String URL = strings[0]+strings[1];
+                Log.i("URL",URL);
+                requestQueue = Volley.newRequestQueue(getApplicationContext());
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onResponse(String response) {
+                        loadingDialog.dismissDialog();
+                        try {
+                            JSONObject objres = new JSONObject(response);
+                            Log.i("Objres",objres+"");
+                            resId = objres.getString("Message");
+
+                            if(resId.contains("User Already")){
+                                Toast.makeText(LoginActivity.this, "A user with this email already exists.", Toast.LENGTH_SHORT).show();
+                                usernameET.setText("");
+                                passwordET.setText("");
+                                displaynameET.setText("");
+                                emailET.setText("");
+                                return;
+                            } else if (objres.getString("Message").contains("Not Found")){
+                                signInUpStatus = "SignUp";
+                                ((Button)findViewById(R.id.usernameJoinButton)).setText(R.string.SignUp);
+                                ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
+                                ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
+                                displaynameET.setVisibility(View.VISIBLE);
+                                usernameET.setVisibility(View.VISIBLE);
+                                //TODO Change some UI maybe
+                                passwordET.setVisibility(View.GONE);
+                                displaynameET.setText(signInAccount.getDisplayName());
+                                emailET.setText(signInAccount.getEmail());
+                                usernameET.setText("");
+                                passwordET.setText(getAlphaNumericString(20));
+                                return;
+                            }
+
+                            LayoutInflater factory = LayoutInflater.from(LoginActivity.this);
+                            final View confirmDialogView = factory.inflate(R.layout.confirm_dialog, null);
+                            final AlertDialog confirmDialog = new AlertDialog.Builder(LoginActivity.this).create();
+                            confirmDialog.setView(confirmDialogView);
+                            final EditText editText = ((EditText)confirmDialogView.findViewById(R.id.confirmCodeEditText));
+                            confirmDialogView.findViewById(R.id.confirmDialogSend).setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void onClick(View v) {
+                                    String codeTaken = editText.getText().toString();
+                                    if(codeTaken.equals(resId)){
+                                        confirmDialog.dismiss();
+                                        String username = usernameET.getText().toString();
+                                        String password = passwordET.getText().toString();
+                                        String email = emailET.getText().toString();
+                                        String displayname = displaynameET.getText().toString();
+
+                                        PostRequest postRequest = new PostRequest();
+                                        String postMessage;
+                                        try {
+                                            loadingDialogFunc();
+                                            //noinspection deprecation
+                                            postMessage = postRequest.execute("https://akiloyunlariapp.herokuapp.com/user" , "SignUp", "fx!Ay:;<p6Q?C8N{", displayname, username, email, password).get();
+                                            Log.i("postId", postMessage);
+                                        } catch (ExecutionException | InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    else{
+                                        Toast.makeText(LoginActivity.this, getString(R.string.Wrong)+" "+getString(R.string.ConfirmationCode), Toast.LENGTH_SHORT).show();
+//                                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                                        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
+                                        editText.setText("");
+                                    }
+                                }
+                            });
+                            confirmDialog.show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.i("Volley", response);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        try{
+                            loadingDialog.dismissDialog();
+                            if((new String(error.networkResponse.data)).contains("Username")){
+                                Toast.makeText(LoginActivity.this, "This username is already taken. Please choose a different username.", Toast.LENGTH_LONG).show();
+                                usernameET.setText("");
+                                passwordET.setText("");
+                                displaynameET.setText("");
+                                emailET.setText("");
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                        Log.e("VolleyError", error.getMessage()+"");
+                    }
+                }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public byte[] getBody() {
+                        return result == null ? null: result.getBytes(StandardCharsets.UTF_8);
+                    }
+                };
+                requestQueue.add(stringRequest);
+                Log.i("resId","id: "+resId);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+            return sharedPreferences.getString("id","none");
+        }
+    }
+
+
+
     public boolean isPasswordAndUsernameSuitable(String username, String password, String email, String displayname) {
         if(signInUpStatus.equals("SignUp")) {
             if (username.length() == 0 || password.length() == 0 || email.length() == 0 || displayname.length() == 0) {
@@ -230,8 +380,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        PostRequest postRequest = new PostRequest();
+
         if(signInUpStatus.equals("SignIn")){
+            PostRequest postRequest = new PostRequest();
             String postMessage;
             try {
                 loadingDialogFunc();
@@ -245,11 +396,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else{
+            CodePostRequest codePostRequest = new CodePostRequest();
             String postMessage;
             try {
                 loadingDialogFunc();
                 //noinspection deprecation
-                postMessage = postRequest.execute("https://akiloyunlariapp.herokuapp.com/user" , "SignUp", "fx!Ay:;<p6Q?C8N{", displayname, username, email, password).get();
+                postMessage = codePostRequest.execute("https://akiloyunlariapp.herokuapp.com/user" , "Send", "fx!Ay:;<p6Q?C8N{", username, email).get();
                 Log.i("postId", postMessage);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();

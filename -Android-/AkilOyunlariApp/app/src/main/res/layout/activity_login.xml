@@ -125,11 +125,16 @@
             android:text="@string/SignUp" />
 
 
-        <com.google.android.gms.common.SignInButton
+        <com.google.android.gms.common.internal.SignInButtonImpl
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:background="@drawable/common_google_signin_btn_text_light"
+            android:text="Log in"
+            android:textAllCaps="false"
+            android:textColor="@color/near_black_blue"
+            tools:text="Log in" />
 
     </LinearLayout>
 

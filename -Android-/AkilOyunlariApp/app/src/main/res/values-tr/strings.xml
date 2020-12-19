@@ -39,5 +39,11 @@
     <string name="Info">Bilgi</string>
     <string name="Stats">İstatistik</string>
     <string name="avgTime">Ort. Süre</string>
+    <string name="numques">Soru Say.</string>
+    <string name="score">Skor</string>
+    <string name="ConfirmationCode">Doğrulama Kodu</string>
+    <string name="Send">Gönder</string>
+    <string name="Wrong">Yanlış</string>
+    <string name="Login">Giriş yap</string>
 
 </resources>
