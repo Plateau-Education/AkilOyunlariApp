@@ -45,5 +45,7 @@
     <string name="Send">Gönder</string>
     <string name="Wrong">Yanlış</string>
     <string name="Login">Giriş yap</string>
+    <string name="Rank">Sıralama</string>
+    <string name="You">Siz</string>
 
 </resources>

@@ -44,4 +44,6 @@
     <string name="Send">Send</string>
     <string name="Wrong">Wrong</string>
     <string name="Login">Log in</string>
+    <string name="Rank">Rank</string>
+    <string name="You">You</string>
 </resources>

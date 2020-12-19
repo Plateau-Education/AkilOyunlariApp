@@ -1,0 +1,650 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:scrollbars="none"
+    android:overScrollMode="never"
+    android:fadingEdgeLength="10dp"
+    android:requiresFadingEdge="vertical"
+    android:background="@color/light_blue_green"
+    tools:ignore="UselessParent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:layout_gravity="center_vertical"
+                android:textSize="25sp"
+                android:text="@string/Rank"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="@string/Username"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="@string/score"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="20dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL1_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="1" />
+
+            <TextView
+                android:id="@+id/UN1_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC1_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL2_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="2"/>
+
+            <TextView
+                android:id="@+id/UN2_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC2_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL3_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="3"/>
+
+            <TextView
+                android:id="@+id/UN3_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC3_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL4_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="4"/>
+
+            <TextView
+                android:id="@+id/UN4_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC4_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL5_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="5"/>
+
+            <TextView
+                android:id="@+id/UN5_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC5_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL6_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="6"/>
+
+            <TextView
+                android:id="@+id/UN6_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC6_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL7_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="7"/>
+
+            <TextView
+                android:id="@+id/UN7_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC7_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL8_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="8"/>
+
+            <TextView
+                android:id="@+id/UN8_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC8_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL9_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="9"/>
+
+            <TextView
+                android:id="@+id/UN9_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC9_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LL10_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="10"/>
+
+            <TextView
+                android:id="@+id/UN10_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="----"/>
+
+            <TextView
+                android:id="@+id/SC10_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <LinearLayout
+            android:id="@+id/LLYou_LB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/YouRank_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:text="-"/>
+
+            <TextView
+                android:id="@+id/UNYou_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="start"
+                android:text="@string/You"/>
+
+            <TextView
+                android:id="@+id/SCYou_LB"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/near_black_blue"
+                android:fontFamily="@font/mohave_bold"
+                android:textSize="30sp"
+                tools:ignore="HardcodedText"
+                android:layout_gravity="center"
+                android:gravity="end"
+                android:text="100"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

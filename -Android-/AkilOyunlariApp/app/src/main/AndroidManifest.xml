@@ -3,7 +3,7 @@
     package="com.yaquila.akiloyunlariapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="false"
@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".LeaderboardActivity" />
+        <activity android:name=".ProfileActivity" />
         <activity
             android:name=".LoginActivity"
             android:screenOrientation="portrait">
