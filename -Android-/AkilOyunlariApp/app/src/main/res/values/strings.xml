@@ -46,4 +46,5 @@
     <string name="Login">Log in</string>
     <string name="Rank">Rank</string>
     <string name="You">You</string>
+    <string name="Unknown">Unknown</string>
 </resources>

@@ -12,6 +12,7 @@
     tools:ignore="UselessParent">
 
     <LinearLayout
+        android:id="@+id/leaderboardLL_LB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="20dp"
@@ -67,6 +68,7 @@
 
         <LinearLayout
             android:id="@+id/LL1_LB"
+            android:tag="LL1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -93,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -120,6 +122,7 @@
 
         <LinearLayout
             android:id="@+id/LL2_LB"
+            android:tag="LL2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -146,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -173,6 +176,7 @@
 
         <LinearLayout
             android:id="@+id/LL3_LB"
+            android:tag="LL3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -199,7 +203,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -226,6 +230,7 @@
 
         <LinearLayout
             android:id="@+id/LL4_LB"
+            android:tag="LL4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -252,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -279,6 +284,7 @@
 
         <LinearLayout
             android:id="@+id/LL5_LB"
+            android:tag="LL5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -305,7 +311,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -332,6 +338,7 @@
 
         <LinearLayout
             android:id="@+id/LL6_LB"
+            android:tag="LL6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -358,7 +365,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -385,6 +392,7 @@
 
         <LinearLayout
             android:id="@+id/LL7_LB"
+            android:tag="LL7"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -411,7 +419,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -438,6 +446,7 @@
 
         <LinearLayout
             android:id="@+id/LL8_LB"
+            android:tag="LL8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -464,7 +473,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -491,6 +500,7 @@
 
         <LinearLayout
             android:id="@+id/LL9_LB"
+            android:tag="LL9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -517,7 +527,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -544,6 +554,7 @@
 
         <LinearLayout
             android:id="@+id/LL10_LB"
+            android:tag="LL10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -570,7 +581,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"
@@ -597,6 +608,7 @@
 
         <LinearLayout
             android:id="@+id/LLYou_LB"
+            android:tag="LLYou"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
@@ -624,7 +636,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="start"

@@ -45,13 +45,13 @@
             android:id="@+id/nameAndSurnameTV2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Yusuf Kartal"
+            android:text="@string/Unknown"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:fontFamily="@font/mohave_medium"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
 
     </LinearLayout>
 
@@ -93,13 +93,13 @@
             android:id="@+id/usernameTV2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="yaquila"
+            android:text="@string/Unknown"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:fontFamily="@font/mohave_medium"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
 
     </LinearLayout>
 
@@ -140,14 +140,14 @@
             android:id="@+id/emailTV2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="yusufkartal2004@gmail.com"
+            android:text="@string/Unknown"
             android:maxLines="1"
             android:layout_marginTop="15dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:textColor="@color/near_black_blue"
             android:fontFamily="@font/mohave_medium"
-            android:textSize="30sp" />
+            android:textSize="22sp" />
 
     </LinearLayout>
 

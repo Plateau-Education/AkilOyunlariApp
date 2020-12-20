@@ -47,5 +47,6 @@
     <string name="Login">Giriş yap</string>
     <string name="Rank">Sıralama</string>
     <string name="You">Siz</string>
+    <string name="Unknown">Bilinmiyor</string>
 
 </resources>

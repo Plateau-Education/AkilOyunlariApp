@@ -1,6 +1,9 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,11 +15,23 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TabHost;
+import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class LeaderboardActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, View.OnTouchListener {
 
@@ -24,33 +39,64 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     LinearLayout tab1,tab2,tab3,tab4,tab5,tab6;
     ScrollView leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6;
 
-
     @SuppressWarnings("deprecation")
     TabHost tabHost;
 
+    LoadingDialog loadingDialog;
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @SuppressWarnings("deprecation")
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leaderboard);
+    @SuppressLint("StaticFieldLeak")
+    public class GetRequest extends AsyncTask<String, Void, String> {
 
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                StringBuilder result = new StringBuilder();
+                URL reqURL;
+                reqURL = new URL(strings[0] + "/leaderboard/board" + "?Token=" + strings[1]);
 
-        final LayoutInflater inflater = getLayoutInflater();
-        leaderboard_tab_sl1= (ScrollView) inflater.inflate(this.getResources().getIdentifier("leaderboard_tab_sl", "layout", this.getPackageName()),null);
+                HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setDoInput(true);
+                connection.setDoOutput(false);
+                connection.connect();
+                InputStream in;
+                int status = connection.getResponseCode();
+                if (status != HttpURLConnection.HTTP_OK)  {
+                    in = connection.getErrorStream();
+                }
+                else  {
+                    in = connection.getInputStream();
+                }
+                InputStreamReader reader = new InputStreamReader(in);
+                int data = reader.read();
+                while (data != -1) {
 
-        tab1 = (LinearLayout) findViewById(R.id.tab1);
-        tab2 = (LinearLayout) findViewById(R.id.tab2);
-        tab3 = (LinearLayout) findViewById(R.id.tab3);
-        tab4 = (LinearLayout) findViewById(R.id.tab4);
-        tab5 = (LinearLayout) findViewById(R.id.tab5);
-        tab6 = (LinearLayout) findViewById(R.id.tab6);
+                    char current = (char) data;
+                    result.append(current);
+                    data = reader.read();
+                }
+                Log.i("result", result.toString());
+                return result.toString();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+        @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+        @Override
+        protected void onPostExecute(String result) {
+            //noinspection deprecation
+            super.onPostExecute(result);
 
-        tab1.addView(leaderboard_tab_sl1);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            try {
+                org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
+
+                LayoutInflater inflater = getLayoutInflater();
                 leaderboard_tab_sl2 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl3 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl4 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
@@ -73,8 +119,57 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 mGestureDetector = new GestureDetector(LeaderboardActivity.this,LeaderboardActivity.this);
 
 
+
+                List<String> games = new ArrayList<>(Arrays.asList("Sudoku", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit"));
+                List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
+                for(int g = 0; g<games.size(); g++){
+                    String game = games.get(g);
+                    JSONArray jsonArray = jb.getJSONArray(game);
+                    ScrollView sl = slList.get(g);
+                    for(int i = 0; i<jsonArray.length(); i++){
+                        LinearLayout horLL = (LinearLayout) sl.findViewWithTag("LL"+(i+1));
+                        ((TextView)horLL.getChildAt(1)).setText(jsonArray.getJSONArray(i).getString(0));
+                        ((TextView)horLL.getChildAt(2)).setText(jsonArray.getJSONArray(i).getString(1));
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        },1000);
+
+            loadingDialog.dismissDialog();
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    public void loadingDialogFunc(){
+        loadingDialog = new LoadingDialog(LeaderboardActivity.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+        loadingDialog.startLoadingAnimation();
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @SuppressWarnings("deprecation")
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_leaderboard);
+
+        GetRequest getRequest = new GetRequest();
+        //noinspection deprecation
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/","fx!Ay:;<p6Q?C8N{");
+        loadingDialogFunc();
+
+        final LayoutInflater inflater = getLayoutInflater();
+        leaderboard_tab_sl1= (ScrollView) inflater.inflate(this.getResources().getIdentifier("leaderboard_tab_sl", "layout", this.getPackageName()),null);
+
+        tab1 = (LinearLayout) findViewById(R.id.tab1);
+        tab2 = (LinearLayout) findViewById(R.id.tab2);
+        tab3 = (LinearLayout) findViewById(R.id.tab3);
+        tab4 = (LinearLayout) findViewById(R.id.tab4);
+        tab5 = (LinearLayout) findViewById(R.id.tab5);
+        tab6 = (LinearLayout) findViewById(R.id.tab6);
+
+        tab1.addView(leaderboard_tab_sl1);
 
 
         tabHost = (TabHost) findViewById(R.id.tabhost);

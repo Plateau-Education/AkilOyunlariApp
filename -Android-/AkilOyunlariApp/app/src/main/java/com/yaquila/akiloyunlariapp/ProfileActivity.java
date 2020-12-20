@@ -55,6 +55,12 @@ public class ProfileActivity extends AppCompatActivity {
     ConstraintLayout infoCl;
     LinearLayout scrollViewLL;
 
+    public void goToMainMenu(View view){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
@@ -108,8 +114,9 @@ public class ProfileActivity extends AppCompatActivity {
 //            JSONObject jsonObject = null;
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
+
                 JSONObject scores = jb.getJSONObject("puan");
-                List<String> games = new ArrayList<String>(Arrays.asList("Sudoku.6", "Sudoku.9","HazineAvi","Patika","SayiBulmaca","SozcukTuru","Piramit","Sudoku"));
+                List<String> games = new ArrayList<>(Arrays.asList("Sudoku.6", "Sudoku.9", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit", "Sudoku"));
                 for(String g: games.subList(2,games.size())){
                     ((TextView)statsCl.findViewWithTag(g+"S")).setText(getString(R.string.score)+": "+scores.getDouble(g));
                 }
@@ -311,6 +318,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
+            if(maxX == 0){
+                graphView.getViewport().setMaxY(10);
+                graphView.getViewport().setYAxisBoundsManual(true);
+                maxX = 10;
+            }
             graphView.getViewport().setMinX(0);
             graphView.getViewport().setMaxX(maxX);
             graphView.getViewport().setMaxXAxisSize(maxX);
@@ -343,7 +355,7 @@ public class ProfileActivity extends AppCompatActivity {
             pseries2 = new PointsGraphSeries<>();
             pseries3 = new PointsGraphSeries<>();
 //            LineGraphSeries<DataPoint> s2 = new LineGraphSeries<>();
-//            s2.appendData(new DataPoint(0,0),true,100);
+//            s2.appendData(new DataPoint(10,10),true,100);
 //            s2.appendData(new DataPoint(50,0),true,100);
 
 //            s2.setColor(getResources().getColor(R.color.transparent));
@@ -467,6 +479,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
+            if(maxX == 0){
+                graphView.getViewport().setMaxY(10);
+                graphView.getViewport().setYAxisBoundsManual(true);
+                maxX = 10;
+            }
             graphView.getViewport().setMinX(0);
             graphView.getViewport().setMaxX(maxX);
             graphView.getViewport().setMaxXAxisSize(maxX);
@@ -653,6 +670,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
 
+            if(maxX == 0){
+                graphView.getViewport().setMaxY(10);
+                graphView.getViewport().setYAxisBoundsManual(true);
+                maxX = 10;
+            }
             graphView.getViewport().setMinX(0);
             graphView.getViewport().setMaxX(maxX);
             graphView.getViewport().setMaxXAxisSize(maxX);
@@ -674,9 +696,9 @@ public class ProfileActivity extends AppCompatActivity {
         infoCl = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("info_layout", "layout", this.getPackageName()),null);
 
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        ((TextView) infoCl.findViewById(R.id.nameAndSurnameTV2)).setText(sharedPreferences.getString("displayname","Unknown"));
-        ((TextView) infoCl.findViewById(R.id.usernameTV2)).setText(sharedPreferences.getString("username","Unknown"));
-        ((TextView) infoCl.findViewById(R.id.emailTV2)).setText(sharedPreferences.getString("email","Unknown"));
+        ((TextView) infoCl.findViewById(R.id.nameAndSurnameTV2)).setText(sharedPreferences.getString("displayname",getString(R.string.Unknown)));
+        ((TextView) infoCl.findViewById(R.id.usernameTV2)).setText(sharedPreferences.getString("username",getString(R.string.Unknown)));
+        ((TextView) infoCl.findViewById(R.id.emailTV2)).setText(sharedPreferences.getString("email",getString(R.string.Unknown)));
 
         scrollViewLL.addView(infoCl);
 
