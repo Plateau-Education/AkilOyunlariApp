@@ -1,6 +1,7 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -44,6 +45,12 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
 
     LoadingDialog loadingDialog;
 
+
+    public void goToMainMenu(View view){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
@@ -109,12 +116,12 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 tab5.addView(leaderboard_tab_sl5);
                 tab6.addView(leaderboard_tab_sl6);
 
-                leaderboard_tab_sl1.setOnTouchListener(LeaderboardActivity.this);
-                leaderboard_tab_sl2.setOnTouchListener(LeaderboardActivity.this);
-                leaderboard_tab_sl3.setOnTouchListener(LeaderboardActivity.this);
-                leaderboard_tab_sl4.setOnTouchListener(LeaderboardActivity.this);
-                leaderboard_tab_sl5.setOnTouchListener(LeaderboardActivity.this);
-                leaderboard_tab_sl6.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl1.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl2.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl3.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl4.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl5.setOnTouchListener(LeaderboardActivity.this);
+//                leaderboard_tab_sl6.setOnTouchListener(LeaderboardActivity.this);
 
                 mGestureDetector = new GestureDetector(LeaderboardActivity.this,LeaderboardActivity.this);
 
@@ -218,6 +225,14 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         spec.setIndicator("Piramit");
         tabHost.addTab(spec);
 
+        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String s) {
+                List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
+                ScrollView currentsl = slList.get(tabHost.getCurrentTab());
+                currentsl.setScrollY(0);
+            }
+        });
 
     }
 
@@ -247,9 +262,20 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         return false;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
+//        List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
+//        ScrollView currentsl = slList.get(tabHost.getCurrentTab());
+//        if(v1 > 10 && Math.abs(v)<40)
+////            currentsl.fullScroll(View.FOCUS_DOWN);
+//            currentsl.scrollBy(0,(int)v1);
+//        if(v1 < 10 && Math.abs(v)<40)
+////            currentsl.fullScroll(View.FOCUS_UP);
+//            currentsl.scrollBy(0,(int)v1);
+//        Log.i("v1 onscroll",v1+" / "+v);
+        return true;
     }
 
     @Override
@@ -260,23 +286,37 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     @SuppressWarnings("deprecation")
     @Override
     public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        Log.i("onFling",v+"  "+v1);
-
-        if(Math.abs(v1)<6000){
-            int current = tabHost.getCurrentTab();
-            if(v > 0){
-                if(current!=0){
-                    tabHost.setCurrentTab(current-1);
-                    ((HorizontalScrollView)tabHost.getTabWidget().getParent()).scrollBy(-tabHost.getTabWidget().getWidth()/tabHost.getTabWidget().getTabCount(),0);
-                }
-            } else {
-                if(current!=tabHost.getTabWidget().getTabCount()-1){
-                    tabHost.setCurrentTab(current+1);
-                    ((HorizontalScrollView)tabHost.getTabWidget().getParent()).scrollBy(tabHost.getTabWidget().getWidth()/tabHost.getTabWidget().getTabCount(),0);
-                }
-            }
-        }
-//        tabHost.getCurrentTab();
+//        Log.i("onFling",v+"  "+v1);
+//
+//        List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
+//        ScrollView currentsl = slList.get(tabHost.getCurrentTab());
+//
+//        if(Math.abs(v1)<5000&&Math.abs(v)>4000){
+//            int current = tabHost.getCurrentTab();
+//            if(v > 0){
+//                if(current!=0){
+//                    tabHost.setCurrentTab(current-1);
+//
+//                    currentsl.setScrollY(0);
+//                    ((HorizontalScrollView)tabHost.getTabWidget().getParent()).scrollBy(-tabHost.getTabWidget().getWidth()/tabHost.getTabWidget().getTabCount(),0);
+//                }
+//            } else {
+//                if(current!=tabHost.getTabWidget().getTabCount()-1){
+//                    tabHost.setCurrentTab(current+1);
+//                    ((HorizontalScrollView)tabHost.getTabWidget().getParent()).scrollBy(tabHost.getTabWidget().getWidth()/tabHost.getTabWidget().getTabCount(),0);
+//                }
+//            }
+//        }
+//
+//        else{
+//            if(v1 > 10 && Math.abs(v)<40)
+////            currentsl.fullScroll(View.FOCUS_DOWN);
+//                currentsl.scrollBy(0,(int)v1);
+//            if(v1 < 10 && Math.abs(v)<40)
+////            currentsl.fullScroll(View.FOCUS_UP);
+//                currentsl.scrollBy(0,(int)v1);
+//        }
+////        tabHost.getCurrentTab();
 
         return true;
     }

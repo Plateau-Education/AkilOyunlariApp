@@ -350,21 +350,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
     public boolean isPasswordAndUsernameSuitable(String username, String password, String email, String displayname) {
         if(signInUpStatus.equals("SignUp")) {
             if (username.length() == 0 || password.length() == 0 || email.length() == 0 || displayname.length() == 0) {
                 return false;
-            } else if (username.length() < 4 || username.length() > 20 || password.length() < 4 || password.length() > 20 || displayname.length() < 4 || displayname.length() > 20) {
-                Toast.makeText(this, "Username, Password and Name&Surname should be 4-20 words.", Toast.LENGTH_LONG).show();
+            } else if (username.length() < 4 || username.length() > 30 || password.length() < 4 || password.length() > 30 || displayname.length() < 4 || displayname.length() > 30) {
+                Toast.makeText(this, "Username, Password and Name&Surname should be 4-30 words.", Toast.LENGTH_LONG).show();
                 return false;
             }
         }
         else {
             if (password.length() == 0 || email.length() == 0) {
                 return false;
-            } else if (password.length() < 4 || password.length() > 20) {
-                Toast.makeText(this, "Username, Password and Name&Surname should be 4-20 words.", Toast.LENGTH_LONG).show();
+            } else if (password.length() < 4 || password.length() > 30) {
+                Toast.makeText(this, "Username, Password and Name&Surname should be 4-30 words.", Toast.LENGTH_LONG).show();
                 return false;
             }
         }

@@ -531,9 +531,14 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
+                Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+                assert solvedQuestions != null;
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+gridSize)).toString()+"ss");
                 for(int i = 0; i < idArray.length(); i++){
-                    questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
-                    gameIds.add(idArray.getInt(i));
+                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+gridSize)).toString().contains(idArray.getInt(i)+"-")) {
+                        questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
+                        gameIds.add(idArray.getInt(i));
+                    }
                 }
 
             } catch (Exception e) {
