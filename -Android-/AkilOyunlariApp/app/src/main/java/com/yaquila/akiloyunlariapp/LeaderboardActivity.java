@@ -126,17 +126,28 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 mGestureDetector = new GestureDetector(LeaderboardActivity.this,LeaderboardActivity.this);
 
 
-
+                SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                String username = sP.getString("username","-");
+                String userRank = "-";
                 List<String> games = new ArrayList<>(Arrays.asList("Sudoku", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit"));
                 List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
                 for(int g = 0; g<games.size(); g++){
                     String game = games.get(g);
                     JSONArray jsonArray = jb.getJSONArray(game);
                     ScrollView sl = slList.get(g);
-                    for(int i = 0; i<jsonArray.length(); i++){
-                        LinearLayout horLL = (LinearLayout) sl.findViewWithTag("LL"+(i+1));
-                        ((TextView)horLL.getChildAt(1)).setText(jsonArray.getJSONArray(i).getString(0));
-                        ((TextView)horLL.getChildAt(2)).setText(jsonArray.getJSONArray(i).getString(1));
+                    for(int i = 0; i<jsonArray.length(); i++) {
+                        if (jsonArray.getJSONArray(i).getString(0).equals(username)) {
+                            userRank = Integer.toString((i + 1));
+                            LinearLayout horLL = (LinearLayout) sl.findViewWithTag("LLYou");
+                            ((TextView) horLL.getChildAt(0)).setText(userRank);//score
+                            ((TextView) horLL.getChildAt(2)).setText(jsonArray.getJSONArray(i).getString(1));//score
+                        }
+                        if (i < 10) {
+                            LinearLayout horLL = (LinearLayout) sl.findViewWithTag("LL" + (i + 1));
+                            ((TextView) horLL.getChildAt(1)).setText(jsonArray.getJSONArray(i).getString(0));//name
+                            ((TextView) horLL.getChildAt(2)).setText(jsonArray.getJSONArray(i).getString(1));//score
+
+                        }
                     }
                 }
 
