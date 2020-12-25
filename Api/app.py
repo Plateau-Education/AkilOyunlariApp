@@ -28,7 +28,9 @@ request.add_argument("Ids", required=False)
 cluster = MongoClient(key)
 cluster2 = MongoClient(key2)
 db = cluster["AkilOyunlariDB"]
-userdb = cluster2["AkilOyunlariUsers"]["Users"]
+db2 = cluster2["AkilOyunlariUsers"]
+userdb = db2["Users"]
+cl = db2["Class"]
 
 
 def send_Mail(receiver, name):
@@ -82,11 +84,17 @@ def signUp(displayname, username, email, password, identity):
     if identity == "Instructor":
         flag = True
         while flag:
+            flag = False
             classid = B64UUID(uuid.uuid4()).string[:6]
-            flag = isTaken(classid, "classid")
+            for i in cl.find():
+                if i["_id"] == classid:
+                    flag = True
+                    break
+        cl.insert_one({"_id": classid, "Instructor": {"id": idx, "displayname": b85decode(displayname.encode()).decode(), 
+                       "username": b85decode(username.encode()).decode()}, "Students": []})            
     userdb.insert_one(
         {"_id": idx, "type": identity,"displayname": displayname, "username": username, 
-        "email": email, "password": password, "classid": classid,"class" = [],
+        "email": email, "password": password, "classid": classid, "class": [],
          "solved": {
              "Sudoku": {"6": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]},
                         "9": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]}},
@@ -101,8 +109,8 @@ def signUp(displayname, username, email, password, identity):
              "Anagram": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]}},
          "puan": {"Sudoku": 0, "SayiBulmaca": 0, "Piramit": 0, "Patika": 0,
                   "HazineAvi": 0, "Pentomino": 0, "SozcukTuru": 0, "Anagram": 0}})
-    userdb.find_one_and_update({"_id": "userid"}, update={"$inc": {"seq": 1}}, new=True)
-    return {"_id": idx}
+    userdb.find_one_and_update({"_id": "userid"}, update={"$inc": {"seq": 1}}, new=True)    
+    return {"Id": idx, "ClassId": classid}
 
 
 def getSolved(user_id, query):
@@ -200,7 +208,11 @@ class User(Resource):
                     best_dict[col] = [userb[2], userb[3]]
                 return dumps(best_dict), 200
             elif userinfo == "classGet":
-                # username, diplayname, _id
+                info = loads(args["Info"].replace("'", '"'))
+                classid = info["ClassId"]
+                if classid == "None":
+                    return {"Message": "Not Found!"}, 404
+                return dumps(cl.find_one({"_id": classid})), 200
         return {"Message": "Method not allowed"}, 405
 
     def post(self, userinfo):
@@ -227,7 +239,7 @@ class User(Resource):
                 identity = b85encode(json["type"].encode()).decode()
                 if not isTaken(email, "email"):
                     idx = signUp(displayname=displayname, username=username, email=email, password=password, identity)                    
-                    return {"Id": idx, "ClassId": classid}, 200
+                    return {"Id": idx[0], "ClassId": idx[1]}, 200
                 return {"Message": "User Already Exists!"}, 200
             elif userinfo == "userSend":
                 json = loads(args["Info"].replace("'", '"'))
@@ -341,11 +353,13 @@ class User(Resource):
                 info = loads(args["Info"].replace("'", '"'))
                 classid = info["ClassId"]
                 userid = info["Id"]
-                tc = userdb.find_one({"type": "Instructer", "classid": classid})
+                displayna = info["Displayname"]
+                userna = info["Username"]
+                tc = cl.find_one({"_id": classid})
                 if tc:
-                    userdb.find_one_and_update({"type": "Instructer", "classid": classid}, update={"$push": {"class": userid}})
-                    userdb.find_one_and_update({"_id": userid}, update={"$push": {"class": tc["_id"]}, "$set": {"classid": classid}})
-                    return {"Message": "Ok"}, 200
+                    cl.find_one_and_update({"_id": classid}, update={"$push": {"Students": {"id": userid, "displayname": displayna, "username": userna}}})
+                    userdb.find_one_and_update({"_id": userid}, update={"$set": {"classid": classid}})
+                    return dumps(cl.find_one({"_id": classid})), 200
                 return {"Message": "Not Found!"}, 404
             return {"Message": "Method not allowed"}, 405
 
