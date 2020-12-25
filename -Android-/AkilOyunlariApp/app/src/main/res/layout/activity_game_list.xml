@@ -95,7 +95,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|right"
+                        android:gravity="center_vertical|end"
                         android:textStyle="bold"
                         android:textSize="35sp"
                         android:textColor="@color/near_black_blue"
@@ -233,7 +233,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|right"
+                        android:gravity="center_vertical|end"
                         android:textStyle="bold"
                         android:textSize="35sp"
                         android:textColor="@color/near_black_blue"
@@ -291,7 +291,7 @@
 
                     <TextView android:id="@+id/sayiBulmacaTV_gl"
                         android:text="Sayı Bulmaca"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/mohave_bold"
@@ -372,7 +372,7 @@
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|right"
+                        android:gravity="center_vertical|end"
                         android:textStyle="bold"
                         android:textSize="35sp"
                         android:textColor="@color/near_black_blue"
@@ -451,7 +451,7 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
@@ -474,6 +474,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/pentominoLL_GL"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -507,11 +508,11 @@
                         android:layout_marginRight="15dp"/>
 
                     <TextView android:id="@+id/pentominoTV_gl"
-                        android:text="Pentomino"
+                        android:text="@string/Comingsoon"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|right"
+                        android:gravity="center_vertical|end"
                         android:textStyle="bold"
                         android:textSize="35sp"
                         android:textColor="@color/near_black_blue"
@@ -545,6 +546,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/anagramLL_GL"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -565,11 +567,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:onClick="extendListItem"
-                    android:tag="8">
+                    android:tag="8"
+                    tools:ignore="UseCompoundDrawables">
 
                     <TextView android:id="@+id/anagramTV_gl"
-                        android:text="Anagram"
-                        android:layout_width="match_parent"
+                        android:text="@string/Comingsoon"
+                        android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
                         android:fontFamily="@font/mohave_bold"
@@ -584,78 +587,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="fill_parent"
 
-                        android:src="@drawable/ic_extendbutton" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:visibility="gone"
-                    android:onClick="goToDifficulty"
-                    android:layout_marginBottom="15dp"
-
-                    android:background="@drawable/hazineavi_gamelist_image"
-                    android:layout_weight="0.5">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:src="@drawable/ic_infobutton"
-                        android:onClick="goToHowtoplay"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/rounded_f7f5fa_bg"
-                android:layout_weight="1"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="7.5dp"
-                android:layout_marginTop="7.5dp"
-                android:padding="10dp"
-                android:paddingStart="30dp"
-                android:paddingEnd="25dp"
-                android:paddingRight="25dp"
-                android:paddingLeft="30dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:onClick="extendListItem"
-                    android:tag="9">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:gravity="center_vertical"
                         android:src="@drawable/ic_extendbutton"
-                        android:layout_marginEnd="15dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="15dp"/>
-
-                    <TextView android:id="@+id/kakuroTV_gl"
-                        android:text="Kakuro"
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"
-                        android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|right"
-                        android:textStyle="bold"
-                        android:textSize="35sp"
-                        android:textColor="@color/near_black_blue"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
+                        tools:ignore="ContentDescription" />
 
                 </LinearLayout>
 
@@ -667,7 +600,8 @@
                     android:layout_marginBottom="15dp"
 
                     android:background="@drawable/hazineavi_gamelist_image"
-                    android:layout_weight="0.5">
+                    android:layout_weight="0.5"
+                    tools:ignore="NestedWeights">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -677,79 +611,14 @@
                         android:onClick="goToHowtoplay"
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"/>
+                        android:layout_alignParentRight="true"
+                        tools:ignore="ContentDescription" />
 
                 </RelativeLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/rounded_f7f5fa_bg"
-                android:layout_weight="1"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="7.5dp"
-                android:layout_marginTop="7.5dp"
-                android:padding="10dp"
-                android:paddingEnd="25dp"
-                android:paddingStart="30dp"
-                android:paddingLeft="30dp"
-                android:paddingRight="25dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:onClick="extendListItem"
-                    android:tag="10">
-
-                    <TextView android:id="@+id/citTV_gl"
-                        android:text="Çit"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/mohave_bold"
-                        android:gravity="center_vertical|start"
-                        android:textStyle="bold"
-                        android:textSize="35sp"
-                        android:textColor="@color/near_black_blue"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="5dp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-
-                        android:src="@drawable/ic_extendbutton" />
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:visibility="gone"
-                    android:onClick="goToDifficulty"
-                    android:layout_marginBottom="15dp"
-
-                    android:background="@drawable/hazineavi_gamelist_image"
-                    android:layout_weight="0.5">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:src="@drawable/ic_infobutton"
-                        android:onClick="goToHowtoplay"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"/>
-
-                </RelativeLayout>
-
-            </LinearLayout>
 
         </LinearLayout>
 

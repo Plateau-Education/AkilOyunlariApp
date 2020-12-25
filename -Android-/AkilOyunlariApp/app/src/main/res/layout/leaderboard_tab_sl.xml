@@ -29,7 +29,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -50,7 +50,7 @@
                 android:text="@string/Username"/>
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -79,7 +79,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -103,7 +103,7 @@
 
             <TextView
                 android:id="@+id/SC1_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -133,7 +133,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -157,7 +157,7 @@
 
             <TextView
                 android:id="@+id/SC2_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -187,7 +187,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -211,7 +211,7 @@
 
             <TextView
                 android:id="@+id/SC3_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -241,7 +241,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -265,7 +265,7 @@
 
             <TextView
                 android:id="@+id/SC4_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -295,7 +295,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -319,7 +319,7 @@
 
             <TextView
                 android:id="@+id/SC5_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -349,7 +349,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -373,7 +373,7 @@
 
             <TextView
                 android:id="@+id/SC6_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -403,7 +403,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -427,7 +427,7 @@
 
             <TextView
                 android:id="@+id/SC7_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -457,7 +457,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -481,7 +481,7 @@
 
             <TextView
                 android:id="@+id/SC8_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -511,7 +511,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -535,7 +535,7 @@
 
             <TextView
                 android:id="@+id/SC9_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -565,7 +565,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -589,7 +589,7 @@
 
             <TextView
                 android:id="@+id/SC10_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -620,7 +620,7 @@
 
             <TextView
                 android:id="@+id/YouRank_LB"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
@@ -644,7 +644,7 @@
 
             <TextView
                 android:id="@+id/SCYou_LB"
-                android:layout_width="match_parent"
+                android:layout_width="300dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"

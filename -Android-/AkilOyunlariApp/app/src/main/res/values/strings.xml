@@ -47,4 +47,7 @@
     <string name="Rank">Rank</string>
     <string name="You">You</string>
     <string name="Unknown">Unknown</string>
+    <string name="Leaderboard">Leaderboard</string>
+    <string name="Comingsoon">Coming soon...</string>
+    <string name="Besttime"><u>Best</u></string>
 </resources>

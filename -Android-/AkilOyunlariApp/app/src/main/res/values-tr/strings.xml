@@ -48,5 +48,8 @@
     <string name="Rank">Sıralama</string>
     <string name="You">Siz</string>
     <string name="Unknown">Bilinmiyor</string>
+    <string name="Leaderboard">Skor Tablosu</string>
+    <string name="Comingsoon">Yakında...</string>
+    <string name="Besttime"><u>En İyi</u></string>
 
 </resources>

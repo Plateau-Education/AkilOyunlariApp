@@ -38,6 +38,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -80,50 +81,49 @@ public class GameListActivity extends AppCompatActivity {
 
     public void extendListItem(View view){
         int rowNum = Integer.parseInt(view.getTag().toString());
-        if(currentExtendedRow == 0){
-            final LinearLayout ll = (LinearLayout) view.getParent();
-            RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
-            rl.setVisibility(View.VISIBLE);
-            currentExtendedRow = rowNum;
+        if(rowNum<7) {
+            if (currentExtendedRow == 0) {
+                final LinearLayout ll = (LinearLayout) view.getParent();
+                RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
+                ll.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
+                rl.setVisibility(View.VISIBLE);
+                currentExtendedRow = rowNum;
 //            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
 
-            final ScrollView scrollView = findViewById(R.id.scrollView_gl);
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(0,ll.getBottom()-scrollView.getBottom());
-                }
-            });
+                final ScrollView scrollView = findViewById(R.id.scrollView_gl);
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, ll.getBottom() - scrollView.getBottom());
+                    }
+                });
 
+            } else if (currentExtendedRow == rowNum) {
+                LinearLayout ll = (LinearLayout) view.getParent();
+                RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
+                ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
+                rl.setVisibility(View.GONE);
+                currentExtendedRow = 0;
+            } else {
+                final LinearLayout ll = (LinearLayout) ((LinearLayout) ((LinearLayout) view.getParent()).getParent()).getChildAt(currentExtendedRow);
+                RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
+                ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
+                rl.setVisibility(View.GONE);
+                final LinearLayout ll_2 = (LinearLayout) view.getParent();
+                RelativeLayout rl_2 = (RelativeLayout) ll_2.getChildAt(1);
+                ll_2.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
+                rl_2.setVisibility(View.VISIBLE);
+                currentExtendedRow = rowNum;
+                Log.i("rowNum/childCount", rowNum + " / " + ((LinearLayout) ll.getParent()).getChildCount());
+                final ScrollView scrollView = findViewById(R.id.scrollView_gl);
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.smoothScrollTo(0, ll_2.getBottom() - scrollView.getBottom());
+                    }
+                });
+            }
         }
-        else if(currentExtendedRow == rowNum){
-            LinearLayout ll = (LinearLayout) view.getParent();
-            RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
-            rl.setVisibility(View.GONE);
-            currentExtendedRow = 0;
-        }
-        else {
-            final LinearLayout ll = (LinearLayout) ((LinearLayout) ((LinearLayout)view.getParent()).getParent()).getChildAt(currentExtendedRow);
-            RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-            ll.setBackground(getResources().getDrawable(R.drawable.rounded_f7f5fa_bg));
-            rl.setVisibility(View.GONE);
-            final LinearLayout ll_2 = (LinearLayout) view.getParent();
-            RelativeLayout rl_2 = (RelativeLayout) ll_2.getChildAt(1);
-            ll_2.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
-            rl_2.setVisibility(View.VISIBLE);
-            currentExtendedRow = rowNum;
-            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
-            final ScrollView scrollView = findViewById(R.id.scrollView_gl);
-            scrollView.post(new Runnable() {
-                @Override
-                public void run() {
-                    scrollView.smoothScrollTo(0,ll_2.getBottom()-scrollView.getBottom());
-                }
-            });
-        }
-
     }
 
     public void transferBests(JSONObject jo) throws JSONException {
@@ -196,7 +196,6 @@ public class GameListActivity extends AppCompatActivity {
         Log.i("allSPs", sP.getString("ScoreHazineAvi.Easy","")+" / "+sP.getString("BestHazineAvi.Easy",""));
     }
 
-
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
@@ -258,7 +257,6 @@ public class GameListActivity extends AppCompatActivity {
 
         }
     }
-
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
@@ -346,7 +344,6 @@ public class GameListActivity extends AppCompatActivity {
         }
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -358,6 +355,10 @@ public class GameListActivity extends AppCompatActivity {
         if(message!=null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
+
+        findViewById(R.id.pentominoLL_GL).setEnabled(false);
+        findViewById(R.id.anagramLL_GL).setEnabled(false);
+
 
         try{
             Log.i("getReq","in onCreate");
@@ -381,7 +382,7 @@ public class GameListActivity extends AppCompatActivity {
                     continue;
                 PutRequest putRequest = new PutRequest();
                 //noinspection deprecation
-                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", id, s, Objects.requireNonNull(solvedQuestions.get(s)).toString());
+                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", id, s, new ArrayList<>(new HashSet<>(Objects.requireNonNull(solvedQuestions.get(s)))).toString());
                 Objects.requireNonNull(solvedQuestions.get(s)).clear();
             }
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
