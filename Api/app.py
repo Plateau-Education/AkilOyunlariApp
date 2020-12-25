@@ -38,6 +38,7 @@ def send_Mail(receiver, name):
     from_email='akiloyunlariapp@gmail.com',
     to_emails=f'{receiver}',
     subject='Welcome To Mind Puzzles',
+    plain_text_content=f"Verification Code {kod}",
     html_content=f'{render_template("email.htm", members=members)}')
     try:
         sg = SendGridAPIClient(mail_key)
@@ -66,46 +67,56 @@ def signIn(email, password):
         if email == idx[0]:
             if password == idx[1]:
                 return {"Id": idx[2], "Username": b85decode(idx[3].encode()).decode(),
-                        "Displayname": b85decode(idx[4].encode()).decode()}, 200
+                        "Displayname": b85decode(idx[4].encode()).decode(), "classid": 0}, 200
     return False
 
 
-def signUp(displayname, username, email, password):
+def signUp(displayname, username, email, password, identity):
     flag = True
     idx = None
+    idt = None
+    classid = "None"
     while flag:
         idx = B64UUID(uuid.uuid4()).string
         flag = isTaken(idx, "_id")
+    if identity == "Instructor":
+        flag = True
+        while flag:
+            classid = B64UUID(uuid.uuid4()).string[:6]
+            flag = isTaken(classid, "classid")
     userdb.insert_one(
-        {"_id": idx, "displayname": displayname, "username": username, "email": email, "password": password,
+        {"_id": idx, "type": identity,"displayname": displayname, "username": username, 
+        "email": email, "password": password, "classid": classid,"class" = [],
          "solved": {
-             "Sudoku": {"6": {"Easy": [[], [[0, 0]], 0, 0], "Medium": [[], [[0, 0]], 0, 0], "Hard": [[], [[0, 0]], 0, 0]},
-                        "9": {"Easy": [[], [[0, 0]], 0, 0], "Medium": [[], [[0, 0]], 0, 0], "Hard": [[], [[0, 0]], 0, 0]}},
-             "SozcukTuru": {"Easy": [[], [[0, 0]], 0, 0], "Medium": [[], [[0, 0]], 0, 0], "Hard": [[], [[0, 0]], 0, 0],
-                            "Hardest": [[], [[0, 0]], 0, 0]},
-             "SayiBulmaca": {"3": [[], [[0, 0]], 0, 0], "4": [[], [[0, 0]], 0, 0], "5": [[], [[0, 0]], 0, 0]},
-             "Patika": {"5": [[], [[0, 0]], 0, 0], "7": [[], [[0, 0]], 0, 0], "9": [[], [[0, 0]], 0, 0]},
-             "HazineAvi": {"5": [[], [[0, 0]], 0, 0], "8": [[], [[0, 0]], 0, 0], "10": [[], [[0, 0]], 0, 0]},
-             "Piramit": {"3": [[], [[0, 0]], 0, 0], "4": [[], [[0, 0]], 0, 0], "5": [[], [[0, 0]], 0, 0],
-                         "6": [[], [[0, 0]], 0, 0]},
-             "Pentomino": {"Easy": [[], [[0, 0]], 0, 0], "Medium": [[], [[0, 0]], 0, 0], "Hard": [[], [[0, 0]], 0, 0]},
-             "Anagram": {"Easy": [[], [[0, 0]], 0, 0], "Medium": [[], [[0, 0]], 0, 0], "Hard": [[], [[0, 0]], 0, 0]}},
+             "Sudoku": {"6": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]},
+                        "9": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]}},
+             "SozcukTuru": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []],
+                            "Hardest": [[], [[0, 0]], 0, 0, []]},
+             "SayiBulmaca": {"3": [[], [[0, 0]], 0, 0, []], "4": [[], [[0, 0]], 0, 0, []], "5": [[], [[0, 0]], 0, 0, []]},
+             "Patika": {"5": [[], [[0, 0]], 0, 0, []], "7": [[], [[0, 0]], 0, 0, []], "9": [[], [[0, 0]], 0, 0, []]},
+             "HazineAvi": {"5": [[], [[0, 0]], 0, 0, []], "8": [[], [[0, 0]], 0, 0, []], "10": [[], [[0, 0]], 0, 0, []]},
+             "Piramit": {"3": [[], [[0, 0]], 0, 0, []], "4": [[], [[0, 0]], 0, 0, []], "5": [[], [[0, 0]], 0, 0, []],
+                         "6": [[], [[0, 0]], 0, 0, []]},
+             "Pentomino": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]},
+             "Anagram": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]}},
          "puan": {"Sudoku": 0, "SayiBulmaca": 0, "Piramit": 0, "Patika": 0,
                   "HazineAvi": 0, "Pentomino": 0, "SozcukTuru": 0, "Anagram": 0}})
     userdb.find_one_and_update({"_id": "userid"}, update={"$inc": {"seq": 1}}, new=True)
-    return idx 
+    return {"_id": idx}
 
 
 def getSolved(user_id, query):
     query = query.split(".")
     query.insert(0, "solved")
-    query.append(0)
     ids = userdb.find_one({"_id": user_id})
+    idx = []
     for k in query:
         ids = ids[k]
-    for n, i in enumerate(ids):
-        ids[n] = int(i[0])
-    return ids
+    for i in ids[0]:
+        idx.append(int(i[0]))
+    for i in ids[4]:
+        idx.append(int(i[0]))
+    return idx
 
 
 def Find(col, userid, amount=1, cevap=None, query=None):
@@ -188,6 +199,8 @@ class User(Resource):
                         userb = userb[i]
                     best_dict[col] = [userb[2], userb[3]]
                 return dumps(best_dict), 200
+            elif userinfo == "classGet":
+                # username, diplayname, _id
         return {"Message": "Method not allowed"}, 405
 
     def post(self, userinfo):
@@ -211,17 +224,20 @@ class User(Resource):
                 displayname = b85encode(json["displayname"].encode()).decode()
                 password = b85encode(json["password"].encode()).decode()
                 email = b85encode(json["email"].encode()).decode()
-                # kod = b85encode(json["code"].encode()).decode()
+                identity = b85encode(json["type"].encode()).decode()
                 if not isTaken(email, "email"):
-                    idx = signUp(displayname=displayname, username=username, email=email, password=password)
-                    return {"Message": idx}, 200
+                    idx = signUp(displayname=displayname, username=username, email=email, password=password, identity)                    
+                    return {"Id": idx, "ClassId": classid}, 200
                 return {"Message": "User Already Exists!"}, 200
             elif userinfo == "userSend":
                 json = loads(args["Info"].replace("'", '"'))
                 email = b85encode(json["email"].encode()).decode()
+                username = b85encode(json["username"].encode()).decode()
+                if isTaken(username, "username"):
+                    return {"Message": "Username Already Exists!"}, 422
                 if not isTaken(email, "email"):
-                    # kod = send_Mail(json["email"], json["displayname"])
-                    return {"Message": "Ok!"}, 200
+                    kod = send_Mail(json["email"], json["username"])
+                    return {"Message": kod}, 200
                 return {"Message": "User Already Exists!"}, 200
             return {"Message": "Method not allowed"}, 405
         return {"Message": "Method not allowed"}, 405
@@ -238,67 +254,100 @@ class User(Resource):
                      "Pentomino.Hard": 1, "SozcukTuru.Easy": 0.1, "SozcukTuru.Medium": 0.25, "SozcukTuru.Hard": 0.5,
                      "SozcukTuru.Hardest": 1, "Anagram.Easy": 0.1, "Anagram.Medium": 0.3, "Anagram.Hard": 0.8}
         args = request.parse_args()
-        if args["Token"] == token and args["Info"] and userinfo == "userUpdate":
-            info = loads(args["Info"].replace("'", '"'))
-            idx = info["Id"]
-            game_ids = info["Ids"]
-            total = 0
-            if isTaken(idx, "_id"):
-                time = 0
-                new_time = 0
-                valid_ids = []
-                best = []
-                for n, i in enumerate(game_ids):
-                    game_ids[n] = i.split("-")
-                    game_ids[n][1] = int(game_ids[n][1])
-                    if game_ids[n][1]:
-                        time += 1
-                        new_time += game_ids[n][1]
-                        best.append(game_ids[n][1])
-                        total += puan_dict[info["Query"]] * 10
-                        valid_ids.append(game_ids[n][1])
-                best = min(best)
-                q = info['Query'].split(".")
-                q.append(3)
-                best_bef = userdb.find_one({"_id": idx})["solved"]
-                for i in q:
-                    best_bef = best_bef[i]
-                q.remove(3)
-                if best_bef != 0 and best_bef < best:
-                    best = best_bef
-                game = info["Query"].split(".")[0]
-                userdb.find_one_and_update({"_id": idx},
-                                           update={"$inc": {f"solved.{info['Query']}.2": total, f"puan.{game}": total}, 
-                                                   "$set": {f"solved.{info['Query']}.3": best}})
-                q.append(1)
-                ar = userdb.find_one({"_id": idx})["solved"]
-                for i in q:
-                    ar = ar[i]
-                count = ar[-1][1]
-                avg_t = ar[-1][0] * count
-                new_stats = [ar[-1]]
-                if count == 0:
-                    userdb.find_one_and_update({"_id": idx}, update={"$pull": {f"solved.{info['Query']}.1": [0, 0]}})
-                flag = True
-                if ar[-1][1] % 10 == 0:
-                    flag = False
-                for stat in valid_ids:
-                    count += 1
-                    avg_t += stat
-                    if count % 10 == 0:
-                        new_stats.append([avg_t / count, count])
-                if flag:
-                    userdb.find_one_and_update({"_id": idx}, update={"$pull": {f"solved.{info['Query']}.1": ar[-1]}})
-                if new_stats[-1][1] != count:
-                    print(avg_t, count)      
-                    new_stats.append([avg_t / count, count])
-                new_stats.remove(ar[-1])
-                userdb.find_one_and_update({"_id": idx},
-                                           update={"$push": {f"solved.{info['Query']}.1": {"$each": new_stats}},
-                                                   "$addToSet": {f"solved.{info['Query']}.0": {"$each": game_ids}}})
-                return {"Message": "Ok"}, 200
-            return {"Message": "Not Found"}, 200
-        return {"Message": "Method not allowed"}, 405
+        if args["Token"] == token and args["Info"]:
+            if userinfo == "userUpdate":
+                info = loads(args["Info"].replace("'", '"'))
+                idx = info["Id"]
+                game_ids = info["Ids"]
+                unsolved = []
+                total = 0
+                if isTaken(idx, "_id"):
+                    time = 0
+                    new_time = 0
+                    valid_ids = []
+                    best = []
+                    for n, i in enumerate(game_ids):
+                        game_ids[n] = i.split("-")
+                        game_ids[n][1] = int(game_ids[n][1])
+                        if game_ids[n][1] != 0:
+                            time += 1
+                            new_time += game_ids[n][1]
+                            best.append(game_ids[n][1])
+                            total += puan_dict[info["Query"]] * 10
+                            valid_ids.append(game_ids[n][1])
+                        else:
+                            unsolved.append(game_ids[n])
+                            game_ids.remove(game_ids[n])                
+                    q = info['Query'].split(".")
+                    q.append(3)
+                    best_bef = userdb.find_one({"_id": idx})["solved"]
+                    for i in q:
+                        best_bef = best_bef[i]
+                    q.remove(3)
+                    if best == []:
+                        best = best_bef
+                    else:
+                        best = min(best)
+                    if best_bef != 0 and best_bef < best:
+                        best = best_bef
+                    game = info["Query"].split(".")[0]
+                    userdb.find_one_and_update({"_id": idx},
+                                            update={"$inc": {f"solved.{info['Query']}.2": total, f"puan.{game}": total}, 
+                                                    "$set": {f"solved.{info['Query']}.3": best}})
+                    ar = userdb.find_one({"_id": idx})["solved"]
+                    for i in q:
+                        ar = ar[i]
+                    constant = ((len(ar[0]) + len(game_ids)) // 10) + 1                
+                    cb = ar[1][0][1]                
+                    new_stats = []
+                    if cb != constant:
+                        ids = ar[0].copy()
+                        ids.extend(game_ids)
+                        avg_t = 0
+                        for n, i in enumerate(ids, 1):
+                            avg_t += int(i[1])
+                            if n % constant == 0:
+                                new_stats.append([avg_t / n, n])
+                        if new_stats[-1][1] != len(ids):
+                            new_stats.append([avg_t / len(ids), len(ids)])
+                        userdb.find_one_and_update({"_id": idx},
+                                            update={"$set": {f"solved.{info['Query']}.1": new_stats}})  
+                    else:
+                        ar = ar[1]
+                        count = ar[-1][1]
+                        avg_t = ar[-1][0] * count
+                        new_stats = [ar[-1]]                
+                        flag = True
+                        if ar[-1][1] % constant == 0:
+                            flag = False
+                        for stat in valid_ids:
+                            count += 1
+                            avg_t += stat
+                            if count % constant == 0:
+                                new_stats.append([avg_t / count, count])
+                        if flag:
+                            userdb.find_one_and_update({"_id": idx}, update={"$pull": {f"solved.{info['Query']}.1": ar[-1]}})
+                        if new_stats[-1][1] != count:
+                            new_stats.append([avg_t / count, count])
+                        new_stats.remove(ar[-1])
+                        userdb.find_one_and_update({"_id": idx},
+                                            update={"$push": {f"solved.{info['Query']}.1": {"$each": new_stats}}})                
+                    userdb.find_one_and_update({"_id": idx},
+                                            update={"$addToSet": {f"solved.{info['Query']}.0": {"$each": game_ids},
+                                                                    f"solved.{info['Query']}.4": {"$each": unsolved}}})
+                    return {"Message": "Ok"}, 200
+                return {"Message": "Not Found"}, 200
+            elif userinfo == "classUpdate":
+                info = loads(args["Info"].replace("'", '"'))
+                classid = info["ClassId"]
+                userid = info["Id"]
+                tc = userdb.find_one({"type": "Instructer", "classid": classid})
+                if tc:
+                    userdb.find_one_and_update({"type": "Instructer", "classid": classid}, update={"$push": {"class": userid}})
+                    userdb.find_one_and_update({"_id": userid}, update={"$push": {"class": tc["_id"]}, "$set": {"classid": classid}})
+                    return {"Message": "Ok"}, 200
+                return {"Message": "Not Found!"}, 404
+            return {"Message": "Method not allowed"}, 405
 
     def delete(self, userinfo):
         args = request.parse_args()
