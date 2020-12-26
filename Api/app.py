@@ -64,19 +64,18 @@ def isTaken(info, query):
 
 def signIn(email, password):
     col = userdb
-    ids = [(i["email"], i["password"], i["_id"], i["username"], i["displayname"]) for i in col.find()]
+    ids = [(i["email"], i["password"], i["_id"], i["username"], i["displayname"], i["classid"]) for i in col.find()]
     for idx in ids:
         if email == idx[0]:
             if password == idx[1]:
                 return {"Id": idx[2], "Username": b85decode(idx[3].encode()).decode(),
-                        "Displayname": b85decode(idx[4].encode()).decode(), "classid": 0}, 200
+                        "Displayname": b85decode(idx[4].encode()).decode(), "ClassId": idx[5]}, 200
     return False
 
 
 def signUp(displayname, username, email, password, identity):
     flag = True
     idx = None
-    idt = None
     classid = "None"
     while flag:
         idx = B64UUID(uuid.uuid4()).string
@@ -223,7 +222,7 @@ class User(Resource):
                 if isTaken(google, "email"):
                     idx = userdb.find_one({"email": google})
                     return {"Id": idx["_id"], "Username": b85decode(idx["username"].encode()).decode(),
-                            "Displayname": b85decode(idx["displayname"].encode()).decode()}, 200
+                            "Displayname": b85decode(idx["displayname"].encode()).decode(), "classid": idx["classid"]}, 200
                 return {"Message": "Not Found"}, 200
             elif userinfo == "userSignIn":
                 json = loads(args["Info"].replace("'", '"'))
@@ -236,10 +235,10 @@ class User(Resource):
                 displayname = b85encode(json["displayname"].encode()).decode()
                 password = b85encode(json["password"].encode()).decode()
                 email = b85encode(json["email"].encode()).decode()
-                identity = b85encode(json["type"].encode()).decode()
+                identity = json["type"]
                 if not isTaken(email, "email"):
-                    idx = signUp(displayname=displayname, username=username, email=email, password=password, identity)                    
-                    return {"Id": idx[0], "ClassId": idx[1]}, 200
+                    idx = signUp(displayname=displayname, username=username, email=email, password=password, identity=identity)                    
+                    return idx, 200
                 return {"Message": "User Already Exists!"}, 200
             elif userinfo == "userSend":
                 json = loads(args["Info"].replace("'", '"'))
