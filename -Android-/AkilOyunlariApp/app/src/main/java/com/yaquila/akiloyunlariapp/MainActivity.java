@@ -37,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
+    public void goToClassroom(View view){
+        Intent intent = new Intent(getApplicationContext(), MyClassActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
     public void checkSavedQuestions() throws IOException {
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         if(!"none".equals(sP.getString("Sudoku.6.Easy","none"))){

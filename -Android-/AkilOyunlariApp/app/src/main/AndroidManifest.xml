@@ -12,6 +12,7 @@
         android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".MyClassActivity"></activity>
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".ProfileActivity" />
         <activity

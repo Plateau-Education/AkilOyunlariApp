@@ -8,7 +8,7 @@
     tools:context=".MainActivity">
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/profileIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
@@ -23,15 +23,28 @@
         tools:ignore="ContentDescription" />
 
     <ImageButton
+        android:id="@+id/rankingsIcon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
         android:onClick="goToLeaderboard"
         android:padding="10dp"
         android:src="@drawable/ic_rankingicon"
-        app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/imageButton"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintEnd_toStartOf="@+id/profileIcon"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon"
+        tools:ignore="ContentDescription" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:onClick="goToClassroom"
+        android:padding="10dp"
+        android:src="@drawable/ic_classroom"
+        app:layout_constraintBottom_toBottomOf="@+id/rankingsIcon"
+        app:layout_constraintEnd_toStartOf="@+id/rankingsIcon"
+        app:layout_constraintTop_toTopOf="@+id/rankingsIcon"
         tools:ignore="ContentDescription" />
 
     <TextView

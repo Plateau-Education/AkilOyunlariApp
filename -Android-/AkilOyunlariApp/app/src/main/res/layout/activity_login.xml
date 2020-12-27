@@ -108,21 +108,50 @@
             android:text="@string/HaveAccount" />
 
 
-        <Button
-            android:id="@+id/usernameJoinButton"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/mohave_bold"
-            android:background="@drawable/clicked_diff_bg"
-            android:textColor="#ffffff"
-            android:onClick="signClicked"
-            android:textAllCaps="false"
-            android:padding="10dp"
-            android:textSize="18sp"
-            android:text="@string/SignUp" />
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/signUpAsStudentBtn"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mohave_bold"
+                android:background="@drawable/clicked_diff_bg"
+                android:textColor="#ffffff"
+                android:onClick="signClicked"
+                android:textAllCaps="false"
+                android:gravity="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginRight="10dp"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:text="@string/SignUp" />
+
+            <Button
+                android:id="@+id/signUpAsTeacherBtn"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mohave_bold"
+                android:background="@drawable/clicked_diff_bg"
+                android:textColor="#ffffff"
+                android:onClick="signClicked"
+                android:textAllCaps="false"
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:text="@string/SignUpAsInstructer" />
+
+
+        </LinearLayout>
+
 
 
         <com.google.android.gms.common.internal.SignInButtonImpl
