@@ -1,10 +1,5 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.gridlayout.widget.GridLayout;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,7 +7,6 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,10 +14,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.LabelFormatter;
-import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -46,8 +42,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.jjoe64.graphview.LegendRenderer.LegendAlign.TOP;
-
 public class ProfileActivity extends AppCompatActivity {
 
     String profileInfoState = "Info";
@@ -69,10 +63,8 @@ public class ProfileActivity extends AppCompatActivity {
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-                String id = sharedPreferences.getString("id", "non");
                 URL reqURL;
-                reqURL = new URL(strings[0] + "/userGet" + "?Info=" + id + "&Token=" + strings[1]);
+                reqURL = new URL(strings[0] + "/userGet" + "?Info=" + strings[2] + "&Token=" + strings[1]);
 
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
@@ -185,7 +177,6 @@ public class ProfileActivity extends AppCompatActivity {
             mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
             maxX=0;
             double x,y;
-            x = 0;
             GraphView graphView = statsCl.findViewWithTag(gameName+"G");
             series1 = new LineGraphSeries<>();
             series2 = new LineGraphSeries<>();
@@ -309,11 +300,11 @@ public class ProfileActivity extends AppCompatActivity {
                     if (isValueX) {
                         // show normal x values
 //                        Log.i("normalX",value+"");
-                        return super.formatLabel(value, isValueX);
+                        return super.formatLabel(value, true);
                     } else {
                         // show currency for y values
 //                        Log.i("currencyY",value+"");
-                        return super.formatLabel(value, isValueX)+"s";
+                        return super.formatLabel(value, false)+"s";
                     }
                 }
             });
@@ -346,7 +337,6 @@ public class ProfileActivity extends AppCompatActivity {
             mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
             maxX=0;
             double x,y;
-            x = 0;
             GraphView graphView = statsCl.findViewWithTag(gameName+"G");
             series1 = new LineGraphSeries<>();
             series2 = new LineGraphSeries<>();
@@ -470,11 +460,11 @@ public class ProfileActivity extends AppCompatActivity {
                     if (isValueX) {
                         // show normal x values
 //                        Log.i("normalX",value+"");
-                        return super.formatLabel(value, isValueX);
+                        return super.formatLabel(value, true);
                     } else {
                         // show currency for y values
 //                        Log.i("currencyY",value+"");
-                        return super.formatLabel(value, isValueX)+"s";
+                        return super.formatLabel(value, false)+"s";
                     }
                 }
             });
@@ -509,7 +499,6 @@ public class ProfileActivity extends AppCompatActivity {
             mToast = Toast.makeText(this,"",Toast.LENGTH_SHORT);
             maxX=0;
             double x,y;
-            x = 0;
             GraphView graphView = statsCl.findViewWithTag(gameName+"G");
             series1 = new LineGraphSeries<>();
             series2 = new LineGraphSeries<>();
@@ -661,11 +650,11 @@ public class ProfileActivity extends AppCompatActivity {
                     if (isValueX) {
                         // show normal x values
 //                        Log.i("normalX",value+"");
-                        return super.formatLabel(value, isValueX);
+                        return super.formatLabel(value, true);
                     } else {
                         // show currency for y values
 //                        Log.i("currencyY",value+"");
-                        return super.formatLabel(value, isValueX)+"s";
+                        return super.formatLabel(value, false)+"s";
                     }
                 }
             });
@@ -691,19 +680,40 @@ public class ProfileActivity extends AppCompatActivity {
 
         scrollViewLL = findViewById(R.id.scrollViewLL);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+
+        Intent intent = getIntent();
+        String id = intent.getStringExtra("id");
+        String displayname = intent.getStringExtra("displayname");
+        String username = intent.getStringExtra("username");
+
         LayoutInflater inflater = getLayoutInflater();
         statsCl = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("stats_layout", "layout", this.getPackageName()),null);
         infoCl = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("info_layout", "layout", this.getPackageName()),null);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        ((TextView) infoCl.findViewById(R.id.nameAndSurnameTV2)).setText(sharedPreferences.getString("displayname",getString(R.string.Unknown)));
-        ((TextView) infoCl.findViewById(R.id.usernameTV2)).setText(sharedPreferences.getString("username",getString(R.string.Unknown)));
-        ((TextView) infoCl.findViewById(R.id.emailTV2)).setText(sharedPreferences.getString("email",getString(R.string.Unknown)));
+        if(id == null){
+            id = sharedPreferences.getString("id", "non");
+            displayname = sharedPreferences.getString("displayname",getString(R.string.Unknown));
+            username = sharedPreferences.getString("username",getString(R.string.Unknown));
+            ((TextView) infoCl.findViewById(R.id.emailTV2)).setText(sharedPreferences.getString("email",getString(R.string.Unknown)));
+        } else {
+            assert username != null;
+            if(username.equals(sharedPreferences.getString("username", "non"))){
+                ((TextView) infoCl.findViewById(R.id.emailTV2)).setText(sharedPreferences.getString("email",getString(R.string.Unknown)));
+            } else {
+                infoCl.findViewById(R.id.emailLL).setVisibility(View.GONE);
+            }
+        }
+
+        ((TextView) infoCl.findViewById(R.id.nameAndSurnameTV2)).setText(displayname);
+        ((TextView) infoCl.findViewById(R.id.usernameTV2)).setText(username);
+
 
         scrollViewLL.addView(infoCl);
 
         GetRequest getRequest = new GetRequest();
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com","fx!Ay:;<p6Q?C8N{");
+        //noinspection deprecation
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com","fx!Ay:;<p6Q?C8N{", id);
 
     }
 }

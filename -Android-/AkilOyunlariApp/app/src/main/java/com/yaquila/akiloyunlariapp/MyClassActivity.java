@@ -52,6 +52,18 @@ public class MyClassActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
+    public void goToStudentStats(View view){
+        if(!((ConstraintLayout)view).getChildAt(1).getTag().toString().equals("Instructor")) {
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            intent.putExtra("id", ((ConstraintLayout) view).getChildAt(1).getTag().toString());
+            intent.putExtra("displayname", ((TextView) ((ConstraintLayout) view).getChildAt(1)).getText());
+            intent.putExtra("username", ((TextView) ((ConstraintLayout) view).getChildAt(2)).getText().toString().substring(1));
+
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        }
+    }
+
     public void joinClicked(View view){
         try{
             loadingDialogFunc();
@@ -147,6 +159,7 @@ public class MyClassActivity extends AppCompatActivity {
                 String URL = strings[0]+strings[1];
                 requestQueue = Volley.newRequestQueue(getApplicationContext());
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onResponse(String response) {
                         try {
@@ -224,6 +237,8 @@ public class MyClassActivity extends AppCompatActivity {
 
         ConstraintLayout studentCL = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("student_row_class", "layout", this.getPackageName()),null);
         ((TextView)studentCL.getChildAt(1)).setText(teacherArray.getString("displayname"));
+        studentCL.getChildAt(1).setTag("Instructor");
+
         ((TextView)studentCL.getChildAt(2)).setText("@"+teacherArray.getString("username"));
         linearLayout.addView(studentCL,offset+1);
 
@@ -231,10 +246,12 @@ public class MyClassActivity extends AppCompatActivity {
             JSONObject studentInfo = studentsArray.getJSONObject(i);
             String studentDname = studentInfo.getString("displayname");
             String studentUsername = studentInfo.getString("username");
+            String studentId = studentInfo.getString("id");
             studentCL = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("student_row_class", "layout", this.getPackageName()),null);
-            View space = (View) inflater.inflate(this.getResources().getIdentifier("space_view", "layout", this.getPackageName()),null);
+            View space = inflater.inflate(this.getResources().getIdentifier("space_view", "layout", this.getPackageName()),null);
             space.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (10 * getResources().getDisplayMetrics().density)));
             ((TextView)studentCL.getChildAt(1)).setText(studentDname);
+            studentCL.getChildAt(1).setTag(studentId);
             ((TextView)studentCL.getChildAt(2)).setText("@"+studentUsername);
             linearLayout.addView(studentCL,i*2+3+offset);
             linearLayout.addView(space,i*2+4+offset);
