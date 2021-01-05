@@ -64,12 +64,12 @@ def isTaken(info, query):
 
 def signIn(email, password):
     col = userdb
-    ids = [(i["email"], i["password"], i["_id"], i["username"], i["displayname"], i["classid"]) for i in col.find()]
+    ids = [(i["email"], i["password"], i["_id"], i["username"], i["displayname"], i["classid"], i["type"]) for i in col.find()]
     for idx in ids:
         if email == idx[0]:
             if password == idx[1]:
                 return {"Id": idx[2], "Username": b85decode(idx[3].encode()).decode(),
-                        "Displayname": b85decode(idx[4].encode()).decode(), "ClassId": idx[5]}, 200
+                        "Displayname": b85decode(idx[4].encode()).decode(), "ClassId": idx[5], "Type": idx[6]}, 200
     return False
 
 
@@ -101,7 +101,7 @@ def signUp(displayname, username, email, password, identity):
                             "Hardest": [[], [[0, 0]], 0, 0, []]},
              "SayiBulmaca": {"3": [[], [[0, 0]], 0, 0, []], "4": [[], [[0, 0]], 0, 0, []], "5": [[], [[0, 0]], 0, 0, []]},
              "Patika": {"5": [[], [[0, 0]], 0, 0, []], "7": [[], [[0, 0]], 0, 0, []], "9": [[], [[0, 0]], 0, 0, []]},
-             "HazineAvi": {"5": [[], [[0, 0]], 0, 0, []], "8": [[], [[0, 0]], 0, 0, []], "10": [[], [[0, 0]], 0, 0, []]},
+             "HazineAvi": {"5": [[], [[0, 0]], 0, 0, [], 1], "8": [[], [[0, 0]], 0, 0, [], 1], "10": [[], [[0, 0]], 0, 0, [], 2]},
              "Piramit": {"3": [[], [[0, 0]], 0, 0, []], "4": [[], [[0, 0]], 0, 0, []], "5": [[], [[0, 0]], 0, 0, []],
                          "6": [[], [[0, 0]], 0, 0, []]},
              "Pentomino": {"Easy": [[], [[0, 0]], 0, 0, []], "Medium": [[], [[0, 0]], 0, 0, []], "Hard": [[], [[0, 0]], 0, 0, []]},
@@ -126,7 +126,7 @@ def getSolved(user_id, query):
     return idx
 
 
-def Find(col, userid, amount=1, cevap=None, query=None):
+def Find(col, userid, amount=1, cevap=None, query=None, AR=None):
     collection = db[col]
     rangelist = [i for i in range(2, collection.find_one(filter={"_id": "userid"})["seq"] + 1)]
     if cevap:
@@ -138,6 +138,34 @@ def Find(col, userid, amount=1, cevap=None, query=None):
         response = [[i["soru"], i["cevap"]] for i in docs]
         return response, randchoice
     else:
+        if AR and col.split(".")[0] == "HazineAvi":
+            flag = True
+            fis = -1
+            k = 0
+            usar = collection.find_one({"_id": "userid"})["difs"]
+            ak = list(usar.keys())
+            for k5, ke in enumerate(ak):
+                ak[k5] = int(ke)
+            solved = set(getSolved(userid, query))
+            sorular = []
+            while flag:
+                if AR + k < min(ak):
+                    fis = 1
+                    k = 1
+                    continue
+                if AR + k > max(ak):
+                    return "Message:", False
+                ar1 = list(set(usar[str(AR + k)]) - solved)
+                k += fis
+                if len(ar1) >= amount:
+                    randchoice = choices(ar1, k=amount)
+                    docs = collection.find(filter={"_id": {"$in": randchoice}})
+                    response = [[[i["soru"]]] for i in docs]
+                    return response, randchoice
+                else:
+                    sorular.extend(ar1)
+                    amount -= len(ar1)
+            return "Message:", False
         solved = getSolved(userid, query)
         for n in solved:
             rangelist.remove(int(n))
@@ -174,6 +202,10 @@ class Games(Resource):
                     return {"Message": "Unprocessable Entity"}, 422
                 if num > 20:
                     return {"Message": "Method not allowed"}, 405
+                if game.split(".")[0] == "HazineAvi":
+                    ar = int(userdb.find_one({"_id": user})["solved"]["HazineAvi"][game.split(".")[1]][5])
+                    response = Find(col=game, userid=user, cevap=args["Req"], amount=num, query=game, AR=ar)
+                    return dumps({"Info": response[0], "Ids": response[1]}), 200
                 response = Find(col=game, userid=user, cevap=args["Req"], amount=num, query=game)
                 return dumps({"Info": response[0], "Ids": response[1]}), 200
             return {"Message": "Not Found"}, 404
@@ -211,7 +243,7 @@ class User(Resource):
                 classid = info["ClassId"]
                 if classid == "None":
                     return {"Message": "Not Found!"}, 404
-                return dumps(cl.find_one({"_id": classid})), 200
+                return cl.find_one({"_id": classid}), 200
         return {"Message": "Method not allowed"}, 405
 
     def post(self, userinfo):
@@ -222,7 +254,7 @@ class User(Resource):
                 if isTaken(google, "email"):
                     idx = userdb.find_one({"email": google})
                     return {"Id": idx["_id"], "Username": b85decode(idx["username"].encode()).decode(),
-                            "Displayname": b85decode(idx["displayname"].encode()).decode(), "classid": idx["classid"]}, 200
+                            "Displayname": b85decode(idx["displayname"].encode()).decode(), "ClassId": idx["classid"], "Type": idx["type"]}, 200
                 return {"Message": "Not Found"}, 200
             elif userinfo == "userSignIn":
                 json = loads(args["Info"].replace("'", '"'))
@@ -264,6 +296,7 @@ class User(Resource):
                      "Pentomino.Medium": 0.3,
                      "Pentomino.Hard": 1, "SozcukTuru.Easy": 0.1, "SozcukTuru.Medium": 0.25, "SozcukTuru.Hard": 0.5,
                      "SozcukTuru.Hardest": 1, "Anagram.Easy": 0.1, "Anagram.Medium": 0.3, "Anagram.Hard": 0.8}
+        dif_dict = {"5": [1, 7, 30, 50], "8": [1, 13, 70, 100], "10": [2, 12, 280, 330]}
         args = request.parse_args()
         if args["Token"] == token and args["Info"]:
             if userinfo == "userUpdate":
@@ -290,11 +323,22 @@ class User(Resource):
                             unsolved.append(game_ids[n])
                             game_ids.remove(game_ids[n])                
                     q = info['Query'].split(".")
-                    q.append(3)
-                    best_bef = userdb.find_one({"_id": idx})["solved"]
+                    best_bef = userdb.find_one({"_id": idx})["solved"]                    
                     for i in q:
-                        best_bef = best_bef[i]
-                    q.remove(3)
+                        best_bef = best_bef[i]                    
+                    if q[0] == "HazineAvi":
+                        dif = best_bef[5]
+                        dif -= len(unsolved) * 0.1
+                        d1 = dif_dict[q[1]]
+                        for n in valid_ids:
+                            k1 = (d1[3] - n)/d1[3]/10 if n > d1[3] else 0.1 if d1[3] > n > d1[2] else 0.1 + (d1[2] - n)/d1[2]/10
+                            dif += k1
+                        if dif < dif_dict[q[1]][0]:
+                            dif = dif_dict[q[1]][0]
+                        elif dif > dif_dict[q[1]][1]:
+                            dif = dif_dict[q[1]][1]
+                        userdb.find_one_and_update({"_id": idx}, update={"$set": {f"solved.{info['Query']}.5": dif}})
+                    best_bef = best_bef[3]
                     if best == []:
                         best = best_bef
                     else:
@@ -358,7 +402,7 @@ class User(Resource):
                 if tc:
                     cl.find_one_and_update({"_id": classid}, update={"$push": {"Students": {"id": userid, "displayname": displayna, "username": userna}}})
                     userdb.find_one_and_update({"_id": userid}, update={"$set": {"classid": classid}})
-                    return dumps(cl.find_one({"_id": classid})), 200
+                    return cl.find_one({"_id": classid}), 200
                 return {"Message": "Not Found!"}, 404
             return {"Message": "Method not allowed"}, 405
 
