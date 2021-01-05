@@ -50,4 +50,10 @@
     <string name="Leaderboard">Leaderboard</string>
     <string name="Comingsoon">Coming soon...</string>
     <string name="Besttime"><u>Best</u></string>
+    <string name="Teacher"><u>Instructor</u></string>
+    <string name="Students"><u>Students</u></string>
+    <string name="SignUpAsStudent">Sign Up As Student</string>
+    <string name="SignUpAsInstructer">Sign Up As Instructor</string>
+    <string name="Join">Join</string>
+    <string name="CouldntFind">Couldn\'t find the class.</string>
 </resources>

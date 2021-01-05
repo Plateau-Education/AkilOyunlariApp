@@ -77,18 +77,30 @@
                     android:id="@+id/gameNameTV_htp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
                     android:fontFamily="@font/mohave_bold"
                     android:gravity="center"
                     android:text="Hazine\nAvı"
                     android:textColor="@color/near_black_blue"
                     android:textSize="40sp"
-                    android:layout_margin="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/HowToPlayTV"
                     app:layout_constraintVertical_bias="1.0" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/ic_playbutton"
+                    android:onClick="goToGuide"
+                    android:padding="10dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/gameNameTV_htp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/gameNameTV_htp"
+                    app:layout_constraintTop_toTopOf="@+id/gameNameTV_htp"
+                    app:layout_constraintHorizontal_bias="0.4"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

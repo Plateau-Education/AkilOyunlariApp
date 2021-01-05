@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_red"
+    tools:context=".MyClassActivity">
+
+
+    <ScrollView
+        android:id="@+id/classScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:fadingEdgeLength="10dp"
+        android:requiresFadingEdge="vertical"
+        android:background="@color/light_red"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/classLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp">
+
+                <ImageView
+                    android:padding="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:onClick="goToMainMenu"
+                    android:src="@drawable/ic_homebutton"
+                    android:tint="@color/near_black_blue"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintHorizontal_bias="0.05"/>
+
+                <TextView
+                    android:id="@+id/codeTV_cl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/mohave_medium"
+                    android:text=""
+                    android:textColor="@color/near_black_blue"
+                    android:textSize="50sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/instructorTV_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+                android:text="@string/Teacher"
+                android:textColor="@color/f7f5fa"
+                android:textSize="50sp" />
+
+            <TextView
+                android:id="@+id/studentsTV_cl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+                android:text="@string/Students"
+                android:textColor="@color/f7f5fa"
+                android:textSize="50sp" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/classSearchLL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="40dp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/classCodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Class Code"
+            android:fontFamily="@font/mohave_bold"
+            android:background="@drawable/rounded_f7f5fa_bg"
+            android:textSize="30sp"
+            android:textColor="@color/near_black_blue"
+            android:textColorHint="@color/shallow2_near_black_blue"
+            android:padding="15dp"
+            android:autofillHints=""
+            android:inputType="textVisiblePassword" />
+
+        <Button
+            android:id="@+id/classCodeButton"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mohave_bold"
+            android:background="@drawable/clicked_diff_bg"
+            android:textColor="@color/f7f5fa"
+            android:onClick="joinClicked"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:text="@string/Join" />
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

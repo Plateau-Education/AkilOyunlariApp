@@ -1,0 +1,47 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="510"
+    android:viewportHeight="510">
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m0,450h510v60h-510z"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="M105,322.5m-37.5,0a37.5,37.5 0,1 1,75 0a37.5,37.5 0,1 1,-75 0"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="M255,322.5m-37.5,0a37.5,37.5 0,1 1,75 0a37.5,37.5 0,1 1,-75 0"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="M405,322.5m-37.5,0a37.5,37.5 0,1 1,75 0a37.5,37.5 0,1 1,-75 0"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m213,210v30h84v-30c-6,-17.461 -22.443,-30 -42,-30s-36,12.539 -42,30z"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m181.735,419h146.529c-7.352,-33.691 -37.401,-59 -73.265,-59s-65.911,25.309 -73.264,59z"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m331.735,419h146.529c-7.352,-33.691 -37.401,-59 -73.265,-59s-65.911,25.309 -73.264,59z"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m105,360c-35.863,0 -65.912,25.309 -73.265,59h146.529c-7.352,-33.691 -37.401,-59 -73.264,-59z"/>
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="M255,127.5m-22.5,0a22.5,22.5 0,1 1,45 0a22.5,22.5 0,1 1,-45 0" />
+  <path
+      android:fillColor="@color/near_black_blue"
+      tools:ignore="VectorRaster"
+      android:pathData="m180,225c0,-26.692 14.027,-50.156 35.087,-63.451 -7.839,-9.175 -12.587,-21.064 -12.587,-34.049 0,-28.949 23.551,-52.5 52.5,-52.5s52.5,23.551 52.5,52.5c0,12.984 -4.748,24.874 -12.587,34.049 21.06,13.295 35.087,36.759 35.087,63.451v15h120v-240h-390v240h120z"/>
+</vector>

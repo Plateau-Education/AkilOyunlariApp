@@ -51,5 +51,11 @@
     <string name="Leaderboard">Skor Tablosu</string>
     <string name="Comingsoon">Yakında...</string>
     <string name="Besttime"><u>En İyi</u></string>
+    <string name="Teacher"><u>Eğitmen</u></string>
+    <string name="Students"><u>Öğrenciler</u></string>
+    <string name="SignUpAsStudent">Öğrenci Olarak Kayıt Ol</string>
+    <string name="SignUpAsInstructer">Eğitmen Olarak Kayıt Ol</string>
+    <string name="Join">Katıl</string>
+    <string name="CouldntFind">Sınıf bulunamadı.</string>
 
 </resources>
