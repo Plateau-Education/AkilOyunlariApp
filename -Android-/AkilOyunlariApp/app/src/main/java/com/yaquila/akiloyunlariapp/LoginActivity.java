@@ -104,8 +104,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 e.printStackTrace();
                                 resId = objres.getString("Message");
                             }
+                            Log.i("resId---",resId);
                             if(strings[1].equals("SignIn") || strings[1].equals("Google")){
-                                type = objres.getString("Type");
+                                try{
+                                    type = objres.getString("Type");
+                                } catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                             if(resId.contains("User Already")){
                                 Toast.makeText(LoginActivity.this, "A user with this email already exists.", Toast.LENGTH_SHORT).show();
@@ -118,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
                                 ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setVisibility(View.VISIBLE);
+                                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                                 displaynameET.setVisibility(View.VISIBLE);
@@ -258,7 +263,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
                                 ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setVisibility(View.VISIBLE);
+                                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                                 displaynameET.setVisibility(View.VISIBLE);
@@ -276,7 +281,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             final View confirmDialogView = factory.inflate(R.layout.confirm_dialog, null);
                             final AlertDialog confirmDialog = new AlertDialog.Builder(LoginActivity.this).create();
                             confirmDialog.setView(confirmDialogView);
-                            final EditText editText = ((EditText)confirmDialogView.findViewById(R.id.confirmCodeEditText));
+                            final EditText editText = confirmDialogView.findViewById(R.id.confirmCodeEditText);
                             confirmDialogView.findViewById(R.id.confirmDialogSend).setOnClickListener(new View.OnClickListener() {
                                 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                                 @Override
@@ -546,7 +551,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signInUpStatus = "SignUp";
         ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
         ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-        ((Button)findViewById(R.id.signUpAsTeacherBtn)).setVisibility(View.VISIBLE);
+        findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
         ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
         displaynameET.setVisibility(View.VISIBLE);
@@ -568,7 +573,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(signInUpStatus.equals("SignUp")){
                 signInUpStatus = "SignIn";
                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignIn);
-                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setVisibility(View.GONE);
+                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.GONE);
                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.DontHaveAccount);
                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignIn);
                 displaynameET.setVisibility(View.GONE);
@@ -579,7 +584,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 signInUpStatus = "SignUp";
                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
                 ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setVisibility(View.VISIBLE);
+                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                 displaynameET.setVisibility(View.VISIBLE);

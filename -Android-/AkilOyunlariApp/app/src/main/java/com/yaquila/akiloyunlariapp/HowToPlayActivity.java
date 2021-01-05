@@ -31,6 +31,13 @@ public class HowToPlayActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
+    public void goToGuide(View view) {
+        if (currentGameName.contains("azine")) {
+            Intent intent = new Intent(this, GameGuideActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        }
+    }
     public void howToPlayGameListOpen(View view){
         ConstraintLayout constraintLayout = (ConstraintLayout) view.getParent();
         RelativeLayout howToPlayGameListRL = (RelativeLayout) constraintLayout.getChildAt(2);
@@ -75,7 +82,7 @@ public class HowToPlayActivity extends AppCompatActivity {
         currentGameName = intent.getStringExtra("gameName");
         if (currentGameName!=null){
             Log.i("gameName", Objects.requireNonNull(intent.getStringExtra("gameName")));
-            Toast.makeText(this, currentGameName, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, currentGameName, Toast.LENGTH_SHORT).show();
         }
         TextView gameNameTV = findViewById(R.id.gameNameTV_htp);
         if(currentGameName.contains(" ")){
