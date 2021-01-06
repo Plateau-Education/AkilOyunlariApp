@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,6 +37,7 @@ public class GameGuideActivity extends AppCompatActivity {
     TextView inTV;
     GridLayout gl;
     ImageView switchIV;
+    ImageView arrow;
 
     public void goBackToHTP(View view){
 
@@ -289,30 +291,44 @@ public class GameGuideActivity extends AppCompatActivity {
             tapBoxes = new ArrayList<>(Arrays.asList("03","23"));
         }
 
+        arrow.setVisibility(View.INVISIBLE);
+        arrow.clearAnimation();
 
         if(inNum==5 || inNum==11 || inNum==15 || inNum==16){
             for (String index : relatedClues) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
             for (String index : relatedBoxes) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
             animateView(switchIV,0.3f,1.0f);
 
+            arrow.setVisibility(View.VISIBLE);
+            Animation anim = new TranslateAnimation(-(100f/3)*getResources().getDisplayMetrics().density, (100f/3)*getResources().getDisplayMetrics().density, 0f, 0f);
+            anim.setDuration(500);
+            anim.setStartOffset(20);
+            anim.setRepeatMode(Animation.REVERSE);
+            anim.setRepeatCount(Animation.INFINITE);
+            arrow.startAnimation(anim);
+
             final List<String> finalTapBoxes = tapBoxes;
             switchIV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    switchIV.clearAnimation();
-                    if(switchPosition.equals("diamond")) {
-                        switchIV.setImageResource(R.drawable.ic_cross);
-                        switchPosition = "cross";
-                    } else {
-                        switchIV.setImageResource(R.drawable.ic_diamond);
-                        switchPosition = "diamond";
+                    if(inNum==5 || inNum==11 || inNum==15 || inNum==16) {
+                        arrow.setVisibility(View.INVISIBLE);
+                        arrow.clearAnimation();
+                        switchIV.clearAnimation();
+                        if (switchPosition.equals("diamond")) {
+                            switchIV.setImageResource(R.drawable.ic_cross);
+                            switchPosition = "cross";
+                        } else {
+                            switchIV.setImageResource(R.drawable.ic_diamond);
+                            switchPosition = "diamond";
+                        }
+                        for (String index : finalTapBoxes) {
+                            allowedBoxes.add(index);
+                            gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                            animateView(gl.findViewWithTag(index), 0.5f, 1.0f);
+                        }
+                        switchIV.setOnClickListener(null);
                     }
-                    for (String index : finalTapBoxes) {
-                        allowedBoxes.add(index);
-                        gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-                        animateView(gl.findViewWithTag(index),0.5f,1.0f);
-                    }
-                    switchIV.setOnClickListener(null);
                 }
             });
 
@@ -331,16 +347,16 @@ public class GameGuideActivity extends AppCompatActivity {
     public void setInStrings(){
         inStrings.add("Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
         inStrings.add("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.");
-        inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuculardır.");
+        inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır.");
         inStrings.add("Örnekte görüldüğü üzere, içinde 4 yazılı ipucunun sadece 4 komşusu vardır. Bu komşular kesin olarak elmasla doldurulabilir.");
         inStrings.add("Farkedilebileceği üzere koyduğumuz 4 elmastan 2'si, yandaki içinde 2 yazan ipucunun da komşusudur.");
-        inStrings.add("Yani içinde 2 yazan ipucu, alması gereken tüm elmasları almıştır ve diğer komşularında elmas olamaz. Bu komşulara çarpı koyulur.");
-        inStrings.add("İçinde yazan sayı kadar komşusu olan ipucular, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir.");
-        inStrings.add("Bu durumlarda bakılması gereken şey, ipucuların komşularına koyulacak elmasların diğer ipuculardaki ortak etkileridir.");
+        inStrings.add("Yani içinde 2 yazan ipucu, alması gereken tüm elmasları almıştır ve diğer komşularında elmas olamaz. Bu komşulara sol aşağıdaki değişim kutusundan çarpıya geçilerek çarpı koyulur.");
+        inStrings.add("İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir.");
+        inStrings.add("Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
         inStrings.add("Örneğin bu 2 ipucusunun 3 komşusu vardır ve bu 3 kutudan 2'si elmas olmak zorundadır.");
         inStrings.add("Görüldüğü üzere bu 3 kutu aynı zamanda bir üstteki 2 ipucusunun da komşusudur. Yani bu 3 kutudaki 2 elmas onu da etkiler.");
         inStrings.add("Bu gri renkli 3 komşuda kesin olarak 2 elmas bulunacağı için diğer komşularda elmas olamaz. Bu komşulara çarpı koyulur.");
-        inStrings.add("Sağdaki 1 ipucusunun tek boş komşusu kalmıştır. Bu komşuya da elmas koyulur.");
+        inStrings.add("Sağdaki 1 ipucusunun tek boş komşusu kalmıştır. Bu komşuya da değişim kutusundan elmasa geçilerek elmas koyulur.");
         inStrings.add("Yeşille işaretlenmiş 2 ipucusunun komşularından biri elmastır. Yani kalan 2 komşudan birisi elmas olmak zorundadır.");
         inStrings.add("Yeşille işaretlenen 1 ipucusunun da 2 komşusundan birinde elmas olmak zorundadır.");
         inStrings.add("Yani bu 4 kutuda toplam 2 elmas bulunmaktadır.");
@@ -348,7 +364,6 @@ public class GameGuideActivity extends AppCompatActivity {
         inStrings.add("Yeşille işaretlenen 1 ipucusunun tek komşusu kalmıştır. Bu komşuya da elmas gelmelidir.");
         inStrings.add("Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.");
         inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
-
     }
 
     public void animateView(View view,float s1, float s2){
@@ -385,6 +400,7 @@ public class GameGuideActivity extends AppCompatActivity {
         inTV = findViewById(R.id.instructionTV_guide);
         gl = findViewById(R.id.gridGL_guide);
         switchIV = findViewById(R.id.switchIV);
+        arrow = findViewById(R.id.arrowIV_guide);
         setInStrings();
         inTV.setText(inStrings.get(0));
         createGridAndPlace(new ArrayList<>(Arrays.asList(
