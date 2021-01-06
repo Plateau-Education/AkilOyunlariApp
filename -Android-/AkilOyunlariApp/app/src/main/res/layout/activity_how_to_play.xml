@@ -94,13 +94,22 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:src="@drawable/ic_playbutton"
+                    android:background="@drawable/nums_gl_bg"
+                    android:tint="@color/f7f5fa"
                     android:onClick="goToGuide"
-                    android:padding="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="14dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingStart="14dp"
+
                     app:layout_constraintBottom_toBottomOf="@+id/gameNameTV_htp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/gameNameTV_htp"
                     app:layout_constraintTop_toTopOf="@+id/gameNameTV_htp"
-                    app:layout_constraintHorizontal_bias="0.4"/>
+                    app:layout_constraintHorizontal_bias="0.4"
+                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

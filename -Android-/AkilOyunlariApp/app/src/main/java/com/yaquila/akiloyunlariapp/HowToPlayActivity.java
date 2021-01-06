@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -100,7 +99,9 @@ public class HowToPlayActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+//        super.onBackPressed();
+        Intent intent = new Intent(this, GameListActivity.class);
+        startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 }

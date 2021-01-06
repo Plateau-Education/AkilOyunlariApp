@@ -19,6 +19,7 @@ import androidx.gridlayout.widget.GridLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,6 +35,7 @@ public class GameGuideActivity extends AppCompatActivity {
     List<String> inStrings = new ArrayList<>();
     TextView inTV;
     GridLayout gl;
+    ImageView switchIV;
 
     public void goBackToHTP(View view){
 
@@ -90,15 +92,15 @@ public class GameGuideActivity extends AppCompatActivity {
     }
 
     public void changeSwitch(View view){
-        ImageView switchTV = (ImageView) view;
-        if(switchPosition.equals("diamond")){
-            switchTV.setImageResource(R.drawable.ic_cross);
-            switchPosition = "cross";
-        }
-        else if(switchPosition.equals("cross")){
-            switchTV.setImageResource(R.drawable.ic_diamond);
-            switchPosition = "diamond";
-        }
+//        ImageView switchTV = (ImageView) view;
+//        if(switchPosition.equals("diamond")){
+//            switchTV.setImageResource(R.drawable.ic_cross);
+//            switchPosition = "cross";
+//        }
+//        else if(switchPosition.equals("cross")){
+//            switchTV.setImageResource(R.drawable.ic_diamond);
+//            switchPosition = "diamond";
+//        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -130,8 +132,9 @@ public class GameGuideActivity extends AppCompatActivity {
     public void instructionChange(View view){
         List<String> tapBoxes = new ArrayList<>();
         List<String> relatedClues = new ArrayList<>();
+        List<String> relatedBoxes = new ArrayList<>();
         List<ArrayList<Integer>> grid = new ArrayList<>();
-
+        allowedBoxes = new ArrayList<>();
 
         if (view.getTag().equals("+")) {
             if(inNum<inStrings.size()-1) inNum++;
@@ -141,8 +144,10 @@ public class GameGuideActivity extends AppCompatActivity {
         }
         inTV.setText(inStrings.get(inNum));
 
-        if(inNum<=2){
+        if(inNum<=3){
             Log.i("inNum","<=2");
+            switchIV.setImageResource(R.drawable.ic_diamond);
+            switchPosition="diamond";
             grid.add(new ArrayList<>(Arrays.asList(0, 0, 2, 4, 0)));
             grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 0, 0)));
             grid.add(new ArrayList<>(Arrays.asList(0, 3, 0, 0, 0)));
@@ -151,41 +156,209 @@ public class GameGuideActivity extends AppCompatActivity {
             createGridAndPlace(grid);
         }
 
-        else if(inNum==3){
+        if(inNum==3){
             tapBoxes = new ArrayList<>(Arrays.asList("40","21","31","41"));
-            relatedClues = new ArrayList<>(Arrays.asList("30"));
-            grid.add(new ArrayList<>(Arrays.asList(0, 0, 2, 4, 0)));
-            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 0, 0)));
+            relatedClues = new ArrayList<>(Collections.singletonList("30"));
+        }
+
+        if(inNum==4 || inNum==5){
+            relatedClues = new ArrayList<>(Collections.singletonList("20"));
+            switchIV.setImageResource(R.drawable.ic_diamond);
+            switchPosition="diamond";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(0, 0, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, -1, -1, -1)));
             grid.add(new ArrayList<>(Arrays.asList(0, 3, 0, 0, 0)));
             grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
             grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, 0)));
             createGridAndPlace(grid);
         }
 
-        for(String index : tapBoxes) {
-            allowedBoxes.add(index);
-            gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-            Animation anim = new AlphaAnimation(0.5f, 1.0f);
-            anim.setDuration(500); //You can manage the blinking time with this parameter
-            anim.setStartOffset(20);
-            anim.setRepeatMode(Animation.REVERSE);
-            anim.setRepeatCount(Animation.INFINITE);
-            gl.findViewWithTag(index).startAnimation(anim);
+        if(inNum>=6 && inNum <= 10){
+            switchIV.setImageResource(R.drawable.ic_cross);
+            switchPosition="cross";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(0, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 3, 0, 0, 0)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, 0)));
+            createGridAndPlace(grid);
+        }
+        if(inNum==11){
+            switchIV.setImageResource(R.drawable.ic_cross);
+            switchPosition="cross";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(0, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 3, -2, -2, -2)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, 0)));
+            createGridAndPlace(grid);
+        }
+        if(inNum>=12 && inNum <= 15){
+            switchIV.setImageResource(R.drawable.ic_diamond);
+            switchPosition="diamond";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(0, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 3, -2, -2, -2)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, -1)));
+            createGridAndPlace(grid);
+        }
+        if(inNum==16){
+            switchIV.setImageResource(R.drawable.ic_cross);
+            switchPosition="cross";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(0, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(-2, 3, -2, -2, -2)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, -1)));
+            createGridAndPlace(grid);
+        }
+        if(inNum==17){
+            switchIV.setImageResource(R.drawable.ic_diamond);
+            switchPosition="diamond";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(-1, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(-2, 3, -2, -2, -2)));
+            grid.add(new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, -1)));
+            createGridAndPlace(grid);
+        }
+        if(inNum>=18){
+            switchIV.setImageResource(R.drawable.ic_diamond);
+            switchPosition="diamond";
+            switchIV.clearAnimation();
+            grid.add(new ArrayList<>(Arrays.asList(-1, -2, 2, 4, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, -2, -1, -1, -1)));
+            grid.add(new ArrayList<>(Arrays.asList(-2, 3, -2, -2, -2)));
+            grid.add(new ArrayList<>(Arrays.asList(-1, 2, -1, 2, 1)));
+            grid.add(new ArrayList<>(Arrays.asList(1, 0, 0, 2, -1)));
+            createGridAndPlace(grid);
         }
 
-        for(String index : relatedClues){
-            gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
+
+
+        if(inNum==5) {
+            tapBoxes = new ArrayList<>(Arrays.asList("10", "11"));
+            relatedClues = new ArrayList<>(Collections.singletonList("20"));
+        }
+        if(inNum==8){
+            relatedBoxes = new ArrayList<>(Arrays.asList("23","24","44"));
+            relatedClues = new ArrayList<>(Collections.singletonList("34"));
+        }
+        if(inNum==9){
+            relatedClues = new ArrayList<>(Collections.singletonList("33"));
+            relatedBoxes = new ArrayList<>(Arrays.asList("23","24","44"));
+        }
+        if(inNum==10){
+            relatedBoxes = new ArrayList<>(Arrays.asList("23","24","44"));
+            relatedClues = new ArrayList<>(Collections.singletonList("33"));
+            tapBoxes = new ArrayList<>(Arrays.asList("42","32","22"));
+        }
+        if(inNum==11){
+            tapBoxes = new ArrayList<>(Collections.singletonList("44"));
+            relatedClues = new ArrayList<>(Collections.singletonList("43"));
+        }
+        if(inNum==12){
+            relatedBoxes = new ArrayList<>(Arrays.asList("23","24"));
+            relatedClues = new ArrayList<>(Collections.singletonList("34"));
+        }
+        if(inNum==13){
+            relatedBoxes = new ArrayList<>(Arrays.asList("03","14"));
+            relatedClues = new ArrayList<>(Collections.singletonList("04"));
+        }
+        if(inNum==14){
+            relatedBoxes = new ArrayList<>(Arrays.asList("03","14","23","24"));
+        }
+        if(inNum==15){
+            relatedBoxes = new ArrayList<>(Arrays.asList("03","14","23","24"));
+            relatedClues = new ArrayList<>(Collections.singletonList("13"));
+            tapBoxes = new ArrayList<>(Collections.singletonList("02"));
+        }
+        if(inNum==16){
+            relatedClues = new ArrayList<>(Collections.singletonList("01"));
+            tapBoxes = new ArrayList<>(Collections.singletonList("00"));
+        }
+        if(inNum==17){
+            relatedClues = new ArrayList<>(Collections.singletonList("12"));
+            tapBoxes = new ArrayList<>(Arrays.asList("03","23"));
+        }
+
+
+        if(inNum==5 || inNum==11 || inNum==15 || inNum==16){
+            for (String index : relatedClues) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
+            for (String index : relatedBoxes) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
+            animateView(switchIV,0.3f,1.0f);
+
+            final List<String> finalTapBoxes = tapBoxes;
+            switchIV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switchIV.clearAnimation();
+                    if(switchPosition.equals("diamond")) {
+                        switchIV.setImageResource(R.drawable.ic_cross);
+                        switchPosition = "cross";
+                    } else {
+                        switchIV.setImageResource(R.drawable.ic_diamond);
+                        switchPosition = "diamond";
+                    }
+                    for (String index : finalTapBoxes) {
+                        allowedBoxes.add(index);
+                        gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                        animateView(gl.findViewWithTag(index),0.5f,1.0f);
+                    }
+                    switchIV.setOnClickListener(null);
+                }
+            });
+
+        }
+        else {
+            for (String index : tapBoxes) {
+                allowedBoxes.add(index);
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                animateView(gl.findViewWithTag(index),0.5f,1.0f);
+            }
+            for (String index : relatedClues) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
+            for (String index : relatedBoxes) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
         }
     }
 
     public void setInStrings(){
-        inStrings.add("Hazine Avı uygulamalı rehberine hoşgeldiniz. Başlamak için tıklayınız.");
+        inStrings.add("Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
         inStrings.add("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.");
         inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuculardır.");
         inStrings.add("Örnekte görüldüğü üzere, içinde 4 yazılı ipucunun sadece 4 komşusu vardır. Bu komşular kesin olarak elmasla doldurulabilir.");
+        inStrings.add("Farkedilebileceği üzere koyduğumuz 4 elmastan 2'si, yandaki içinde 2 yazan ipucunun da komşusudur.");
+        inStrings.add("Yani içinde 2 yazan ipucu, alması gereken tüm elmasları almıştır ve diğer komşularında elmas olamaz. Bu komşulara çarpı koyulur.");
+        inStrings.add("İçinde yazan sayı kadar komşusu olan ipucular, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir.");
+        inStrings.add("Bu durumlarda bakılması gereken şey, ipucuların komşularına koyulacak elmasların diğer ipuculardaki ortak etkileridir.");
+        inStrings.add("Örneğin bu 2 ipucusunun 3 komşusu vardır ve bu 3 kutudan 2'si elmas olmak zorundadır.");
+        inStrings.add("Görüldüğü üzere bu 3 kutu aynı zamanda bir üstteki 2 ipucusunun da komşusudur. Yani bu 3 kutudaki 2 elmas onu da etkiler.");
+        inStrings.add("Bu gri renkli 3 komşuda kesin olarak 2 elmas bulunacağı için diğer komşularda elmas olamaz. Bu komşulara çarpı koyulur.");
+        inStrings.add("Sağdaki 1 ipucusunun tek boş komşusu kalmıştır. Bu komşuya da elmas koyulur.");
+        inStrings.add("Yeşille işaretlenmiş 2 ipucusunun komşularından biri elmastır. Yani kalan 2 komşudan birisi elmas olmak zorundadır.");
+        inStrings.add("Yeşille işaretlenen 1 ipucusunun da 2 komşusundan birinde elmas olmak zorundadır.");
+        inStrings.add("Yani bu 4 kutuda toplam 2 elmas bulunmaktadır.");
+        inStrings.add("Bu 4 kutuda bulunan 2 elmas, yeşille işaretli 2 ipucusunu da etkiler. Bu nedenle, 2 ipucusunun kalan komşusuna çarpı koyulur.");
+        inStrings.add("Yeşille işaretlenen 1 ipucusunun tek komşusu kalmıştır. Bu komşuya da elmas gelmelidir.");
+        inStrings.add("Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.");
+        inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
 
     }
 
+    public void animateView(View view,float s1, float s2){
+        Animation anim = new AlphaAnimation(s1, s2);
+        anim.setDuration(500); //You can manage the blinking time with this parameter
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        anim.setRepeatCount(Animation.INFINITE);
+        view.startAnimation(anim);
+    }
 
     public void createGridAndPlace(List<ArrayList<Integer>> grid){
         for(int i = 0; i < 5; i++){
@@ -193,8 +366,13 @@ public class GameGuideActivity extends AppCompatActivity {
                 String n = grid.get(i).get(j).toString();
                 if (Integer.parseInt(n) > 0) {
                     ((TextView) gl.findViewWithTag(Integer.toString(j) + i)).setText(n);
-                }
-                gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                } else if (Integer.parseInt(n) == 0){
+                    gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                } else if (Integer.parseInt(n) == -1)
+                    gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                else gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
+
                 gl.findViewWithTag(Integer.toString(j) + i).clearAnimation();
             }
         }
@@ -206,7 +384,9 @@ public class GameGuideActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game_guide);
         inTV = findViewById(R.id.instructionTV_guide);
         gl = findViewById(R.id.gridGL_guide);
+        switchIV = findViewById(R.id.switchIV);
         setInStrings();
+        inTV.setText(inStrings.get(0));
         createGridAndPlace(new ArrayList<>(Arrays.asList(
                 new ArrayList<>(Arrays.asList(0, 0, 2, 4, 0)),
                 new ArrayList<>(Arrays.asList(1, 0, 0, 0, 0)),

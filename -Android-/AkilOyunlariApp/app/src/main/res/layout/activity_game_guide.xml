@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="306dp"
+        android:layout_width="318dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@id/gridGL_guide"
@@ -55,14 +55,16 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="instructionChange"
-            android:layout_width="25dp"
+            android:layout_width="35dp"
             android:layout_height="65dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="15dp"
             android:paddingRight="5dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_lefticon"/>
+            android:src="@drawable/ic_lefticon"
+            android:paddingStart="15dp"
+            android:paddingEnd="5dp" />
 
         <TextView
             android:id="@+id/instructionTV_guide"
@@ -72,7 +74,7 @@
             android:focusable="true"
             android:fontFamily="@font/mohave_medium"
             android:padding="15dp"
-            android:text="Hazine Avı uygulamalı rehberine hoşgeldiniz. Başlamak için tıklayınız."
+            android:text=""
             android:textColor="@color/near_black_blue"
             android:textSize="17sp"
             tools:ignore="HardcodedText" />
@@ -82,14 +84,16 @@
             android:clickable="true"
             android:focusable="true"
             android:onClick="instructionChange"
-            android:layout_width="25dp"
+            android:layout_width="35dp"
             android:layout_height="65dp"
             android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:paddingRight="15dp"
             android:paddingTop="20dp"
             android:paddingBottom="20dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_righticon"/>
+            android:src="@drawable/ic_righticon"
+            android:paddingEnd="15dp"
+            android:paddingStart="5dp" />
 
 
     </LinearLayout>
@@ -157,7 +161,7 @@
             android:id="@+id/grid5_30"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/stroke_bg_bluegreen"
+            android:background="@drawable/stroke_bg"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/mohave_bold"
@@ -565,6 +569,7 @@
         app:layout_constraintVertical_bias="0.3">
 
         <ImageView
+            android:id="@+id/switchIV"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginRight="30dp"
