@@ -83,12 +83,12 @@ public class GameListActivity extends AppCompatActivity {
         int rowNum = Integer.parseInt(view.getTag().toString());
         if(rowNum<7) {
             if (currentExtendedRow == 0) {
-                final LinearLayout ll = (LinearLayout) view.getParent();
-                RelativeLayout rl = (RelativeLayout) ll.getChildAt(1);
-                ll.setBackground(getResources().getDrawable(R.drawable.rounded_yellowish_bg));
-                rl.setVisibility(View.VISIBLE);
-                currentExtendedRow = rowNum;
-//            Log.i("rowNum/childCount",rowNum+" / "+((LinearLayout)ll.getParent()).getChildCount());
+                final LinearLayout ll = (LinearLayout) view.getParent(); // basılan layout 
+                RelativeLayout rl = (RelativeLayout) ll.getChildAt(1); // açılınca ortaya çıkacak
+                ll.setBackground(getResources().getDrawable(
+                        R.drawable.rounded_yellowish_bg));
+                rl.setVisibility(View.VISIBLE); // görünür yap
+                currentExtendedRow = rowNum; // şuanki genişletilmiş sırayı değiştir
 
                 final ScrollView scrollView = findViewById(R.id.scrollView_gl);
                 scrollView.post(new Runnable() {
@@ -382,7 +382,11 @@ public class GameListActivity extends AppCompatActivity {
                     continue;
                 PutRequest putRequest = new PutRequest();
                 //noinspection deprecation
-                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Update", "fx!Ay:;<p6Q?C8N{", id, s, new ArrayList<>(new HashSet<>(Objects.requireNonNull(solvedQuestions.get(s)))).toString());
+                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user",
+                        "Update", "fx!Ay:;<p6Q?C8N{", id, s,
+                        new ArrayList<>(new HashSet<>(Objects.requireNonNull(
+                                solvedQuestions.get(s))))
+                                .toString());
                 Objects.requireNonNull(solvedQuestions.get(s)).clear();
             }
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();

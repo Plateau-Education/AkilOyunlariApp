@@ -134,7 +134,7 @@ public class MyClassActivity extends AppCompatActivity {
                 addRows(jb.getJSONObject("Instructor"),jb.getJSONArray("Students"));
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String classid = sharedPreferences.getString("classid", "None");
-                ((TextView) findViewById(R.id.codeTV_cl)).setText("Code: "+classid);
+                ((TextView) findViewById(R.id.codeTV_cl)).setText(getString(R.string.Code)+": "+classid);
                 findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
                 findViewById(R.id.classSearchLL).setVisibility(View.GONE);
             } catch (Exception e) {

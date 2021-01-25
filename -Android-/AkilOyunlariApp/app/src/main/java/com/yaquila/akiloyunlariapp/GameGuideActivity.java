@@ -368,7 +368,7 @@ public class GameGuideActivity extends AppCompatActivity {
 
     public void animateView(View view,float s1, float s2){
         Animation anim = new AlphaAnimation(s1, s2);
-        anim.setDuration(500); //You can manage the blinking time with this parameter
+        anim.setDuration(500);
         anim.setStartOffset(20);
         anim.setRepeatMode(Animation.REVERSE);
         anim.setRepeatCount(Animation.INFINITE);

@@ -56,4 +56,7 @@
     <string name="SignUpAsInstructer">Sign Up As Instructor</string>
     <string name="Join">Join</string>
     <string name="CouldntFind">Couldn\'t find the class.</string>
+    <string name="letters">letters</string>
+    <string name="Code">Code</string>
+    <string name="ClassCode">Class Code</string>
 </resources>

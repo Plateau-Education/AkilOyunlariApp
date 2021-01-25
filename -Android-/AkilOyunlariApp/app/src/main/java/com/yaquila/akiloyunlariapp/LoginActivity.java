@@ -393,8 +393,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-
-
         if(signInUpStatus.equals("SignIn")){
             PostRequest postRequest = new PostRequest();
             String postMessage;
@@ -518,16 +516,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
                 Log.i("account", "account unavailable");
                 findViewById(R.id.usernameLinearLayout).setVisibility(View.VISIBLE);
-                //            final Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                //            new Handler().postDelayed(new Runnable() {
-                //                @Override
-                //                public void run() {
-                //                    startActivity(intent);
-                //                }
-                //            },500);
             } else {
-                //findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-//                Log.i("account", Objects.requireNonNull(account.getDisplayName()));
                 signInAccount = account;
                 PostRequest postRequest = new PostRequest();
                 String postMessage;

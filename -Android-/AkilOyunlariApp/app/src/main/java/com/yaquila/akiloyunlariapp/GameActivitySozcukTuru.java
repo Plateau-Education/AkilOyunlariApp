@@ -14,6 +14,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -808,11 +810,22 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
+        TextView textView;
+        String s;
+        SpannableString ss1;
+
         assert difficulty != null;
         switch (difficulty) {
             case "Easy":
             case "Kolay":
                 setContentView(R.layout.activity_game_sozcuk_turu34);
+
+                s= getString(R.string.Easy) + " - 3,4,5 "+getString(R.string.letters);
+                ss1=  new SpannableString(s);
+                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
+                textView = findViewById(R.id.diffTV_game);
+                textView.setText(ss1);
+
                 Log.i("diff", "easy");
                 difficulty = "Easy";
                 gridSizeX = 3;
@@ -821,6 +834,14 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             case "Medium":
             case "Orta":
                 setContentView(R.layout.activity_game_sozcuk_turu35);
+
+
+                s= getString(R.string.Medium) + " - 4,5,6 "+getString(R.string.letters);
+                ss1=  new SpannableString(s);
+                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
+                textView = findViewById(R.id.diffTV_game);
+                textView.setText(ss1);
+
                 gridSizeX = 3;
                 gridSizeY = 5;
                 difficulty = "Medium";
@@ -829,6 +850,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             case "Hard":
             case "Zor":
                 setContentView(R.layout.activity_game_sozcuk_turu45);
+
+                s= getString(R.string.Hard) + " - 2,3,4,5,6 "+getString(R.string.letters);
+                ss1=  new SpannableString(s);
+                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
+                textView = findViewById(R.id.diffTV_game);
+                textView.setText(ss1);
+
                 gridSizeX = 4;
                 gridSizeY = 5;
                 difficulty = "Hard";
@@ -836,6 +864,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 break;
             default:
                 setContentView(R.layout.activity_game_sozcuk_turu55);
+
+                s= getString(R.string.VeryHard) + " - 3,4,5,6,7 "+getString(R.string.letters);
+                ss1=  new SpannableString(s);
+                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
+                textView = findViewById(R.id.diffTV_game);
+                textView.setText(ss1);
+
                 gridSizeX = 5;
                 gridSizeY = 5;
                 difficulty = "Hardest";

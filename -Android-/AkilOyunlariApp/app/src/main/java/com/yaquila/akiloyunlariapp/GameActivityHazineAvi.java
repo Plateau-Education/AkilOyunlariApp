@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class GameActivityHazineAvi extends AppCompatActivity {
 
     String gameName;
@@ -101,8 +102,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             }
         });
         leaveDialog.show();
-    }
-
+    } // Ana Menüye dönmek istiyor musun?
     public void nextQuestion(View view){
         if(timerStopped){
             LayoutInflater factory = LayoutInflater.from(this);
@@ -130,9 +130,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             });
             correctDialog.show();
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    } // Sonraki soruya geç
     public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
@@ -164,8 +162,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             Log.i("operations",operations+"");
             checkAnswer(null);
         }
-    }
-
+    } // Tıklanan kutuya elmas/çarpı koy
     public void changeSwitch(View view){
         ImageView switchTV = (ImageView) view;
         if(switchPosition.equals("diamond")){
@@ -176,9 +173,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             switchTV.setImageResource(R.drawable.ic_diamond);
             switchPosition = "diamond";
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    } // Elmas - çarpı değiştir
     public void undoOperation(View view){
         if(operations.size() > 1){
 //            operations = operations.subList(0,operations.size()-1);
@@ -208,8 +203,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
             }
         }
-    }
-
+    } // Son işlemi geri al
     public void resetGrid(View view){
         try {
             final TextView resetTV = (TextView) view;
@@ -242,9 +236,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    } // Tüm işlemleri sıfırla
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
@@ -336,9 +328,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             });
             correctDialog.show();
         }
-    }
-
-    @SuppressLint("StaticFieldLeak")
+    } // Çözümün doğruluğunu kontrol et
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         ArrayList<String> questions = new ArrayList<>();
@@ -451,8 +441,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             timerFunc();
             loadingDialog.dismissDialog();
         }
-    }
-
+    } // API'den soru çek
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         for(int i = 0; i < gridSize; i++){
@@ -467,8 +456,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 }
             }
         }
-    }
-
+    } // Çekilen soruyu kullanıcıya göster
     public void timerFunc(){
         //noinspection deprecation
         timerHandler = new Handler();
@@ -484,7 +472,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         };
         timerHandler.post(runnable);
 
-    }
+    } // Süreyi tut ve göster
 
     @SuppressLint("DefaultLocale")
     public static String formatTime(int secs) {
@@ -515,7 +503,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         timerInSeconds = 0;
         timerStopped=true;
     }
-
 
     public void mainFunc(){
         TextView undoTV = findViewById(R.id.undoTV_ga);

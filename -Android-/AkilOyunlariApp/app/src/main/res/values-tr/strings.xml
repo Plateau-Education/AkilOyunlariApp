@@ -45,7 +45,7 @@
     <string name="Send">Gönder</string>
     <string name="Wrong">Yanlış</string>
     <string name="Login">Giriş yap</string>
-    <string name="Rank">Sıralama</string>
+    <string name="Rank">Sıra</string>
     <string name="You">Siz</string>
     <string name="Unknown">Bilinmiyor</string>
     <string name="Leaderboard">Skor Tablosu</string>
@@ -57,5 +57,8 @@
     <string name="SignUpAsInstructer">Eğitmen Olarak Kayıt Ol</string>
     <string name="Join">Katıl</string>
     <string name="CouldntFind">Sınıf bulunamadı.</string>
+    <string name="letters">harfler</string>
+    <string name="Code">Kod</string>
+    <string name="ClassCode">Sınıf Kodu</string>
 
 </resources>

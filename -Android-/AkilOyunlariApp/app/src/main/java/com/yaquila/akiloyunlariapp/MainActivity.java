@@ -20,7 +20,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     public void goToGameList(View view){
-        Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+        Intent intent = new Intent(getApplicationContext(),
+                GameListActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }

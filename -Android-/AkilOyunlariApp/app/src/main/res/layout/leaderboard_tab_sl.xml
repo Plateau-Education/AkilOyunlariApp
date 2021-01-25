@@ -35,7 +35,7 @@
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
                 android:layout_gravity="center_vertical"
-                android:textSize="25sp"
+                android:textSize="23sp"
                 android:text="@string/Rank"/>
 
             <TextView
@@ -44,18 +44,18 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="25sp"
+                android:textSize="23sp"
                 android:layout_gravity="center"
                 android:gravity="start"
                 android:text="@string/Username"/>
 
             <TextView
-                android:layout_width="300dp"
+                android:layout_width="250dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="25sp"
+                android:textSize="23sp"
                 android:layout_gravity="center"
                 android:gravity="end"
                 android:text="@string/score"/>
@@ -91,15 +91,15 @@
             <TextView
                 android:id="@+id/UN1_LB"
                 android:layout_width="match_parent"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:textColor="@color/near_black_blue"
-                android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
-                tools:ignore="HardcodedText"
                 android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/mohave_bold"
                 android:gravity="start"
-                android:text="----"/>
+                android:text="----"
+                android:textColor="@color/near_black_blue"
+                android:textSize="20sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/SC1_LB"
@@ -112,7 +112,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -166,7 +166,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -220,7 +220,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -274,7 +274,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -328,7 +328,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -382,7 +382,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -436,7 +436,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -490,7 +490,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -544,7 +544,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -598,7 +598,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
@@ -653,7 +653,7 @@
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
                 android:gravity="end"
-                android:text="100"/>
+                android:text="0"/>
 
         </LinearLayout>
 
