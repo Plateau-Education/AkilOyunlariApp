@@ -33,6 +33,12 @@ public class HowToPlayActivity extends AppCompatActivity {
     public void goToGuide(View view) {
         if (currentGameName.contains("azine")) {
             Intent intent = new Intent(this, GameGuideActivity.class);
+            intent.putExtra("gamename", "Hazine Avı");
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (currentGameName.contains("atika")){
+            Intent intent = new Intent(this, GameGuideActivity.class);
+            intent.putExtra("gamename", "Patika");
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         }
