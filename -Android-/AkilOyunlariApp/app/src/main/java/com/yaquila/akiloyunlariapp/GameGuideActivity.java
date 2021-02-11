@@ -54,7 +54,6 @@ public class GameGuideActivity extends AppCompatActivity {
     ImageView switchIV;
     ImageView arrow;
     Handler animator;
-    Runnable runnableAnim;
     Runnable[] runnables = new Runnable[100];
 
     List<String> blackList = new ArrayList<>();
@@ -65,34 +64,10 @@ public class GameGuideActivity extends AppCompatActivity {
     Paint paint;
 
     public void goBackToHTP(View view){
-
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         intent.putExtra("gameName", gamename);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-
-//        LayoutInflater factory = LayoutInflater.from(this);
-//        final View leaveDialogView = factory.inflate(R.layout.leave_dialog, null);
-//        final AlertDialog leaveDialog = new AlertDialog.Builder(this).create();
-//        leaveDialog.setView(leaveDialogView);
-//
-//        leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-//                startActivity(intent);
-//                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-//                leaveDialog.dismiss();
-//            }
-//        });
-//        leaveDialogView.findViewById(R.id.leaveDialogNo).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                leaveDialog.dismiss();
-//            }
-//        });
-//        leaveDialog.show();
     }
 
     public void nextQuestion(View view){

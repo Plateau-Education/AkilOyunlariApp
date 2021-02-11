@@ -59,4 +59,7 @@
     <string name="letters">letters</string>
     <string name="Code">Code</string>
     <string name="ClassCode">Class Code</string>
+    <string name="Tasks">Tasks</string>
+    <string name="Members">Members</string>
+    <string name="Everyone">All Students</string>
 </resources>

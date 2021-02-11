@@ -60,5 +60,8 @@
     <string name="letters">harfler</string>
     <string name="Code">Kod</string>
     <string name="ClassCode">Sınıf Kodu</string>
+    <string name="Tasks">Görevler</string>
+    <string name="Members">Üyeler</string>
+    <string name="Everyone">Tüm Öğrenciler</string>
 
 </resources>

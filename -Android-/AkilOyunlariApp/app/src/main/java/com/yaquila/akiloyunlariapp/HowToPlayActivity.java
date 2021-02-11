@@ -66,6 +66,11 @@ public class HowToPlayActivity extends AppCompatActivity {
         TextView gameNameTV = findViewById(R.id.gameNameTV_htp);
         gameNameTV.setText((CharSequence) tv.getTag());
         //TODO change content of the how to play text
+        if(tv.getTag().equals("Hazine Avı"))
+            ((TextView)findViewById(R.id.howToPlay_text)).setText("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir. Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır. İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir. Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
+        else {
+            ((TextView)findViewById(R.id.howToPlay_text)).setText("Yakında...");
+        }
         LinearLayout howToPlayGameListLL = (LinearLayout) tv.getParent();
         Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
         tv.setTypeface(mohave_bold);
@@ -101,6 +106,12 @@ public class HowToPlayActivity extends AppCompatActivity {
         Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
+
+        if(currentGameName.equals("Hazine Avı"))
+            ((TextView)findViewById(R.id.howToPlay_text)).setText("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir. Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır. İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir. Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
+        else {
+            ((TextView)findViewById(R.id.howToPlay_text)).setText("Yakında...");
+        }
     }
 
     @Override

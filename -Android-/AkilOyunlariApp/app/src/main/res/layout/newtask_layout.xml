@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@drawable/rounded_f7f5fa_bg">
+
+
+    <ImageView
+        android:id="@+id/closebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="closeNewTask"
+        android:padding="10dp"
+        android:src="@drawable/ic_closebutton"
+        android:tint="@color/near_black_blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/ogrenciSecmeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_medium"
+        android:text="Öğrenci Seçiniz"
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.118"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closebutton"
+        app:layout_constraintVertical_bias="0.022" />
+
+    <Spinner
+        android:id="@+id/nameSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/less_rounded_light_bluegreen_bg"
+        android:backgroundTint="@color/light_blue_green"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintVertical_bias="0.08"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        tools:targetApi="lollipop" />
+
+
+    <TextView
+        android:id="@+id/oyunSecmeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_medium"
+        android:text="Tür Seçiniz : "
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintTop_toBottomOf="@+id/nameSpinner"
+        app:layout_constraintVertical_bias="0.126" />
+
+    <Spinner
+        android:id="@+id/gameSpinner"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/less_rounded_light_bluegreen_bg"
+        android:backgroundTint="@color/light_blue_green"
+        app:layout_constraintBottom_toBottomOf="@+id/oyunSecmeTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/oyunSecmeTV"
+        app:layout_constraintTop_toTopOf="@+id/oyunSecmeTV"
+        app:layout_constraintHorizontal_bias="1"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        tools:targetApi="lollipop"/>
+
+    <TextView
+        android:id="@+id/diffSecmeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_medium"
+        android:text="Zorluk Seçiniz : "
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintTop_toBottomOf="@+id/gameSpinner"
+        app:layout_constraintVertical_bias="0.126" />
+
+    <Spinner
+        android:id="@+id/diffSpinner"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/less_rounded_light_bluegreen_bg"
+        android:backgroundTint="@color/light_blue_green"
+        app:layout_constraintBottom_toBottomOf="@+id/diffSecmeTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/diffSecmeTV"
+        app:layout_constraintTop_toTopOf="@+id/diffSecmeTV"
+        app:layout_constraintHorizontal_bias="1"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        tools:targetApi="lollipop" />
+
+    <TextView
+        android:id="@+id/soruSayisiTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mohave_medium"
+        android:text="Soru sayısı giriniz : "
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/ogrenciSecmeTV"
+        app:layout_constraintTop_toBottomOf="@+id/diffSpinner"
+        app:layout_constraintVertical_bias="0.151" />
+
+    <EditText
+        android:id="@+id/editTextNumber"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:fontFamily="@font/mohave_medium"
+        android:background="@drawable/less_rounded_light_bluegreen_bg"
+        android:padding="5dp"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="@+id/soruSayisiTV"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/soruSayisiTV"
+        app:layout_constraintTop_toTopOf="@+id/soruSayisiTV" />
+
+    <Button
+        android:id="@+id/sendbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="Gönder"
+        android:background="@drawable/rounded_light_bluegreen_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextNumber" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

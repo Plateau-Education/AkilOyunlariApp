@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    android:id="@+id/instructorTV_cl"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="15dp"
+    android:fontFamily="@font/mohave_bold"
+    android:gravity="center"
+    android:text=""
+    android:textColor="@color/f7f5fa"
+    android:textSize="35sp"
+    xmlns:android="http://schemas.android.com/apk/res/android" />

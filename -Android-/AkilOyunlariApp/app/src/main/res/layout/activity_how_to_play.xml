@@ -114,6 +114,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
+                android:id="@+id/howToPlay_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="@color/near_black_blue"
@@ -121,6 +122,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginStart="50dp"
                 android:layout_marginEnd="50dp"
+                android:layout_marginBottom="75dp"
                 android:textSize="23sp"
                 android:text="Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content Content "/>
 

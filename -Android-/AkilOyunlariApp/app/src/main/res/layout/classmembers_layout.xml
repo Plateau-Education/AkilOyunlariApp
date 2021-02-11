@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/instructorTV_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:fontFamily="@font/mohave_bold"
+        android:gravity="center"
+        android:text="@string/Teacher"
+        android:textColor="@color/f7f5fa"
+        android:textSize="50sp" />
+
+    <TextView
+        android:id="@+id/studentsTV_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:fontFamily="@font/mohave_bold"
+        android:gravity="center"
+        android:text="@string/Students"
+        android:textColor="@color/f7f5fa"
+        android:textSize="50sp" />
+
+</LinearLayout>
