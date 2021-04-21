@@ -776,15 +776,14 @@ public class GameActivityPiramit extends AppCompatActivity{
             assert questions != null;
             questions.remove(0);
 
-            assert solvedQuestions != null;
-            assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
-
-            Log.i("solvedQuestions",solvedQuestions+"");
-
             sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Log.i("solvedQuestions",solvedQuestions+"");
 
         } catch (IOException e) {
             e.printStackTrace();

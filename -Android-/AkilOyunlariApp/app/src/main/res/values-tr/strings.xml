@@ -63,5 +63,7 @@
     <string name="Tasks">Görevler</string>
     <string name="Members">Üyeler</string>
     <string name="Everyone">Tüm Öğrenciler</string>
+    <string name="leaveClass">Sınıftan Ayrıl</string>
+    <string name="dywt_leave_class">Bu sınıftan ayrılmak istiyor musun?</string>
 
 </resources>

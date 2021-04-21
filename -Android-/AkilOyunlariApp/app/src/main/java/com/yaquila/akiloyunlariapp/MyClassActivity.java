@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -103,6 +104,39 @@ public class MyClassActivity extends AppCompatActivity {
         }
     }
 
+    public void leaveClicked(View view){
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View leaveDialogView = factory.inflate(R.layout.leave_dialog, null);
+        final AlertDialog leaveDialog = new AlertDialog.Builder(this).create();
+        leaveDialog.setView(leaveDialogView);
+        ((TextView)leaveDialogView.findViewById(R.id.leaveDialogText)).setText(R.string.dywt_leave_class);
+
+        leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onClick(View v) {
+                try{
+                    loadingDialogFunc();
+                    LeavePutRequest putRequest = new LeavePutRequest();
+                    SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                    //noinspection deprecation
+                    putRequest.execute("https://akiloyunlariapp.herokuapp.com/leave", "Class", "fx!Ay:;<p6Q?C8N{", sP.getString("id","none"), sP.getString("classid","none"));
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialogView.findViewById(R.id.leaveDialogNo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialog.show();
+    }
+
+
     @SuppressLint("SetTextI18n")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void classInfoChange(View view) throws JSONException {
@@ -150,7 +184,7 @@ public class MyClassActivity extends AppCompatActivity {
             tasksTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
 
             scrollViewLL.removeView(tasksLL);
-            scrollViewLL.addView(membersLL);
+            scrollViewLL.addView(membersLL,2);
         }
     }
 
@@ -408,6 +442,7 @@ public class MyClassActivity extends AppCompatActivity {
                             responseMessage = response;
                             JSONObject jb = new JSONObject(response);
                             Log.i("jb",jb+"");
+                            scrollViewLL.addView(membersLL,2);
                             addRows(jb.getJSONObject("Instructor"), jb.getJSONArray("Students"));
                             loadingDialog.dismissDialog();
                             findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
@@ -439,6 +474,58 @@ public class MyClassActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         Log.e("Volley",error.getMessage()+"");
+                    }
+                }) {
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public byte[] getBody() {
+                        return result == null ? null: result.getBytes(StandardCharsets.UTF_8);
+                    }
+                };
+                requestQueue.add(stringRequest);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
+    public class LeavePutRequest extends AsyncTask<String, Void, String> {
+
+        RequestQueue requestQueue;
+        String result = null;
+        @Override
+        protected String doInBackground(final String... strings) {
+            try {
+                result = "{\"Info\":"+ "{\"Id\":\"" + strings[3] +  "\", \"ClassId\":\""+ strings[4] + "\"}, \"Token\":"+ "\""+strings[2]+ "\"}";
+                Log.i("request",result);
+                String URL = strings[0]+strings[1];
+                requestQueue = Volley.newRequestQueue(getApplicationContext());
+                StringRequest stringRequest = new StringRequest(Request.Method.PUT, URL, new Response.Listener<String>() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onResponse(String response) {
+                        SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                        sP.edit().remove("classid").apply();
+                        Log.i("Volley", response);
+                        goToMainMenu(null);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                        sP.edit().remove("classid").apply();
+                        loadingDialog.dismissDialog();
+                        Log.e("Volley",error.getMessage()+"");
+                        goToMainMenu(null);
                     }
                 }) {
                     @Override
@@ -613,7 +700,7 @@ public class MyClassActivity extends AppCompatActivity {
         scrollViewLL = findViewById(R.id.classLL);
 
         if(!Objects.equals(sharedPreferences.getString("classid", "None"), "None")){
-            scrollViewLL.addView(membersLL);
+            scrollViewLL.addView(membersLL,2);
             try{
                 loadingDialogFunc();
                 GetRequest getRequest = new GetRequest();

@@ -342,6 +342,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 String id = sharedPreferences.getString("id", "non");
                 try {
                     questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi." + gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    Log.i("questions",questions+"");
                     gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 }catch (IOException e){
                     e.printStackTrace();
@@ -573,22 +574,24 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d("STH","DESTROYED");
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
             ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
             ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
-            ArrayList<String> solvedQuestions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new ArrayList<String>())));
+            Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
-            assert solvedQuestions != null;
-            assert gameIds != null;
-            solvedQuestions.add("HazineAvi."+gridSize+","+gameIds.remove(0)+"-"+"0");
-
             sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
-            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize(solvedQuestions)).apply();
+            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            Objects.requireNonNull(solvedQuestions.get("HazineAvi." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Log.i("solvedQuestions",solvedQuestions+"");
 
 
         } catch (IOException e) {

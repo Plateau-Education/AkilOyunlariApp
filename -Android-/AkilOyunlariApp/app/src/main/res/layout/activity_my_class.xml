@@ -123,6 +123,20 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <Button
+                android:id="@+id/leaveClassButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="leaveClicked"
+                android:background="@drawable/clicked_diff_bg"
+                android:text="@string/leaveClass"
+                android:textAllCaps="false"
+                android:fontFamily="@font/mohave_bold"
+                android:textColor="@color/f7f5fa"
+                android:textSize="30sp"
+                android:padding="5dp"
+                />
+
         </LinearLayout>
     </ScrollView>
 

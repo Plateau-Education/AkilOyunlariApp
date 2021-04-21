@@ -19,8 +19,8 @@
             android:id="@+id/leaveDialogText"
             android:layout_gravity="center"
             android:gravity="center"
-            android:lines="2"
-            android:maxLines="2"
+            android:minLines="2"
+            android:maxLines="3"
             android:textColor="@color/near_black_blue"
             android:fontFamily="@font/mohave_bold"
             android:textSize="36sp"/>

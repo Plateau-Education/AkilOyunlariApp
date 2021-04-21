@@ -1010,13 +1010,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             assert questions != null;
             questions.remove(0);
 
-            assert solvedQuestions != null;
-            assert gameIds != null;
-            solvedQuestions.add("SozcukTuru."+difficulty+","+gameIds.remove(0)+"-"+"0");
-
             sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize(solvedQuestions)).apply();
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            solvedQuestions.add("SozcukTuru."+difficulty+","+gameIds.remove(0)+"-"+"0");
 
 
         } catch (IOException e) {

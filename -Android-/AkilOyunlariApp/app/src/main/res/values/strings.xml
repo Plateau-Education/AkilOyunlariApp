@@ -62,4 +62,6 @@
     <string name="Tasks">Tasks</string>
     <string name="Members">Members</string>
     <string name="Everyone">All Students</string>
+    <string name="leaveClass">Leave Class</string>
+    <string name="dywt_leave_class">Do you want to leave this class?</string>
 </resources>

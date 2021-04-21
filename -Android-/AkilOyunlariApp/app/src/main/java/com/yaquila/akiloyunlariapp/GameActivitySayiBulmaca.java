@@ -760,15 +760,14 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             assert questions != null;
             questions.remove(0);
 
-            assert solvedQuestions != null;
-            assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + gridSize)).add(gameIds.remove(0)+"-"+"0");
-
-            Log.i("solvedQuestions",solvedQuestions+"");
-
             sharedPreferences.edit().putString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Log.i("solvedQuestions",solvedQuestions+"");
 
         } catch (IOException e) {
             e.printStackTrace();

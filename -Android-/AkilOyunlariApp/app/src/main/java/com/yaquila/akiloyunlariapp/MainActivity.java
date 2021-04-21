@@ -46,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkSavedQuestions() throws IOException {
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        if(!"none".equals(sP.getString("Sudoku.6.Easy","none"))){
+        if("none".equals(sP.getString("Sudoku.6.Easy","none"))){
+            Log.d("NONE","QWEQWEQWEQWEQWEWQ");
             sP.edit().putString("IDSudoku.6.Easy",ObjectSerializer.serialize(new ArrayList<String>())).apply();
             sP.edit().putString("IDSudoku.6.Medium",ObjectSerializer.serialize(new ArrayList<String>())).apply();
             sP.edit().putString("IDSudoku.6.Hard",ObjectSerializer.serialize(new ArrayList<String>())).apply();

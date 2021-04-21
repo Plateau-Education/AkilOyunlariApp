@@ -187,6 +187,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     public void numClicked(View view){
         Button btn = (Button) view;
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout numGrid = findViewById(R.id.numsGL_ga);
         if(!clickedBox.equals("-1")){
             TextView currentBox = gridLayout.findViewWithTag(clickedBox);
             if(currentBox.getText().toString().equals("")){
@@ -213,6 +214,9 @@ public class GameActivitySudoku extends AppCompatActivity {
                             if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                             else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                             draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
+                            for(int i = 1; i<gridSize+1; i++){
+                                ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
+                            }
                             findViewById(R.id.draftbutton_ga).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                         }
                     }
@@ -273,6 +277,14 @@ public class GameActivitySudoku extends AppCompatActivity {
                 currentBox.setText("");
             }
             else{
+                if(num.length()>1){
+                    draftModeActive[Integer.parseInt(co.substring(0,1))*gridSize+Integer.parseInt(co.substring(1))]=false;
+                    draftClicked(null);
+                }
+                else{
+                    draftModeActive[Integer.parseInt(co.substring(0,1))*gridSize+Integer.parseInt(co.substring(1))]=true;
+                    draftClicked(null);
+                }
                 currentBox.setText(num);
             }
             undoing=true;
@@ -727,15 +739,16 @@ public class GameActivitySudoku extends AppCompatActivity {
             assert questions != null;
             questions.remove(0);
 
-            assert solvedQuestions != null;
-            assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
 
             Log.i("solvedQuestions",solvedQuestions+"");
 
             sharedPreferences.edit().putString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
+            assert solvedQuestions != null;
+            assert gameIds != null;
+            Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
 
         } catch (IOException e) {
             e.printStackTrace();
