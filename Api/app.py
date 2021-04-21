@@ -1,46 +1,49 @@
 from pymongo import MongoClient
-from random import choices, randint
-from flask import Flask, render_template, send_from_directory
-from flask_restful import Api, Resource, reqparse
-from json import dumps, loads
+from random import choices,randint
+from flask import Flask,render_template, send_from_directory
+from flask_restful import Api,Resource,reqparse
+from json import dumps,loads
 import os
 import uuid
 from b64uuid import B64UUID
-from base64 import b85encode, b85decode
+from base64 import b85encode,b85decode
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
 key = os.environ.get("MONGO_URI")
 key2 = os.environ.get("MONGO_URI2")
-token = os.environ.get("TOKEN")
-mail_key = os.environ.get('SENDGRID_API_KEY')
+cluster = MongoClient(key)
+cluster2 = MongoClient(key2)
+token = os.environ.get("TOKEN")#API şifresi sisteme alınır.
+mail_key = os.environ.get('SENDGRID_API_KEY')#Sendgrid şifresi sisteme alınır.
 app = Flask(__name__, template_folder="templates")
 app.env = "development"
+api = Api(app)
 email_user = os.environ.get("email_user")
 email_password = os.environ.get("email_password")
-api = Api(app)
+#Sengrid için gönderici mail adresi ve şifresi sisteme alınır.
 request = reqparse.RequestParser()
 request.add_argument("Info", required=False)
 request.add_argument("Token", required=False)
 request.add_argument("Req", required=False)
 request.add_argument("Query", required=False)
 request.add_argument("Ids", required=False)
-cluster = MongoClient(key)
-cluster2 = MongoClient(key2)
 db = cluster["AkilOyunlariDB"]
 db2 = cluster2["AkilOyunlariUsers"]
 userdb = db2["Users"]
 cl = db2["Class"]
+sender = "akiloyunlariapp@gmail.com"
+subject = "Welcome To Mind Puzzles"
 
 
 def send_Mail(receiver, name):
-    kod = randint(100000, 1000000)
-    members = [[name, kod]]
+    kod = randint(100000, 1000000)#rastgele doğrulama kodu belirlenir.
+    members = [[name, kod]]#alıcı bilgileri
     message = Mail(
-    from_email='akiloyunlariapp@gmail.com',
+    from_email=f'{sender}',
     to_emails=f'{receiver}',
-    subject='Welcome To Mind Puzzles',
-    plain_text_content=f"Verification Code {kod}",
+    subject=f'{subject}',
+    plain_text_content=f"Verification Code: {kod}",
     html_content=f'{render_template("email.htm", members=members)}')
     try:
         sg = SendGridAPIClient(mail_key)
@@ -253,8 +256,9 @@ class User(Resource):
                 google = b85encode(args["Info"].encode()).decode()
                 if isTaken(google, "email"):
                     idx = userdb.find_one({"email": google})
-                    return {"Id": idx["_id"], "Username": b85decode(idx["username"].encode()).decode(),
+                    user = {"Id": idx["_id"], "Username": b85decode(idx["username"].encode()).decode(),
                             "Displayname": b85decode(idx["displayname"].encode()).decode(), "ClassId": idx["classid"], "Type": idx["type"]}, 200
+                    return user
                 return {"Message": "Not Found"}, 200
             elif userinfo == "userSignIn":
                 json = loads(args["Info"].replace("'", '"'))
@@ -282,6 +286,35 @@ class User(Resource):
                     kod = send_Mail(json["email"], json["username"])
                     return {"Message": kod}, 200
                 return {"Message": "User Already Exists!"}, 200
+            elif userinfo == "taskSend":
+                json = loads(args["Info"].replace("'", '"'))
+                to = json["to"]
+                game = json["game"]
+                goal = int(json["goal"])
+                cla = json["class"]
+                std2 = cl.find_one({"_id": cla})["Students"]
+                if to == "all":
+                    for n in range(len(std2)):
+                        cl.find_one_and_update({"_id": cla}, {"$push": {f"Students.{n}.tasks": [game, goal, 0, "active"]}})
+                    return {"Message": "Done!"}, 200
+                for n in range(len(std2)):
+                    if std2[n]["id"] == to:
+                        cl.find_one_and_update({"_id": cla}, {"$push": {f"Students.{n}.tasks": [game, goal, 0, "active"]}})
+                        return {"Message": "Done!"}, 200
+                return {"Message": "User Not Found!"}, 200
+            elif userinfo == "taskDelete":
+                json = loads(args["Info"].replace("'", '"'))
+                to = json["to"]
+                game = json["game"]
+                goal = int(json["goal"])
+                clId = json["class"]
+                if clId != "None":
+                    sts = cl.find_one({"_id": clId})["Students"]
+                    for k, s in enumerate(sts):
+                        if s["id"] == to:
+                            cl.find_one_and_update({"_id": clId}, update={"$pull": {f"Students.{k}.tasks": [game, goal, goal, "passive"]}})
+                            return {"Message": "Done!"}, 200
+                return {"Message": "Method not allowed"}, 405
             return {"Message": "Method not allowed"}, 405
         return {"Message": "Method not allowed"}, 405
 
@@ -321,9 +354,28 @@ class User(Resource):
                             valid_ids.append(game_ids[n][1])
                         else:
                             unsolved.append(game_ids[n])
-                            game_ids.remove(game_ids[n])                
+                    for i in unsolved:
+                        game_ids.remove(i)
+                    game = info['Query']
                     q = info['Query'].split(".")
-                    best_bef = userdb.find_one({"_id": idx})["solved"]                    
+                    sty = userdb.find_one({"_id": idx})
+                    best_bef = sty["solved"]
+                    clId = sty["classid"]
+                    if clId != "None":
+                        sts = cl.find_one({"_id": clId})["Students"]
+                        for k, s in enumerate(sts):
+                            if s["id"] == idx:
+                                for l, task in enumerate(s["tasks"]):
+                                    if task[0] == game:
+                                        if task[3] == "active":
+                                            goal = task[1]
+                                            pres = task[2] + len(game_ids)
+                                            if pres >= goal:
+                                                cl.find_one_and_update({"_id": clId}, update={"$set" : {f"Students.{k}.tasks.{l}.2": goal, f"Students.{k}.tasks.{l}.3": "passive"}})
+                                            else:
+                                                cl.find_one_and_update({"_id": clId}, update={"$set" : {f"Students.{k}.tasks.{l}.2": pres}})
+                                            break
+                                break
                     for i in q:
                         best_bef = best_bef[i]                    
                     if q[0] == "HazineAvi":
@@ -352,41 +404,51 @@ class User(Resource):
                     ar = userdb.find_one({"_id": idx})["solved"]
                     for i in q:
                         ar = ar[i]
-                    constant = ((len(ar[0]) + len(game_ids)) // 10) + 1                
-                    cb = ar[1][0][1]                
+                    constant = ((len(ar[0]) + len(game_ids)) // 8) + 1                
+                    # cb = ar[1][0][1]                
                     new_stats = []
-                    if cb != constant:
-                        ids = ar[0].copy()
-                        ids.extend(game_ids)
-                        avg_t = 0
-                        for n, i in enumerate(ids, 1):
-                            avg_t += int(i[1])
-                            if n % constant == 0:
-                                new_stats.append([avg_t / n, n])
-                        if new_stats[-1][1] != len(ids):
-                            new_stats.append([avg_t / len(ids), len(ids)])
-                        userdb.find_one_and_update({"_id": idx},
-                                            update={"$set": {f"solved.{info['Query']}.1": new_stats}})  
-                    else:
-                        ar = ar[1]
-                        count = ar[-1][1]
-                        avg_t = ar[-1][0] * count
-                        new_stats = [ar[-1]]                
-                        flag = True
-                        if ar[-1][1] % constant == 0:
-                            flag = False
-                        for stat in valid_ids:
-                            count += 1
-                            avg_t += stat
-                            if count % constant == 0:
-                                new_stats.append([avg_t / count, count])
-                        if flag:
-                            userdb.find_one_and_update({"_id": idx}, update={"$pull": {f"solved.{info['Query']}.1": ar[-1]}})
-                        if new_stats[-1][1] != count:
-                            new_stats.append([avg_t / count, count])
-                        new_stats.remove(ar[-1])
-                        userdb.find_one_and_update({"_id": idx},
-                                            update={"$push": {f"solved.{info['Query']}.1": {"$each": new_stats}}})                
+                    # if cb != constant:
+                    ids = ar[0].copy()
+                    ids.extend(game_ids)
+                    avg_t = 0
+                    ax = 0
+                    tur = 0
+                    for i in ids:
+                        avg_t += int(i[1])
+                        ax += 1
+                        tur += 1
+                        if ax % constant == 0:
+                            new_stats.append([avg_t / ax, tur])
+                            avg_t = 0
+                            ax = 0
+                    if ax != 0:
+                        new_stats.append([avg_t / ax, tur])
+                    userdb.find_one_and_update({"_id": idx},
+                                        update={"$set": {f"solved.{info['Query']}.1": new_stats}})  
+                    #else:
+                     #   ar = ar[1]
+                      #  count = ar[-1][1]
+                      #  tur = count
+                       # avg_t = ar[-1][0] * count
+                       # new_stats = [ar[-1]]                
+                        #flag = True
+                        #if ar[-1][1] % constant == 0:
+                         #   flag = False
+                       # for stat in valid_ids:
+                        #    count += 1
+                         #   avg_t += stat
+                         #   tur += 1
+                          #  if count % constant == 0:
+                           #     new_stats.append([avg_t / count, tur])
+                            #    avg_t = 0
+                             #   count = 0
+                    #    if flag:
+                     #       userdb.find_one_and_update({"_id": idx}, update={"$pull": {f"solved.{info['Query']}.1": ar[-1]}})
+                      #  if count != 0:
+                       #     new_stats.append([avg_t / count, tur])
+                     #   new_stats.remove(ar[-1])
+                      #  userdb.find_one_and_update({"_id": idx},
+                       #                     update={"$push": {f"solved.{info['Query']}.1": {"$each": new_stats}}})                
                     userdb.find_one_and_update({"_id": idx},
                                             update={"$addToSet": {f"solved.{info['Query']}.0": {"$each": game_ids},
                                                                     f"solved.{info['Query']}.4": {"$each": unsolved}}})
@@ -400,10 +462,19 @@ class User(Resource):
                 userna = info["Username"]
                 tc = cl.find_one({"_id": classid})
                 if tc:
-                    cl.find_one_and_update({"_id": classid}, update={"$push": {"Students": {"id": userid, "displayname": displayna, "username": userna}}})
+                    cl.find_one_and_update({"_id": classid}, update={"$push": {"Students": {"id": userid, "displayname": displayna, "username": userna, "tasks":[]}}})
                     userdb.find_one_and_update({"_id": userid}, update={"$set": {"classid": classid}})
                     return cl.find_one({"_id": classid}), 200
                 return {"Message": "Not Found!"}, 404
+            elif userinfo == "leaveClass":
+                info = loads(args["Info"].replace("'", '"'))
+                classid = info["ClassId"]
+                userid = info["Id"]
+                tc = cl.find_one({"_id": classid})
+                if tc:
+                    cl.find_one_and_update({"_id": classid}, update={"$pull": {"Students": {"id": userid}}})
+                    userdb.find_one_and_update({"_id": userid}, update={"$set": {"classid": "None"}})
+                    return {"Message": "Ok!"}, 200
             return {"Message": "Method not allowed"}, 405
 
     def delete(self, userinfo):
