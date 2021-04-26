@@ -8,7 +8,9 @@ import uuid
 from b64uuid import B64UUID
 from base64 import b85encode,b85decode
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import mail_settings
+import socket
+import threading
 
 key = os.environ.get("MONGO_URI")
 key2 = os.environ.get("MONGO_URI2")
@@ -213,7 +215,6 @@ class Games(Resource):
                 return dumps({"Info": response[0], "Ids": response[1]}), 200
             return {"Message": "Not Found"}, 404
         return {"Message": "Method not allowed"}, 405
-
 
 class User(Resource):
     def get(self, userinfo):
@@ -489,7 +490,6 @@ class User(Resource):
             return {"Message": "Not Found"}, 200
         return {"Message": "Method not allowed"}, 405
 
-
 class LeaderBoard(Resource):
     def __init__(self):
         self.leader_list_dict = {}
@@ -520,8 +520,61 @@ class LeaderBoard(Resource):
                 self.leader_list_dict[game].append([b85decode(i["username"].encode()).decode(), i["puan"][game]])
         for game in self.leader_list_dict.values():
             game.sort(key=sort, reverse=True)
+            
+class Room:
+    def __init__(self, room_id):
+        self.id = room_id
+        self.clients = []
+
+class Server:
+    def __init__(self):
+        self.ip = "0.0.0.0"
+        print("denemeeeee", end="  ------------   ")
+        print(os.environ.get('PORT'))
+        self.port = int(os.environ.get('PORT', 17995))
+
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.bind((self.ip, self.port))
+
+        self.rooms = dict()
+        for i in cl.find():
+            self.rooms[i["_id"]] = Room(i["_id"])
+        self.accept_connections()
+
+    def accept_connections(self):
+        self.s.listen(5)
+
+        print('Running on IP: ' + self.ip)
+        print('Running on port: ' + str(self.port))
+
+        while True:
+            c, addr = self.s.accept()
+            self.addToRoom(c)
+
+    def broadcast(self, sock, data, room_id):
+        for client in self.rooms[room_id].clients:
+            if client != sock:
+                try:
+                    client.send(data)
+                except:
+                    pass
+
+    def handle_client(self, c, room_id):
+        while 1:
+            try:
+                data = c.recv(1024)
+                self.broadcast(c, data, room_id)
+
+            except socket.error:
+                c.close()
+
+    def addToRoom(self, c):
+        room_id = c.recv(16).decode()
+        self.rooms[room_id].clients.append(c)
+        threading.Thread(target=self.handle_client, args=(c, room_id,)).start()
 
 
+threading.Thread(target=Server).start()
 api.add_resource(Games, "/<string:game>/<string:user>")
 api.add_resource(User, "/<string:userinfo>")
 api.add_resource(LeaderBoard, "/leaderboard/board")
