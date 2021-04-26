@@ -93,7 +93,6 @@
         app:layout_constraintEnd_toEndOf="@id/gridGL_ga"
         app:layout_constraintBottom_toTopOf="@+id/gridGL_ga" />
 
-
     <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridGL_ga"
         android:layout_width="wrap_content"

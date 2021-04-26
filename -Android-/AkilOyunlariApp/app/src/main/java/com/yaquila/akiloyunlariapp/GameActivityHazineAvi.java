@@ -103,6 +103,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         });
         leaveDialog.show();
     } // Ana Menüye dönmek istiyor musun?
+
     public void nextQuestion(View view){
         if(timerStopped){
             LayoutInflater factory = LayoutInflater.from(this);
@@ -131,6 +132,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             correctDialog.show();
         }
     } // Sonraki soruya geç
+
     public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
@@ -163,6 +165,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             checkAnswer(null);
         }
     } // Tıklanan kutuya elmas/çarpı koy
+
     public void changeSwitch(View view){
         ImageView switchTV = (ImageView) view;
         if(switchPosition.equals("diamond")){
@@ -174,6 +177,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             switchPosition = "diamond";
         }
     } // Elmas - çarpı değiştir
+
     public void undoOperation(View view){
         if(operations.size() > 1){
 //            operations = operations.subList(0,operations.size()-1);
@@ -204,6 +208,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             }
         }
     } // Son işlemi geri al
+
     public void resetGrid(View view){
         try {
             final TextView resetTV = (TextView) view;
@@ -237,6 +242,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             e.printStackTrace();
         }
     } // Tüm işlemleri sıfırla
+
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking=true;
@@ -329,6 +335,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             correctDialog.show();
         }
     } // Çözümün doğruluğunu kontrol et
+
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         ArrayList<String> questions = new ArrayList<>();
@@ -443,6 +450,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             loadingDialog.dismissDialog();
         }
     } // API'den soru çek
+
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         for(int i = 0; i < gridSize; i++){
@@ -458,6 +466,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             }
         }
     } // Çekilen soruyu kullanıcıya göster
+
     public void timerFunc(){
         //noinspection deprecation
         timerHandler = new Handler();

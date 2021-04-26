@@ -4,8 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    
-    
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/mindpuzzles_icon_3xxhdpi"
@@ -13,7 +12,8 @@
         android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GameGuideActivity"></activity>
+        <activity android:name=".GroupSolvingActivity"></activity>
+        <activity android:name=".GameGuideActivity" />
         <activity android:name=".MyClassActivity" />
         <activity android:name=".LeaderboardActivity" />
         <activity android:name=".ProfileActivity" />
