@@ -40,7 +40,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -90,6 +89,12 @@ public class MyClassActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         }
+    }
+
+    public void goToGroupSolving(View view){
+        Intent intent = new Intent(getApplicationContext(), GroupSolvingActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     public void joinClicked(View view){
@@ -329,6 +334,7 @@ public class MyClassActivity extends AppCompatActivity {
                     String classid = sharedPreferences.getString("classid", "None");
                     ((TextView) findViewById(R.id.codeTV_cl)).setText(getString(R.string.Code) + ": " + classid);
                     findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
+                    findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
                     findViewById(R.id.classSearchLL).setVisibility(GONE);
                 } else { //Yeni task oluşturulduğundaki taskları yenileme
                     Log.i("jb In else",jb.toString());
@@ -446,6 +452,7 @@ public class MyClassActivity extends AppCompatActivity {
                             addRows(jb.getJSONObject("Instructor"), jb.getJSONArray("Students"));
                             loadingDialog.dismissDialog();
                             findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
+                            findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.classSearchLL).setVisibility(GONE);
                             ((TextView) findViewById(R.id.codeTV_cl)).setText("Code: "+strings[6]);
                             SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
@@ -698,7 +705,9 @@ public class MyClassActivity extends AppCompatActivity {
 //        newTaskLayout = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("newtask_layout", "layout", this.getPackageName()),null);
         taskRowInstructor = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("task_row_instructor", "layout", this.getPackageName()),null);
         scrollViewLL = findViewById(R.id.classLL);
-
+        if(Objects.equals(sharedPreferences.getString("type", "None"), "Instructor")){
+            findViewById(R.id.leaveClassButton).setVisibility(GONE);
+        }
         if(!Objects.equals(sharedPreferences.getString("classid", "None"), "None")){
             scrollViewLL.addView(membersLL,2);
             try{
@@ -711,7 +720,8 @@ public class MyClassActivity extends AppCompatActivity {
             }
         } else {
             findViewById(R.id.classSearchLL).setVisibility(View.VISIBLE);
-            findViewById(R.id.classScrollView).setVisibility(GONE);
+            findViewById(R.id.classScrollView).setVisibility(View.GONE);
+            findViewById(R.id.solvingButton).setVisibility(View.GONE);
         }
     }
 }

@@ -8,6 +8,8 @@
     tools:context=".MyClassActivity">
 
 
+
+
     <ScrollView
         android:id="@+id/classScrollView"
         android:layout_width="match_parent"
@@ -123,6 +125,8 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
             <Button
                 android:id="@+id/leaveClassButton"
                 android:layout_width="match_parent"
@@ -139,6 +143,24 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <ImageView
+        android:id="@+id/solvingButton"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:visibility="gone"
+        android:background="@drawable/circlef7f5fa"
+        android:backgroundTint="@color/yellowish"
+        android:onClick="goToGroupSolving"
+        android:padding="15dp"
+        android:src="@drawable/ic_solving_icon2"
+        app:layout_constraintBottom_toBottomOf="@+id/classScrollView"
+        app:layout_constraintEnd_toEndOf="@+id/classScrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintVertical_bias="0.93"
+        tools:targetApi="lollipop" />
 
     <LinearLayout
         android:id="@+id/classSearchLL"
