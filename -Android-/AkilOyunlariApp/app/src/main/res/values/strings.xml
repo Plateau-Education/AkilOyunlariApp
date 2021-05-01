@@ -67,4 +67,6 @@
     <string name="Start">Start</string>
     <string name="Instructor_Hasnt_started">Instructor hasn\'t started the session yet.</string>
     <string name="Ins">(Ins)</string>
+    <string name="permissionGranted">Permission to make changes on the grid is granted.</string>
+    <string name="permissionRemoved">Permission to make changes on the grid is removed</string>
 </resources>

@@ -62,6 +62,8 @@ public class GroupSolvingActivity extends AppCompatActivity {
     int gridSize = 5;
     boolean gotQuestion = false;
     boolean isPermitted = false;
+    boolean isConnected = false;
+    boolean isParticipantsShown = false;
 
     List<List<String>> operations = new ArrayList<>();
     List<List<Integer>> currentGrid = new ArrayList<>();
@@ -71,6 +73,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
     Map<String,Boolean> participantMap = new HashMap<>();
     LoadingDialog loadingDialog;
     GridLayout gridGL;
+    ConstraintLayout participantsLayout;
     AlertDialog ntDialog;
     AlertDialog participantsDialog;
     Spinner gameSpinner;
@@ -339,8 +342,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
-                seperateGridAnswer(gridArrays.getJSONArray(0).getJSONArray(0).getJSONArray(0));
-
+                seperateGridAnswer(gridArrays.getJSONArray(0).getJSONArray(0).getJSONArray(0), false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -349,7 +351,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
             ((ConstraintLayout)findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
         }
     } // API'den soru çek
-    public void seperateGridAnswer(JSONArray grid) throws JSONException {
+    public void seperateGridAnswer(JSONArray grid, boolean fromStudent) throws JSONException {
         GridLayout gridLayout = gridGL;
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++) {
@@ -360,30 +362,29 @@ public class GroupSolvingActivity extends AppCompatActivity {
                     ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
                 }
                 else if(n.equals("-1")){
-                    if(!type.contains("nstructor")) {
+                    if(!type.contains("nstructor") || fromStudent) {
                         currentGrid.get(i).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-
                     }
                     answer.add(Integer.toString(j)+i);
                 }
-                else if(n.equals("-2") && !type.contains("nstructor")){
+                else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
                 }
-                else if(n.equals("0") && !type.contains("nstructor")){
+                else if(n.equals("0") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                 }
             }
         }
-        Log.i("clueIndexes",clueIndexes.toString());
-        Log.i("currentGrid",currentGrid.toString());
-        if(type.contains("nstructor")) {
+        if(type.contains("nstructor") && !isConnected) {
+            isConnected = true;
             connectSocket();
             joinClass();
         }
-
+        Log.i("clueIndexes",clueIndexes.toString());
+        Log.i("currentGrid",currentGrid.toString());
     } // Çekilen soruyu kullanıcıya göster
     @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
@@ -539,12 +540,15 @@ public class GroupSolvingActivity extends AppCompatActivity {
         mainFunc();
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "InflateParams"})
     public void openParticipants(View view){
         LayoutInflater factory = getLayoutInflater();
-        ConstraintLayout participantsLayout = (ConstraintLayout) factory.inflate(R.layout.participants_dialog, null);
+        participantsLayout = (ConstraintLayout) factory.inflate(R.layout.participants_dialog, null);
+        ((LinearLayout)participantsLayout.findViewById(R.id.prtpLL)).removeAllViews();
         ConstraintLayout instructorRow= (ConstraintLayout) factory.inflate(this.getResources().getIdentifier("participant_row", "layout", this.getPackageName()),null);
-        ((TextView)instructorRow.findViewById(R.id.usernameTV)).setText(instructorName+ " "+getString(R.string.Ins));
+        ((ImageView)instructorRow.findViewById(R.id.avatarS1)).setImageResource(R.drawable.ic_teacher_usericon);
+        ((TextView)instructorRow.findViewById(R.id.usernameTV)).setText(instructorName);
+        ((LinearLayout)participantsLayout.findViewById(R.id.prtpLL)).addView(instructorRow);
         for(int i = 0; i < participantMap.size(); i++){
             ConstraintLayout participantRow= (ConstraintLayout) factory.inflate(this.getResources().getIdentifier("participant_row", "layout", this.getPackageName()),null);
             ((TextView)participantRow.findViewById(R.id.usernameTV)).setText((String) participantMap.keySet().toArray()[i]);
@@ -562,29 +566,47 @@ public class GroupSolvingActivity extends AppCompatActivity {
         participantsDialog = new AlertDialog.Builder(this).create();
         participantsDialog.setCancelable(false);
         participantsDialog.setView(participantsLayout);
-
-//        participantsLayout.findViewById(R.id.startbutton).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sendGameDiff(participantsLayout);
-//                participantsDialog.dismiss();
-//            }
-//        });
         participantsLayout.findViewById(R.id.closebutton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 participantsDialog.dismiss();
+                isParticipantsShown = false;
             }
         });
         participantsDialog.show();
+        isParticipantsShown = true;
+    }
+
+    public void changeParticipantsInRT(){
+        LayoutInflater factory = getLayoutInflater();
+        ((LinearLayout)participantsLayout.findViewById(R.id.prtpLL)).removeAllViews();
+        ConstraintLayout instructorRow= (ConstraintLayout) factory.inflate(this.getResources().getIdentifier("participant_row", "layout", this.getPackageName()),null);
+        ((ImageView)instructorRow.findViewById(R.id.avatarS1)).setImageResource(R.drawable.ic_teacher_usericon);
+        ((TextView)instructorRow.findViewById(R.id.usernameTV)).setText(instructorName);
+        ((LinearLayout)participantsLayout.findViewById(R.id.prtpLL)).addView(instructorRow);
+        for(int i = 0; i < participantMap.size(); i++){
+            ConstraintLayout participantRow= (ConstraintLayout) factory.inflate(this.getResources().getIdentifier("participant_row", "layout", this.getPackageName()),null);
+            ((TextView)participantRow.findViewById(R.id.usernameTV)).setText((String) participantMap.keySet().toArray()[i]);
+            if(type.contains("nstructor")){
+                participantRow.findViewById(R.id.permissionButton).setVisibility(View.VISIBLE);
+                if((Boolean) participantMap.values().toArray()[i]) {
+                    ((ImageView)participantRow.findViewById(R.id.permissionButton)).setImageResource(R.drawable.ic_delete_icon);
+                } else {
+                    ((ImageView)participantRow.findViewById(R.id.permissionButton)).setImageResource(R.drawable.ic_key_icon);
+                }
+            }
+            ((LinearLayout)participantsLayout.findViewById(R.id.prtpLL)).addView(participantRow);
+        }
+        participantsDialog.setView(participantsLayout);
     }
 
     public void giveOrRemovePermission(View view){
-        if(view.getTag() == "key"){
-            givePermission((String) ((TextView)(((ConstraintLayout)view.getParent()).findViewById(R.id.usernameTV))).getText());
+        String username = (String) ((TextView)(((ConstraintLayout)view.getParent()).findViewById(R.id.usernameTV))).getText();
+        if(!participantMap.get(username)){
+            givePermission(username);
             ((ImageView)view).setImageResource(R.drawable.ic_delete_icon);
         } else {
-            removePermission((String) ((TextView)(((ConstraintLayout)view.getParent()).findViewById(R.id.usernameTV))).getText());
+            removePermission(username);
             ((ImageView)view).setImageResource(R.drawable.ic_key_icon);
         }
     }
@@ -608,7 +630,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         String msg =(String) args[0];
-                        Log.i("sendGrid",msg+ ".");
+                        Log.i("joinClass",msg+ ".");
                         if(msg.equals("failed")){
                             disconnectSocket(null);
                             Toast.makeText(GroupSolvingActivity.this, R.string.Instructor_Hasnt_started, Toast.LENGTH_SHORT).show();
@@ -646,13 +668,13 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(!type.contains("nstructor")) {
+//                        if(!type.contains("nstructor")) {
                             ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
 
                             try {
                                 String result = (String) args[0];
 //                                JSONObject jb = new JSONObject(result);
-                                seperateGridAnswer(new JSONArray(result));
+                                seperateGridAnswer(new JSONArray(result), true);
                                 RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
                                 gridRL.removeAllViews();
                                 gridRL.addView(gridGL);
@@ -660,7 +682,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
-                        }
+//                        }
 
                         Log.i("sendGrid", args[0] + ".");
                     }
@@ -680,11 +702,21 @@ public class GroupSolvingActivity extends AppCompatActivity {
                                 instructorName = prtps.getJSONObject("instructor").getString("username");
                             }
                             JSONArray students = prtps.getJSONArray("students");
+                            List<String> stNameList = new ArrayList<>();
                             for(int i = 0; i<students.length(); i++){
                                 String stName = students.getJSONObject(i).getString("username");
+                                stNameList.add(stName);
                                 if(participantMap.get(stName)==null){
                                     participantMap.put(stName,false);
                                 }
+                            }
+                            for(String s : participantMap.keySet()){
+                                if(!stNameList.contains(s)){
+                                    participantMap.remove(s);
+                                }
+                            }
+                            if(isParticipantsShown){
+                                changeParticipantsInRT();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -702,6 +734,23 @@ public class GroupSolvingActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         isPermitted = true;
+                        operations = new ArrayList<>();
+                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
+                        Toast.makeText(GroupSolvingActivity.this, getString(R.string.permissionGranted), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        socket.on("permissionRemoved", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isPermitted = false;
+                        operations = new ArrayList<>();
+                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
+                        Toast.makeText(GroupSolvingActivity.this, getString(R.string.permissionRemoved), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -756,6 +805,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
     public void givePermission(String username){
         socket.emit("givePermission", username);
         participantMap.put(username,true);
+
     }
 
     public void removePermission(String username){

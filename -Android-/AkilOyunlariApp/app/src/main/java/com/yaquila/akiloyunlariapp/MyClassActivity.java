@@ -724,4 +724,12 @@ public class MyClassActivity extends AppCompatActivity {
             findViewById(R.id.solvingButton).setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MyClassActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+//        super.onBackPressed();
+    }
 }
