@@ -65,5 +65,10 @@
     <string name="Everyone">Tüm Öğrenciler</string>
     <string name="leaveClass">Sınıftan Ayrıl</string>
     <string name="dywt_leave_class">Bu sınıftan ayrılmak istiyor musun?</string>
+    <string name="Start">Başla</string>
+    <string name="Instructor_Hasnt_started">Eğitmen henüz oturumu başlatmadı.</string>
+    <string name="Ins">(Eğt)</string>
+    <string name="permissionGranted">Oyunda değişiklik yapma izni verildi.</string>
+    <string name="permissionRemoved">Oyunda değişiklik yapma izni kaldırıldı.</string>
 
 </resources>

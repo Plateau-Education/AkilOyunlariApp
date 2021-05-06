@@ -198,13 +198,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(getApplicationContext(), GroupSolvingActivity.class);
-        startActivity(intent);
-//        try {
-//            checkSavedQuestions();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }//checkSavedQuestions
+
+        try {
+            checkSavedQuestions();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }//checkSavedQuestions
 
 //        try{
 //            Intent intent = getIntent();
