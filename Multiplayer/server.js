@@ -1,10 +1,8 @@
-require('dotenv').config()
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const lodash = require("lodash")
-const MongoClient = require("mongodb").MongoClient
-const URL = process.env.MONGO_URI
+const axios = require("axios")
 
 const app = express();
 const server = http.createServer(app);
@@ -21,26 +19,11 @@ let waiting3P = {"Sudoku6": [], "Sudoku9": [], "Patika": [], "HazineAvi": [], "P
 let waiting5P = {"Sudoku6": [], "Sudoku9": [], "Patika": [], "HazineAvi": [], "Piramit": [],
                  "SayiBulmaca": [], "SozcukTuru": [], "Anagram": [], "Pentomino": []}
 let waiting = {2: waiting2P, 3: waiting3P, 5: waiting5P}
-const gameDict = {"Sudoku.6": ["Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard"], 
-                  "Sudoku.9": ["Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard"],
-                  "Patika": ["Patika.5", "Patika.7", "Patika.9"],
-                  "HazineAvi": ["HazineAvi.5", "HazineAvi.8", "HazineAvi.10"],
-                  "SayiBulmaca": ["SayiBulmaca.3", "SayiBulmaca.4", "SayiBulmaca.5"],
-                  "SozcukTuru": ["SozcukTuru.Easy", "SozcukTuru.Medium", "SozcukTuru.Hard"], 
-                  "Anagram": ["Anagram.Easy", "Anagram.Medium", "Anagram.Hard"],
-                  "Piramit": ["Piramit.3", "Piramit.4", "Piramit.5", "Piramit.6"],
-                  "Pentomino": ["Pentomino.Easy", "Pentomino.Medium", "Pentomino.Hard"]}
 
-MongoClient.connect(URL, (err, client) => {
-  if (err) throw err;
-  console.log('MongoDB bağlantısı başarıyla gerçekleştirildi.');
-  client.close();
-});
-const getGames = (game => {
-  let res = []
-  let gameList = gameDict[game]
-
-})
+const getWords = async (game) => {
+  const res = await axios.get(`https://akiloyunlariapp.herokuapp.com/${game}/userid`, {params: {Token: "fx!Ay:;<p6Q?C8N{", Info: 1, "Multiplayer": 1}})
+  return await res.data;
+};
 
 io.on("connection", socket => {
   let roomId = null
@@ -63,15 +46,21 @@ io.on("connection", socket => {
     roomId = socket.id
     let needNum = pType - compatiplePlayers.length - 1
     let neededPlayers = needNum > 0 ? needNum : 0
-    playersInRoom = lodash.sampleSize(waiting[pType][game], neededPlayers)
-    playersInRoom.concat( compatiplePlayers.slice(0, pType - neededPlayers - 1))
-    playersInRoom.push({id: socket.id, cluster: clust, score: null})
-    waiting[pType][game] = waiting[pType][game].filter(player => playersInRoom.findIndex(pl => pl.id === player.id) === -1)
-    rooms[pType].push({id: roomId, players: playersInRoom, currentP: 0, currentS: 0, games: getGames(game)})
-    for (const sock of playersInRoom) {
-      io.to(sock.id).emit("roomFound", socket.id)
+    if (waiting[pType][game].length < neededPlayers) {
+      io.to(socket.id).emit("wait")
     }
-    // kimse yoksa wait dönsün
+    else {
+      playersInRoom = lodash.sampleSize(waiting[pType][game], neededPlayers)
+      playersInRoom.concat( compatiplePlayers.slice(0, pType - neededPlayers - 1))
+      playersInRoom.push({id: socket.id, cluster: clust, score: null})
+      waiting[pType][game] = waiting[pType][game].filter(player => playersInRoom.findIndex(pl => pl.id === player.id) === -1)
+      getGames(game).then(dat => {
+        rooms[pType].push({id: roomId, players: playersInRoom, currentP: 0, currentS: 0, games: dat})
+      })    
+      for (const sock of playersInRoom) {
+        io.to(sock.id).emit("roomFound", socket.id)
+      }
+    }
   })
   socket.on("getInRoom", data => {
     let choosenRoom = rooms[pType].findIndex(room => room.id === data) 
