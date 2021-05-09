@@ -382,7 +382,10 @@ public class GroupSolvingActivity extends AppCompatActivity {
             isConnected = true;
             connectSocket();
             joinClass();
+        } else if (type.contains("nstructor")){
+            sendGrid();
         }
+
         Log.i("clueIndexes",clueIndexes.toString());
         Log.i("currentGrid",currentGrid.toString());
     } // Çekilen soruyu kullanıcıya göster
@@ -398,9 +401,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
         map.put("Zor",R.string.Hard);
         return map.get(diff);
     }
-    public String visibleToDatabase(String visibleOrDatabase, String string){
+    public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
-        List<String> gosterilenOyunIsimleri = new ArrayList<>(Arrays.asList(
+        List<String> shownGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
                 "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
                 "Hazine Avı "+getString(R.string.Easy), "Hazine Avı "+getString(R.string.Medium), "Hazine Avı "+getString(R.string.Hard),
@@ -408,15 +411,15 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 "Sayı Bulmaca "+getString(R.string.Easy), "Sayı Bulmaca "+getString(R.string.Medium), "Sayı Bulmaca "+getString(R.string.Hard),
                 "Sözcük Turu "+getString(R.string.Easy), "Sözcük Turu "+getString(R.string.Medium), "Sözcük Turu "+getString(R.string.Hard), "Sözcük Turu "+getString(R.string.VeryHard),
                 "Piramit "+getString(R.string.Easy), "Piramit "+getString(R.string.Medium), "Piramit "+getString(R.string.Hard), "Piramit "+getString(R.string.VeryHard)));
-        List<String> databaseOyunIsimleri = new ArrayList<>(Arrays.asList(
+        List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
                 "SayiBulmaca.3", "SayiBulmaca.4", "SayiBulmaca.5", "SozcukTuru.Easy", "SozcukTuru.Medium", "SozcukTuru.Hard", "SozcukTuru.Hardest",
                 "Piramit.3", "Piramit.4","Piramit.5","Piramit.6"));
-        for(int i = 0; i<gosterilenOyunIsimleri.size(); i++)
-            visibleToDB.put(gosterilenOyunIsimleri.get(i),databaseOyunIsimleri.get(i));
+        for(int i = 0; i<shownGameNames.size(); i++)
+            visibleToDB.put(shownGameNames.get(i),databaseGameNames.get(i));
 
-        if(visibleOrDatabase.equals("visibleToDatabase")){
+        if(visibleOrDatabase.equals("shownToDatabase")){
             return visibleToDB.get(string);
         }
         else{
@@ -426,6 +429,20 @@ public class GroupSolvingActivity extends AppCompatActivity {
             }
             return dbToVisible.get(string);
         }
+    }
+    public boolean checkIfGridHasDC(JSONArray grid) throws JSONException{
+        boolean flag = false;
+        for(int i = 0; i < gridSize; i++) {
+            if(flag) break;
+            for (int j = 0; j < gridSize; j++) {
+                String n = ((JSONArray)grid.get(i)).get(j).toString();
+                if(n.equals("-1") || n.equals("-2")){
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        return flag;
     }
     public void clearGrid(){
         operations = new ArrayList<>();
@@ -524,7 +541,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
 
     public void sendGameDiff(View view){
         newTaskProperties = new ArrayList<>();
-        newTaskProperties.add(visibleToDatabase("visibleToDatabase",gameSpinner.getSelectedItem() +" "+ diffSpinner.getSelectedItem()));
+        newTaskProperties.add(shownToDatabase("shownToDatabase",gameSpinner.getSelectedItem() +" "+ diffSpinner.getSelectedItem()));
         dbGameName = newTaskProperties.get(0);
         String[] ntp = newTaskProperties.get(0).split("\\.");
         gridSize = Integer.parseInt(ntp[1]);
@@ -623,14 +640,14 @@ public class GroupSolvingActivity extends AppCompatActivity {
     public void connectSocket(){
         socket.connect();
         Log.i("Connected","Connected");
-        socket.on("joinClass", new Emitter.Listener() {
+        socket.on("joinToRoom", new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         String msg =(String) args[0];
-                        Log.i("joinClass",msg+ ".");
+                        Log.i("joinToRoom",msg+ ".");
                         if(msg.equals("failed")){
                             disconnectSocket(null);
                             Toast.makeText(GroupSolvingActivity.this, R.string.Instructor_Hasnt_started, Toast.LENGTH_SHORT).show();
@@ -674,7 +691,12 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             try {
                                 String result = (String) args[0];
 //                                JSONObject jb = new JSONObject(result);
-                                seperateGridAnswer(new JSONArray(result), true);
+                                JSONArray grid = new JSONArray(result);
+                                if(!checkIfGridHasDC(grid)){
+                                    clearGrid();
+                                    Log.i("grid","cleared");
+                                }
+                                seperateGridAnswer(grid, true);
                                 RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
                                 gridRL.removeAllViews();
                                 gridRL.addView(gridGL);

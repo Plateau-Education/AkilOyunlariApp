@@ -70,5 +70,13 @@
     <string name="Ins">(Eğt)</string>
     <string name="permissionGranted">Oyunda değişiklik yapma izni verildi.</string>
     <string name="permissionRemoved">Oyunda değişiklik yapma izni kaldırıldı.</string>
+    <string name="singlePlayer">Tek Oyunculu</string>
+    <string name="multiplayer">Çok Oyunculu</string>
+    <string name="tournament">Turnuva</string>
+    <string name="WaitingForOpponents">Rakip bekleniyor...</string>
+    <string name="GameMode">Oyun Modu</string>
+    <string name="Opponents">Rakipler</string>
+    <string name="Results">Sonuçlar</string>
+    <string name="QuestionShortQ">S</string>
 
 </resources>

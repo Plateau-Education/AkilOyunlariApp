@@ -3,6 +3,7 @@ package com.yaquila.akiloyunlariapp;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -45,6 +47,8 @@ import java.util.Objects;
 public class GameListActivity extends AppCompatActivity {
 
     int currentExtendedRow = 0;
+    String type = "single";
+    String pType = "2";
 
     public void goToHowtoplay(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
@@ -66,13 +70,25 @@ public class GameListActivity extends AppCompatActivity {
 
     public void goToDifficulty(View view){
         Intent intent = new Intent(getApplicationContext(), DifficultyActivity.class);
+
         if(currentExtendedRow == 1){
             intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+            if(type.contains("multi")){
+                intent.putExtra("pType",pType);
+            }
         }
         else if(currentExtendedRow % 2 == 1){
+            if(type.contains("multi")){
+                intent = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                intent.putExtra("pType",pType);
+            }
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(1)).getText());
         }
         else{
+            if(type.contains("multi")){
+                intent = new Intent(getApplicationContext(), MultiplayerActivity.class);
+                intent.putExtra("pType",pType);
+            }
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(0)).getText());
         }
         startActivity(intent);
@@ -129,71 +145,76 @@ public class GameListActivity extends AppCompatActivity {
     public void transferBests(JSONObject jo) throws JSONException {
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
 
+        if(type.equals("single")) {
+            sP.edit().putString("ScoreSudoku.6.Easy", Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(0))).apply();
+            sP.edit().putString("ScoreSudoku.6.Medium", Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(0))).apply();
+            sP.edit().putString("ScoreSudoku.6.Hard", Integer.toString(jo.getJSONArray("Sudoku.6.Hard").getInt(0))).apply();
+            sP.edit().putString("ScoreSudoku.9.Easy", Integer.toString(jo.getJSONArray("Sudoku.9.Easy").getInt(0))).apply();
+            sP.edit().putString("ScoreSudoku.9.Medium", Integer.toString(jo.getJSONArray("Sudoku.9.Medium").getInt(0))).apply();
+            sP.edit().putString("ScoreSudoku.9.Hard", Integer.toString(jo.getJSONArray("Sudoku.9.Hard").getInt(0))).apply();
 
-        sP.edit().putString("ScoreSudoku.6.Easy",Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(0))).apply();
-        sP.edit().putString("ScoreSudoku.6.Medium",Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(0))).apply();
-        sP.edit().putString("ScoreSudoku.6.Hard",Integer.toString(jo.getJSONArray("Sudoku.6.Hard").getInt(0))).apply();
-        sP.edit().putString("ScoreSudoku.9.Easy",Integer.toString(jo.getJSONArray("Sudoku.9.Easy").getInt(0))).apply();
-        sP.edit().putString("ScoreSudoku.9.Medium",Integer.toString(jo.getJSONArray("Sudoku.9.Medium").getInt(0))).apply();
-        sP.edit().putString("ScoreSudoku.9.Hard",Integer.toString(jo.getJSONArray("Sudoku.9.Hard").getInt(0))).apply();
+            sP.edit().putString("ScoreHazineAvi.Easy", Integer.toString(jo.getJSONArray("HazineAvi.5").getInt(0))).apply();
+            sP.edit().putString("ScoreHazineAvi.Medium", Integer.toString(jo.getJSONArray("HazineAvi.8").getInt(0))).apply();
+            sP.edit().putString("ScoreHazineAvi.Hard", Integer.toString(jo.getJSONArray("HazineAvi.10").getInt(0))).apply();
 
-        sP.edit().putString("ScoreHazineAvi.Easy",Integer.toString(jo.getJSONArray("HazineAvi.5").getInt(0))).apply();
-        sP.edit().putString("ScoreHazineAvi.Medium",Integer.toString(jo.getJSONArray("HazineAvi.8").getInt(0))).apply();
-        sP.edit().putString("ScoreHazineAvi.Hard",Integer.toString(jo.getJSONArray("HazineAvi.10").getInt(0))).apply();
+            sP.edit().putString("ScorePatika.Easy", Integer.toString(jo.getJSONArray("Patika.5").getInt(0))).apply();
+            sP.edit().putString("ScorePatika.Medium", Integer.toString(jo.getJSONArray("Patika.7").getInt(0))).apply();
+            sP.edit().putString("ScorePatika.Hard", Integer.toString(jo.getJSONArray("Patika.9").getInt(0))).apply();
 
-        sP.edit().putString("ScorePatika.Easy",Integer.toString(jo.getJSONArray("Patika.5").getInt(0))).apply();
-        sP.edit().putString("ScorePatika.Medium",Integer.toString(jo.getJSONArray("Patika.7").getInt(0))).apply();
-        sP.edit().putString("ScorePatika.Hard",Integer.toString(jo.getJSONArray("Patika.9").getInt(0))).apply();
+            sP.edit().putString("ScoreSayiBulmaca.Easy", Integer.toString(jo.getJSONArray("SayiBulmaca.3").getInt(0))).apply();
+            sP.edit().putString("ScoreSayiBulmaca.Medium", Integer.toString(jo.getJSONArray("SayiBulmaca.4").getInt(0))).apply();
+            sP.edit().putString("ScoreSayiBulmaca.Hard", Integer.toString(jo.getJSONArray("SayiBulmaca.5").getInt(0))).apply();
 
-        sP.edit().putString("ScoreSayiBulmaca.Easy",Integer.toString(jo.getJSONArray("SayiBulmaca.3").getInt(0))).apply();
-        sP.edit().putString("ScoreSayiBulmaca.Medium",Integer.toString(jo.getJSONArray("SayiBulmaca.4").getInt(0))).apply();
-        sP.edit().putString("ScoreSayiBulmaca.Hard",Integer.toString(jo.getJSONArray("SayiBulmaca.5").getInt(0))).apply();
+            sP.edit().putString("ScoreSozcukTuru.Easy", Integer.toString(jo.getJSONArray("SozcukTuru.Easy").getInt(0))).apply();
+            sP.edit().putString("ScoreSozcukTuru.Medium", Integer.toString(jo.getJSONArray("SozcukTuru.Medium").getInt(0))).apply();
+            sP.edit().putString("ScoreSozcukTuru.Hard", Integer.toString(jo.getJSONArray("SozcukTuru.Hard").getInt(0))).apply();
+            sP.edit().putString("ScoreSozcukTuru.VeryHard", Integer.toString(jo.getJSONArray("SozcukTuru.Hardest").getInt(0))).apply();
 
-        sP.edit().putString("ScoreSozcukTuru.Easy",Integer.toString(jo.getJSONArray("SozcukTuru.Easy").getInt(0))).apply();
-        sP.edit().putString("ScoreSozcukTuru.Medium",Integer.toString(jo.getJSONArray("SozcukTuru.Medium").getInt(0))).apply();
-        sP.edit().putString("ScoreSozcukTuru.Hard",Integer.toString(jo.getJSONArray("SozcukTuru.Hard").getInt(0))).apply();
-        sP.edit().putString("ScoreSozcukTuru.VeryHard",Integer.toString(jo.getJSONArray("SozcukTuru.Hardest").getInt(0))).apply();
-
-        sP.edit().putString("ScorePiramit.Easy",Integer.toString(jo.getJSONArray("Piramit.3").getInt(0))).apply();
-        sP.edit().putString("ScorePiramit.Medium",Integer.toString(jo.getJSONArray("Piramit.4").getInt(0))).apply();
-        sP.edit().putString("ScorePİramit.Hard",Integer.toString(jo.getJSONArray("Piramit.5").getInt(0))).apply();
-        sP.edit().putString("ScorePiramit.VeryHard",Integer.toString(jo.getJSONArray("Piramit.6").getInt(0))).apply();
-
-
+            sP.edit().putString("ScorePiramit.Easy", Integer.toString(jo.getJSONArray("Piramit.3").getInt(0))).apply();
+            sP.edit().putString("ScorePiramit.Medium", Integer.toString(jo.getJSONArray("Piramit.4").getInt(0))).apply();
+            sP.edit().putString("ScorePiramit.Hard", Integer.toString(jo.getJSONArray("Piramit.5").getInt(0))).apply();
+            sP.edit().putString("ScorePiramit.VeryHard", Integer.toString(jo.getJSONArray("Piramit.6").getInt(0))).apply();
 
 
-        sP.edit().putString("BestSudoku.6.Easy",Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(1))).apply();
-        sP.edit().putString("BestSudoku.6.Medium",Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(1))).apply();
-        sP.edit().putString("BestSudoku.6.Hard",Integer.toString(jo.getJSONArray("Sudoku.6.Hard").getInt(1))).apply();
-        sP.edit().putString("BestSudoku.9.Easy",Integer.toString(jo.getJSONArray("Sudoku.9.Easy").getInt(1))).apply();
-        sP.edit().putString("BestSudoku.9.Medium",Integer.toString(jo.getJSONArray("Sudoku.9.Medium").getInt(1))).apply();
-        sP.edit().putString("BestSudoku.9.Hard",Integer.toString(jo.getJSONArray("Sudoku.9.Hard").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.6.Easy", Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.6.Medium", Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.6.Hard", Integer.toString(jo.getJSONArray("Sudoku.6.Hard").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.9.Easy", Integer.toString(jo.getJSONArray("Sudoku.9.Easy").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.9.Medium", Integer.toString(jo.getJSONArray("Sudoku.9.Medium").getInt(1))).apply();
+            sP.edit().putString("BestSudoku.9.Hard", Integer.toString(jo.getJSONArray("Sudoku.9.Hard").getInt(1))).apply();
 
-        sP.edit().putString("BestHazineAvi.Easy",Integer.toString(jo.getJSONArray("HazineAvi.5").getInt(1))).apply();
-        sP.edit().putString("BestHazineAvi.Medium",Integer.toString(jo.getJSONArray("HazineAvi.8").getInt(1))).apply();
-        sP.edit().putString("BestHazineAvi.Hard",Integer.toString(jo.getJSONArray("HazineAvi.10").getInt(1))).apply();
+            sP.edit().putString("BestHazineAvi.Easy", Integer.toString(jo.getJSONArray("HazineAvi.5").getInt(1))).apply();
+            sP.edit().putString("BestHazineAvi.Medium", Integer.toString(jo.getJSONArray("HazineAvi.8").getInt(1))).apply();
+            sP.edit().putString("BestHazineAvi.Hard", Integer.toString(jo.getJSONArray("HazineAvi.10").getInt(1))).apply();
 
-        sP.edit().putString("BestPatika.Easy",Integer.toString(jo.getJSONArray("Patika.5").getInt(1))).apply();
-        sP.edit().putString("BestPatika.Medium",Integer.toString(jo.getJSONArray("Patika.7").getInt(1))).apply();
-        sP.edit().putString("BestPatika.Hard",Integer.toString(jo.getJSONArray("Patika.9").getInt(1))).apply();
+            sP.edit().putString("BestPatika.Easy", Integer.toString(jo.getJSONArray("Patika.5").getInt(1))).apply();
+            sP.edit().putString("BestPatika.Medium", Integer.toString(jo.getJSONArray("Patika.7").getInt(1))).apply();
+            sP.edit().putString("BestPatika.Hard", Integer.toString(jo.getJSONArray("Patika.9").getInt(1))).apply();
 
-        sP.edit().putString("BestSayiBulmaca.Easy",Integer.toString(jo.getJSONArray("SayiBulmaca.3").getInt(1))).apply();
-        sP.edit().putString("BestSayiBulmaca.Medium",Integer.toString(jo.getJSONArray("SayiBulmaca.4").getInt(1))).apply();
-        sP.edit().putString("BestSayiBulmaca.Hard",Integer.toString(jo.getJSONArray("SayiBulmaca.5").getInt(1))).apply();
+            sP.edit().putString("BestSayiBulmaca.Easy", Integer.toString(jo.getJSONArray("SayiBulmaca.3").getInt(1))).apply();
+            sP.edit().putString("BestSayiBulmaca.Medium", Integer.toString(jo.getJSONArray("SayiBulmaca.4").getInt(1))).apply();
+            sP.edit().putString("BestSayiBulmaca.Hard", Integer.toString(jo.getJSONArray("SayiBulmaca.5").getInt(1))).apply();
 
-        sP.edit().putString("BestSozcukTuru.Easy",Integer.toString(jo.getJSONArray("SozcukTuru.Easy").getInt(1))).apply();
-        sP.edit().putString("BestSozcukTuru.Medium",Integer.toString(jo.getJSONArray("SozcukTuru.Medium").getInt(1))).apply();
-        sP.edit().putString("BestSozcukTuru.Hard",Integer.toString(jo.getJSONArray("SozcukTuru.Hard").getInt(1))).apply();
-        sP.edit().putString("BestSozcukTuru.VeryHard",Integer.toString(jo.getJSONArray("SozcukTuru.Hardest").getInt(1))).apply();
+            sP.edit().putString("BestSozcukTuru.Easy", Integer.toString(jo.getJSONArray("SozcukTuru.Easy").getInt(1))).apply();
+            sP.edit().putString("BestSozcukTuru.Medium", Integer.toString(jo.getJSONArray("SozcukTuru.Medium").getInt(1))).apply();
+            sP.edit().putString("BestSozcukTuru.Hard", Integer.toString(jo.getJSONArray("SozcukTuru.Hard").getInt(1))).apply();
+            sP.edit().putString("BestSozcukTuru.VeryHard", Integer.toString(jo.getJSONArray("SozcukTuru.Hardest").getInt(1))).apply();
 
-        sP.edit().putString("BestPiramit.Easy",Integer.toString(jo.getJSONArray("Piramit.3").getInt(1))).apply();
-        sP.edit().putString("BestPiramit.Medium",Integer.toString(jo.getJSONArray("Piramit.4").getInt(1))).apply();
-        sP.edit().putString("BestPiramit.Hard",Integer.toString(jo.getJSONArray("Piramit.5").getInt(1))).apply();
-        sP.edit().putString("BestPiramit.VeryHard",Integer.toString(jo.getJSONArray("Piramit.6").getInt(1))).apply();
+            sP.edit().putString("BestPiramit.Easy", Integer.toString(jo.getJSONArray("Piramit.3").getInt(1))).apply();
+            sP.edit().putString("BestPiramit.Medium", Integer.toString(jo.getJSONArray("Piramit.4").getInt(1))).apply();
+            sP.edit().putString("BestPiramit.Hard", Integer.toString(jo.getJSONArray("Piramit.5").getInt(1))).apply();
+            sP.edit().putString("BestPiramit.VeryHard", Integer.toString(jo.getJSONArray("Piramit.6").getInt(1))).apply();
 
 
-
-        Log.i("allSPs", sP.getString("ScoreHazineAvi.Easy","")+" / "+sP.getString("BestHazineAvi.Easy",""));
+            Log.i("allSPs", sP.getString("ScoreHazineAvi.Easy", "") + " / " + sP.getString("BestHazineAvi.Easy", ""));
+        } else if (type.contains("multi")){
+            sP.edit().putString("SudokuCluster", Integer.toString(jo.getInt("Sudoku"))).apply();
+            sP.edit().putString("HazineAviCluster", Integer.toString(jo.getInt("HazineAvi"))).apply();
+            sP.edit().putString("PatikaCluster", Integer.toString(jo.getInt("Patika"))).apply();
+            sP.edit().putString("SayiBulmacaCluster", Integer.toString(jo.getInt("SayiBulmaca"))).apply();
+            sP.edit().putString("SozcukTuruCluster", Integer.toString(jo.getInt("SozcukTuru"))).apply();
+            sP.edit().putString("PiramitCluster", Integer.toString(jo.getInt("Piramit"))).apply();
+        }
     }
 
     @SuppressWarnings("deprecation")
@@ -355,7 +376,19 @@ public class GameListActivity extends AppCompatActivity {
         if(message!=null){
             Toast.makeText(this, message, Toast.LENGTH_LONG).show();
         }
-
+        type = intent.getStringExtra("type");
+        if(type!=null){
+            if(type.equals("single")){
+                findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.light_blue_green));
+            } else if(type.contains("multi")){
+                pType = String.valueOf(type.charAt(type.length()-1));
+                type = type.substring(0,type.length()-1);
+                findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.light_red));
+            } else {
+                findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.yellowish));
+            }
+            Log.i("type",type);
+        }
         findViewById(R.id.pentominoLL_GL).setEnabled(false);
         findViewById(R.id.anagramLL_GL).setEnabled(false);
 
@@ -363,9 +396,12 @@ public class GameListActivity extends AppCompatActivity {
         try{
             Log.i("getReq","in onCreate");
             GetRequest getRequest = new GetRequest();
-            //noinspection deprecation
-            getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
-
+            if(type.equals("single")) {
+                //noinspection deprecation
+                getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest", "fx!Ay:;<p6Q?C8N{");
+            } else{
+                getRequest.execute("https://akiloyunlariapp.herokuapp.com/userCluster", "fx!Ay:;<p6Q?C8N{");
+            }
 
         } catch (Exception e){
             e.printStackTrace();
@@ -415,7 +451,7 @@ public class GameListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), GameTypesActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }

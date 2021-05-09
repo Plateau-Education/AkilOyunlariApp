@@ -166,8 +166,8 @@ public class MyClassActivity extends AppCompatActivity {
                 for (int i = 0; i < tasks4Student.length(); i++) {
                     JSONArray task = (JSONArray) tasks4Student.get(i);
                     ConstraintLayout taskRow = (ConstraintLayout) getLayoutInflater().inflate(this.getResources().getIdentifier("task_row_student", "layout", this.getPackageName()),null);
-                    Log.i("task",visibleToDatabase("databaseToVisible",task.getString(0)));
-                    ((TextView)taskRow.findViewById(R.id.gameNameTV_taskrow)).setText(visibleToDatabase("databaseToVisible",task.getString(0)));
+                    Log.i("task",shownToDatabase("databaseToShown",task.getString(0)));
+                    ((TextView)taskRow.findViewById(R.id.gameNameTV_taskrow)).setText(shownToDatabase("databaseToShown",task.getString(0)));
                     ((TextView)taskRow.findViewById(R.id.progressTV_taskrow)).setText(task.getInt(2)+" / "+task.getInt(1));
                     taskRow.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                     tasksLL.addView(taskRow);
@@ -262,7 +262,7 @@ public class MyClassActivity extends AppCompatActivity {
         if(String.valueOf(nameSpinner.getSelectedItem()).equals(getString(R.string.Everyone))) newTaskProperties.add("all");
         else newTaskProperties.add(studentIds.get(studentNames.indexOf(String.valueOf(nameSpinner.getSelectedItem()))-1));
 
-        newTaskProperties.add(visibleToDatabase("visibleToDatabase",gameSpinner.getSelectedItem() +" "+ diffSpinner.getSelectedItem()));
+        newTaskProperties.add(shownToDatabase("shownToDatabase",gameSpinner.getSelectedItem() +" "+ diffSpinner.getSelectedItem()));
         newTaskProperties.add(String.valueOf(((EditText)view.findViewById(R.id.editTextNumber)).getText()));
 
         PostRequest postRequest = new PostRequest();
@@ -621,7 +621,7 @@ public class MyClassActivity extends AppCompatActivity {
             for (int j = 0; j < tasks.length(); j++) {
                 JSONArray task = (JSONArray) tasks.get(j);
                 ConstraintLayout taskRow = (ConstraintLayout) getLayoutInflater().inflate(this.getResources().getIdentifier("task_row_student", "layout", this.getPackageName()),null);
-                ((TextView)taskRow.findViewById(R.id.gameNameTV_taskrow)).setText(visibleToDatabase("databaseToVisible",task.getString(0)));
+                ((TextView)taskRow.findViewById(R.id.gameNameTV_taskrow)).setText(shownToDatabase("databaseToShown",task.getString(0)));
                 ((TextView)taskRow.findViewById(R.id.progressTV_taskrow)).setText(task.getInt(2)+" / "+task.getInt(1));
                 taskRow.setLayoutParams(new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -655,9 +655,9 @@ public class MyClassActivity extends AppCompatActivity {
         arrangeTasks4Instructor(tasks4Instructor);
     }
 
-    public String visibleToDatabase(String visibleOrDatabase, String string){
+    public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
-        List<String> gosterilenOyunIsimleri = new ArrayList<>(Arrays.asList(
+        List<String> shownGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
                 "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
                 "Hazine Avı "+getString(R.string.Easy), "Hazine Avı "+getString(R.string.Medium), "Hazine Avı "+getString(R.string.Hard),
@@ -665,15 +665,15 @@ public class MyClassActivity extends AppCompatActivity {
                 "Sayı Bulmaca "+getString(R.string.Easy), "Sayı Bulmaca "+getString(R.string.Medium), "Sayı Bulmaca "+getString(R.string.Hard),
                 "Sözcük Turu "+getString(R.string.Easy), "Sözcük Turu "+getString(R.string.Medium), "Sözcük Turu "+getString(R.string.Hard), "Sözcük Turu "+getString(R.string.VeryHard),
                 "Piramit "+getString(R.string.Easy), "Piramit "+getString(R.string.Medium), "Piramit "+getString(R.string.Hard), "Piramit "+getString(R.string.VeryHard)));
-        List<String> databaseOyunIsimleri = new ArrayList<>(Arrays.asList(
+        List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
                 "SayiBulmaca.3", "SayiBulmaca.4", "SayiBulmaca.5", "SozcukTuru.Easy", "SozcukTuru.Medium", "SozcukTuru.Hard", "SozcukTuru.Hardest",
                 "Piramit.3", "Piramit.4","Piramit.5","Piramit.6"));
-        for(int i = 0; i<gosterilenOyunIsimleri.size(); i++)
-            visibleToDB.put(gosterilenOyunIsimleri.get(i),databaseOyunIsimleri.get(i));
+        for(int i = 0; i<shownGameNames.size(); i++)
+            visibleToDB.put(shownGameNames.get(i),databaseGameNames.get(i));
 
-        if(visibleOrDatabase.equals("visibleToDatabase")){
+        if(visibleOrDatabase.equals("shownToDatabase")){
             return visibleToDB.get(string);
         }
         else{
@@ -727,7 +727,7 @@ public class MyClassActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getApplicationContext(), MyClassActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
 //        super.onBackPressed();

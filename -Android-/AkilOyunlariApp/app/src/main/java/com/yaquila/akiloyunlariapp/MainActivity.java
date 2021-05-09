@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToGameList(View view){
         Intent intent = new Intent(getApplicationContext(),
-                GameListActivity.class);
+                GameTypesActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
