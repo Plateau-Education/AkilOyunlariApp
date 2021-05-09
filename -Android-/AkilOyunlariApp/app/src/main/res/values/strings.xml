@@ -69,4 +69,12 @@
     <string name="Ins">(Ins)</string>
     <string name="permissionGranted">Permission to make changes on the grid is granted.</string>
     <string name="permissionRemoved">Permission to make changes on the grid is removed</string>
+    <string name="singlePlayer">Single Player</string>
+    <string name="multiplayer">Multiplayer</string>
+    <string name="tournament">Tournament</string>
+    <string name="WaitingForOpponents">Waiting For Opponents...</string>
+    <string name="GameMode">Game Mode</string>
+    <string name="Opponents">Opponents</string>
+    <string name="Results">Results</string>
+    <string name="QuestionShortQ">Q</string>
 </resources>

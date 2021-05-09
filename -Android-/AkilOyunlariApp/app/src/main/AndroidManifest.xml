@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GroupSolvingActivity"></activity>
+        <activity android:name=".MultiplayerActivity"></activity>
+        <activity android:name=".GameTypesActivity" />
+        <activity android:name=".GroupSolvingActivity" />
         <activity android:name=".GameGuideActivity" />
         <activity android:name=".MyClassActivity" />
         <activity android:name=".LeaderboardActivity" />
