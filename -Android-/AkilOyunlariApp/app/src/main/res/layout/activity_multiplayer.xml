@@ -190,7 +190,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         android:orientation="vertical"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@drawable/less_rounded_light_bluegreen_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

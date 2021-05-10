@@ -63,12 +63,14 @@ public class MultiplayerActivity extends AppCompatActivity {
     int numberOfQ = 3;
     int currentQ = 0;
     int totalSolveTime;
+    int score = 0;
     long currentTimeInMillis;
     long afterTenMinMillis;
     boolean inTheRoom = false;
+    boolean gotScores;
 
     List<String> playerNames = new ArrayList<>();
-    Map<String, Integer> playerSMap = new HashMap<>();
+    List<Integer> solveTimeList = new ArrayList<>();
     JSONArray allQs = new JSONArray();
     TextView timerTV;
 
@@ -83,7 +85,6 @@ public class MultiplayerActivity extends AppCompatActivity {
     List<List<String>> operations = new ArrayList<>();
     List<String> clueIndexes = new ArrayList<>();
     List<String> answer = new ArrayList<>();
-    LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
 
@@ -119,6 +120,10 @@ public class MultiplayerActivity extends AppCompatActivity {
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
+                disconnectSocket();
+                timerStopped=true;
+                inTheRoom=true;
+                gotScores=true;
                 Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
                 intent.putExtra("type","multi"+pType);
                 startActivity(intent);
@@ -142,7 +147,7 @@ public class MultiplayerActivity extends AppCompatActivity {
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
             TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-            timerTV.setText(formatTime(timerInSeconds));
+            timerTV.setVisibility(GONE);
             correctDialog.setView(leaveDialogView);
 
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
@@ -311,16 +316,16 @@ public class MultiplayerActivity extends AppCompatActivity {
 //            }
 //        }
         Log.i("check",checking+"  "+answer);
-        if(checking){
+        if(checking) {
 
-            if(currentQ!=numberOfQ) {
+            if (currentQ != numberOfQ) {
                 timerStopped = true;
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
                 final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
                 TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
                 timerTV.setText(formatTime(timerInSeconds));
-                totalSolveTime += timerInSeconds;
+//                totalSolveTime += timerInSeconds;
                 correctDialog.setView(leaveDialogView);
 
                 findViewById(R.id.clickView).setVisibility(View.VISIBLE);
@@ -357,10 +362,25 @@ public class MultiplayerActivity extends AppCompatActivity {
 //            });
                 leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
                 correctDialog.show();
+            } else {
+                Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ);
+                solveTimeList.add(timerInSeconds-solveTimeList.get(1)-solveTimeList.get(0));
+                score = 10 + 30 + 60;
+                if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
+                if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
+                if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
+                Log.i("solveTimeList",solveTimeList.toString());
+                Log.i("score",score+"");
+                timerStopped=true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setContentView(R.layout.activity_multiplayer);
+                        findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
+//                sendScore(score);
+                    }
+                },500);
             }
-        }
-        else {
-            sendScore();
         }
     } // Çözümün doğruluğunu kontrol et
 
@@ -392,16 +412,27 @@ public class MultiplayerActivity extends AppCompatActivity {
                 timerInSeconds+=1;
                 Log.i("timerInSeconds",((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
                 timerTV.setText(formatTime((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
-                totalSolveTime = (int)(afterTenMinMillis-Calendar.getInstance().getTimeInMillis());
+//                totalSolveTime = (int)(afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000;
                 if((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())>300){
                     timerStopped=false;
                 }
                 else{
                     timerStopped=true;
+                    if(currentQ==1){
+                        score=0;
+                    } else if(currentQ==2){
+                        score = 10;
+                        if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
+                    } else if(currentQ==3){
+                        score = (int)(10f + (((60f-solveTimeList.get(0))/60f)*10f) + 30f + (((180f-solveTimeList.get(1))/180f)*30f));
+                        if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
+                        if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
+                    }
                     setContentView(R.layout.activity_multiplayer);
                     findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
 
-                    sendScore();
+                    Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ +" time: "+totalSolveTime);
+                    sendScore(score);
                 }
                 if(!timerStopped){
                     timerHandler.postDelayed(this,1000);
@@ -441,14 +472,18 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     public void mainFunc() throws JSONException {
         if(currentQ == 1){
+            solveTimeList.add(timerInSeconds);
             setContentView(R.layout.activity_game_hazine_avi8);
             timerTV = findViewById(R.id.timeTV_game);
             gridSize=8;
+            Log.i("solveTimeList",solveTimeList.toString());
         }
         else if(currentQ == 2){
+            solveTimeList.add(timerInSeconds-solveTimeList.get(0));
             setContentView(R.layout.activity_game_hazine_avi10);
             timerTV = findViewById(R.id.timeTV_game);
             gridSize=10;
+            Log.i("solveTimeList",solveTimeList.toString());
         }
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
@@ -497,6 +532,9 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     public void goToGameList(View view){
         disconnectSocket();
+        timerStopped=true;
+        inTheRoom=true;
+        gotScores=true;
         Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
         intent.putExtra("type","multi"+pType);
         startActivity(intent);
@@ -598,28 +636,22 @@ public class MultiplayerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
+                            gotScores=true;
                             findViewById(R.id.waitingDialogCL).setVisibility(GONE);
                             JSONArray players = (JSONArray) args[0];
                             for(int i = 0; i<players.length(); i++){
                                 JSONObject player = players.getJSONObject(i);
                                 String plName = player.getString("username");
                                 int plScore = players.getJSONObject(i).getInt("score");
-                                playerSMap.put(plName,plScore);
-                                findViewById(R.id.opponentNamesLL).findViewWithTag("opp"+(i+1));
                                 LinearLayout horLL = findViewById(R.id.scoresLL).findViewWithTag("LL" + (i + 1));
                                 ((TextView) horLL.getChildAt(1)).setText(plName); // kullanıcı adı
-                                if(currentQ == numberOfQ){
-                                    ((TextView) horLL.getChildAt(2)).setText(formatTime(totalSolveTime)); // skoru
-                                } else {
-                                    ((TextView) horLL.getChildAt(2)).setText((currentQ-1)+getString(R.string.QuestionShortQ));
-                                }
+                                ((TextView) horLL.getChildAt(2)).setText(Integer.toString(plScore));
                             }
-
                             findViewById(R.id.scoresLL).setVisibility(View.VISIBLE);
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        Log.i("socket-start","Socket Room: "+args[0]);
+                        Log.i("socket-scores","Scores: "+args[0]);
 
                     }
                 });
@@ -652,15 +684,26 @@ public class MultiplayerActivity extends AppCompatActivity {
         socket.emit("getInRoom",socketId);
     }
 
-    public void sendScore(){
+    @SuppressWarnings("deprecation")
+    public void sendScore(int score){
         Log.i("socket","sendScore: "+totalSolveTime);
-        socket.emit("sendScore",totalSolveTime);
-        new Handler().postDelayed(new Runnable() {
+        socket.emit("sendScore",score);
+        final Handler getScoresHandler = new Handler();
+        Runnable getScoresRunnable = null;
+        final Runnable finalFindRoomRunnable = getScoresRunnable;
+        getScoresRunnable = new Runnable() {
             @Override
             public void run() {
-                getScores();
+                if(!gotScores) {
+                    getScoresHandler.postDelayed(this, 3000);
+                    getScores();
+                } else {
+                    getScoresHandler.removeCallbacks(this);
+                    getScoresHandler.removeCallbacks(finalFindRoomRunnable);
+                }
             }
-        },3000);
+        };
+        getScoresHandler.post(getScoresRunnable);
     }
 
     public void getScores(){
@@ -695,42 +738,61 @@ public class MultiplayerActivity extends AppCompatActivity {
 
         connectSocket();
         playerJoin();
-        new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    if(!inTheRoom){
-                        findRoom();
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(!inTheRoom){
-                                    findRoom();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if(!inTheRoom){
-                                                findRoom();
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        findRoom();
-                                                    }
-                                                },5000);
-                                            }
-                                        }
-                                    },5000);
-                                }
-                            }
-                        },5000);
-                    }
-                }
-        }, 5000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(!inTheRoom){
+//                    findRoom();
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            if(!inTheRoom){
+//                                findRoom();
+//                                new Handler().postDelayed(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        if(!inTheRoom){
+//                                            findRoom();
+//                                            new Handler().postDelayed(new Runnable() {
+//                                                @Override
+//                                                public void run() {
+//                                                    findRoom();
+//                                                }
+//                                            },5000);
+//                                        }
+//                                    }
+//                                },5000);
+//                            }
+//                        }
+//                    },5000);
+//                }
+//            }
+//        }, 5000);
 
+        final Handler findRoomHandler = new Handler();
+        Runnable findRoomRunnable = null;
+        final Runnable finalFindRoomRunnable = findRoomRunnable;
+        findRoomRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if(!inTheRoom) {
+                    findRoomHandler.postDelayed(this, 5000);
+                    findRoom();
+                } else {
+                    findRoomHandler.removeCallbacks(this);
+                    findRoomHandler.removeCallbacks(finalFindRoomRunnable);
+                }
+            }
+        };
+        findRoomHandler.post(findRoomRunnable);
     }
 
     @Override
     public void onBackPressed() {
         disconnectSocket();
+        timerStopped=true;
+        inTheRoom=true;
+        gotScores=true;
         Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
         intent.putExtra("type","multi"+pType);
         startActivity(intent);
@@ -740,6 +802,7 @@ public class MultiplayerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         disconnectSocket();
+        timerStopped=true;
         super.onDestroy();
     }
 }
