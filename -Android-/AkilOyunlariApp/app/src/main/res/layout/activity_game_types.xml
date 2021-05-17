@@ -23,6 +23,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:padding="3dp"
+                android:onClick="goToMainMenu"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -233,6 +234,7 @@
                     android:focusable="true"
                     android:fontFamily="@font/mohave_bold"
                     android:gravity="center"
+                    android:onClick="goToTournament"
                     android:paddingStart="50dp"
                     android:paddingTop="10dp"
                     android:paddingEnd="50dp"
@@ -245,56 +247,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/hardestTimeTV_d"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/nums_gl_bg"
-                    android:fontFamily="@font/mohave_bold"
-                    android:gravity="center"
-                    android:paddingStart="10dp"
-                    android:paddingTop="5dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="3dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="00:00"
-                    android:textColor="#ffffff"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/fourthTV_d"
-                    android:layout_width="wrap_content"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/mohave_bold"
-                    android:text="@string/VeryEasy"
-                    android:textColor="@color/near_black_blue"
-                    android:textSize="40sp"
-                    android:clickable="true"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

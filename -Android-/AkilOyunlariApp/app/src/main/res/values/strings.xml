@@ -77,4 +77,11 @@
     <string name="Opponents">Opponents</string>
     <string name="Results">Results</string>
     <string name="QuestionShortQ">Q</string>
+    <string name="Create">Create Tournament</string>
+    <string name="Participants">Participants</string>
+    <string name="StartTournament">Start The Tournament</string>
+    <string name="Activities">Activities</string>
+    <string name="CollectiveSolving">Collective Solving</string>
+    <string name="TournamentHasntStartedYet">Tournament hasn\'t started yet.</string>
+    <string name="InvalidCode">Invalid Code</string>
 </resources>

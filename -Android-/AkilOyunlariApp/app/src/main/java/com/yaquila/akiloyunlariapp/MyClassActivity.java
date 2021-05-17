@@ -59,6 +59,7 @@ public class MyClassActivity extends AppCompatActivity {
     LoadingDialog loadingDialog;
     LinearLayout membersLL;
     LinearLayout tasksLL;
+    LinearLayout activitiesLL;
     LinearLayout scrollViewLL;
 //    ConstraintLayout newTaskLayout;
     ConstraintLayout taskRowInstructor;
@@ -92,7 +93,26 @@ public class MyClassActivity extends AppCompatActivity {
     }
 
     public void goToGroupSolving(View view){
+        TextView tvdiff = (TextView) view;
+        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
         Intent intent = new Intent(getApplicationContext(), GroupSolvingActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void goToTournament(View view){
+        TextView tvdiff = (TextView) view;
+        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
+        if(Objects.equals(getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("type", "None"), "Student")){
+            intent.putExtra("userType","student");
+        } else {
+            intent.putExtra("userType","instructor");
+        }
+        intent.putExtra("code",getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("classid","none"));
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
@@ -147,15 +167,30 @@ public class MyClassActivity extends AppCompatActivity {
     public void classInfoChange(View view) throws JSONException {
         TextView tasksTV = findViewById(R.id.tasks_tabTV);
         TextView membersTV = findViewById(R.id.members_tabTV);
+        TextView activitiesTV = findViewById(R.id.activities_tabTV);
 
-        if(classInfoState.equals("Members") && view.getId()==R.id.tasks_tabTV){
+
+        if(("Members-Activities".contains(classInfoState)) && view.getId()==R.id.tasks_tabTV){
             classInfoState = "Tasks";
+            findViewById(R.id.leaveClassButton).setVisibility(View.GONE);
             tasksTV.setTextColor(getResources().getColor(R.color.light_blue_green));
             tasksTV.setBackground(getResources().getDrawable(R.drawable.more_rounded_f7f5fa_bg));
             membersTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
             membersTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
+            activitiesTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
+            activitiesTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
 
-            scrollViewLL.removeView(membersLL);
+
+            try{
+                scrollViewLL.removeView(membersLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                scrollViewLL.removeView(activitiesLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
             scrollViewLL.addView(tasksLL);
 
             ImageView addButton = tasksLL.findViewById(R.id.newTaskButton);
@@ -180,16 +215,52 @@ public class MyClassActivity extends AppCompatActivity {
                 arrangeTasks4Instructor(tasks4Instructor);
             }
         }
-        else if(classInfoState.equals("Tasks") && view.getId() == R.id.members_tabTV){
+        else if(("Tasks-Activities".contains(classInfoState)) && view.getId() == R.id.members_tabTV){
             classInfoState = "Members";
+            findViewById(R.id.leaveClassButton).setVisibility(View.VISIBLE);
 //            closeNewTask(null);
             membersTV.setTextColor(getResources().getColor(R.color.light_blue_green));
             membersTV.setBackground(getResources().getDrawable(R.drawable.more_rounded_f7f5fa_bg));
             tasksTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
             tasksTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
+            activitiesTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
+            activitiesTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
 
-            scrollViewLL.removeView(tasksLL);
+            try{
+                scrollViewLL.removeView(tasksLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                scrollViewLL.removeView(activitiesLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+
             scrollViewLL.addView(membersLL,2);
+        }
+        else if(("Members-Tasks".contains(classInfoState)) && view.getId()==R.id.activities_tabTV){
+            classInfoState = "Activities";
+            findViewById(R.id.leaveClassButton).setVisibility(View.GONE);
+
+            activitiesTV.setTextColor(getResources().getColor(R.color.light_blue_green));
+            activitiesTV.setBackground(getResources().getDrawable(R.drawable.more_rounded_f7f5fa_bg));
+            tasksTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
+            tasksTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
+            membersTV.setTextColor(getResources().getColorStateList(R.color.tab_selector_tvcolor));
+            membersTV.setBackground(getResources().getDrawable(R.drawable.tab_selector_bg));
+
+            try{
+                scrollViewLL.removeView(membersLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            try{
+                scrollViewLL.removeView(tasksLL);
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+            scrollViewLL.addView(activitiesLL);
         }
     }
 
@@ -334,7 +405,7 @@ public class MyClassActivity extends AppCompatActivity {
                     String classid = sharedPreferences.getString("classid", "None");
                     ((TextView) findViewById(R.id.codeTV_cl)).setText(getString(R.string.Code) + ": " + classid);
                     findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
-                    findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
+//                    findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
                     findViewById(R.id.classSearchLL).setVisibility(GONE);
                 } else { //Yeni task oluşturulduğundaki taskları yenileme
                     Log.i("jb In else",jb.toString());
@@ -452,9 +523,9 @@ public class MyClassActivity extends AppCompatActivity {
                             addRows(jb.getJSONObject("Instructor"), jb.getJSONArray("Students"));
                             loadingDialog.dismissDialog();
                             findViewById(R.id.classScrollView).setVisibility(View.VISIBLE);
-                            findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
+//                            findViewById(R.id.solvingButton).setVisibility(View.VISIBLE);
                             findViewById(R.id.classSearchLL).setVisibility(GONE);
-                            ((TextView) findViewById(R.id.codeTV_cl)).setText("Code: "+strings[6]);
+                            ((TextView) findViewById(R.id.codeTV_cl)).setText(getString(R.string.Code)+": "+strings[6]);
                             SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                             sP.edit().putString("classid",strings[6]).apply();
 
@@ -702,7 +773,9 @@ public class MyClassActivity extends AppCompatActivity {
         LayoutInflater inflater = getLayoutInflater();
         membersLL = (LinearLayout) inflater.inflate(this.getResources().getIdentifier("classmembers_layout", "layout", this.getPackageName()),null);
         tasksLL = (LinearLayout) inflater.inflate(this.getResources().getIdentifier("classtasks_layout", "layout", this.getPackageName()),null);
-//        newTaskLayout = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("newtask_layout", "layout", this.getPackageName()),null);
+        activitiesLL = (LinearLayout) inflater.inflate(this.getResources().getIdentifier("classactivities_layout", "layout", this.getPackageName()),null);
+
+        //        newTaskLayout = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("newtask_layout", "layout", this.getPackageName()),null);
         taskRowInstructor = (ConstraintLayout) inflater.inflate(this.getResources().getIdentifier("task_row_instructor", "layout", this.getPackageName()),null);
         scrollViewLL = findViewById(R.id.classLL);
         if(Objects.equals(sharedPreferences.getString("type", "None"), "Instructor")){
@@ -721,7 +794,7 @@ public class MyClassActivity extends AppCompatActivity {
         } else {
             findViewById(R.id.classSearchLL).setVisibility(View.VISIBLE);
             findViewById(R.id.classScrollView).setVisibility(View.GONE);
-            findViewById(R.id.solvingButton).setVisibility(View.GONE);
+//            findViewById(R.id.solvingButton).setVisibility(View.GONE);
         }
     }
 
