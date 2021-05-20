@@ -271,8 +271,6 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
         Log.i("check",checking+"  "+answer);
         if(checking){
-
-
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -284,7 +282,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
             undoTV.setEnabled(false);
             resetTV.setEnabled(false);
 
-            nextQuestion(null);
+            if(type.contains("nstructor")) {
+                nextQuestion(null);
+            }
         }
     } // Çözümün doğruluğunu kontrol et
     @SuppressWarnings("deprecation")
@@ -358,7 +358,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
                 if(Integer.parseInt(n) > 0){
                     currentGrid.get(i).set(j,Integer.parseInt(n));
-                    clueIndexes.add(Integer.toString(j)+i);
+                    if(!fromStudent) clueIndexes.add(Integer.toString(j)+i);
                     ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
                 }
                 else if(n.equals("-1")){
@@ -366,7 +366,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
                         currentGrid.get(i).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
                     }
-                    answer.add(Integer.toString(j)+i);
+                    if(!fromStudent) answer.add(Integer.toString(j)+i);
+
+
                 }
                 else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
@@ -378,6 +380,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 }
             }
         }
+        Log.i("answer",answer+"");
         if(type.contains("nstructor") && !isConnected) {
             isConnected = true;
             connectSocket();
@@ -462,11 +465,6 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
         Log.i("firstCurrentGrid",currentGrid.toString());
         clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
-
-
-
     }
     public void mainFunc(){
         TextView undoTV = findViewById(R.id.undoTV_ga);
@@ -475,6 +473,8 @@ public class GroupSolvingActivity extends AppCompatActivity {
         resetTV.setEnabled(true);
         findViewById(R.id.clickView).setVisibility(View.GONE);
         clearGrid();
+        answer = new ArrayList<>();
+        clueIndexes = new ArrayList<>();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
         getRequest.execute("https://akiloyunlariapp.herokuapp.com/"+newTaskProperties.get(0),"fx!Ay:;<p6Q?C8N{");
@@ -683,6 +683,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void run() {
 //                        if(!type.contains("nstructor")) {
@@ -695,6 +696,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
                                 if(!checkIfGridHasDC(grid)){
                                     clearGrid();
                                     Log.i("grid","cleared");
+                                }
+                                if(type.contains("nstructor")){
+                                    checkAnswer(null);
                                 }
                                 seperateGridAnswer(grid, true);
                                 RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
@@ -734,7 +738,11 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             }
                             for(String s : participantMap.keySet()){
                                 if(!stNameList.contains(s)){
-                                    participantMap.remove(s);
+                                    try {
+                                        participantMap.remove(s);
+                                    } catch(Exception e){
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             if(isParticipantsShown){

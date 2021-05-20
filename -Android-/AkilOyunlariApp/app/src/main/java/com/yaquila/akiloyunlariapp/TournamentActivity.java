@@ -796,7 +796,7 @@ public class TournamentActivity extends AppCompatActivity {
 //                            if(participantsLayout.getVisibility() == VISIBLE){
                             changeParticipantsInRT();
 //                            }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         Log.i("playersMap",playersMap.toString());
