@@ -59,7 +59,6 @@
         android:layout_marginEnd="20dp"
         tools:targetApi="lollipop" />
 
-
     <TextView
         android:id="@+id/oyunSecmeTV"
         android:layout_width="wrap_content"
@@ -152,7 +151,9 @@
         app:layout_constraintBottom_toBottomOf="@+id/soruSayisiTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/soruSayisiTV"
-        app:layout_constraintTop_toTopOf="@+id/soruSayisiTV" />
+        app:layout_constraintTop_toTopOf="@+id/soruSayisiTV"
+        android:importantForAutofill="no"
+        tools:ignore="LabelFor" />
 
     <Button
         android:id="@+id/sendbutton"

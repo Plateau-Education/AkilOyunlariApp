@@ -78,5 +78,12 @@
     <string name="Opponents">Rakipler</string>
     <string name="Results">Sonuçlar</string>
     <string name="QuestionShortQ">S</string>
+    <string name="Create">Turnuva Oluştur</string>
+    <string name="Participants">Katılımcılar</string>
+    <string name="StartTournament">Turnuvayı Başlat</string>
+    <string name="Activities">Etkinlikler</string>
+    <string name="CollectiveSolving">Toplu Soru Çözümü</string>
+    <string name="TournamentHasntStartedYet">Turnuva henüz başlamadı.</string>
+    <string name="InvalidCode">Geçersiz Kod</string>
 
 </resources>

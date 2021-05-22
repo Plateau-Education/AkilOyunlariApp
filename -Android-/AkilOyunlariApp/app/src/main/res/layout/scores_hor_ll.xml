@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:id="@+id/LL1_LB"
+    android:tag="LL1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:background="@drawable/rounded_f7f5fa_bg"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textColor="@color/near_black_blue"
+        android:fontFamily="@font/mohave_bold"
+        android:textSize="30sp"
+        tools:ignore="HardcodedText"
+        android:text="1" />
+
+    <TextView
+        android:id="@+id/UN1_LB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:fontFamily="@font/mohave_bold"
+        android:gravity="start"
+        android:text="----"
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/SC1_LB"
+        android:layout_width="300dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textColor="@color/near_black_blue"
+        android:fontFamily="@font/mohave_bold"
+        android:textSize="30sp"
+        tools:ignore="HardcodedText"
+        android:layout_gravity="center"
+        android:gravity="end"
+        android:text="0"/>
+
+</LinearLayout>

@@ -25,6 +25,15 @@ public class GameTypesActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
+    public void goToTournament(View view){
+        TextView tvdiff = (TextView) view;
+        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

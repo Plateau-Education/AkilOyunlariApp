@@ -363,12 +363,19 @@ public class MultiplayerActivity extends AppCompatActivity {
                 leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
                 correctDialog.show();
             } else {
-                Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ);
+                currentQ++;
+                Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ+" timerInSeconds: "+timerInSeconds);
                 solveTimeList.add(timerInSeconds-solveTimeList.get(1)-solveTimeList.get(0));
                 score = 10 + 30 + 60;
                 if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
+                Log.i("s11",60f-solveTimeList.get(0)+"");
+                Log.i("s12", (int)(((60f-solveTimeList.get(0))/60f)*10f)+"");
                 if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
+                Log.i("s21",180f-solveTimeList.get(1)+"");
+                Log.i("s22", (int)(((180f-solveTimeList.get(0))/180f)*30f)+"");
                 if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
+                Log.i("s31",360f-solveTimeList.get(2)+"");
+                Log.i("s32", (int)(((360f-solveTimeList.get(0))/360f)*60f)+"");
                 Log.i("solveTimeList",solveTimeList.toString());
                 Log.i("score",score+"");
                 timerStopped=true;
@@ -409,8 +416,8 @@ public class MultiplayerActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                timerInSeconds+=1;
-                Log.i("timerInSeconds",((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
+                timerInSeconds = 1;
+                Log.i("countDown",((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
                 timerTV.setText(formatTime((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
 //                totalSolveTime = (int)(afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000;
                 if((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())>300){
@@ -686,7 +693,7 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     @SuppressWarnings("deprecation")
     public void sendScore(int score){
-        Log.i("socket","sendScore: "+totalSolveTime);
+        Log.i("socket","sendScore: "+score);
         socket.emit("sendScore",score);
         final Handler getScoresHandler = new Handler();
         Runnable getScoresRunnable = null;

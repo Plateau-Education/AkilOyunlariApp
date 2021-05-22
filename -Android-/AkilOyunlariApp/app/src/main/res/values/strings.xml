@@ -52,8 +52,8 @@
     <string name="Besttime"><u>Best</u></string>
     <string name="Teacher"><u>Instructor</u></string>
     <string name="Students"><u>Students</u></string>
-    <string name="SignUpAsStudent">Sign Up As Student</string>
-    <string name="SignUpAsInstructer">Sign Up As Instructor</string>
+    <string name="SignUpAsStudent">Sign Up As A Student</string>
+    <string name="SignUpAsInstructer">Sign Up As  An Instructor</string>
     <string name="Join">Join</string>
     <string name="CouldntFind">Couldn\'t find the class.</string>
     <string name="letters">letters</string>
@@ -77,4 +77,11 @@
     <string name="Opponents">Opponents</string>
     <string name="Results">Results</string>
     <string name="QuestionShortQ">Q</string>
+    <string name="Create">Create Tournament</string>
+    <string name="Participants">Participants</string>
+    <string name="StartTournament">Start The Tournament</string>
+    <string name="Activities">Activities</string>
+    <string name="CollectiveSolving">Collective Solving</string>
+    <string name="TournamentHasntStartedYet">Tournament hasn\'t started yet.</string>
+    <string name="InvalidCode">Invalid Code</string>
 </resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="vertical">
+
+
+    <Button
+        android:id="@+id/instructorTV_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="goToTournament"
+        android:layout_margin="15dp"
+        android:fontFamily="@font/mohave_medium"
+        android:gravity="center"
+        android:text="@string/tournament"
+        android:textAllCaps="false"
+        android:background="@drawable/type_selector_tm"
+        android:padding="20dp"
+        android:textColor="@color/diff_selector_tvcolor"
+        android:textSize="30sp" />
+
+
+
+    <Button
+        android:id="@+id/studentsTV_cl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:onClick="goToGroupSolving"
+        android:layout_margin="15dp"
+        android:fontFamily="@font/mohave_medium"
+        android:gravity="center"
+        android:text="@string/CollectiveSolving"
+        android:textAllCaps="false"
+        android:background="@drawable/type_selector_tm"
+        android:padding="20dp"
+        android:textColor="@color/diff_selector_tvcolor"
+        android:textSize="30sp"/>
+
+
+</LinearLayout>

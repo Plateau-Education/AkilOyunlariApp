@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -271,8 +275,6 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
         Log.i("check",checking+"  "+answer);
         if(checking){
-
-
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -284,7 +286,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
             undoTV.setEnabled(false);
             resetTV.setEnabled(false);
 
-            nextQuestion(null);
+            if(type.contains("nstructor")) {
+                nextQuestion(null);
+            }
         }
     } // Çözümün doğruluğunu kontrol et
     @SuppressWarnings("deprecation")
@@ -358,7 +362,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
                 if(Integer.parseInt(n) > 0){
                     currentGrid.get(i).set(j,Integer.parseInt(n));
-                    clueIndexes.add(Integer.toString(j)+i);
+                    if(!fromStudent) clueIndexes.add(Integer.toString(j)+i);
                     ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
                 }
                 else if(n.equals("-1")){
@@ -366,7 +370,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
                         currentGrid.get(i).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
                     }
-                    answer.add(Integer.toString(j)+i);
+                    if(!fromStudent) answer.add(Integer.toString(j)+i);
+
+
                 }
                 else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
@@ -378,6 +384,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 }
             }
         }
+        Log.i("answer",answer+"");
         if(type.contains("nstructor") && !isConnected) {
             isConnected = true;
             connectSocket();
@@ -462,11 +469,6 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
         Log.i("firstCurrentGrid",currentGrid.toString());
         clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
-
-
-
     }
     public void mainFunc(){
         TextView undoTV = findViewById(R.id.undoTV_ga);
@@ -475,6 +477,8 @@ public class GroupSolvingActivity extends AppCompatActivity {
         resetTV.setEnabled(true);
         findViewById(R.id.clickView).setVisibility(View.GONE);
         clearGrid();
+        answer = new ArrayList<>();
+        clueIndexes = new ArrayList<>();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
         getRequest.execute("https://akiloyunlariapp.herokuapp.com/"+newTaskProperties.get(0),"fx!Ay:;<p6Q?C8N{");
@@ -628,6 +632,47 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
     }
 
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private void playMp3(byte[] mp3SoundByteArray) {
+        try {
+            // create temp file that will hold byte array
+            File tempMp3 = File.createTempFile("temp", ".mp3", getCacheDir());
+            tempMp3.deleteOnExit();
+            FileOutputStream fos = new FileOutputStream(tempMp3);
+            fos.write(mp3SoundByteArray);
+            fos.close();
+
+            // resetting mediaplayer instance to evade problems
+            mediaPlayer.reset();
+
+            // In case you run into issues with threading consider new instance like:
+            // MediaPlayer mediaPlayer = new MediaPlayer();
+
+            // Tried passing path directly, but kept getting
+            // "Prepare failed.: status=0x1"
+            // so using file descriptor instead
+
+            try {
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+                FileInputStream fis = new FileInputStream(tempMp3);
+                mediaPlayer.setDataSource(fis.getFD());
+                mediaPlayer.prepareAsync();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mediaPlayer.start();
+        } catch (IOException ex) {
+            String s = ex.toString();
+            ex.printStackTrace();
+        }
+    }
+
     private Socket socket;
     {
         try {
@@ -683,6 +728,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void run() {
 //                        if(!type.contains("nstructor")) {
@@ -695,6 +741,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
                                 if(!checkIfGridHasDC(grid)){
                                     clearGrid();
                                     Log.i("grid","cleared");
+                                }
+                                if(type.contains("nstructor")){
+                                    checkAnswer(null);
                                 }
                                 seperateGridAnswer(grid, true);
                                 RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
@@ -734,13 +783,17 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             }
                             for(String s : participantMap.keySet()){
                                 if(!stNameList.contains(s)){
-                                    participantMap.remove(s);
+                                    try {
+                                        participantMap.remove(s);
+                                    } catch(Exception e){
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                             if(isParticipantsShown){
                                 changeParticipantsInRT();
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         Log.i("participantMap",participantMap.toString());
@@ -779,27 +832,22 @@ public class GroupSolvingActivity extends AppCompatActivity {
         });
 
 
-//        socket.on("voiceChat", new Emitter.Listener() {
-//            @Override
-//            public void call(final Object... args) {
-//                runOnUiThread(new Runnable() {
-//                    @RequiresApi(api = Build.VERSION_CODES.M)
-//                    @Override
-//                    public void run() {
-//                        byte[] byteArray = (byte[])args[0];
-//
+        socket.on("voiceChat", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void run() {
+                        byte[] byteArray = (byte[])args[0];
 
-//                        Log.i("socket.on", new String()+ ".");
-                        // Create the AudioData object from the byte array
-//                        AudioData audiodata = new AudioData(byteArray);
-//// Create an AudioDataStream to play back
-//                        AudioDataStream audioStream = new AudioDataStream(audioData);
-//// Play the sound
-//                        AudioPlayer.player.start(audioStream);
-//                    }
-//                });
-//            }
-//        });
+                        playMp3(byteArray);
+                        Log.i("socket- voiceChat", new String(byteArray)+".");
+
+                    }
+                });
+            }
+        });
     }
 
     public void disconnectSocket(View view){
