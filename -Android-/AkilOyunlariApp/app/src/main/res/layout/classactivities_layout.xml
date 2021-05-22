@@ -15,7 +15,7 @@
         android:gravity="center"
         android:text="@string/tournament"
         android:textAllCaps="false"
-        android:background="@color/type_selector_tm"
+        android:background="@drawable/type_selector_tm"
         android:padding="20dp"
         android:textColor="@color/diff_selector_tvcolor"
         android:textSize="30sp" />
@@ -33,7 +33,7 @@
         android:gravity="center"
         android:text="@string/CollectiveSolving"
         android:textAllCaps="false"
-        android:background="@color/type_selector_tm"
+        android:background="@drawable/type_selector_tm"
         android:padding="20dp"
         android:textColor="@color/diff_selector_tvcolor"
         android:textSize="30sp"/>

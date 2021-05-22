@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -628,6 +632,47 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
     }
 
+    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private void playMp3(byte[] mp3SoundByteArray) {
+        try {
+            // create temp file that will hold byte array
+            File tempMp3 = File.createTempFile("temp", ".mp3", getCacheDir());
+            tempMp3.deleteOnExit();
+            FileOutputStream fos = new FileOutputStream(tempMp3);
+            fos.write(mp3SoundByteArray);
+            fos.close();
+
+            // resetting mediaplayer instance to evade problems
+            mediaPlayer.reset();
+
+            // In case you run into issues with threading consider new instance like:
+            // MediaPlayer mediaPlayer = new MediaPlayer();
+
+            // Tried passing path directly, but kept getting
+            // "Prepare failed.: status=0x1"
+            // so using file descriptor instead
+
+            try {
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        mp.start();
+                    }
+                });
+                FileInputStream fis = new FileInputStream(tempMp3);
+                mediaPlayer.setDataSource(fis.getFD());
+                mediaPlayer.prepareAsync();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            mediaPlayer.start();
+        } catch (IOException ex) {
+            String s = ex.toString();
+            ex.printStackTrace();
+        }
+    }
+
     private Socket socket;
     {
         try {
@@ -748,7 +793,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             if(isParticipantsShown){
                                 changeParticipantsInRT();
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                         Log.i("participantMap",participantMap.toString());
@@ -787,27 +832,22 @@ public class GroupSolvingActivity extends AppCompatActivity {
         });
 
 
-//        socket.on("voiceChat", new Emitter.Listener() {
-//            @Override
-//            public void call(final Object... args) {
-//                runOnUiThread(new Runnable() {
-//                    @RequiresApi(api = Build.VERSION_CODES.M)
-//                    @Override
-//                    public void run() {
-//                        byte[] byteArray = (byte[])args[0];
-//
+        socket.on("voiceChat", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
+                    @Override
+                    public void run() {
+                        byte[] byteArray = (byte[])args[0];
 
-//                        Log.i("socket.on", new String()+ ".");
-                        // Create the AudioData object from the byte array
-//                        AudioData audiodata = new AudioData(byteArray);
-//// Create an AudioDataStream to play back
-//                        AudioDataStream audioStream = new AudioDataStream(audioData);
-//// Play the sound
-//                        AudioPlayer.player.start(audioStream);
-//                    }
-//                });
-//            }
-//        });
+                        playMp3(byteArray);
+                        Log.i("socket- voiceChat", new String(byteArray)+".");
+
+                    }
+                });
+            }
+        });
     }
 
     public void disconnectSocket(View view){
