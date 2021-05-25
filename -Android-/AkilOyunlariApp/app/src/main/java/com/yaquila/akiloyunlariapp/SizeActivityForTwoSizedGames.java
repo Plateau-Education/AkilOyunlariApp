@@ -50,6 +50,7 @@ public class SizeActivityForTwoSizedGames extends AppCompatActivity {
         setContentView(R.layout.activity_size_for_two_sized_games);
         Intent intent = getIntent();
         type = intent.getStringExtra("type");
+        if(type==null) type="single";
         initDiffs();
     }
 

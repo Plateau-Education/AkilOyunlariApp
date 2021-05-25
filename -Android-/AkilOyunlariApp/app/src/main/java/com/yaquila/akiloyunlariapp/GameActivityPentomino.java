@@ -74,6 +74,7 @@ public class GameActivityPentomino extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                intent.putExtra("type","single");
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 timerStopped=true;

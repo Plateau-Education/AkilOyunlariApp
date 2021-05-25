@@ -1,19 +1,28 @@
 package com.yaquila.akiloyunlariapp;
 
+import androidx.annotation.NonNull;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
+import android.graphics.PorterDuff;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,17 +31,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.model.AGEventHandler;
+import com.yaquila.akiloyunlariapp.model.ConstantApp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -47,11 +57,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.agora.rtc.IRtcEngineEventHandler;
+import io.agora.rtc.RtcEngine;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-public class GroupSolvingActivity extends AppCompatActivity {
+public class GroupSolvingActivity extends BaseActivityForVoice implements AGEventHandler {
 
     String dbGameName;
     String gameName;
@@ -558,6 +570,7 @@ public class GroupSolvingActivity extends AppCompatActivity {
                 +gridSize+"_grid", "layout", this.getPackageName()),null);
         RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
         gridRL.addView(gridGL);
+        initUIandEvent();
         mainFunc();
     }
 
@@ -632,45 +645,333 @@ public class GroupSolvingActivity extends AppCompatActivity {
         }
     }
 
-    private MediaPlayer mediaPlayer = new MediaPlayer();
-    private void playMp3(byte[] mp3SoundByteArray) {
-        try {
-            // create temp file that will hold byte array
-            File tempMp3 = File.createTempFile("temp", ".mp3", getCacheDir());
-            tempMp3.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tempMp3);
-            fos.write(mp3SoundByteArray);
-            fos.close();
 
-            // resetting mediaplayer instance to evade problems
-            mediaPlayer.reset();
+//    private final static Logger log = LoggerFactory.getLogger(ChatActivity.class);
 
-            // In case you run into issues with threading consider new instance like:
-            // MediaPlayer mediaPlayer = new MediaPlayer();
+    private volatile boolean mAudioMuted = true;
 
-            // Tried passing path directly, but kept getting
-            // "Prepare failed.: status=0x1"
-            // so using file descriptor instead
+    private volatile int mAudioRouting = -1; // Default
 
-            try {
-                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mp) {
-                        mp.start();
-                    }
-                });
-                FileInputStream fis = new FileInputStream(tempMp3);
-                mediaPlayer.setDataSource(fis.getFD());
-                mediaPlayer.prepareAsync();
-            } catch (Exception e) {
-                e.printStackTrace();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        return false;
+    }
+
+    @Override
+    protected void initUIandEvent() {
+        event().addEventHandler(this);
+
+        String channelName = "HG3uzk";
+        vSettings().mChannelName = channelName;
+        Log.i("channelName", channelName);
+        /*
+          Allows a user to join a channel.
+
+          Users in the same channel can talk to each other, and multiple users in the same channel can start a group chat. Users with different App IDs cannot call each other.
+
+          You must call the leaveChannel method to exit the current call before joining another channel.
+
+          A successful joinChannel method call triggers the following callbacks:
+
+          The local client: onJoinChannelSuccess.
+          The remote client: onUserJoined, if the user joining the channel is in the Communication profile, or is a BROADCASTER in the Live Broadcast profile.
+
+          When the connection between the client and Agora's server is interrupted due to poor
+          network conditions, the SDK tries reconnecting to the server. When the local client
+          successfully rejoins the channel, the SDK triggers the onRejoinChannelSuccess callback
+          on the local client.
+
+         */
+        worker().joinChannel(channelName, config().mUid);
+
+//        TextView textChannelName = (TextView) findViewById(R.id.channel_name);
+//        textChannelName.setText(channelName);
+
+        optional();
+
+//        LinearLayout bottomContainer = (LinearLayout) findViewById(R.id.bottom_container);
+//        FrameLayout.MarginLayoutParams fmp = (FrameLayout.MarginLayoutParams) bottomContainer.getLayoutParams();
+//        fmp.bottomMargin = virtualKeyHeight() + 16;
+    }
+
+    private Handler mMainHandler;
+
+    private static final int UPDATE_UI_MESSAGE = 0x1024;
+
+    EditText mMessageList;
+
+    StringBuffer mMessageCache = new StringBuffer();
+
+    private void notifyMessageChanged(String msg) {
+        if (mMessageCache.length() > 10000) { // drop messages
+            mMessageCache = new StringBuffer(mMessageCache.substring(10000 - 40));
+        }
+
+        mMessageCache.append(System.currentTimeMillis()).append(": ").append(msg).append("\n"); // append timestamp for messages
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
+                if (mMainHandler == null) {
+                    mMainHandler = new Handler(getMainLooper()) {
+                        @Override
+                        public void handleMessage(Message msg) {
+                            super.handleMessage(msg);
+
+                            if (isFinishing()) {
+                                return;
+                            }
+
+                            switch (msg.what) {
+                                case UPDATE_UI_MESSAGE:
+                                    String content = (String) (msg.obj);
+                                    Log.i("UPDATE_UI_MESSAGE",content);
+//                                    mMessageList.setText(content);
+//                                    mMessageList.setSelection(content.length());
+                                    break;
+
+                                default:
+                                    break;
+                            }
+
+                        }
+                    };
+
+//                    mMessageList = (EditText) findViewById(R.id.msg_list);
+                }
+
+                mMainHandler.removeMessages(UPDATE_UI_MESSAGE);
+                Message envelop = new Message();
+                envelop.what = UPDATE_UI_MESSAGE;
+                envelop.obj = mMessageCache.toString();
+                mMainHandler.sendMessageDelayed(envelop, 1000l);
+            }
+        });
+    }
+
+    private void optional() {
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+//        getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+
+        setVolumeControlStream(AudioManager.STREAM_VOICE_CALL);
+    }
+
+    private void optionalDestroy() {
+    }
+
+    public void onSwitchSpeakerClicked(View view) {
+        Log.i("onSwitchSpeakerClicked ",  view + " " + mAudioMuted + " " + mAudioRouting);
+
+        RtcEngine rtcEngine = rtcEngine();
+
+        /*
+          Enables/Disables the audio playback route to the speakerphone.
+          This method sets whether the audio is routed to the speakerphone or earpiece.
+          After calling this method, the SDK returns the onAudioRouteChanged callback
+          to indicate the changes.
+         */
+        rtcEngine.setEnableSpeakerphone(mAudioRouting != 3);
+    }
+
+    @Override
+    protected void deInitUIandEvent() {
+        optionalDestroy();
+
+        doLeaveChannel();
+        event().removeEventHandler(this);
+    }
+
+    /**
+     * Allows a user to leave a channel.
+     *
+     * After joining a channel, the user must call the leaveChannel method to end the call before
+     * joining another channel. This method returns 0 if the user leaves the channel and releases
+     * all resources related to the call. This method call is asynchronous, and the user has not
+     * exited the channel when the method call returns. Once the user leaves the channel,
+     * the SDK triggers the onLeaveChannel callback.
+     *
+     * A successful leaveChannel method call triggers the following callbacks:
+     *
+     * The local client: onLeaveChannel.
+     * The remote client: onUserOffline, if the user leaving the channel is in the
+     * Communication channel, or is a BROADCASTER in the Live Broadcast profile.
+     *
+     */
+    private void doLeaveChannel() {
+        worker().leaveChannel(config().mChannel);
+    }
+
+    public void onEndCallClicked(View view) {
+        Log.i("onEndCallClicked ", ""+view);
+
+        quitCall();
+    }
+
+    private void quitCall() {
+//        Intent intent = new Intent(this, MainActivity.class);
+//        startActivity(intent);
+
+        finish();
+    }
+
+    public void onVoiceMuteClicked(View view) {
+        Log.i("onVoiceMuteClicked ", view + " audio_status: " + mAudioMuted);
+
+        RtcEngine rtcEngine = rtcEngine();
+        rtcEngine.muteLocalAudioStream(mAudioMuted = !mAudioMuted);
+
+        ImageView iv = (ImageView) view;
+
+        if (mAudioMuted) {
+            iv.setImageResource(R.drawable.ic_microphone_closed);
+        } else {
+            iv.setImageResource(R.drawable.ic_microphone_open);
+        }
+    }
+
+    @Override
+    public void onJoinChannelSuccess(String channel, final int uid, int elapsed) {
+        String msg = "onJoinChannelSuccess " + channel + " " + (uid & 0xFFFFFFFFL) + " " + elapsed;
+        Log.d("onJoinChannelSuccess", msg);
+
+        notifyMessageChanged(msg);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
+                rtcEngine().muteLocalAudioStream(mAudioMuted);
+            }
+        });
+    }
+
+    @Override
+    public void onUserOffline(int uid, int reason) {
+        String msg = "onUserOffline " + (uid & 0xFFFFFFFFL) + " " + reason;
+        Log.d("onUserOffline",msg);
+
+        notifyMessageChanged(msg);
+
+    }
+
+    @Override
+    public void onExtraCallback(final int type, final Object... data) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isFinishing()) {
+                    return;
+                }
+
+                doHandleExtraCallback(type, data);
+            }
+        });
+    }
+
+    private void doHandleExtraCallback(int type, Object... data) {
+        int peerUid;
+        boolean muted;
+
+        switch (type) {
+            case AGEventHandler.EVENT_TYPE_ON_USER_AUDIO_MUTED: {
+                peerUid = (Integer) data[0];
+                muted = (boolean) data[1];
+
+                notifyMessageChanged("mute: " + (peerUid & 0xFFFFFFFFL) + " " + muted);
+                break;
             }
 
-            mediaPlayer.start();
-        } catch (IOException ex) {
-            String s = ex.toString();
-            ex.printStackTrace();
+            case AGEventHandler.EVENT_TYPE_ON_AUDIO_QUALITY: {
+                peerUid = (Integer) data[0];
+                int quality = (int) data[1];
+                short delay = (short) data[2];
+                short lost = (short) data[3];
+
+                notifyMessageChanged("quality: " + (peerUid & 0xFFFFFFFFL) + " " + quality + " " + delay + " " + lost);
+                break;
+            }
+
+            case AGEventHandler.EVENT_TYPE_ON_SPEAKER_STATS: {
+                IRtcEngineEventHandler.AudioVolumeInfo[] infos = (IRtcEngineEventHandler.AudioVolumeInfo[]) data[0];
+
+                if (infos.length == 1 && infos[0].uid == 0) { // local guy, ignore it
+                    break;
+                }
+
+                StringBuilder volumeCache = new StringBuilder();
+                for (IRtcEngineEventHandler.AudioVolumeInfo each : infos) {
+                    peerUid = each.uid;
+                    int peerVolume = each.volume;
+
+                    if (peerUid == 0) {
+                        continue;
+                    }
+
+                    volumeCache.append("volume: ").append(peerUid & 0xFFFFFFFFL).append(" ").append(peerVolume).append("\n");
+                }
+
+                if (volumeCache.length() > 0) {
+                    String volumeMsg = volumeCache.substring(0, volumeCache.length() - 1);
+                    notifyMessageChanged(volumeMsg);
+
+                    if ((System.currentTimeMillis() / 1000) % 10 == 0) {
+                        Log.d("volumeMsg",volumeMsg);
+                    }
+                }
+                break;
+            }
+
+            case AGEventHandler.EVENT_TYPE_ON_APP_ERROR: {
+                int subType = (int) data[0];
+
+                if (subType == ConstantApp.AppError.NO_NETWORK_CONNECTION) {
+                    showLongToast(getString(R.string.msg_no_network_connection));
+                }
+
+                break;
+            }
+
+            case AGEventHandler.EVENT_TYPE_ON_AGORA_MEDIA_ERROR: {
+                int error = (int) data[0];
+                String description = (String) data[1];
+
+                notifyMessageChanged(error + " " + description);
+
+                break;
+            }
+
+            case AGEventHandler.EVENT_TYPE_ON_AUDIO_ROUTE_CHANGED: {
+                notifyHeadsetPlugged((int) data[0]);
+
+                break;
+            }
         }
+    }
+
+    public void notifyHeadsetPlugged(final int routing) {
+        Log.i("notifyHeadsetPlugged ", ""+routing);
+
+        mAudioRouting = routing;
+
+//        ImageView iv = (ImageView) findViewById(R.id.switch_speaker_id);
+//        if (mAudioRouting == 3) { // Speakerphone
+//            iv.setColorFilter(getResources().getColor(R.color.agora_blue), PorterDuff.Mode.MULTIPLY);
+//        } else {
+//            iv.clearColorFilter();
+//        }
     }
 
     private Socket socket;
@@ -771,6 +1072,9 @@ public class GroupSolvingActivity extends AppCompatActivity {
                             JSONObject prtps = room.getJSONObject("participants");
                             if(instructorName == null){
                                 instructorName = prtps.getJSONObject("instructor").getString("username");
+                                if(!type.contains("nstructor")){
+                                    initUIandEvent();
+                                }
                             }
                             JSONArray students = prtps.getJSONArray("students");
                             List<String> stNameList = new ArrayList<>();
@@ -832,22 +1136,22 @@ public class GroupSolvingActivity extends AppCompatActivity {
         });
 
 
-        socket.on("voiceChat", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-                runOnUiThread(new Runnable() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void run() {
-                        byte[] byteArray = (byte[])args[0];
-
-                        playMp3(byteArray);
-                        Log.i("socket- voiceChat", new String(byteArray)+".");
-
-                    }
-                });
-            }
-        });
+//        socket.on("voiceChat", new Emitter.Listener() {
+//            @Override
+//            public void call(final Object... args) {
+//                runOnUiThread(new Runnable() {
+//                    @RequiresApi(api = Build.VERSION_CODES.M)
+//                    @Override
+//                    public void run() {
+////                        byte[] byteArray = (byte[])args[0];
+////
+////                        playMp3(byteArray);
+////                        Log.i("socket- voiceChat", new String(byteArray)+".");
+//
+//                    }
+//                });
+//            }
+//        });
     }
 
     public void disconnectSocket(View view){
@@ -893,10 +1197,10 @@ public class GroupSolvingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_solving);
-        SharedPreferences sp =getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        type = sp.getString("type",getString(R.string.Unknown));
-        user_name = sp.getString("username",getString(R.string.Unknown));
-        classid = sp.getString("classid",getString(R.string.Unknown));
+        SharedPreferences sp = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
+        type = sp.getString("type", getString(R.string.Unknown));
+        user_name = sp.getString("username", getString(R.string.Unknown));
+        classid = sp.getString("classid", getString(R.string.Unknown));
         currentGrid = new ArrayList<>();
         for (int i = 0; i < gridSize; i++) {
             List<Integer> row = new ArrayList<>();
@@ -905,121 +1209,33 @@ public class GroupSolvingActivity extends AppCompatActivity {
             }
             currentGrid.add(row);
         }
-        if(type.contains("nstructor")) {
+        if (type.contains("nstructor")) {
             selectGameDiff(null);
-        }
-        else{
+        } else {
             connectSocket();
             joinClass();
         }
-
-
-//        btn = (Button) findViewById(R.id.button2);
-//        mediaPlayer = new MediaPlayer();
-//        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (!playPause) {
-//                    btn.setText("Pause Streaming");
-//
-//                    if (initialStage) {
-//                        new Player().execute("https://server4groups.herokuapp.com");
-//                    } else {
-//                        if (!mediaPlayer.isPlaying())
-//                            mediaPlayer.start();
-//                    }
-//
-//                    playPause = true;
-//
-//                } else {
-//                    btn.setText("Launch Streaming");
-//
-//                    if (mediaPlayer.isPlaying()) {
-//                        mediaPlayer.pause();
-//                    }
-//
-//                    playPause = false;
-//                }
-//            }
-//        });
-//
-//
     }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//
-//        if (mediaPlayer != null) {
-//            mediaPlayer.reset();
-//            mediaPlayer.release();
-//            mediaPlayer = null;
-//        }
-//    }
-//
-//    @SuppressWarnings("deprecation")
-//    class Player extends AsyncTask<String, Void, Boolean> {
-//        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//        @Override
-//        protected Boolean doInBackground(String... strings) {
-//            Boolean prepared = false;
-//
-//            try {
-//                mediaPlayer.setDataSource(strings[0]);
-//                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-//                    @Override
-//                    public void onCompletion(MediaPlayer mediaPlayer) {
-//                        initialStage = true;
-//                        playPause = false;
-//                        btn.setText("Launch Streaming");
-//                        mediaPlayer.stop();
-//                        mediaPlayer.reset();
-//                    }
-//                });
-//
-//                mediaPlayer.prepare();
-//                prepared = true;
-//
-//            } catch (Exception e) {
-//                Log.e("MyAudioStreamingApp", Objects.requireNonNull(e.getMessage()));
-//                prepared = false;
-//            }
-//
-//            return prepared;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Boolean aBoolean) {
-//            super.onPostExecute(aBoolean);
-//
-////            if (progressDialog.isShowing()) {
-////                progressDialog.cancel();
-////            }
-//
-//            mediaPlayer.start();
-//            initialStage = false;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//
-////            progressDialog.setMessage("Buffering...");
-////            progressDialog.show();
-//        }
-//    }
-
 
     @Override
     protected void onDestroy() {
         disconnectSocket(null);
+        try {
+            onEndCallClicked(null);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         disconnectSocket(null);
+        try {
+            onEndCallClicked(null);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 //        if(currentScreen.equals("selection")) {
 //            ntDialog.dismiss();
 //            Intent intent = new Intent(getApplicationContext(), MyClassActivity.class);
