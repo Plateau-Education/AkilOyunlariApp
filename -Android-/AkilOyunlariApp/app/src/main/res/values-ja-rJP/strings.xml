@@ -85,4 +85,6 @@
     <string name="CollectiveSolving">集合的解決</string>
     <string name="TournamentHasntStartedYet">トーナメントはまだ始まっていません。</string>
     <string name="InvalidCode">無効なコード</string>
+    <string name="msg_no_network_connection" translatable="false">ネットワークに接続されていません。ネットワーク設定を確認してください</string>
+    <string name="WaitingInsNextQ">インストラクターが次の質問に進むのを待っています。</string>
 </resources>

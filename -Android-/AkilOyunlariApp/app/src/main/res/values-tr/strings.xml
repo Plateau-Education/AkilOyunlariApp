@@ -85,5 +85,7 @@
     <string name="CollectiveSolving">Toplu Soru Çözümü</string>
     <string name="TournamentHasntStartedYet">Turnuva henüz başlamadı.</string>
     <string name="InvalidCode">Geçersiz Kod</string>
+    <string name="msg_no_network_connection" translatable="false">Ağ bağlantısı yok, lütfen ağ ayarlarını kontrol edin</string>
+    <string name="WaitingInsNextQ">Eğitmenin bir sonraki soruya geçmesi bekleniyor.</string>
 
 </resources>

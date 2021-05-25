@@ -80,6 +80,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     boolean isPermitted = false;
     boolean isConnected = false;
     boolean isParticipantsShown = false;
+    boolean isCorrectDialogShown = false;
 
     List<List<String>> operations = new ArrayList<>();
     List<List<Integer>> currentGrid = new ArrayList<>();
@@ -92,6 +93,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     ConstraintLayout participantsLayout;
     AlertDialog ntDialog;
     AlertDialog participantsDialog;
+    AlertDialog correctDialog;
     Spinner gameSpinner;
     Spinner diffSpinner;
 
@@ -122,25 +124,34 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void nextQuestion(View view){
         LayoutInflater factory = LayoutInflater.from(this);
         final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-        final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+        correctDialog = new AlertDialog.Builder(this).create();
         correctDialog.setView(leaveDialogView);
-
-        leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mainFunc();
-                correctDialog.dismiss();
-            }
-        });
-        leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((ConstraintLayout)findViewById(R.id.diffTV_game).getParent()).setVisibility(View.GONE);
-                selectGameDiff(null);
-                correctDialog.dismiss();
-            }
-        });
+        if(type.contains("nstructor")) {
+            leaveDialogView.findViewById(R.id.timeTV_correctDialog).setVisibility(View.GONE);
+            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mainFunc();
+                    correctDialog.dismiss();
+                }
+            });
+            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.GONE);
+                    selectGameDiff(null);
+                    correctDialog.dismiss();
+                }
+            });
+        } else {
+            leaveDialogView.findViewById(R.id.correctDialogNext).setVisibility(View.GONE);
+            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(View.GONE);
+            TextView tv = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+            tv.setVisibility(View.VISIBLE);
+            tv.setText(R.string.WaitingInsNextQ);
+        }
         correctDialog.show();
+        isCorrectDialogShown=true;
     } // Sonraki soruya geç
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void changeClicked(View view){
@@ -169,7 +180,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             clickedBox = answerIndex;
             assert op != null;
             currentGrid.get(Integer.parseInt(String.valueOf(answerIndex.charAt(1)))).set(Integer.parseInt(String.valueOf(answerIndex.charAt(0))),Integer.parseInt(op));
-            sendGrid();
+            sendGrid(currentGrid);
             Log.i("currentGrid",currentGrid.toString());
             List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
             if(!newOp.equals(operations.get(operations.size() - 1))){
@@ -211,7 +222,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             GridLayout gridLayout = gridGL;
             TextView currentBox = gridLayout.findViewWithTag(co1);
             currentGrid.get(Integer.parseInt(String.valueOf(co1.charAt(1)))).set(Integer.parseInt(String.valueOf(co1.charAt(0))),Integer.parseInt(num2));
-            sendGrid();
+            sendGrid(currentGrid);
 
             if(num2.equals("-1")){
                 currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
@@ -261,7 +272,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     currentGrid.set(i, row);
                 }
                 Log.i("currentGrid-reset", currentGrid.toString());
-                sendGrid();
+                sendGrid(currentGrid);
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -286,7 +297,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             }
         }
         Log.i("check",checking+"  "+answer);
-        if(checking){
+        if(checking && answer.size()>0){ //&& type.contains("nstructor")){
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -297,11 +308,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             }
             undoTV.setEnabled(false);
             resetTV.setEnabled(false);
+            Log.i("checkingTrue - type",type);
+            nextQuestion(null);
 
-            if(type.contains("nstructor")) {
-                nextQuestion(null);
-            }
+
+
         }
+
     } // Çözümün doğruluğunu kontrol et
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
@@ -367,14 +380,19 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             ((ConstraintLayout)findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
         }
     } // API'den soru çek
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void seperateGridAnswer(JSONArray grid, boolean fromStudent) throws JSONException {
         GridLayout gridLayout = gridGL;
+        if(!type.contains("nstructor")){
+            clueIndexes = new ArrayList<>();
+//            answer = new ArrayList<>();
+        }
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++) {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
                 if(Integer.parseInt(n) > 0){
                     currentGrid.get(i).set(j,Integer.parseInt(n));
-                    if(!fromStudent) clueIndexes.add(Integer.toString(j)+i);
+                    if(!fromStudent || !type.contains("nstructor")) clueIndexes.add(Integer.toString(j)+i);
                     ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
                 }
                 else if(n.equals("-1")){
@@ -382,9 +400,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                         currentGrid.get(i).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
                     }
-                    if(!fromStudent) answer.add(Integer.toString(j)+i);
-
-
+                    if(!fromStudent) // || !type.contains("nstructor"))
+                        answer.add(Integer.toString(j)+i);
                 }
                 else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
@@ -401,8 +418,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             isConnected = true;
             connectSocket();
             joinClass();
-        } else if (type.contains("nstructor")){
-            sendGrid();
+        } else if(!type.contains("nstructor") || fromStudent){
+            checkAnswer(null);
+        }
+        else if (type.contains("nstructor")){
+            sendGrid(currentGrid);
         }
 
         Log.i("clueIndexes",clueIndexes.toString());
@@ -650,7 +670,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
     private volatile boolean mAudioMuted = true;
 
-    private volatile int mAudioRouting = -1; // Default
+    private volatile int mAudioRouting = 3; // Default
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -688,7 +708,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
          */
         worker().joinChannel(channelName, config().mUid);
-
+        rtcEngine().setEnableSpeakerphone(true);
 //        TextView textChannelName = (TextView) findViewById(R.id.channel_name);
 //        textChannelName.setText(channelName);
 
@@ -1029,22 +1049,58 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
+                    @SuppressLint("DefaultLocale")
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void run() {
 //                        if(!type.contains("nstructor")) {
                             ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
-
+                            if(isCorrectDialogShown && !type.contains("nstructor")){
+                                correctDialog.dismiss();
+                                TextView undoTV = findViewById(R.id.undoTV_ga);
+                                TextView resetTV = findViewById(R.id.resetTV_game);
+                                undoTV.setEnabled(true);
+                                resetTV.setEnabled(true);
+                                findViewById(R.id.clickView).setVisibility(View.GONE);
+                            }
                             try {
+                                JSONArray grid;
                                 String result = (String) args[0];
-//                                JSONObject jb = new JSONObject(result);
-                                JSONArray grid = new JSONArray(result);
+                                JSONArray resultJB = new JSONArray(result);
+                                if(resultJB.length()==2){
+                                    grid = resultJB.getJSONArray(0);
+                                    if(!type.contains("nstructor")) {
+                                        JSONArray answerJA = resultJB.getJSONArray(1);
+                                        answer = new ArrayList<>();
+                                        for (int i = 0; i < answerJA.length(); i++) {
+                                            answer.add(String.format("%02d",(int) answerJA.get(i)));
+                                        }
+                                        Log.i("answerInSendGrid",answer.toString());
+                                    }
+                                } else {
+                                    grid = resultJB;
+                                }
+//                                try {
+//                                    String result = (String) args[0];
+//                                    grid = new JSONArray(result);
+//                                    Log.i("sendGrid - result",result);
+//                                } catch (ClassCastException e){
+//                                    JSONObject jb = (JSONObject) args[0];
+//                                    Log.i("sendGrid - jb",jb.toString());
+//                                    grid = new JSONArray(jb.getString("grid"));
+//                                    if(!type.contains("nstructor")) {
+//                                        JSONArray answerJA = new JSONArray(jb.getString("answer"));
+//                                        answer = new ArrayList<>();
+//                                        for (int i = 0; i < answerJA.length(); i++) {
+//                                            answer.add(Integer.toString((int)answerJA.get(i)));
+//                                        }
+//                                        Log.i("answerInSendGrid",answer.toString());
+//                                    }
+//
+//                                }
                                 if(!checkIfGridHasDC(grid)){
                                     clearGrid();
                                     Log.i("grid","cleared");
-                                }
-                                if(type.contains("nstructor")){
-                                    checkAnswer(null);
                                 }
                                 seperateGridAnswer(grid, true);
                                 RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
@@ -1172,8 +1228,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         Log.i("socket","joinToRoom");
     }
 
-    public void sendGrid(){
-        socket.emit("sendGrid",currentGrid);
+    public void sendGrid(List<List<Integer>> grid){
+
+//        Map<String, Object> map = new HashMap<>();
+//        map.put("grid",grid);
+//        map.put("answer",answer);
+        List<Object> lst = new ArrayList<Object>(Arrays.asList(grid,answer));
+        socket.emit("sendGrid", lst);
     }
 
     public void givePermission(String username){

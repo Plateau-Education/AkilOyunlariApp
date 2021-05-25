@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textAllCaps="true"
+            android:textAllCaps="false"
             android:id="@+id/timeTV_correctDialog"
             android:layout_gravity="center"
             android:gravity="center"

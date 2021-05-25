@@ -85,4 +85,6 @@
     <string name="CollectiveSolving">Kollektives Lösen</string>
     <string name="TournamentHasntStartedYet">Das Turnier hat noch nicht begonnen.</string>
     <string name="InvalidCode">Ungültiger Code</string>
+    <string name="msg_no_network_connection" translatable="false">Keine Netzwerkverbindung, bitte überprüfen Sie die Netzwerkeinstellungen</string>
+    <string name="WaitingInsNextQ">Warten Sie, bis der Kursleiter mit der nächsten Frage fortfährt.</string>
 </resources>

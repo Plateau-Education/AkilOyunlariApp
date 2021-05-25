@@ -84,5 +84,6 @@
     <string name="CollectiveSolving">Collective Solving</string>
     <string name="TournamentHasntStartedYet">Tournament hasn\'t started yet.</string>
     <string name="InvalidCode">Invalid Code</string>
-    <string name="msg_no_network_connection" translatable="false">No network connection, please check the network settings</string>
+    <string name="msg_no_network_connection">No network connection, please check the network settings</string>
+    <string name="WaitingInsNextQ">Waiting for the instructor to move on to the next question.</string>
 </resources>
