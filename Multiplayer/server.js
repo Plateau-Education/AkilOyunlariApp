@@ -47,6 +47,7 @@ io.on("connection", socket => {
   socket.on("findRoom", () => {
     console.log("findRoom - user name", usern)
     let currentPlayer = waiting[pType][game].filter(player => player.id === socket.id)[0]
+    console.log("current PLayer", currentPlayer, usern)
     waiting[pType][game] = waiting[pType][game].filter(player => player.id !== socket.id)
     let compatiplePlayers = waiting[pType][game].filter(player => player.cluster === clust)
     roomId = socket.id
@@ -55,7 +56,9 @@ io.on("connection", socket => {
     console.log("compatiple", compatiplePlayers, usern)
     console.log("needed", neededPlayers, usern)
     if (waiting[pType][game].length < neededPlayers) {
+      if (currentPlayer !== undefined){
       waiting[pType][game].push(currentPlayer)
+      }
       io.to(socket.id).emit("wait")      
     }
     else {
@@ -71,6 +74,7 @@ io.on("connection", socket => {
       console.log("room", rooms[pType])
       for (const sock of playersInRoom) {
         io.to(sock.id).emit("roomFound", socket.id)
+        console.log("room Found", usern, sock.id)
       }
     }
   })
@@ -110,6 +114,9 @@ io.on("connection", socket => {
           console.log("data", data)
           rooms[pType][activeRoom].players[playerIndex].score = data
           rooms[pType][activeRoom].currentS++
+          if (rooms[pType][activeRoom].currentS == pType) {
+            io.to(roomId).emit("scores", rooms[pType][activeRoom].players)
+          }
         }
       }
     }
