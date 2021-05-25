@@ -136,10 +136,12 @@
             tools:ignore="ContentDescription" />
 
         <ImageView
+            android:id="@+id/micButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="onVoiceMuteClicked"
             android:src="@drawable/ic_microphone_closed"
             tools:ignore="ContentDescription" />
 

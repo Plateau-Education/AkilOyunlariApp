@@ -95,6 +95,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                intent.putExtra("type","single");
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 timerStopped=true;
@@ -130,6 +131,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    intent.putExtra("type","single");
                     startActivity(intent);
                     overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                     correctDialog.dismiss();
@@ -406,6 +408,7 @@ public class GameActivitySudoku extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    intent.putExtra("type","single");
                     startActivity(intent);
                     overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                     correctDialog.dismiss();
@@ -533,6 +536,7 @@ public class GameActivitySudoku extends AppCompatActivity {
 
             if(questions.size() == 0){
                 Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                intent.putExtra("type","single");
                 intent.putExtra("message","Need internet connection to view " + gameName +" "+ difficulty);
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);

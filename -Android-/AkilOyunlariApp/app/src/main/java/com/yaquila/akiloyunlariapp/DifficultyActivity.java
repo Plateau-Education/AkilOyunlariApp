@@ -28,6 +28,7 @@ public class DifficultyActivity extends AppCompatActivity {
         Intent intent;
         if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
         else intent = new Intent(this, GameListActivity.class);
+        intent.putExtra("type","single");
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -154,6 +155,7 @@ public class DifficultyActivity extends AppCompatActivity {
         Intent intent;
         if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
         else intent = new Intent(this, GameListActivity.class);
+        intent.putExtra("type","single");
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
