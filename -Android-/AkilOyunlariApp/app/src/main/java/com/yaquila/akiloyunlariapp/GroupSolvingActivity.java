@@ -34,6 +34,7 @@ import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.media.RtcTokenBuilder;
 import com.yaquila.akiloyunlariapp.model.AGEventHandler;
 import com.yaquila.akiloyunlariapp.model.ConstantApp;
 
@@ -688,7 +689,14 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
         String channelName = "HG3uzk";
         vSettings().mChannelName = channelName;
-        Log.i("channelName", channelName);
+
+        RtcTokenBuilder token = new RtcTokenBuilder();
+        vSettings().mToken = token.buildTokenWithUid(getString(R.string.private_app_id), getString(R.string.private_app_certificate),
+                channelName, 0, RtcTokenBuilder.Role.Role_Publisher, (int)(System.currentTimeMillis() / 1000 + 36000));
+
+
+
+        Log.i("channelName - token", channelName+" token: "+vSettings().mToken);
         /*
           Allows a user to join a channel.
 

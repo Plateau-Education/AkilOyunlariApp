@@ -43,6 +43,7 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     testImplementation 'junit:junit:4.12'
+    implementation "commons-codec:commons-codec:1.11"
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 

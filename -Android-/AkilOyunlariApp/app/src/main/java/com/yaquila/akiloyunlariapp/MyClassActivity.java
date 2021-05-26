@@ -217,7 +217,9 @@ public class MyClassActivity extends AppCompatActivity {
         }
         else if(("Tasks-Activities".contains(classInfoState)) && view.getId() == R.id.members_tabTV){
             classInfoState = "Members";
-            findViewById(R.id.leaveClassButton).setVisibility(View.VISIBLE);
+            if(!Objects.equals(getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).getString("type", "None"), "Instructor")) {
+                findViewById(R.id.leaveClassButton).setVisibility(View.VISIBLE);
+            }
 //            closeNewTask(null);
             membersTV.setTextColor(getResources().getColor(R.color.light_blue_green));
             membersTV.setBackground(getResources().getDrawable(R.drawable.more_rounded_f7f5fa_bg));
