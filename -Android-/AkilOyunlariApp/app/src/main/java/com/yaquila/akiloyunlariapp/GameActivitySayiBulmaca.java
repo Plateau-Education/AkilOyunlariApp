@@ -12,7 +12,6 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -30,7 +29,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,212 +135,87 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void changeClicked(View view){
-        TextView box = (TextView) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        int answerIndex = Integer.parseInt((box.getTag().toString()).substring(box.getTag().toString().length()-1));
-        if (clickedBox != answerIndex){
-            if (clickedBox != -1){
-                if (clickedBox == 0){
-                    gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-                }
-                else{
-                    gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-                }
-                ((TextView) gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
-            }
-            if(answerIndex == 0){
-                box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft_shallow2));
-            }
-            else{
-                box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom_shallow2));
-            }
-            box.setTextColor(getResources().getColor(R.color.f7f5fa));
-            clickedBox = answerIndex;
-        }
-        else{
-            if(!undoing){
-                if (answerIndex == 0){
-                    box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-                }
-                else{
-                    box.setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-                }
-                box.setTextColor(getResources().getColor(R.color.light_red));
-                clickedBox = -1;
-            }
-        }
-        if(clickedBox != -1 && draftModeActive[clickedBox]){
-            for(int i = 0; i<10; i++){
-                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-            }
-        }
+        clickedBox = AssistClass.changeClicked(this,view,undoing, draftModeActive, clickedBox);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
-        Button btn = (Button) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         if(clickedBox != -1){
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
-            if(currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox,-1)));
+            Object[] result = AssistClass.numClicked(this,view,draftModeActive,gridSize,clickedBox,operations);
+            if(result!=null) {
+                operations = (List<List<Integer>>) result[0];
+                boolean isFull = (boolean) result[1];
+                if (isFull) checkAnswer(null);
+                Log.i("operations", operations + "");
             }
-            if(draftModeActive[clickedBox]){
-                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-            }
-            else{
-                currentBox.setText(btn.getTag().toString());
-            }
-            List<Integer> newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
-            }
-            boolean isFull = true;
-            for (int i = 0; i<gridSize; i++){
-                if (((TextView)gridLayout.findViewWithTag("answer"+i)).getText().toString().equals("")){
-                    isFull = false;
-                    break;
-                }
-            }
-            if (isFull) checkAnswer(null);
-            Log.i("operations",operations+"");
         }
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
-            if(!currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, -1)));
-                Log.i("operations",operations+"");
-                currentBox.setText("");
-            }
-        }
+        operations = AssistClass.deleteNum(this,clickedBox,operations);
     }
 
     @SuppressLint("SetTextI18n")
     public void undoOperation(View view){
-        if(operations.size() > 1){
-            operations = operations.subList(0,operations.size()-1);
-            List<Integer> tuple = operations.get(operations.size()-1);
-            int co = tuple.get(0);
-            int num = tuple.get(1);
-            Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
-            if(num == -1){
-                currentBox.setText("");
-            }
-            else{
-                currentBox.setText(Integer.toString(num));
-            }
-            undoing=true;
-            changeClicked(currentBox);
-            undoing=false;
+        Object[] result = AssistClass.undoOperation(this, draftModeActive, operations, clickedBox);
+        if(result!=null) {
+            operations = (List<List<Integer>>) result[0];
+            clickedBox = (int) result[1];
+            undoing = (boolean) result[2];
         }
     }
 
-    public void resetGrid(View view){
+    public static Object[] resetGrid(final AppCompatActivity context, final View view, final List<String> clueIndexes, final int gridSize, List<List<String>> operations, String clickedBox){
         try {
             final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
+            resetTV.setTextColor(context.getResources().getColor(R.color.light_red));
             resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
             resetTV.setText(R.string.ResetNormal);
             resetTV.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
+                    resetTV.setTextColor(context.getResources().getColorStateList(R.color.reset_selector_tvcolor));
                     resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     resetTV.setText(R.string.ResetUnderlined);
                 }
             }, 100);
 
             operations = new ArrayList<>();
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            for (int i = 0; i < gridSize; i++) {
-                TextView currentBox = gridLayout.findViewWithTag("answer" + i);
-                currentBox.setText("");
-            }
-            if(clickedBox!=-1) {
-                if (clickedBox == 0) {
-                    gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-                } else {
-                    gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-                }
-            }
-            clickedBox = -1;
+            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+            clickedBox = "-1";
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                    if(!clueIndexes.contains(Integer.toString(j)+i)){
+                        tv.setText("");
+                    }
                 }
             }
         }
         catch(Exception e){
             e.printStackTrace();
         }
+        return new Object[]{operations,clickedBox};
+    }
+
+
+    public void resetGrid(View view){
+        Object[] result = AssistClass.resetGrid(this,view,gridSize, clickedBox);
+        operations = (List<List<Integer>>) result[0];
+        clickedBox = (int) result[1];
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void notesOnGrid(View view) {
-        TextView clickedTV = (TextView) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        String clickedNum = clickedTV.getText().toString();
-//        Log.i("debugLog","beforeIfs");
-        if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
-//            Log.i("debugLog","stroke_bg");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
-                    }
-                }
-            }
-        }
-        else if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg_bluegreen).getConstantState())) {
-//            Log.i("debugLog","stroke_bg_red");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-                    }
-                }
-            }
-        }
-        else if (Objects.equals(clickedTV.getBackground().getConstantState(), getResources().getDrawable(R.drawable.stroke_bg_red).getConstantState())) {
-//            Log.i("debugLog","stroke_bg_bluegreen");
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if (tv.getText().toString().equals(clickedNum)) {
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    }
-                }
-            }
-        }
+        AssistClass.notesOnGrid(this,view, gridSize);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(int i = 0; i < gridSize; i++){
-            try {
-                if(!((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().equals(answer.get(i).toString())){
-                    checking=false;
-                }
-                Log.i("checking",((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().toString()+" / "+(answer.get(i).toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.i("check",checking+"  "+answer);
-        if(checking){
-
+        if(AssistClass.checkAnswer(this,gridSize,answer)){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -420,46 +293,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        GridLayout numGrid = findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
-        if(clickedBox != -1){
-            TextView currentClickedBox = questionGrid.findViewWithTag("answer"+ clickedBox);
-            if(currentClickedBox.getText().toString().length() == 1){
-                if(currentClickedBox.getTextSize() == 25){
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
-                }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-                    }
-                    draftModeActive[clickedBox] = false;
-                }
-            }
-            else if (currentClickedBox.getText().toString().length() == 0) {
-                if (draftModeActive[clickedBox]) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 0; i < 10; i++) {
-                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    }
-                    draftModeActive[clickedBox] = false;
-                }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
-                }
-            }
-            else{
-                draftModeActive[clickedBox] = true;
-            }
-        }
+        draftModeActive = AssistClass.draftClicked(this, clickedBox, draftModeActive);
     }
 
     @SuppressWarnings("deprecation")
@@ -586,31 +420,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        answer = (JSONArray) grid.get(grid.length()-1);
-        Log.i("jsonGrid",""+grid);
-        for (int i = 0; i < grid.length()-1; i++){
-            JSONArray row = (JSONArray) grid.get(i);
-            for (int j = 0; j< row.length()-1; j++){
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j)+ i);
-                tv.setText(row.get(j).toString());
-            }
-            JSONArray rguide = (JSONArray)row.get(row.length()-1);
-            TextView rGuideTV = gridLayout.findViewWithTag("g"+i);
-            if(rguide.get(0).toString().equals("0")){
-                rGuideTV.setText(rguide.get(1).toString());
-            }
-            else if(rguide.get(1).toString().equals("0")){
-                rGuideTV.setText("+"+rguide.get(0).toString());
-            }
-            else{
-                rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
-            }
-        }
-        TextView guideanswer = gridLayout.findViewWithTag("answerguide");
-        guideanswer.setText("+"+((JSONArray)answer.get(answer.length()-1)).get(0).toString());
-        answer.remove(answer.length()-1);
-
+        answer = AssistClass.seperateGridAnswer(this, grid);
     }
 
     public void timerFunc(){

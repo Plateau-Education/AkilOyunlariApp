@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AkilOyunlariApp</string>
+    <string name="app_name">マインド高原</string>
     <string name="app_name1">マインド</string>
-    <string name="app_name2">ゲーム</string>
+    <string name="app_name2">高原</string>
     <string name="play_button">演奏する</string>
     <string name="games">ゲーム</string>
     <string name="Back">バック</string>
@@ -87,4 +87,11 @@
     <string name="InvalidCode">無効なコード</string>
     <string name="msg_no_network_connection" translatable="false">ネットワークに接続されていません。ネットワーク設定を確認してください</string>
     <string name="WaitingInsNextQ">インストラクターが次の質問に進むのを待っています。</string>
+    <string name="htp_sudoku">.</string>
+    <string name="htp_hazineavi">.</string>
+    <string name="htp_patika">.</string>
+    <string name="htp_sayibulmaca">.</string>
+    <string name="htp_sozcukturu">.</string>
+    <string name="htp_piramit">.</string>
+    <string name="WaitingForScores">.</string>
 </resources>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AkilOyunlariApp</string>
+    <string name="app_name">Akıl Platosu</string>
     <string name="app_name1">Akıl</string>
-    <string name="app_name2">Oyunları</string>
+    <string name="app_name2">Platosu</string>
     <string name="play_button">Oyna</string>
     <string name="games">Oyunlar</string>
     <string name="Back">Geri</string>
@@ -87,5 +87,12 @@
     <string name="InvalidCode">Geçersiz Kod</string>
     <string name="msg_no_network_connection" translatable="false">Ağ bağlantısı yok, lütfen ağ ayarlarını kontrol edin</string>
     <string name="WaitingInsNextQ">Eğitmenin bir sonraki soruya geçmesi bekleniyor.</string>
+    <string name="htp_sudoku">Sudoku oyununda amaç, 1\'den 6\'ya veya 9\'a kadar olan sayıları; satır, sütun ve karelerde tekrar etmeyecek şekilde dizmektir. Sudoku sorusu çözerken aynı satır, sütun ve karelerde bulunan sayılara bakılarak kutulara gelemeyecek sayılar tespit edilir ve ihtimaller azaltılır. Örneğin bir kutuya 9 sayıdan 8\'i gelemiyorsa kalan 1 sayı kesin bir şekilde yerleştirilebilir.</string>
+    <string name="htp_hazineavi">Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir. Hazine Avı sorusu çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır. İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir. Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.</string>
+    <string name="htp_patika">Patika oyununda amaç, tüm boş kutuları dolduracak, kendisini kesmeyecek, her kutudan 1 defa geçecek ve tamamlandığında kapalı tek bir şekil oluşturacak bir yol çizmektir. Patika sorusu çözerken öncelikle kesin olan köşeler bulunur. Herhangi bir karenin 4 komşusundan (yatay ve dikey komşular) 2\'si kapalıysa, diğer iki komşusuna doğru yol çizilir. Bu işlem daha fazla köşe çizilemeyene kadar devam ettirilir. Bunun yanında kullanılması gereken bir başka metod ise tek kapalı yol oluşturma kuralından yararlanmaktır. Örneğin bir kutuya gelen yolun gidebileceği 2 yön varsa ve bunlardan birinden devam edildiğinde küçük bir kapalı yol oluşuyorsa diğer yoldan gidilmelidir.</string>
+    <string name="htp_sayibulmaca">Sayı Bulmaca oyununda, sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir. Yanında \'+\' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını gösterir. Yanında \'-\' işareti olanlar ise o satırdaki rakam ya da rakamların cevabın içinde farklı sütunda olduğunu gösterir. Örneğin sağ tarafında \'+1 -2\' yazan bir satırda, rakamların 3 tanesi cevabın içinde ve bunların 1 tanesi doğru, 2 tanesi yanlış yerde olduğu sonucuna varılır.</string>
+    <string name="htp_sozcukturu">Sözcük Türü oyununda amaç, verilen harf sayılarına göre tablo içerisinde kelimeler bulmaktır. Bu oyunda; en az harfli kelimeden başlayıp yatay, dikey veya çapraz olarak kutular arasında hareket edilerek en çok harfli kelimenin son harfinde biten bir yol çizilmesi gerekir. Bunun yanında, her kutu yalnızca 1 kere kullanılmalı ve boşta kutu kalmamalıdır.</string>
+    <string name="htp_piramit">Piramit oyununda, kutulardaki rakamlar altlarındaki 2 kutudaki rakamların toplamı veya farkı olmalıdır. Ayrıca bir satırda aynı rakam birden fazla bulunamaz ve yan yana olan kutularda ardışık sayılar bulunamaz. Bu kurallara uyularak tüm boş kutular doldurulmalıdır.</string>
+    <string name="WaitingForScores">Skorlar bekleniyor...</string>
 
 </resources>

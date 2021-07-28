@@ -158,147 +158,44 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
+
         if(!clueIndexes.contains(answerIndex) && (isPermitted || type.contains("nstructor"))) {
-            String op = null;
-            if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                    op = "-1";
-                }
-            }
-            else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                    op = "-2";
-                }
-            }
-            clickedBox = answerIndex;
+            Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
+            operations = (List<List<String>>) result[0];
+            clickedBox = (String) result[1];
+            String op = operations.get(operations.size()-1).get(1);
             assert op != null;
             currentGrid.get(Integer.parseInt(String.valueOf(answerIndex.charAt(1)))).set(Integer.parseInt(String.valueOf(answerIndex.charAt(0))),Integer.parseInt(op));
             sendGrid(currentGrid);
             Log.i("currentGrid",currentGrid.toString());
-            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
-            }
-            Log.i("operations",operations+"");
             checkAnswer(null);
         }
     } // Tıklanan kutuya elmas/çarpı koy
     public void changeSwitch(View view){
-        ImageView switchTV = (ImageView) view;
-        if(isPermitted || type.contains("nstructor")) {
-            if (switchPosition.equals("diamond")) {
-                switchTV.setImageResource(R.drawable.ic_cross);
-                switchPosition = "cross";
-            } else if (switchPosition.equals("cross")) {
-                switchTV.setImageResource(R.drawable.ic_diamond);
-                switchPosition = "diamond";
-            }
-        }
+        if(isPermitted || type.contains("nstructor")) switchPosition = AssistClass.changeSwitch(view, switchPosition);
     } // Elmas - çarpı değiştir
+
     public void undoOperation(View view){
         if(operations.size() > 1 && (isPermitted || type.contains("nstructor"))){
-//            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple1 = operations.get(operations.size()-1);
-            operations = operations.subList(0,operations.size()-1);
-            String co1 = tuple1.get(0);
-            String num2 = "0";
-            String co2;
-            for(int i = operations.size()-1; i>0; i--){
-                List<String> tuple2 = operations.get(i);
-                co2 = tuple2.get(0);
-                if(co1.equals(co2)){
-                    num2 = tuple2.get(1);
-                    break;
-                }
-            }
-            Log.i("co/num",co1+" / "+num2);
-            GridLayout gridLayout = gridGL;
-            TextView currentBox = gridLayout.findViewWithTag(co1);
+            Object[] result = AssistClass.undoOperation(this, operations);
+            operations = (List<List<String>>) result[0];
+            String co1 = (String) result[1];
+            String num2 = (String) result[2];
             currentGrid.get(Integer.parseInt(String.valueOf(co1.charAt(1)))).set(Integer.parseInt(String.valueOf(co1.charAt(0))),Integer.parseInt(num2));
             sendGrid(currentGrid);
-
-            if(num2.equals("-1")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-            }
-            else if(num2.equals("-2")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-            }
-            else{
-                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-            }
         }
     } // Son işlemi geri al
     public void resetGrid(View view){
         if(isPermitted || type.contains("nstructor")) {
-            try {
-                final TextView resetTV = (TextView) view;
-                resetTV.setTextColor(getResources().getColor(R.color.light_red));
-                resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                resetTV.setText(R.string.ResetNormal);
-                resetTV.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                        resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                        resetTV.setText(R.string.ResetUnderlined);
-                    }
-                }, 100);
-
-                operations = new ArrayList<>();
-                operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-                GridLayout gridLayout = gridGL;
-                clickedBox = "-1";
-                for (int i = 0; i < gridSize; i++) {
-                    for (int j = 0; j < gridSize; j++) {
-                        TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                        if (!clueIndexes.contains(Integer.toString(j) + i)) {
-                            tv.setText("");
-                        }
-                    }
-                }
-                for (int i = 0; i < gridSize; i++) {
-                    List<Integer> row = currentGrid.get(i);
-                    for (int j = 0; j < gridSize; j++) {
-                        if (row.get(j) < 0) row.set(j, 0);
-                    }
-                    currentGrid.set(i, row);
-                }
-                Log.i("currentGrid-reset", currentGrid.toString());
-                sendGrid(currentGrid);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
+            operations = (List<List<String>>) result[0];
+            clickedBox = (String) result[1];
         }
     } // Tüm işlemleri sıfırla
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = gridGL;
-        boolean checking=true;
-        for(int i = 0; i<gridSize; i++){
-            for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-            }
-        }
-        Log.i("check",checking+"  "+answer);
-        if(checking && answer.size()>0){ //&& type.contains("nstructor")){
+        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout) && answer.size()>0){ //&& type.contains("nstructor")){
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -311,11 +208,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             resetTV.setEnabled(false);
             Log.i("checkingTrue - type",type);
             nextQuestion(null);
-
-
-
         }
-
     } // Çözümün doğruluğunu kontrol et
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
@@ -687,7 +580,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     protected void initUIandEvent() {
         event().addEventHandler(this);
 
-        String channelName = "HG3uzk";
+        String channelName = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("classid", getString(R.string.Unknown));
         vSettings().mChannelName = channelName;
 
         RtcTokenBuilder token = new RtcTokenBuilder();

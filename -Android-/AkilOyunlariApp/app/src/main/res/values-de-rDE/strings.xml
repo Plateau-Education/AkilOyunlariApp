@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AkilOyunlariApp</string>
-    <string name="app_name1">Verstand</string>
-    <string name="app_name2">Rätsel</string>
+    <string name="app_name">Mind-Plateau</string>
+    <string name="app_name1">Mind</string>
+    <string name="app_name2">Plateau</string>
     <string name="play_button">Abspielen</string>
     <string name="games">Spiele</string>
     <string name="Back">Zurück</string>
@@ -87,4 +87,11 @@
     <string name="InvalidCode">Ungültiger Code</string>
     <string name="msg_no_network_connection" translatable="false">Keine Netzwerkverbindung, bitte überprüfen Sie die Netzwerkeinstellungen</string>
     <string name="WaitingInsNextQ">Warten Sie, bis der Kursleiter mit der nächsten Frage fortfährt.</string>
+    <string name="htp_sudoku">.</string>
+    <string name="htp_hazineavi">.</string>
+    <string name="htp_patika">.</string>
+    <string name="htp_sayibulmaca">.</string>
+    <string name="htp_sozcukturu">.</string>
+    <string name="htp_piramit">.</string>
+    <string name="WaitingForScores">.</string>
 </resources>

@@ -1,7 +1,6 @@
 <resources>
-    <string name="app_name">AkilOyunlariApp</string>
+    <string name="app_name">Mind Plateau</string>
     <string name="app_name1">Mind</string>
-    <string name="app_name2">Puzzles</string>
     <string name="play_button">Play</string>
     <string name="games">Games</string>
     <string name="Back">Back</string>
@@ -86,4 +85,12 @@
     <string name="InvalidCode">Invalid Code</string>
     <string name="msg_no_network_connection">No network connection, please check the network settings</string>
     <string name="WaitingInsNextQ">Waiting for the instructor to move on to the next question.</string>
+    <string name="app_name2">Plateau</string>
+    <string name="htp_sudoku">Sudoku is played on a grid of 6x6 or 9x9 spaces. Each row, column and square needs to be filled out with the numbers 1-6 or 1-9, without repeating any numbers within the row, column or square. While solving a Sudoku question, by looking at the numbers in the same rows, columns and squares, the numbers that cannot be found in the spaces are determined and the possibilities are reduced. For example, if 8 out of 9 numbers cannot be placed in a space, the remaining 1 number can be placed precisely.</string>
+    <string name="htp_hazineavi">In Hazine Avı game, the numbers given show how many diamonds their neighbors have. While solving a Hazine Avı question, the first thing to look for is clues that have as many neighbors as the number written in them. Clues that have as many neighbors as the number written in them may not be found in every question or may be insufficient to reach a solution. What needs to be looked for in these cases is the common effects of the diamonds which will be placed on the neighbors of the clues, on the other clues.</string>
+    <string name="htp_patika">The aim of the Patika game is to draw a path that will fill all empty boxes, will not cross over itself, pass through each box once and form a single closed shape when completed. When solving the Patika question, first of all, corners are found. If 2 of the 4 neighbors (horizontal and vertical neighbors) of any square are closed, a path is drawn to its other two neighbors. This process is continued until no more corners can be drawn. In addition, another method that should be used is to utilize the single-closed-path rule. For example, if there are 2 directions for the path to go in a box and a small closed shape is formed when continuing from one of them, the other path should be taken.</string>
+    <string name="htp_sayibulmaca">In the Number Puzzle game, the numbers on the right show how many of the numbers in that row are included in the answer. Numbers with a \'+\' sign next to them indicate that the numbers in that row are in the same column in the answer. Those with a \'-\' sign next to them indicate that the numbers in that row are in a different column in the answer. For example, in a line that says \'+1 -2\' on the right side, it can be deduced that 3 of the numbers are in the answer and 1 of them is in the correct place and 2 of them are in the wrong place.</string>
+    <string name="htp_sozcukturu">The aim of the Sözcük Türü game is to find words in the table according to the number of letters given. In this game; it is necessary to draw a path starting from the word with the fewest letters and moving between the boxes horizontally, vertically or diagonally and ending at the last letter of the word with the most letters. In addition, each box should be used only once and no empty boxes should be left.</string>
+    <string name="htp_piramit">In the Piramit game, the numbers in the boxes must be the sum or difference of the numbers in the 2 boxes below them. In addition, the same number cannot be placed more than once in a row and consecutive numbers cannot be placed in adjacent boxes. All empty boxes must be filled in accordance with these rules.</string>
+    <string name="WaitingForScores">Waiting For Scores...</string>
 </resources>

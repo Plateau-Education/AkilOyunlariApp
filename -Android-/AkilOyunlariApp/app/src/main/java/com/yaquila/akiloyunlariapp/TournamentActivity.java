@@ -56,21 +56,18 @@ public class TournamentActivity extends AppCompatActivity {
     int currentQ = 0;
     int totalNumberOfQs = 0;
     int currentTotalScore = 0;
-    int solveTime = 300;
+    int solveTime = 360;
+    int secondsToGo = 60;
     long currentTimeInMillis;
     long afterFiveMinMillis;
+    boolean solvedTheQuestion = false;
+    boolean scoresShown = false;
 
     Map<String, Integer> gamesMap = new HashMap<>();
     Map<String, Integer> playersMap = new HashMap<>();
     List<List<String>> tournamentProperties = new ArrayList<>();
     List<String> gameOrder = new ArrayList<>();
     JSONObject allQs = new JSONObject();
-
-    ConstraintLayout waitingDialog;
-    LinearLayout createOrJoinLL;
-    ConstraintLayout tournamentOptionsCL;
-    ConstraintLayout participantsLayout;
-    LinearLayout scoresLL;
 
 
     //Hazine Avi Variables
@@ -168,40 +165,6 @@ public class TournamentActivity extends AppCompatActivity {
         leaveDialog.show();
     }
 
-//    public void nextQuestion(View view){
-//        if(timerStopped){
-//            LayoutInflater factory = LayoutInflater.from(this);
-//            final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-//            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-//            TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-//            timerTV.setVisibility(GONE);
-//            correctDialog.setView(leaveDialogView);
-//
-//            leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    try {
-//                        mainFunc();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    }
-//                    correctDialog.dismiss();
-//                }
-//            });
-////            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-////                @Override
-////                public void onClick(View v) {
-////                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-////                    startActivity(intent);
-////                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-////                    correctDialog.dismiss();
-////                }
-////            });
-//            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
-//            correctDialog.show();
-//        }
-//    } // Sonraki soruya geç
-
     public void goToGameTypes(View view){
         disconnectSocket();
         Intent intent = new Intent(getApplicationContext(), GameTypesActivity.class);
@@ -212,150 +175,38 @@ public class TournamentActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked(View view){
+    public void changeClicked_HA(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-        if(!clueIndexes.contains(answerIndex)) {
-            String op = null;
-            if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                    op = "-1";
-                }
-            }
-            else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                    op = "-2";
-                }
-            }
-            clickedBox = answerIndex;
-            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
-            }
-            Log.i("operations",operations+"");
-            checkAnswer(null);
-        }
+        Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
+        operations = (List<List<String>>) result[0];
+        clickedBox = (String) result[1];
+        if(!clueIndexes.contains(answerIndex)) checkAnswer_HA(null);
     } // Tıklanan kutuya elmas/çarpı koy
 
-    public void changeSwitch(View view){
-        ImageView switchTV = (ImageView) view;
-        if(switchPosition.equals("diamond")){
-            switchTV.setImageResource(R.drawable.ic_cross);
-            switchPosition = "cross";
-        }
-        else if(switchPosition.equals("cross")){
-            switchTV.setImageResource(R.drawable.ic_diamond);
-            switchPosition = "diamond";
-        }
+    public void changeSwitch_HA(View view){
+        switchPosition = AssistClass.changeSwitch(view, switchPosition);
     } // Elmas - çarpı değiştir
 
-    public void undoOperation(View view){
-        if(operations.size() > 1){
-//            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple1 = operations.get(operations.size()-1);
-            operations = operations.subList(0,operations.size()-1);
-            String co1 = tuple1.get(0);
-            String num2 = "0";
-            String co2;
-            for(int i = operations.size()-1; i>0; i--){
-                List<String> tuple2 = operations.get(i);
-                co2 = tuple2.get(0);
-                if(co1.equals(co2)){
-                    num2 = tuple2.get(1);
-                    break;
-                }
-            }
-            Log.i("co/num",co1+" / "+num2);
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag(co1);
-            if(num2.equals("-1")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-            }
-            else if(num2.equals("-2")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-            }
-            else{
-                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-            }
-        }
+    public void undoOperation_HA(View view){
+        operations = (List<List<String>>) AssistClass.undoOperation( this, operations)[0];
     } // Son işlemi geri al
 
-    public void resetGrid(View view){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            clickedBox = "-1";
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    if(!clueIndexes.contains(Integer.toString(j)+i)){
-                        tv.setText("");
-                    }
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    public void resetGrid_HA(View view){
+        Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
+        operations = (List<List<String>>) result[0];
+        clickedBox = (String) result[1];
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
+    public void checkAnswer_HA(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(int i = 0; i<gridSize; i++){
-            for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-            }
-        }
-//        for(int i = 0; i < gridSize; i++){
-//            for(int j = 0; j <  gridSize; j++){
-//                try {
-//                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(((JSONArray)answer.get(i)).get(j).toString())){
-//                        checking=false;
-//                    }
-//                    Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-        Log.i("check",checking+"  "+answer);
-        if(checking) {
+        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)) {
+            solvedTheQuestion = true;
             if (currentQ != totalNumberOfQs) {
                 timerStopped = true;
-                solveTime = timerInSeconds;
+                solveTime = (int) (secondsToGo - ((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
+                Log.i("solveTime - notTheLastQ", solveTime+"");
 //                LayoutInflater factory = LayoutInflater.from(this);
 //                final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
 //                final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
@@ -384,39 +235,11 @@ public class TournamentActivity extends AppCompatActivity {
                     }
                 },300);
 
-//                leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        try {
-//                            mainFunc();
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        correctDialog.dismiss();
-//                    }
-//                });
-//            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-//                    correctDialog.dismiss();
-//                }
-//            });
-//                leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
-//                correctDialog.show();
             } else {
                 Log.i("socket-qnums","current: "+currentQ+" total: "+totalNumberOfQs);
-//                solveTimeList.add(timerInSeconds-solveTimeList.get(1)-solveTimeList.get(0));
-//                score = 10 + 30 + 60;
-//                if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
-//                if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
-//                if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
-//                Log.i("solveTimeList",solveTimeList.toString());
-//                Log.i("score",score+"");
                 timerStopped=true;
-                solveTime = timerInSeconds;
+                solveTime = (int) (secondsToGo - ((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
+                Log.i("solveTime - theLastQ", solveTime+"");
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -430,24 +253,16 @@ public class TournamentActivity extends AppCompatActivity {
     } // Çözümün doğruluğunu kontrol et
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for(int i = 0; i < gridSize; i++){
-            for(int j = 0; j <  gridSize; j++) {
-                String n = ((JSONArray)grid.get(i)).get(j).toString();
-                if(Integer.parseInt(n) > 0){
-                    clueIndexes.add(Integer.toString(j)+i);
-                    ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
-                }
-                else if(n.equals("-1")){
-                    answer.add(Integer.toString(j)+i);
-                }
-            }
+        if(gameOrder.get(0).contains("HazineAvi")) {
+            Object[] result = AssistClass.seperateGridAnswer(this, grid, gridSize, clueIndexes, answer);
+            clueIndexes = (List<String>) result[0];
+            answer = (List<String>) result[1];
         }
     } // Çekilen soruyu kullanıcıya göster
 
-    public void timerFunc(){
+    public void timerFunc(final int secondsToGo){
         currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
-        afterFiveMinMillis = currentTimeInMillis + 60000;//TODO 300000
+        afterFiveMinMillis = currentTimeInMillis + secondsToGo*1000;
         //noinspection deprecation
         timerHandler = new Handler();
         timerInSeconds = 0;
@@ -458,23 +273,13 @@ public class TournamentActivity extends AppCompatActivity {
                 timerInSeconds+=1;
                 Log.i("timerInSeconds",((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
                 timerTV.setText(formatTime((int) (afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
-//                totalSolveTime = (int)(afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000;
                 if((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())>300){
                     timerStopped=false;
                 }
                 else{
                     timerStopped=true;
-//                    if(currentQ==1){
-//                        score=0;
-//                    } else if(currentQ==2){
-//                        score = 10;
-//                        if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
-//                    } else if(currentQ==3){
-//                        score = (int)(10f + (((60f-solveTimeList.get(0))/60f)*10f) + 30f + (((180f-solveTimeList.get(1))/180f)*30f));
-//                        if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
-//                        if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
-//                    }
                     setContentView(R.layout.activity_tournament);
+                    ((TextView)findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.WaitingForScores);
                     findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
                     findViewById(R.id.participantsLayout).setVisibility(GONE);
                     findViewById(R.id.createOrJoinLL).setVisibility(GONE);
@@ -482,8 +287,8 @@ public class TournamentActivity extends AppCompatActivity {
 
                     int score=0;
                     Log.i("solveTime - timerInSec",solveTime + " - " + timerInSeconds);
-                    if(solveTime<timerInSeconds-1){
-                        score = 1000 - solveTime;
+                    if(solvedTheQuestion){
+                        score = 1000 - solveTime * (600/secondsToGo);
                     }
 
 
@@ -532,13 +337,19 @@ public class TournamentActivity extends AppCompatActivity {
         Log.i("gameOrder",gameOrder.toString());
         Log.i("JsonArray",allQs.getJSONArray(gameOrder.get(0))+"");
         gridSize = Integer.parseInt(gameOrder.get(0).split("\\.")[1]);
+        if(gameOrder.get(0).contains("HazineAvi")){
+            if(gridSize == 5) secondsToGo = 60;
+            else if(gridSize == 8) secondsToGo = 180;
+            else if(gridSize == 10) secondsToGo = 360;
+        }
         Log.i("gridSize", gridSize+"");
         setContentView(gameDiffToLayoutID(gameOrder.get(0)));
         clearGrid();
+        solvedTheQuestion=false;
         seperateGridAnswer(allQs.getJSONArray(gameOrder.get(0)).getJSONArray(0).getJSONArray(0).getJSONArray(0));
         allQs.getJSONArray(gameOrder.get(0)).remove(0);
         gameOrder.remove(0);
-        timerFunc();
+        timerFunc(secondsToGo);
 
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
@@ -665,6 +476,11 @@ public class TournamentActivity extends AppCompatActivity {
     public void startTheTournament(View view){
         findViewById(R.id.tournamentOptionsCL).setVisibility(GONE);
         findViewById(R.id.waitingDialogCL).setVisibility(VISIBLE);
+        try {
+            ((TextView) findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.loading);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
         start();
 
 //        setContentView(gameDiffToLayoutID((String) gamesMap.keySet().toArray()[0]));
@@ -681,9 +497,14 @@ public class TournamentActivity extends AppCompatActivity {
         joinToRoom(code);
         findViewById(R.id.createOrJoinLL).setVisibility(GONE);
         findViewById(R.id.waitingDialogCL).setVisibility(VISIBLE);
+        try {
+            ((TextView) findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.loading);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public void changeParticipantsInRT(){
+    public void  changeParticipantsInRT(){
         LayoutInflater factory = getLayoutInflater();
         ((LinearLayout)findViewById(R.id.participantsLayout).findViewById(R.id.prtpLL)).removeAllViews();
 //        ConstraintLayout organizatorRow= (ConstraintLayout) factory.inflate(this.getResources().getIdentifier("participant_row", "layout", this.getPackageName()),null);
@@ -699,7 +520,7 @@ public class TournamentActivity extends AppCompatActivity {
 //                    ((ImageView)participantRow.findViewById(R.id.permissionButton)).setImageResource(R.drawable.ic_delete_icon);
 //                } else {
 //                    ((ImageView)participantRow.findViewById(R.id.permissionButton)).setImageResource(R.drawable.ic_key_icon);
-//                }
+//                } 
 //            }
             ((LinearLayout)findViewById(R.id.participantsLayout).findViewById(R.id.prtpLL)).addView(participantRow);
         }
@@ -710,7 +531,7 @@ public class TournamentActivity extends AppCompatActivity {
     private Socket socket;
     {
         try {
-            socket = IO.socket("https://plato-tournament.herokuapp.com");
+            socket = IO.socket("https://plato-all-in-one.herokuapp.com");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -730,7 +551,7 @@ public class TournamentActivity extends AppCompatActivity {
                             code = Integer.toString((int)args[0]);
                             joinToRoom(code);
                         }
-                        findViewById(R.id.participantsLayout).setVisibility(VISIBLE);
+                        if(!scoresShown) findViewById(R.id.participantsLayout).setVisibility(VISIBLE);
                         findViewById(R.id.waitingDialogCL).setVisibility(GONE);
                         ((TextView)findViewById(R.id.participantsLayout).findViewById(R.id.codeTV_to)).setText(getString(R.string.Code)+": "+code);
                         Log.i("codeTV-text", getString(R.string.Code)+": "+code);
@@ -766,12 +587,14 @@ public class TournamentActivity extends AppCompatActivity {
             @Override
             public void call(final Object... args) {
                 runOnUiThread(new Runnable() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void run() {
                         try {
                             JSONObject room = (JSONObject) args[0];
                             if(organizatorName == null){
                                 organizatorName = room.getJSONObject("organizator").getString("username");
+                                ((TextView)findViewById(R.id.participantsLayout).findViewById(R.id.codeTV_to)).setText(getString(R.string.Code)+": "+code);
                             }
                             JSONArray players = room.getJSONArray("participants");
                             List<String> plNameList = new ArrayList<>();
@@ -789,7 +612,7 @@ public class TournamentActivity extends AppCompatActivity {
                             }
 
                             findViewById(R.id.waitingDialogCL).setVisibility(GONE);
-                            findViewById(R.id.participantsLayout).setVisibility(VISIBLE);
+                            if(!scoresShown) findViewById(R.id.participantsLayout).setVisibility(VISIBLE);
                             if(userType.equals("participant")||userType.equals("student")){
                                 findViewById(R.id.participantsLayout).findViewById(R.id.startTournamentButton).setVisibility(GONE);
                             }
@@ -885,6 +708,7 @@ public class TournamentActivity extends AppCompatActivity {
                                 String plName = player.getString("username");
                                 int plScore = players.getJSONObject(i).getInt("score");
                                 LinearLayout horLL = (LinearLayout) getLayoutInflater().inflate(getResources().getIdentifier("scores_hor_ll","layout", getPackageName()),null);
+                                ((TextView) horLL.getChildAt(0)).setText((i+1)+""); // sıralama
                                 ((TextView) horLL.getChildAt(1)).setText(plName); // kullanıcı adı
                                 ((TextView) horLL.getChildAt(2)).setText(Integer.toString(plScore));
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -894,6 +718,8 @@ public class TournamentActivity extends AppCompatActivity {
                             }
                             findViewById(R.id.waitingDialogCL).setVisibility(GONE);
                             findViewById(R.id.scoresLL).setVisibility(View.VISIBLE);
+                            scoresShown = true;
+
 
                             if(gameOrder.size()==0){
                                 findViewById(R.id.correctDialogGameMenu).setVisibility(VISIBLE);
@@ -932,6 +758,7 @@ public class TournamentActivity extends AppCompatActivity {
         map.put("gameTypes", gamesMap);
         if(userType.equals("instructor")) map.put("code", code);
 
+        socket.emit("usageType","tournament");
         socket.emit("createRoom", new JSONObject(map));
         Log.i("socket","createRoom - "+map);
     }
@@ -941,7 +768,7 @@ public class TournamentActivity extends AppCompatActivity {
         map.put("username", username);
         map.put("room_id", room_id);
 
-        socket.emit("joinToRoom", new JSONObject(map));
+        socket.emit("tournament_joinToRoom", new JSONObject(map));
         Log.i("socket","joinToRoom - "+map);
     }
 
@@ -952,7 +779,7 @@ public class TournamentActivity extends AppCompatActivity {
 
     public void sendScore(int score){
         Log.i("socket","sendScore");
-        socket.emit("sendScore",score);
+        socket.emit("tournament_sendScore",score);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -970,17 +797,12 @@ public class TournamentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament);
-        waitingDialog = findViewById(R.id.waitingDialogCL);
-        createOrJoinLL = findViewById(R.id.createOrJoinLL);
-        tournamentOptionsCL = findViewById(R.id.tournamentOptionsCL);
-        participantsLayout = findViewById(R.id.participantsLayout);
-        scoresLL = findViewById(R.id.scoresLL);
 
-        waitingDialog.setVisibility(GONE);
-        createOrJoinLL.setVisibility(GONE);
-        tournamentOptionsCL.setVisibility(GONE);
-        participantsLayout.setVisibility(GONE);
-        scoresLL.setVisibility(GONE);
+        findViewById(R.id.waitingDialogCL).setVisibility(GONE);
+        findViewById(R.id.createOrJoinLL).setVisibility(GONE);
+        findViewById(R.id.tournamentOptionsCL).setVisibility(GONE);
+        findViewById(R.id.participantsLayout).setVisibility(GONE);
+        findViewById(R.id.scoresLL).setVisibility(GONE);
 
         SharedPreferences sp = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         username = sp.getString("username",getString(R.string.Unknown));
@@ -1001,7 +823,7 @@ public class TournamentActivity extends AppCompatActivity {
         } else if(userType.equals("instructor")){
             createNewTournament(null);
         } else {
-            createOrJoinLL.setVisibility(VISIBLE);
+            if(!scoresShown)findViewById(R.id.createOrJoinLL).setVisibility(VISIBLE);
         }
 
 

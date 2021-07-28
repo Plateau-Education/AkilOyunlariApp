@@ -39,6 +39,7 @@ public class GameGuideActivity extends AppCompatActivity {
     String clickedBox = "-1";
     String switchPosition = "diamond";
     String gamename = "Hazine Avı";
+    String type = "single";
     String previousCoor;
     String[] rowColumn;
     int inNum = 0;
@@ -66,6 +67,7 @@ public class GameGuideActivity extends AppCompatActivity {
     public void goBackToHTP(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         intent.putExtra("gameName", gamename);
+        intent.putExtra("type",type);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -93,42 +95,18 @@ public class GameGuideActivity extends AppCompatActivity {
         }
     }
 
-    public void changeSwitch(View view){
-//        ImageView switchTV = (ImageView) view;
-//        if(switchPosition.equals("diamond")){
-//            switchTV.setImageResource(R.drawable.ic_cross);
-//            switchPosition = "cross";
-//        }
-//        else if(switchPosition.equals("cross")){
-//            switchTV.setImageResource(R.drawable.ic_diamond);
-//            switchPosition = "diamond";
-//        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked(View view){
+    public void changeClicked_HA(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
+        Object[] result = AssistClass.changeClicked(this, view, switchPosition, allowedBoxes, null, clickedBox);
+        clickedBox = (String) result[1];
         if(allowedBoxes.contains(answerIndex)) {
-            if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                }
-            }
-            else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                }
-            }
-            clickedBox = answerIndex;
             allowedBoxes.remove(answerIndex);
             gl.findViewWithTag(answerIndex).clearAnimation();
         }
     }
+
 
     @SuppressLint("SetTextI18n")
     public void instructionChange(View view){
@@ -493,6 +471,9 @@ public class GameGuideActivity extends AppCompatActivity {
                 gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
 
         }
+        else if (gamename.contains("Bulmaca")){
+
+        }
     }
 
     public void setInStrings() {
@@ -529,6 +510,9 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
+        else if (gamename.contains("Bulmaca")){
+
+        }
     }
 
     public void animateView(View view,float s1, float s2){
@@ -562,6 +546,8 @@ public class GameGuideActivity extends AppCompatActivity {
             for(String cos: blackList){
                 gl.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
             }
+        } else if (gamename.contains("Bulmaca")){
+
         }
     }
 
@@ -825,6 +811,7 @@ public class GameGuideActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         gamename = intent.getStringExtra("gamename");
+        type = intent.getStringExtra("type");
 
         assert gamename != null;
         if(gamename.contains("Hazine")) {
@@ -898,7 +885,10 @@ public class GameGuideActivity extends AppCompatActivity {
                     return true;
                 }
             });
+        } else if (gamename.contains("Bulmaca")){
+
         }
+
     }
 
     @Override

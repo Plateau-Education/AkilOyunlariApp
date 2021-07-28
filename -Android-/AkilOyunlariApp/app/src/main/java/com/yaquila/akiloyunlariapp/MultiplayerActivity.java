@@ -64,8 +64,10 @@ public class MultiplayerActivity extends AppCompatActivity {
     int currentQ = 0;
     int totalSolveTime;
     int score = 0;
+    int secondsToGo = 60;
     long currentTimeInMillis;
     long afterTenMinMillis;
+    long afterSecondsToGoMinMillis;
     boolean inTheRoom = false;
     boolean gotScores;
 
@@ -176,155 +178,40 @@ public class MultiplayerActivity extends AppCompatActivity {
     } // Sonraki soruya geç
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked(View view){
+    public void changeClicked_HA(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-        if(!clueIndexes.contains(answerIndex)) {
-            String op = null;
-            if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                    op = "-1";
-                }
-            }
-            else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                    op = "-2";
-                }
-            }
-            clickedBox = answerIndex;
-            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
-            }
-            Log.i("operations",operations+"");
-            checkAnswer(null);
-        }
+        Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
+        operations = (List<List<String>>) result[0];
+        clickedBox = (String) result[1];
+        if(!clueIndexes.contains(answerIndex)) checkAnswer_HA(null);
     } // Tıklanan kutuya elmas/çarpı koy
 
-    public void changeSwitch(View view){
-        ImageView switchTV = (ImageView) view;
-        if(switchPosition.equals("diamond")){
-            switchTV.setImageResource(R.drawable.ic_cross);
-            switchPosition = "cross";
-        }
-        else if(switchPosition.equals("cross")){
-            switchTV.setImageResource(R.drawable.ic_diamond);
-            switchPosition = "diamond";
-        }
+    public void changeSwitch_HA(View view){
+        switchPosition = AssistClass.changeSwitch(view, switchPosition);
     } // Elmas - çarpı değiştir
 
-    public void undoOperation(View view){
-        if(operations.size() > 1){
-//            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple1 = operations.get(operations.size()-1);
-            operations = operations.subList(0,operations.size()-1);
-            String co1 = tuple1.get(0);
-            String num2 = "0";
-            String co2;
-            for(int i = operations.size()-1; i>0; i--){
-                List<String> tuple2 = operations.get(i);
-                co2 = tuple2.get(0);
-                if(co1.equals(co2)){
-                    num2 = tuple2.get(1);
-                    break;
-                }
-            }
-            Log.i("co/num",co1+" / "+num2);
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag(co1);
-            if(num2.equals("-1")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-            }
-            else if(num2.equals("-2")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-            }
-            else{
-                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-            }
-        }
+    public void undoOperation_HA(View view){
+        operations = (List<List<String>>) AssistClass.undoOperation( this, operations)[0];
     } // Son işlemi geri al
 
-    public void resetGrid(View view){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            clickedBox = "-1";
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    if(!clueIndexes.contains(Integer.toString(j)+i)){
-                        tv.setText("");
-                    }
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+    public void resetGrid_HA(View view){
+        Object[] result = AssistClass.resetGrid(this, view, gridSize, clueIndexes, operations, clickedBox);
+        operations = (List<List<String>>) result[0];
+        clickedBox = (String) result[1];
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
+    public void checkAnswer_HA(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(int i = 0; i<gridSize; i++){
-            for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
-                    checking=false;
-                    break;
-                }
-            }
-        }
-//        for(int i = 0; i < gridSize; i++){
-//            for(int j = 0; j <  gridSize; j++){
-//                try {
-//                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(((JSONArray)answer.get(i)).get(j).toString())){
-//                        checking=false;
-//                    }
-//                    Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
-        Log.i("check",checking+"  "+answer);
-        if(checking) {
-
+        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)) {
             if (currentQ != numberOfQ) {
                 timerStopped = true;
                 LayoutInflater factory = LayoutInflater.from(this);
                 final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
                 final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
                 TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-                timerTV.setText(formatTime(timerInSeconds));
+                timerTV.setText(formatTime((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000))));
 //                totalSolveTime += timerInSeconds;
                 correctDialog.setView(leaveDialogView);
 
@@ -339,6 +226,7 @@ public class MultiplayerActivity extends AppCompatActivity {
                 undoTV.setEnabled(false);
                 resetTV.setEnabled(false);
 
+                solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
 
                 leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -351,31 +239,16 @@ public class MultiplayerActivity extends AppCompatActivity {
                         correctDialog.dismiss();
                     }
                 });
-//            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-//                    correctDialog.dismiss();
-//                }
-//            });
                 leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
                 correctDialog.show();
             } else {
                 currentQ++;
                 Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ+" timerInSeconds: "+timerInSeconds);
-                solveTimeList.add(timerInSeconds-solveTimeList.get(1)-solveTimeList.get(0));
+                solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
                 score = 10 + 30 + 60;
                 if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
-                Log.i("s11",60f-solveTimeList.get(0)+"");
-                Log.i("s12", (int)(((60f-solveTimeList.get(0))/60f)*10f)+"");
                 if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
-                Log.i("s21",180f-solveTimeList.get(1)+"");
-                Log.i("s22", (int)(((180f-solveTimeList.get(0))/180f)*30f)+"");
                 if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
-                Log.i("s31",360f-solveTimeList.get(2)+"");
-                Log.i("s32", (int)(((360f-solveTimeList.get(0))/360f)*60f)+"");
                 Log.i("solveTimeList",solveTimeList.toString());
                 Log.i("score",score+"");
                 timerStopped=true;
@@ -383,7 +256,9 @@ public class MultiplayerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         setContentView(R.layout.activity_multiplayer);
+                        ((TextView)findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.WaitingForScores);
                         findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
+
 //                sendScore(score);
                     }
                 },500);
@@ -392,24 +267,17 @@ public class MultiplayerActivity extends AppCompatActivity {
     } // Çözümün doğruluğunu kontrol et
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for(int i = 0; i < gridSize; i++){
-            for(int j = 0; j <  gridSize; j++) {
-                String n = ((JSONArray)grid.get(i)).get(j).toString();
-                if(Integer.parseInt(n) > 0){
-                    clueIndexes.add(Integer.toString(j)+i);
-                    ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
-                }
-                else if(n.equals("-1")){
-                    answer.add(Integer.toString(j)+i);
-                }
-            }
+        if(gameName.contains("azine")) {
+            Object[] result = AssistClass.seperateGridAnswer(this, grid, gridSize, clueIndexes, answer);
+            clueIndexes = (List<String>) result[0];
+            answer = (List<String>) result[1];
         }
     } // Çekilen soruyu kullanıcıya göster
 
     public void timerFunc(){
         currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
         afterTenMinMillis = currentTimeInMillis + 600000;
+
         //noinspection deprecation
         timerHandler = new Handler();
         timerTV = findViewById(R.id.timeTV_game);
@@ -483,6 +351,10 @@ public class MultiplayerActivity extends AppCompatActivity {
             setContentView(R.layout.activity_game_hazine_avi8);
             timerTV = findViewById(R.id.timeTV_game);
             gridSize=8;
+            if(gameName.contains("azine")){
+                secondsToGo = 180;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+            }
             Log.i("solveTimeList",solveTimeList.toString());
         }
         else if(currentQ == 2){
@@ -490,6 +362,10 @@ public class MultiplayerActivity extends AppCompatActivity {
             setContentView(R.layout.activity_game_hazine_avi10);
             timerTV = findViewById(R.id.timeTV_game);
             gridSize=10;
+            if(gameName.contains("azine")){
+                secondsToGo = 300;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+            }
             Log.i("solveTimeList",solveTimeList.toString());
         }
         TextView undoTV = findViewById(R.id.undoTV_ga);
@@ -605,6 +481,10 @@ public class MultiplayerActivity extends AppCompatActivity {
                             currentQ = 1;
                             setContentView(R.layout.activity_game_hazine_avi5);
                             gridSize=5;
+                            if(gameName.contains("azine")){
+                                secondsToGo = 60;
+                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                            }
                             TextView undoTV = findViewById(R.id.undoTV_ga);
                             TextView resetTV = findViewById(R.id.resetTV_game);
                             undoTV.setEnabled(true);

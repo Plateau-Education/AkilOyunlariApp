@@ -39,8 +39,6 @@ import java.util.Objects;
 
 public class GameActivitySudoku extends AppCompatActivity {
 
-
-
     String gameName;
     String difficulty;
     String clickedBox = "-1";
@@ -142,211 +140,45 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void changeClicked(View view){
-        TextView box = (TextView) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        GridLayout numsLayout = findViewById(R.id.numsGL_ga);
-        String answerIndex = box.getTag().toString();
-        if(!clueIndexes.contains(answerIndex)) {
-            if (!clickedBox.equals(answerIndex)) {
-                if (!clickedBox.equals("-1")) {
-                    gridLayout.findViewWithTag(clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))])
-                        ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.draft_grey));
-                    else ((TextView)gridLayout.findViewWithTag(clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
-                }
-                box.setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow));
-                box.setTextColor(getResources().getColor(R.color.f7f5fa));
-                clickedBox = answerIndex;
-            } else {
-                if (!undoing) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))])
-                        box.setTextColor(getResources().getColor(R.color.draft_grey));
-                    else box.setTextColor(getResources().getColor(R.color.light_red));
-                    clickedBox = "-1";
-                }
-            }
-            if (!clickedBox.equals("-1")){
-                ImageView draftBtn = findViewById(R.id.draftbutton_ga);
-                if (draftModeActive[Integer.parseInt(clickedBox.substring(0, 1)) * gridSize + Integer.parseInt(clickedBox.substring(1))]) {
-                    for (int i = 1; i < gridSize + 1; i++) {
-                        ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    }
-                    draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
-                }
-                else{
-                    for (int i = 1; i < gridSize + 1; i++) {
-                        ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-                    }
-                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-                }
-            }
-        }
+        clickedBox = AssistClass.changeClicked(this,view,clueIndexes,draftModeActive,gridSize,undoing,clickedBox);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
-        Button btn = (Button) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        GridLayout numGrid = findViewById(R.id.numsGL_ga);
         if(!clickedBox.equals("-1")){
-            TextView currentBox = gridLayout.findViewWithTag(clickedBox);
-            if(currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox,"-1")));
+            Object[] result = AssistClass.numClicked(this,view,draftModeActive,gridSize,clickedBox,operations);
+            if(result!=null) {
+                operations = (List<List<String>>) result[0];
+                boolean isFull = (boolean) result[1];
+                if (isFull) checkAnswer(null);
+                Log.i("operations", operations + "");
             }
-            if(draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))]){
-                if(currentBox.getText().toString().length() == 0){
-                    currentBox.setText(btn.getTag().toString());
-                    if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                    List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
-                    if(!newOp.equals(operations.get(operations.size() - 1))){
-                        operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
-                    }
-                }
-                else{
-                    if(currentBox.getText().toString().contains(btn.getTag().toString())){
-                        currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
-                        List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
-                        if(!newOp.equals(operations.get(operations.size() - 1))){
-                            operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
-                        }
-                        if(currentBox.getText().toString().length() == 1){
-                            if(gridSize == 9)currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                            else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
-                            draftModeActive[Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1))] = false;
-                            for(int i = 1; i<gridSize+1; i++){
-                                ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                            }
-                            findViewById(R.id.draftbutton_ga).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-                        }
-                    }
-                    else{
-                        if(currentBox.getText().toString().length() <= 10) {
-                            currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-                            List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
-                            if(!newOp.equals(operations.get(operations.size() - 1))){
-                                operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
-                            }
-                        }
-                    }
-                }
-            }
-            else{
-                currentBox.setText(btn.getTag().toString());
-                List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
-                if(!newOp.equals(operations.get(operations.size() - 1))){
-                    operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
-                }
-            }
-            boolean isFull = true;
-            for (int i = 0; i<gridSize; i++){
-                for (int j = 0; j<gridSize; j++){
-                    if (((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString().equals("")){
-                        isFull = false;
-                        break;
-                    }
-                }
-            }
-            if (isFull) checkAnswer(null);
-            Log.i("operations",operations+"");
         }
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(!clickedBox.equals("-1")){
-            TextView currentBox = gridLayout.findViewWithTag(clickedBox);
-            if(!currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, "-1")));
-                Log.i("operations",operations+"");
-                currentBox.setText("");
-            }
-        }
+        operations = AssistClass.deleteNum(this,clickedBox,operations);
     }
 
     public void undoOperation(View view){
-        if(operations.size() > 1){
-            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple = operations.get(operations.size()-1);
-            String co = tuple.get(0);
-            String num = tuple.get(1);
-            Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag(co);
-            if(num.equals("-1")){
-                currentBox.setText("");
-            }
-            else{
-                if(num.length()>1){
-                    draftModeActive[Integer.parseInt(co.substring(0,1))*gridSize+Integer.parseInt(co.substring(1))]=false;
-                    draftClicked(null);
-                }
-                else{
-                    draftModeActive[Integer.parseInt(co.substring(0,1))*gridSize+Integer.parseInt(co.substring(1))]=true;
-                    draftClicked(null);
-                }
-                currentBox.setText(num);
-            }
-            undoing=true;
-            changeClicked(currentBox);
-            undoing=false;
-        }
+        Object[] result = AssistClass.undoOperation(this,view,clueIndexes,gridSize,draftModeActive,operations,clickedBox);
+        draftModeActive = (boolean[]) result[0];
+        operations = (List<List<String>>) result[1];
+        clickedBox = (String) result[2];
+        undoing = (boolean) result[3];
     }
 
     public void resetGrid(View view){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            clickedBox = "-1";
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    if(!clueIndexes.contains(Integer.toString(j)+i)){
-                        tv.setText("");
-                    }
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        Object[] result = AssistClass.resetGrid(this,view,clueIndexes,gridSize,operations,clickedBox);
+        operations = (List<List<String>>) result[0];
+        clickedBox = (String) result[1];
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(int i = 0; i < gridSize; i++){
-            for(int j = 0; j <  gridSize; j++){
-                try {
-                    if(!((TextView)gridLayout.findViewWithTag(Integer.toString(j)+ i)).getText().equals(((JSONArray)answer.get(i)).get(j).toString())){
-                        checking=false;
-                    }
-                    Log.i("checking",((TextView)gridLayout.findViewWithTag(Integer.toString(j)+i)).getText().toString()+" / "+(((JSONArray)answer.get(i)).get(j).toString()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        Log.i("check",checking+"  "+answer);
-        if(checking){
-
+        if(AssistClass.checkAnswer(answer,gridSize,gridLayout)){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -419,35 +251,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        ImageView draftBtn = findViewById(R.id.draftbutton_ga);
-        GridLayout numGrid = findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
-        TextView currentClickedBox = questionGrid.findViewWithTag(clickedBox);
-        if(!clickedBox.equals("-1")){
-            int boxIndex = Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1));
-            if(!draftModeActive[boxIndex]){
-                if(currentClickedBox.getText().toString().length() == 1) {
-                    if(gridSize == 9)currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                }
-                for(int i = 1; i<gridSize+1; i++){
-                    ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                }
-                draftModeActive[boxIndex] = true;
-                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
-            }
-            else{
-                if(currentClickedBox.getText().toString().length() <= 1) {
-                    if(gridSize == 9)currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
-                    for(int i = 1; i<gridSize+1; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,22);
-                    }
-                    draftModeActive[boxIndex] = false;
-                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-                }
-            }
-        }
+        draftModeActive = AssistClass.draftClicked(this,gridSize,clickedBox,draftModeActive);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -570,24 +374,10 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-
-        answer = (JSONArray) grid.get(1);
-        question = (JSONArray) grid.get(0);
-        Log.i("question",""+question);
-        Log.i("answer",""+answer);
-        for (int i = 0; i < question.length(); i++){
-            JSONArray row = (JSONArray) question.get(i);
-            for (int j = 0; j< row.length(); j++){
-                if(!row.get(j).toString().equals("0")) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setText(row.get(j).toString());
-                    tv.setTextColor(getResources().getColor(R.color.near_black_blue));
-                    clueIndexes.add(Integer.toString(j)+i);
-                }
-            }
-        }
-
+        Object[] result = AssistClass.seperateGridAnswer(this,grid,clueIndexes);
+        answer = (JSONArray) result[0];
+        question = (JSONArray) result[1];
+        clueIndexes = (List<String>) result[2];
     }
 
     public void timerFunc(){

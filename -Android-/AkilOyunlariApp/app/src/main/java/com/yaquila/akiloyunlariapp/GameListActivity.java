@@ -48,7 +48,7 @@ public class GameListActivity extends AppCompatActivity {
 
     int currentExtendedRow = 0;
     String type = "single";
-    String pType = "2";
+    String pType = "";
 
     public void goToHowtoplay(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
@@ -58,6 +58,7 @@ public class GameListActivity extends AppCompatActivity {
         else{
             intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout)((RelativeLayout) view.getParent()).getParent()).getChildAt(0)).getChildAt(0)).getText());
         }
+        intent.putExtra("type",type+pType);
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }

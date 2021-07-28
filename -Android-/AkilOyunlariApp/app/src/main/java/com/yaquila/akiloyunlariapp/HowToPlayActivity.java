@@ -23,9 +23,11 @@ import java.util.Objects;
 public class HowToPlayActivity extends AppCompatActivity {
 
     String currentGameName;
+    String type;
 
     public void goToGameList(View view){
-        Intent intent = new Intent(this, GameListActivity.class);
+        Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+        intent.putExtra("type",type);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -34,11 +36,13 @@ public class HowToPlayActivity extends AppCompatActivity {
         if (currentGameName.contains("azine")) {
             Intent intent = new Intent(this, GameGuideActivity.class);
             intent.putExtra("gamename", "Hazine Avı");
+            intent.putExtra("type",type);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (currentGameName.contains("atika")){
             Intent intent = new Intent(this, GameGuideActivity.class);
             intent.putExtra("gamename", "Patika");
+            intent.putExtra("type",type);
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         }
@@ -90,6 +94,7 @@ public class HowToPlayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         currentGameName = intent.getStringExtra("gameName");
+        type = intent.getStringExtra("type");
         if (currentGameName!=null){
             Log.i("gameName", Objects.requireNonNull(intent.getStringExtra("gameName")));
 //            Toast.makeText(this, currentGameName, Toast.LENGTH_SHORT).show();
@@ -107,18 +112,34 @@ public class HowToPlayActivity extends AppCompatActivity {
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
 
-        if(currentGameName.equals("Hazine Avı"))
-            ((TextView)findViewById(R.id.howToPlay_text)).setText("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir. Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır. İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir. Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
-        else {
-            ((TextView)findViewById(R.id.howToPlay_text)).setText("Yakında...");
+        switch (currentGameName) {
+            case "Sudoku":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
+                break;
+            case "Hazine Avı":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_hazineavi);
+                break;
+            case "Patika":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_patika);
+                break;
+            case "Sayı Bulmaca":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sayibulmaca);
+                break;
+            case "Sözcük Türü":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sozcukturu);
+                break;
+            case "Piramit":
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_piramit);
+                break;
+            default:
+                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.Comingsoon);
+                break;
         }
     }
 
     @Override
     public void onBackPressed() {
 //        super.onBackPressed();
-        Intent intent = new Intent(this, GameListActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+        goToGameList(null);
     }
 }
