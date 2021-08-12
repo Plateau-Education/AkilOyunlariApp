@@ -1,9 +1,5 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -13,11 +9,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,9 +30,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,18 +39,12 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
     String gameName;
     String difficulty;
-    String clickedBox = "-1";
-    String switchPosition = "diamond";
-    int gridSize = 6;
-    int timerInSeconds = 0;
-    boolean timerStopped=false;
-    boolean paused = false;
-    boolean gotQuestion = false;
-
-    List<List<String>> operations = new ArrayList<>();
-    List<String> clueIndexes = new ArrayList<>();
-    List<String> answer = new ArrayList<>();
     LoadingDialog loadingDialog;
+
+    boolean timerStopped = false;
+    boolean gotQuestion = false;
+    boolean paused = false;
+    int timerInSeconds = 0;
     Handler timerHandler;
     Runnable runnable;
 
@@ -68,8 +60,8 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 try {
-                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                     Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                     assert questions != null;
@@ -77,12 +69,12 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
                     assert solvedQuestions != null;
                     assert gameIds != null;
-                    Objects.requireNonNull(solvedQuestions.get("HazineAvi." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+                    Objects.requireNonNull(solvedQuestions.get("HazineAvi." + HazineAviUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
 
                     Log.i("solvedQuestions",solvedQuestions+"");
 
-                    sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                    sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                    sharedPreferences.edit().putString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                     sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                 } catch (IOException e) {
@@ -135,37 +127,53 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         }
     } // Sonraki soruya geç
 
-    public void changeClicked(View view){
+    public void changeClicked(View view) {
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-        Object[] result = AssistClass.changeClicked( this, view, switchPosition, clueIndexes, operations, clickedBox);
-        operations = (List<List<String>>) result[0];
-        clickedBox = (String) result[1];
-        if(!clueIndexes.contains(answerIndex)) checkAnswer(null);
+//        try {
+//            utilsMap.get(gameName).getDeclaredMethod("changeClicked", View.class).invoke(null,view);
+//            if(!utilsMap.get(gameName).getDeclaredField("clueIndexes").get(null).toString().contains(answerIndex)) checkAnswer(null);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        HazineAviUtils.changeClicked(view);
+        if(HazineAviUtils.clueIndexes.contains(answerIndex)) checkAnswer(null);
     } // Tıklanan kutuya elmas/çarpı koy
 
-    public void changeSwitch(View view){
-        switchPosition = AssistClass.changeSwitch(view, switchPosition);
+    public void changeSwitch(View view) {
+        HazineAviUtils.changeSwitch(view);
+//        try {
+//            utilsMap.get(gameName).getDeclaredMethod("changeSwitch", View.class).invoke(null,view);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     } // Elmas - çarpı değiştir
 
-    public void undoOperation(View view){
-        operations = (List<List<String>>) AssistClass.undoOperation(this, operations)[0];
+    public void undoOperation(View view) {
+        HazineAviUtils.undoOperation();
+//        try {
+//            utilsMap.get(gameName).getDeclaredMethod("undoOperation", (Class<?>) null).invoke(null, (Object) null);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     } // Son işlemi geri al
 
-    public void resetGrid(View view){
-        Object[] result = AssistClass.resetGrid( this, view, clueIndexes, gridSize, operations, clickedBox);
-        operations = (List<List<String>>) result[0];
-        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-        clickedBox = (String) result[1];
+    public void resetGrid(View view) {
+        HazineAviUtils.resetGrid(view);
+//        try {
+//            utilsMap.get(gameName).getDeclaredMethod("resetGrid", View.class).invoke(null,view);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     } // Tüm işlemleri sıfırla
 
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)){
+        if(HazineAviUtils.checkAnswer(gridLayout)){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
-                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                 assert questions != null;
@@ -173,12 +181,12 @@ public class GameActivityHazineAvi extends AppCompatActivity {
 
                 assert solvedQuestions != null;
                 assert gameIds != null;
-                Objects.requireNonNull(solvedQuestions.get("HazineAvi." + gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
+                Objects.requireNonNull(solvedQuestions.get("HazineAvi." + HazineAviUtils.gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
 
                 Log.i("solvedQuestions++++",solvedQuestions+"");
 
-                sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                 sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             } catch (IOException e) {
@@ -196,8 +204,8 @@ public class GameActivityHazineAvi extends AppCompatActivity {
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
+            for (int i = 0; i < HazineAviUtils.gridSize; i++) {
+                for (int j = 0; j < HazineAviUtils.gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
             }
@@ -225,6 +233,8 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         }
     } // Çözümün doğruluğunu kontrol et
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         ArrayList<String> questions = new ArrayList<>();
@@ -237,9 +247,9 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 StringBuilder result = new StringBuilder();
                 String id = sharedPreferences.getString("id", "non");
                 try {
-                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi." + gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi." + HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
                     Log.i("questions",questions+"");
-                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi." + HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -294,9 +304,9 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("HazineAvi."+gridSize)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("HazineAvi."+HazineAviUtils.gridSize)).toString()+"ss");
                 for(int i = 0; i < idArray.length(); i++){
-                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("HazineAvi."+gridSize)).toString().contains(idArray.getInt(i)+"-")) {
+                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("HazineAvi."+HazineAviUtils.gridSize)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
                         gameIds.add(idArray.getInt(i));
                     }
@@ -322,14 +332,14 @@ public class GameActivityHazineAvi extends AppCompatActivity {
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi." + HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -342,9 +352,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     } // API'den soru çek
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        Object[] result = AssistClass.seperateGridAnswer( this, grid, gridSize, clueIndexes, answer);
-        clueIndexes = (List<String>) result[0];
-        answer = (List<String>) result[1];
+        HazineAviUtils.seperateGridAnswer(grid);
     } // Çekilen soruyu kullanıcıya göster
 
     public void timerFunc(){
@@ -352,7 +360,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
-            @Override
             public void run() {
                 timerInSeconds+=1;
                 Log.i("timerInSeconds",timerInSeconds+"");
@@ -376,22 +383,14 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     }
 
     public void clearGrid(){
-        operations = new ArrayList<>();
-        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setText("");
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                tv.setEnabled(true);
-            }
-        }
-        clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
+        HazineAviUtils.clearGrid();
+        timerStopped = true;
         timerInSeconds = 0;
-        timerStopped=true;
+//        try {
+//            utilsMap.get(gameName).getDeclaredMethod("clearGrid", View.class).invoke(null,null);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void mainFunc(){
@@ -403,7 +402,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         clearGrid();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/HazineAvi."+gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/HazineAvi."+HazineAviUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -411,21 +410,23 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        HazineAviUtils.initVars(this);
+
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
             setContentView(R.layout.activity_game_hazine_avi5);
-            gridSize=5;
+            HazineAviUtils.gridSize=5;
         }
         else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
             setContentView(R.layout.activity_game_hazine_avi8);
-            gridSize=8;
+            HazineAviUtils.gridSize=8;
         }
         else{
             setContentView(R.layout.activity_game_hazine_avi10);
-            gridSize=10;
+            HazineAviUtils.gridSize=10;
         }
 
         mainFunc();
@@ -453,7 +454,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        timerInSeconds = pausedTime;
+//        HazineAviUtils.timerInSeconds = HazineAviUtils.pausedTime;
         if(paused&&gotQuestion){
             timerStopped=false;
             paused=false;
@@ -466,20 +467,20 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         Log.d("STH","DESTROYED");
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
             Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
-            sharedPreferences.edit().putString("HazineAvi."+gridSize, ObjectSerializer.serialize(questions)).apply();
-            sharedPreferences.edit().putString("IDHazineAvi."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+            sharedPreferences.edit().putString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+            sharedPreferences.edit().putString("IDHazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("HazineAvi." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("HazineAvi." + HazineAviUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
             Log.i("solvedQuestions",solvedQuestions+"");
 
 

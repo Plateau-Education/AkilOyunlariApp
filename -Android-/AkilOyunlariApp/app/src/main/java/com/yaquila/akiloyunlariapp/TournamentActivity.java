@@ -178,30 +178,30 @@ public class TournamentActivity extends AppCompatActivity {
     public void changeClicked_HA(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-        Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
-        operations = (List<List<String>>) result[0];
-        clickedBox = (String) result[1];
+//        Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
+//        operations = (List<List<String>>) result[0];
+//        clickedBox = (String) result[1];
         if(!clueIndexes.contains(answerIndex)) checkAnswer_HA(null);
     } // Tıklanan kutuya elmas/çarpı koy
 
     public void changeSwitch_HA(View view){
-        switchPosition = AssistClass.changeSwitch(view, switchPosition);
+//        switchPosition = AssistClass.changeSwitch(view, switchPosition);
     } // Elmas - çarpı değiştir
 
     public void undoOperation_HA(View view){
-        operations = (List<List<String>>) AssistClass.undoOperation( this, operations)[0];
+//        operations = (List<List<String>>) AssistClass.undoOperation( this, operations)[0];
     } // Son işlemi geri al
 
     public void resetGrid_HA(View view){
-        Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
-        operations = (List<List<String>>) result[0];
-        clickedBox = (String) result[1];
+//        Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
+//        operations = (List<List<String>>) result[0];
+//        clickedBox = (String) result[1];
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer_HA(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)) {
+//        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)) {
             solvedTheQuestion = true;
             if (currentQ != totalNumberOfQs) {
                 timerStopped = true;
@@ -249,14 +249,14 @@ public class TournamentActivity extends AppCompatActivity {
                     }
                 },300);
             }
-        }
+//        }
     } // Çözümün doğruluğunu kontrol et
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         if(gameOrder.get(0).contains("HazineAvi")) {
-            Object[] result = AssistClass.seperateGridAnswer(this, grid, gridSize, clueIndexes, answer);
-            clueIndexes = (List<String>) result[0];
-            answer = (List<String>) result[1];
+//            Object[] result = AssistClass.seperateGridAnswer(this, grid, gridSize, clueIndexes, answer);
+//            clueIndexes = (List<String>) result[0];
+//            answer = (List<String>) result[1];
         }
     } // Çekilen soruyu kullanıcıya göster
 

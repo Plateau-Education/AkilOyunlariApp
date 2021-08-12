@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
@@ -17,16 +13,16 @@ import android.os.Handler;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +36,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,29 +43,16 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     String gameName;
     String difficulty;
-    String previousCoor;
-    String answer = "";
-    String[] rowColumn;
-    String[][] lineGrid = new String[81][81];
-    int gridSizeX = 5;
-    int gridSizeY = 5;
     int timerInSeconds = 0;
-    int pxHeightX = 900;
-    int pxHeightY = 900;
     boolean timerStopped=false;
     boolean paused = false;
     boolean gotQuestion = false;
     boolean is_moving = false;
     boolean solvedQuestion = false;
 
-    List<String> operations = new ArrayList<>();
-    List<String> opsForUndo = new ArrayList<>();
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
-    Bitmap bitmap;
-    Canvas canvas;
-    Paint paint;
 
 
     public void wannaLeaveDialog(View view){
@@ -154,100 +136,17 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void undoOperation(View view){
-        if(opsForUndo.size() > 2){
-            String op = opsForUndo.get(opsForUndo.size()-1);
-            String previousC = op.substring(0,2);
-            String currentC = op.substring(2,4);
-            int[] firstMP = middlePoint(previousC);
-            int[] secondMP = middlePoint(currentC);
-            if(op.charAt(4) == '+'){
-                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-                paint.setStrokeWidth((float)pxHeightY/60);
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], true);
-                removeLine(previousC,currentC);
-                for(int i = operations.size()-1; i >= 0; i--){
-                    if(operations.get(i).equals(previousC + currentC)){
-                        operations.remove(i);
-                        break;
-                    }
-                }
-                removeLine(currentC,previousC);
-                for(int i = operations.size()-1; i >= 0; i--){
-                    if(operations.get(i).equals(currentC + previousC)){
-                        operations.remove(i);
-                        break;
-                    }
-                }
-                paint.setXfermode(null);
-                paint.setStrokeWidth((float)pxHeightY/75);
-
-            } else {
-                drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], false);
-                addLine(previousC, currentC);
-                operations.add(previousC+currentC);
-            }
-            for(int i = opsForUndo.size()-1; i >= 0; i--){
-                if(opsForUndo.get(i).equals(op)){
-                    opsForUndo.remove(i);
-                    break;
-                }
-            }
-            Log.i("opsforUndo",opsForUndo.toString());
-        }
+        SozcukTuruUtils.undoOperation();
     }
 
     public void resetGrid(View view){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            operations.add("--");
-            operations.add("--");
-            opsForUndo = new ArrayList<>();
-            opsForUndo.add("--");
-            opsForUndo.add("--");
-
-            bitmap.eraseColor(Color.TRANSPARENT);
-            canvas = new Canvas(bitmap);
-
-            for (int i = 0; i < gridSizeX; i++){
-                for(int j = 0; j < gridSizeY; j++){
-                    if(lineGrid[i][j].length() <=2){
-                        lineGrid[i][j] = "";
-                    }
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        SozcukTuruUtils.resetGrid(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(String s : operations.subList(2,operations.size())){
-            String sR = s.substring(2) + s.substring(0,2);
-            checking = answer.contains(s) || answer.contains(sR);
-            Log.i("answer / s / sR",s + " / " + sR + " / " + answer);
-            if(!checking) break;
-        }
-//        Log.i("answerComparison",opAnswer.toString()+" // "+answer);
-
-        if(checking){
-
+        if(SozcukTuruUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -283,8 +182,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSizeY; i++) {
-                for (int j = 0; j < gridSizeX; j++) {
+            for (int i = 0; i < SozcukTuruUtils.gridSizeY; i++) {
+                for (int j = 0; j < SozcukTuruUtils.gridSizeX; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
             }
@@ -433,24 +332,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        StringBuilder answerSB = new StringBuilder();
-        answer = answer + ((JSONArray) grid.get(0)).getInt(0)+((JSONArray) grid.get(0)).getInt(1);
-        StringBuilder words = new StringBuilder();
-        for (int i = 0; i < grid.length(); i++){
-            JSONArray box = ((JSONArray) grid.get(i));
-            if(i != 0 && i != grid.length()-1)
-                answerSB.append(box.getInt(0)).append(box.getInt(1)).append(" ").append(box.getInt(0)).append(box.getInt(1));
-//                answer = answer + box.getInt(0)+box.getInt(1) + " " + box.getInt(0)+box.getInt(1);
-            TextView currentTV = gridLayout.findViewWithTag(Integer.toString(box.getInt(0))+box.getInt(1));
-            currentTV.setText(Character.toString((char)box.getInt(2)));
-            words.append((char) box.getInt(2));
-        }
-        answer += answerSB.toString();
-        answer = answer + ((JSONArray) grid.get(grid.length()-1)).getInt(0)+((JSONArray) grid.get(grid.length()-1)).getInt(1);
-
-        Log.i("answerWords", words.toString());
-
+        SozcukTuruUtils.seperateGridAnswer(grid);
     }
 
     public void timerFunc(){
@@ -462,7 +344,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             public void run() {
                 timerInSeconds+=1;
                 Log.i("timerInSeconds",timerInSeconds+"");
-//                Log.i("answer",answer);
+//                Log.i("SozcukTuruUtils.answer",SozcukTuruUtils.answer);
                 timerTV.setText(formatTime(timerInSeconds));
                 if(!timerStopped) timerHandler.postDelayed(this,1000);
             }
@@ -483,37 +365,9 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     public void clearGrid(){
-        operations = new ArrayList<>();
-        operations.add("--");
-        operations.add("--");
-        opsForUndo = new ArrayList<>();
-        opsForUndo.add("--");
-        opsForUndo.add("--");
-
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSizeY; i++) {
-            for (int j = 0; j < gridSizeX; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setText("");
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                tv.setEnabled(true);
-            }
-        }
-        answer = "";
+        SozcukTuruUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
-        try{
-            bitmap.eraseColor(Color.TRANSPARENT);
-            canvas = new Canvas(bitmap);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        for (int i = 0; i < gridSizeX; i++){
-            for(int j = 0; j < gridSizeY; j++){
-                lineGrid[i][j] = "";
-            }
-        }
     }
 
     public void mainFunc(){
@@ -530,280 +384,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     public void initSomeVar(){
-        bitmap = Bitmap.createBitmap(pxHeightX, pxHeightY, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
-        canvas.drawColor(getResources().getColor(R.color.transparent));
-        paint = new Paint();
-        paint.setColor(getResources().getColor(R.color.shallow_light_red2));
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth((float)pxHeightY/75);
-        paint.setAntiAlias(true);
-
-        for (int i = 0; i < gridSizeX; i++){
-            for(int j = 0; j < gridSizeY; j++){
-                lineGrid[j][i] = "";
-            }
-        }
-
-    }
-
-    public String[] xyToRowColumn(float x, float y){
-        String[] rowColumn = new String[2];
-        float coefX = (float)pxHeightX/gridSizeX;
-        float coefY = (float)pxHeightY/gridSizeY;
-        if((((x / coefX) - Math.floor(x / coefX)) >= 0.2f) && (((y / coefY) - Math.floor(y / coefY)) >= 0.2f)){
-            rowColumn[0] = Integer.toString((int) Math.floor(x/coefX));
-            rowColumn[1] = Integer.toString((int) Math.floor(y/coefY));
-        }
-        else{
-            rowColumn[0] = "";
-            rowColumn[1] = "";
-        }
-        return rowColumn;
-    }
-
-    public int[] middlePoint(String coor){
-        int x = Integer.parseInt(String.valueOf(coor.charAt(0)));
-        int y = Integer.parseInt(String.valueOf(coor.charAt(1)));
-        int[] middle_point = new int[2];
-        float coefX = (float)pxHeightX/gridSizeX;
-        float coefY = (float)pxHeightY/gridSizeY;
-        middle_point[0] = (int) (coefX*x+coefX/2);
-        middle_point[1] = (int) (coefY*y+coefY/2);
-        return middle_point;
-    }
-
-    public void drawALine(float startX, float startY, float stopX, float stopY, boolean erasing){
-        ImageView imageView = findViewById(R.id.canvasIV);
-//        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
-        if(!erasing) {
-            int offset = pxHeightY / 150;
-            if (startY - stopY == 0 && startX - stopX != 0) {
-                if (startX < stopX)
-                    canvas.drawLine(startX - offset, startY, stopX + offset, stopY, paint);
-                else canvas.drawLine(startX + offset, startY, stopX - offset, stopY, paint);
-            } else if (startX - stopX == 0 && startY - stopY != 0){
-                if (startY < stopY)
-                    canvas.drawLine(startX, startY - offset, stopX, stopY + offset, paint);
-                else canvas.drawLine(startX, startY + offset, stopX, stopY - offset, paint);
-            }
-            else {
-                canvas.drawLine(startX,startY,stopX,stopY,paint);
-//                if (startX < stopX) {
-//                    if (startY < stopY)
-//                        canvas.drawLine(startX-offset, startY - offset, stopX+offset, stopY + offset, paint);
-//                    else canvas.drawLine(startX-offset, startY + offset, stopX+offset, stopY - offset, paint);
-//                } else {
-//                    if (startY < stopY)
-//                        canvas.drawLine(startX+offset, startY - offset, stopX-offset, stopY + offset, paint);
-//                    else canvas.drawLine(startX+offset, startY + offset, stopX-offset, stopY - offset, paint);
-//                }
-            }
-        }
-        else{
-            String[] previousC = xyToRowColumn(startX,startY);
-            int px = Integer.parseInt(previousC[0]);
-            int py = Integer.parseInt(previousC[1]);
-            String[] currentC = xyToRowColumn(stopX,stopY);
-            int cx = Integer.parseInt(currentC[0]);
-            int cy = Integer.parseInt(currentC[1]);
-
-            if (startY - stopY == 0 && startX - stopX != 0) {
-                int offset1 = pxHeightY / 120;
-                int offset2 = pxHeightY / 120;
-                if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeightY/120;
-                }
-                if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeightY/120;
-                }
-                if (startX < stopX)
-                    canvas.drawLine(startX - offset1, startY, stopX + offset2, stopY, paint);
-                else canvas.drawLine(startX + offset1, startY, stopX - offset2, stopY, paint);
-            } else if (startX - stopX == 0 && startY - stopY != 0){
-                int offset1 = pxHeightY / 120;
-                int offset2 = pxHeightY / 120;
-                if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeightY/120;
-                }
-                if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeightY/120;
-                }
-                if (startY < stopY)
-                    canvas.drawLine(startX, startY - offset1, stopX, stopY + offset2, paint);
-                else canvas.drawLine(startX, startY + offset1, stopX, stopY - offset2, paint);
-            } else {
-                int offset1 = pxHeightY / 120;
-                int offset2 = pxHeightY / 120;
-                if(lineGrid[px][py].length() == 2){
-                    offset1 = -pxHeightY/120;
-                }
-                if(lineGrid[cx][cy].length() == 2){
-                    offset2 = -pxHeightY/120;
-                }
-
-                if (startX < stopX) {
-                    if (startY < stopY)
-                        canvas.drawLine(startX-offset1, startY - offset1, stopX+offset2, stopY + offset2, paint);
-                    else canvas.drawLine(startX-offset1, startY + offset1, stopX+offset2, stopY - offset2, paint);
-                } else {
-                    if (startY < stopY)
-                        canvas.drawLine(startX+offset1, startY - offset1, stopX-offset2, stopY + offset2, paint);
-                    else canvas.drawLine(startX + offset1, startY + offset1, stopX-offset2, stopY - offset2, paint);
-                }
-            }
-        }
-        imageView.setImageBitmap(bitmap);
-    }
-
-    public void addLine(String firstRC, String secondRC){
-        int r1 = Integer.parseInt(String.valueOf(firstRC.charAt(0)));
-        int c1 = Integer.parseInt(String.valueOf(firstRC.charAt(1)));
-        int r2 = Integer.parseInt(String.valueOf(secondRC.charAt(0)));
-        int c2 = Integer.parseInt(String.valueOf(secondRC.charAt(1)));
-        if(r1 == r2 && c1 != c2){ // vertical line
-            if(c1 < c2){ // first one is above second
-                lineGrid[r1][c1] += "d";
-                lineGrid[r2][c2] += "u";
-            }
-            else { // first one is below second
-                lineGrid[r1][c1] += "u";
-                lineGrid[r2][c2] += "d";
-            }
-        }
-        else if(c1 == c2 && r1 != r2){ // horizontal line
-            if(r1 < r2){ // first one is left of second
-                lineGrid[r1][c1] += "r";
-                lineGrid[r2][c2] += "l";
-            }
-            else { // first one is right of second
-                lineGrid[r1][c1] += "l";
-                lineGrid[r2][c2] += "r";
-            }
-        }
-        else{
-            if(c1 < c2){ // first one is above second
-                if(r1 < r2){ // first one is left of second
-                    lineGrid[r1][c1] += "s";
-                    lineGrid[r2][c2] += "n";
-                }
-                else { // first one is right of second
-                    lineGrid[r1][c1] += "n";
-                    lineGrid[r2][c2] += "s";
-                }
-            }
-            else { // first one is below second
-                if(r1 < r2){ // first one is left of second
-                    lineGrid[r1][c1] += "e";
-                    lineGrid[r2][c2] += "w";
-                }
-                else { // first one is right of second
-                    lineGrid[r1][c1] += "w";
-                    lineGrid[r2][c2] += "e";
-                }
-            }
-        }
-    }
-
-    public void removeLine(String firstRC, String secondRC){
-        int r1 = Integer.parseInt(String.valueOf(firstRC.charAt(0)));
-        int c1 = Integer.parseInt(String.valueOf(firstRC.charAt(1)));
-        int r2 = Integer.parseInt(String.valueOf(secondRC.charAt(0)));
-        int c2 = Integer.parseInt(String.valueOf(secondRC.charAt(1)));
-        if(r1 == r2 && c1 != c2){ // vertical line
-            if(c1 < c2){ // first one is above second
-                lineGrid[r1][c1] = lineGrid[r1][c1].replace("d","");
-                lineGrid[r2][c2] = lineGrid[r2][c2].replace("u","");
-            }
-            else { // first one is below second
-                lineGrid[r1][c1] = lineGrid[r1][c1].replace("u","");
-                lineGrid[r2][c2] = lineGrid[r2][c2].replace("d","");
-            }
-        }
-        else if(c1 == c2 && r1 != r2){ // horizontal line
-            if(r1 < r2){ // first one is left of second
-                lineGrid[r1][c1] = lineGrid[r1][c1].replace("r","");
-                lineGrid[r2][c2] = lineGrid[r2][c2].replace("l","");
-            }
-            else { // first one is right of second
-                lineGrid[r1][c1] = lineGrid[r1][c1].replace("l","");
-                lineGrid[r2][c2] = lineGrid[r2][c2].replace("r","");
-
-            }
-        }
-        else{
-            if(c1 < c2){ // first one is above second
-                if(r1 < r2){ // first one is left of second
-                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("s","");
-                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("n","");
-                }
-                else { // first one is right of second
-                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("n","");
-                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("s","");
-                }
-            }
-            else { // first one is below second
-                if(r1 < r2){ // first one is left of second
-                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("e","");
-                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("w","");
-                }
-                else { // first one is right of second
-                    lineGrid[r1][c1] = lineGrid[r1][c1].replace("w","");
-                    lineGrid[r2][c2] = lineGrid[r2][c2].replace("e","");
-                }
-            }
-        }
-//        Log.i("eraseModeRemoveLine",r1+" "+c1+" "+lineGrid[r1][c1]+" / "+r2+" "+c2+" "+lineGrid[r2][c2]);
-    }
-
-    public boolean isMoreLineCanBeAdded(String coor){
-        int r = Integer.parseInt(String.valueOf(coor.charAt(0)));
-        int c = Integer.parseInt(String.valueOf(coor.charAt(1)));
-        Log.i("rc",r+"  "+c);
-        return lineGrid[r][c].length() < 2;
-    }
-
-    public boolean lineCanBeDrawn(String currentC, String previousC){
-//        Log.i("eraseModeLineCanBeDrawn","---------------------------"+previousC+"--"+currentC);
-//        Log.i("eraseModeLineCanBeDrawn","!currentC.equals(previousC)"+ !currentC.equals(previousC));
-//        Log.i("eraseModeLineCanBeDrawn","not cross or more than one box"+ ((currentC.charAt(0) == previousC.charAt(0)
-//                && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
-//                ||      (currentC.charAt(1) == previousC.charAt(1)
-//                && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
-//        ));
-//        Log.i("eraseModeLineCanBeDrawn","isMoreLineCanBeAdded(previousC)"+ !isMoreLineCanBeAdded(previousC));
-//        Log.i("eraseModeLineCanBeDrawn","isMoreLineCanBeAdded(currentC)"+ !isMoreLineCanBeAdded(currentC));
-//
-
-        return (!currentC.equals(previousC)
-                && !currentC.equals("")
-                && !previousC.equals("")
-                && (
-                (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) <= 1)
-
-                        && (Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) <= 1)
-        )
-                && isMoreLineCanBeAdded(previousC) && isMoreLineCanBeAdded(currentC));
-    }
-
-    public boolean isGridFull(){
-        boolean isfull = true;
-        int notfullCount = 0;
-        for(int i = 0; i < gridSizeX; i++){
-            if(!isfull) break;
-            for(int j = 0; j < gridSizeY; j++){
-                if(lineGrid[i][j].length() < 2){
-                    if(lineGrid[i][j].length() <= 1){
-                        notfullCount += 1;
-                    }
-                    if(notfullCount > 2){
-                        isfull=false;
-                        break;
-                    }
-                }
-            }
-        }
-        return isfull;
+        SozcukTuruUtils.initSomeVar();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -811,6 +392,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SozcukTuruUtils.initVars(this);
+        
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
@@ -832,8 +415,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
                 Log.i("diff", "easy");
                 difficulty = "Easy";
-                gridSizeX = 3;
-                gridSizeY = 4;
+                SozcukTuruUtils.gridSizeX = 3;
+                SozcukTuruUtils.gridSizeY = 4;
                 break;
             case "Medium":
             case "Orta":
@@ -846,8 +429,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 textView = findViewById(R.id.diffTV_game);
                 textView.setText(ss1);
 
-                gridSizeX = 3;
-                gridSizeY = 5;
+                SozcukTuruUtils.gridSizeX = 3;
+                SozcukTuruUtils.gridSizeY = 5;
                 difficulty = "Medium";
                 Log.i("diff", "medium");
                 break;
@@ -861,8 +444,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 textView = findViewById(R.id.diffTV_game);
                 textView.setText(ss1);
 
-                gridSizeX = 4;
-                gridSizeY = 5;
+                SozcukTuruUtils.gridSizeX = 4;
+                SozcukTuruUtils.gridSizeY = 5;
                 difficulty = "Hard";
                 Log.i("diff", "medium");
                 break;
@@ -875,8 +458,8 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 textView = findViewById(R.id.diffTV_game);
                 textView.setText(ss1);
 
-                gridSizeX = 5;
-                gridSizeY = 5;
+                SozcukTuruUtils.gridSizeX = 5;
+                SozcukTuruUtils.gridSizeY = 5;
                 difficulty = "Hardest";
                 Log.i("diff", "hard");
                 break;
@@ -893,11 +476,11 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 //                Log.i("pxheight",pxHeight+"");
 //            }
 //        }, 200);
-        pxHeightY = (int) (300 * getResources().getDisplayMetrics().density);
-        pxHeightX = (int) ((300*gridSizeX/gridSizeY) * getResources().getDisplayMetrics().density);
+        SozcukTuruUtils.pxHeightY = (int) (300 * getResources().getDisplayMetrics().density);
+        SozcukTuruUtils.pxHeightX = (int) ((300*SozcukTuruUtils.gridSizeX/SozcukTuruUtils.gridSizeY) * getResources().getDisplayMetrics().density);
 //        Log.i("asd", +"");
-        Log.i("pxheightX",pxHeightX+"");
-        Log.i("pxheightY",pxHeightY+"");
+        Log.i("pxheightX",SozcukTuruUtils.pxHeightX+"");
+        Log.i("pxheightY",SozcukTuruUtils.pxHeightY+"");
         initSomeVar();
         gridLayout.setOnTouchListener(new View.OnTouchListener() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -906,50 +489,50 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 float mx = motionEvent.getX();
                 float my = motionEvent.getY();
 //                Log.i("x / y",mx + " / " + my);
-                if(mx >= 0 && mx <= pxHeightX && my >= 0 && my <= pxHeightY){
+                if(mx >= 0 && mx <= SozcukTuruUtils.pxHeightX && my >= 0 && my <= SozcukTuruUtils.pxHeightY){
                     switch (motionEvent.getAction()){
                         case MotionEvent.ACTION_DOWN:
-                            rowColumn = xyToRowColumn(mx,my);
-                            previousCoor = rowColumn[0] + rowColumn[1];
+                            SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(mx,my);
+                            SozcukTuruUtils.previousCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
                             is_moving=false;
                             break;
                         case MotionEvent.ACTION_MOVE:
-                            rowColumn = xyToRowColumn(mx,my);
-                            String currentCoor = rowColumn[0] + rowColumn[1];
+                            SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(mx,my);
+                            String currentCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
 //                            Log.i("coor",currentCoor);
-                            if(lineCanBeDrawn(currentCoor,previousCoor) || (operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
+                            if(SozcukTuruUtils.lineCanBeDrawn(currentCoor,SozcukTuruUtils.previousCoor) || (SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
                                 is_moving=true;
-                                int[] firstMP = middlePoint(previousCoor);
-                                int[] secondMP = middlePoint(currentCoor);
-                                if((operations.contains(previousCoor+currentCoor) || operations.contains(currentCoor+previousCoor))){
+                                int[] firstMP = SozcukTuruUtils.middlePoint(SozcukTuruUtils.previousCoor);
+                                int[] secondMP = SozcukTuruUtils.middlePoint(currentCoor);
+                                if((SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
 //                                    Log.i("eraseMode","ON");
-                                    paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    paint.setColor(getResources().getColor(R.color.f7f5fa));
-                                    paint.setStrokeWidth((float)pxHeightY/60);
-                                    drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
-                                    if(operations.contains(previousCoor+currentCoor)){
-                                        removeLine(previousCoor,currentCoor);
-                                        operations.remove(previousCoor+currentCoor);
+                                    SozcukTuruUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.f7f5fa));
+                                    SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/60);
+                                    SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
+                                    if(SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor)){
+                                        SozcukTuruUtils.removeLine(SozcukTuruUtils.previousCoor,currentCoor);
+                                        SozcukTuruUtils.operations.remove(SozcukTuruUtils.previousCoor+currentCoor);
                                     }
                                     else{
-                                        removeLine(currentCoor,previousCoor);
-                                        operations.remove(currentCoor+previousCoor);
+                                        SozcukTuruUtils.removeLine(currentCoor,SozcukTuruUtils.previousCoor);
+                                        SozcukTuruUtils.operations.remove(currentCoor+SozcukTuruUtils.previousCoor);
                                     }
-                                    opsForUndo.add(previousCoor+currentCoor+"-");
-                                    paint.setXfermode(null);
-//                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
-                                    paint.setStrokeWidth((float)pxHeightY/75);
+                                    SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"-");
+                                    SozcukTuruUtils.paint.setXfermode(null);
+//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.near_black_blue));
+                                    SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/75);
                                 }
                                 else{
-                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ previousCoor);
-                                    drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
-                                    addLine(previousCoor, currentCoor);
-                                    operations.add(previousCoor+currentCoor);
-                                    opsForUndo.add(previousCoor+currentCoor+"+");
+                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ SozcukTuruUtils.previousCoor);
+                                    SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
+                                    SozcukTuruUtils.addLine(SozcukTuruUtils.previousCoor, currentCoor);
+                                    SozcukTuruUtils.operations.add(SozcukTuruUtils.previousCoor+currentCoor);
+                                    SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"+");
                                 }
-                                previousCoor = currentCoor;
-                                Log.i("operations",operations+"      /      "+answer);
-                                if(isGridFull()){
+                                SozcukTuruUtils.previousCoor = currentCoor;
+                                Log.i("operations",SozcukTuruUtils.operations+"      /      "+SozcukTuruUtils.answer);
+                                if(SozcukTuruUtils.isGridFull()){
                                     Log.i("isGridFull","grid is full");
                                     checkAnswer(null);
                                 }

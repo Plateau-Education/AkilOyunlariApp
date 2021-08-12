@@ -27,6 +27,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -96,14 +98,19 @@ public class GameGuideActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked_HA(View view){
-        TextView box = (TextView) view;
-        String answerIndex = box.getTag().toString();
-        Object[] result = AssistClass.changeClicked(this, view, switchPosition, allowedBoxes, null, clickedBox);
-        clickedBox = (String) result[1];
-        if(allowedBoxes.contains(answerIndex)) {
-            allowedBoxes.remove(answerIndex);
-            gl.findViewWithTag(answerIndex).clearAnimation();
+    public void changeClicked(View view){
+        switch (gamename){
+            case "Hazine Avı":
+                TextView box = (TextView) view;
+                String answerIndex = box.getTag().toString();
+                HazineAviUtils.changeClicked(view);
+                if(allowedBoxes.contains(answerIndex)) {
+                    allowedBoxes.remove(answerIndex);
+                    gl.findViewWithTag(answerIndex).clearAnimation();
+                }
+                break;
+            case "Patika":
+                break;
         }
     }
 

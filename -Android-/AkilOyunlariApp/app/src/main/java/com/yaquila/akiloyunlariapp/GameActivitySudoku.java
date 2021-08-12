@@ -1,9 +1,5 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -16,9 +12,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.gameutils.SudokuUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,9 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,19 +39,11 @@ public class GameActivitySudoku extends AppCompatActivity {
 
     String gameName;
     String difficulty;
-    String clickedBox = "-1";
-    List<String> clueIndexes = new ArrayList<>();
-    int gridSize = 6;
     int timerInSeconds = 0;
     boolean timerStopped=false;
-    boolean undoing=false;
     boolean paused = false;
     boolean gotQuestion = false;
-    boolean[] draftModeActive= new boolean[81];
 
-    List<List<String>> operations = new ArrayList<>();
-    JSONArray question;
-    JSONArray answer;
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
@@ -71,8 +61,8 @@ public class GameActivitySudoku extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 try {
-                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
                     Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                     assert questions != null;
@@ -80,12 +70,12 @@ public class GameActivitySudoku extends AppCompatActivity {
 
                     assert solvedQuestions != null;
                     assert gameIds != null;
-                    Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
+                    Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
 
                     Log.i("solvedQuestions",solvedQuestions+"");
 
-                    sharedPreferences.edit().putString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                    sharedPreferences.edit().putString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                    sharedPreferences.edit().putString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
                     sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                 } catch (IOException e) {
@@ -140,49 +130,35 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void changeClicked(View view){
-        clickedBox = AssistClass.changeClicked(this,view,clueIndexes,draftModeActive,gridSize,undoing,clickedBox);
+        SudokuUtils.changeClicked(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
-        if(!clickedBox.equals("-1")){
-            Object[] result = AssistClass.numClicked(this,view,draftModeActive,gridSize,clickedBox,operations);
-            if(result!=null) {
-                operations = (List<List<String>>) result[0];
-                boolean isFull = (boolean) result[1];
-                if (isFull) checkAnswer(null);
-                Log.i("operations", operations + "");
-            }
-        }
+        if(!SudokuUtils.clickedBox.equals("-1") && SudokuUtils.numClicked(view)) checkAnswer(null);
     }
 
     public void deleteNum(View view){
-        operations = AssistClass.deleteNum(this,clickedBox,operations);
+        SudokuUtils.deleteNum();
     }
 
     public void undoOperation(View view){
-        Object[] result = AssistClass.undoOperation(this,view,clueIndexes,gridSize,draftModeActive,operations,clickedBox);
-        draftModeActive = (boolean[]) result[0];
-        operations = (List<List<String>>) result[1];
-        clickedBox = (String) result[2];
-        undoing = (boolean) result[3];
+        SudokuUtils.undoOperation();
     }
 
     public void resetGrid(View view){
-        Object[] result = AssistClass.resetGrid(this,view,clueIndexes,gridSize,operations,clickedBox);
-        operations = (List<List<String>>) result[0];
-        clickedBox = (String) result[1];
+        SudokuUtils.resetGrid(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(AssistClass.checkAnswer(answer,gridSize,gridLayout)){
+        if(SudokuUtils.checkAnswer(gridLayout)){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
-                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                 assert questions != null;
@@ -190,12 +166,12 @@ public class GameActivitySudoku extends AppCompatActivity {
 
                 assert solvedQuestions != null;
                 assert gameIds != null;
-                Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+timerInSeconds);
+                Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+timerInSeconds);
 
                 Log.i("solvedQuestions",solvedQuestions+"");
 
-                sharedPreferences.edit().putString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
                 sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             } catch (IOException e) {
@@ -215,14 +191,14 @@ public class GameActivitySudoku extends AppCompatActivity {
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
+            for (int i = 0; i < SudokuUtils.gridSize; i++) {
+                for (int j = 0; j < SudokuUtils.gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
-                    if (gridSize==9)((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                    if (SudokuUtils.gridSize==9)((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     else ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 28);
                 }
             }
-            for(int i = 1; i<gridSize+1; i++){
+            for(int i = 1; i<SudokuUtils.gridSize+1; i++){
                 numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(false);
             }
             undoTV.setEnabled(false);
@@ -251,9 +227,10 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        draftModeActive = AssistClass.draftClicked(this,gridSize,clickedBox,draftModeActive);
+        SudokuUtils.draftClicked();
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
@@ -268,8 +245,8 @@ public class GameActivitySudoku extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
-                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku." + gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku." + gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku." + SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku." + SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -326,9 +303,9 @@ public class GameActivitySudoku extends AppCompatActivity {
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).toString()+"ss");
                 for(int i = 0; i < idArray.length(); i++){
-                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).toString().contains(idArray.getInt(i)+"-")) {
+                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).toString());
                         gameIds.add(idArray.getInt(i));
                     }
@@ -354,14 +331,14 @@ public class GameActivitySudoku extends AppCompatActivity {
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku." + SudokuUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -374,10 +351,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        Object[] result = AssistClass.seperateGridAnswer(this,grid,clueIndexes);
-        answer = (JSONArray) result[0];
-        question = (JSONArray) result[1];
-        clueIndexes = (List<String>) result[2];
+        SudokuUtils.seperateGridAnswer(grid);
     }
 
     public void timerFunc(){
@@ -408,25 +382,8 @@ public class GameActivitySudoku extends AppCompatActivity {
         loadingDialog.startLoadingAnimation();
     }
 
-    public void initDraftModeActiveVar(){
-        for(int i = 0; i<gridSize*gridSize; i++){
-            draftModeActive[i] = false;
-        }
-    }
-
     public void clearGrid(){
-        operations = new ArrayList<>();
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setText("");
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                tv.setEnabled(true);
-            }
-        }
-        clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
+        SudokuUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -437,17 +394,17 @@ public class GameActivitySudoku extends AppCompatActivity {
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView deleteTV = findViewById(R.id.deleteTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
-        for(int i = 1; i<gridSize+1; i++){
+        for(int i = 1; i<SudokuUtils.gridSize+1; i++){
             numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
         }
         undoTV.setEnabled(true);
         deleteTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        initDraftModeActiveVar();
+        SudokuUtils.initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku."+gridSize+"."+difficulty,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku."+SudokuUtils.gridSize+"."+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -455,21 +412,23 @@ public class GameActivitySudoku extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SudokuUtils.initVars(this);
+
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
         if(gameName.matches("Sudoku6")){
             setContentView(R.layout.activity_game_sudoku6);
-            gridSize=6;
+            SudokuUtils.gridSize=6;
         }
         else if(gameName.matches("Sudoku9")) {
             setContentView(R.layout.activity_game_sudoku9);
-            gridSize = 9;
+            SudokuUtils.gridSize = 9;
         }
         else{
             setContentView(R.layout.activity_game_sudoku9);
-            gridSize=9;
+            SudokuUtils.gridSize=9;
         }
 
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")) {
@@ -526,8 +485,8 @@ public class GameActivitySudoku extends AppCompatActivity {
     protected void onDestroy() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
             Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
@@ -536,13 +495,13 @@ public class GameActivitySudoku extends AppCompatActivity {
 
             Log.i("solvedQuestions",solvedQuestions+"");
 
-            sharedPreferences.edit().putString("Sudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
-            sharedPreferences.edit().putString("IDSudoku."+gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+            sharedPreferences.edit().putString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(questions)).apply();
+            sharedPreferences.edit().putString("IDSudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("Sudoku." + gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).add(gameIds.remove(0)+"-"+"0");
 
         } catch (IOException e) {
             e.printStackTrace();

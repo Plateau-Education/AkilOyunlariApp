@@ -178,9 +178,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void undoOperation(View view){
         if(operations.size() > 1 && (isPermitted || type.contains("nstructor"))){
             Object[] result = AssistClass.undoOperation(this, operations);
-            operations = (List<List<String>>) result[0];
-            String co1 = (String) result[1];
-            String num2 = (String) result[2];
+            String co1 = (String) result[0];
+            String num2 = (String) result[1];
             currentGrid.get(Integer.parseInt(String.valueOf(co1.charAt(1)))).set(Integer.parseInt(String.valueOf(co1.charAt(0))),Integer.parseInt(num2));
             sendGrid(currentGrid);
         }

@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -17,6 +16,8 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.gameutils.SayiBulmacaUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -38,17 +38,11 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     String gameName;
     String difficulty;
-    int clickedBox = -1;
-    int gridSize = 3;
     int timerInSeconds = 0;
     boolean timerStopped=false;
-    boolean undoing=false;
     boolean paused = false;
     boolean gotQuestion = false;
-    boolean[] draftModeActive= new boolean[5];
 
-    List<List<Integer>> operations = new ArrayList<>();
-    JSONArray answer;
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
@@ -66,8 +60,8 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 try {
-                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                     Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                     assert questions != null;
@@ -75,12 +69,12 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
                     assert solvedQuestions != null;
                     assert gameIds != null;
-                    Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+                    Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + SayiBulmacaUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
 
                     Log.i("solvedQuestions",solvedQuestions+"");
 
-                    sharedPreferences.edit().putString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                    sharedPreferences.edit().putString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                    sharedPreferences.edit().putString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                     sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                 } catch (IOException e) {
@@ -135,91 +129,41 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void changeClicked(View view){
-        clickedBox = AssistClass.changeClicked(this,view,undoing, draftModeActive, clickedBox);
+        SayiBulmacaUtils.changeClicked(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
-        if(clickedBox != -1){
-            Object[] result = AssistClass.numClicked(this,view,draftModeActive,gridSize,clickedBox,operations);
-            if(result!=null) {
-                operations = (List<List<Integer>>) result[0];
-                boolean isFull = (boolean) result[1];
-                if (isFull) checkAnswer(null);
-                Log.i("operations", operations + "");
-            }
-        }
+        if(SayiBulmacaUtils.clickedBox != -1 && SayiBulmacaUtils.numClicked(view)) checkAnswer(null);
     }
 
     public void deleteNum(View view){
-        operations = AssistClass.deleteNum(this,clickedBox,operations);
+        SayiBulmacaUtils.deleteNum();
     }
 
     @SuppressLint("SetTextI18n")
     public void undoOperation(View view){
-        Object[] result = AssistClass.undoOperation(this, draftModeActive, operations, clickedBox);
-        if(result!=null) {
-            operations = (List<List<Integer>>) result[0];
-            clickedBox = (int) result[1];
-            undoing = (boolean) result[2];
-        }
+        SayiBulmacaUtils.undoOperation();
     }
-
-    public static Object[] resetGrid(final AppCompatActivity context, final View view, final List<String> clueIndexes, final int gridSize, List<List<String>> operations, String clickedBox){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(context.getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(context.getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
-            clickedBox = "-1";
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
-                    if(!clueIndexes.contains(Integer.toString(j)+i)){
-                        tv.setText("");
-                    }
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        return new Object[]{operations,clickedBox};
-    }
-
 
     public void resetGrid(View view){
-        Object[] result = AssistClass.resetGrid(this,view,gridSize, clickedBox);
-        operations = (List<List<Integer>>) result[0];
-        clickedBox = (int) result[1];
+        SayiBulmacaUtils.resetGrid(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void notesOnGrid(View view) {
-        AssistClass.notesOnGrid(this,view, gridSize);
+        SayiBulmacaUtils.notesOnGrid(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(AssistClass.checkAnswer(this,gridSize,answer)){
+        if(SayiBulmacaUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
-                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                 assert questions != null;
@@ -227,12 +171,12 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
                 assert solvedQuestions != null;
                 assert gameIds != null;
-                Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
+                Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + SayiBulmacaUtils.gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
 
                 Log.i("solvedQuestions",solvedQuestions+"");
 
-                sharedPreferences.edit().putString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                 sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             } catch (IOException e) {
@@ -252,9 +196,9 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSize; i++) {
+            for (int i = 0; i < SayiBulmacaUtils.gridSize; i++) {
                 gridLayout.findViewWithTag("answer" + i).setEnabled(false);
-                for (int j = 0; j < gridSize; j++) {
+                for (int j = 0; j < SayiBulmacaUtils.gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
             }
@@ -293,7 +237,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        draftModeActive = AssistClass.draftClicked(this, clickedBox, draftModeActive);
+        SayiBulmacaUtils.draftClicked();
     }
 
     @SuppressWarnings("deprecation")
@@ -311,8 +255,8 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
-                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca." + gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca." + SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca." + SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -370,9 +314,9 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+gridSize)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+SayiBulmacaUtils.gridSize)).toString()+"ss");
                 for(int i = 0; i < idArray.length(); i++){
-                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+gridSize)).toString().contains(idArray.getInt(i)+"-")) {
+                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("SayiBulmaca."+SayiBulmacaUtils.gridSize)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
                         gameIds.add(idArray.getInt(i));
                     }
@@ -398,14 +342,14 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca." + SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -420,7 +364,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        answer = AssistClass.seperateGridAnswer(this, grid);
+        SayiBulmacaUtils.seperateGridAnswer(grid);
     }
 
     public void timerFunc(){
@@ -451,36 +395,8 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         loadingDialog.startLoadingAnimation();
     }
 
-    public void initDraftModeActiveVar(){
-        for(int i = 0; i<gridSize; i++){
-            draftModeActive[i] = false;
-        }
-    }
-
     public void clearGrid(){
-        operations = new ArrayList<>();
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            TextView currentBox = gridLayout.findViewWithTag("answer" + i);
-            currentBox.setText("");
-            currentBox.setEnabled(true);
-        }
-        if(clickedBox != -1){
-            if (clickedBox == 0) {
-                gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottomleft));
-            } else {
-                gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.strokebg_topbottom));
-            }
-        }
-
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                tv.setEnabled(true);
-            }
-        }
-        clickedBox = -1;
+        SayiBulmacaUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -498,10 +414,10 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         deleteTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        initDraftModeActiveVar();
+        SayiBulmacaUtils.initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/SayiBulmaca."+gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/SayiBulmaca."+SayiBulmacaUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -509,21 +425,23 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        SayiBulmacaUtils.initVars(this);
+
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
         if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
             setContentView(R.layout.activity_game_sayibulmaca3);
-            gridSize=3;
+            SayiBulmacaUtils.gridSize=3;
         }
         else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
             setContentView(R.layout.activity_game_sayibulmaca4);
-            gridSize=4;
+            SayiBulmacaUtils.gridSize=4;
         }
         else{
             setContentView(R.layout.activity_game_sayibulmaca5);
-            gridSize=5;
+            SayiBulmacaUtils.gridSize=5;
         }
 
         mainFunc();
@@ -567,20 +485,20 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
     protected void onDestroy() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
             Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
-            sharedPreferences.edit().putString("SayiBulmaca."+gridSize, ObjectSerializer.serialize(questions)).apply();
-            sharedPreferences.edit().putString("IDSayiBulmaca."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+            sharedPreferences.edit().putString("SayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+            sharedPreferences.edit().putString("IDSayiBulmaca."+SayiBulmacaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("SayiBulmaca." + SayiBulmacaUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
             Log.i("solvedQuestions",solvedQuestions+"");
 
         } catch (IOException e) {

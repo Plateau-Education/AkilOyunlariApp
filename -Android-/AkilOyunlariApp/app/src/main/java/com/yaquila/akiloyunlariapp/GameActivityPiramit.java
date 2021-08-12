@@ -12,13 +12,13 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
+
+import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,9 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,18 +39,10 @@ public class GameActivityPiramit extends AppCompatActivity{
 
     String gameName;
     String difficulty;
-    String clickedBox = "-1";
-    int gridSize = 3;
-    int answerCount = 3;
     int timerInSeconds = 0;
     boolean timerStopped=false;
-    boolean undoing=false;
     boolean paused = false;
     boolean gotQuestion = false;
-    boolean[] draftModeActive= new boolean[14];
-
-    List<List<String>> operations = new ArrayList<>();
-    JSONArray answer;
     LoadingDialog loadingDialog;
     Handler timerHandler;
     Runnable runnable;
@@ -104,8 +94,8 @@ public class GameActivityPiramit extends AppCompatActivity{
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 try {
-                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                     Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                     assert questions != null;
@@ -113,12 +103,12 @@ public class GameActivityPiramit extends AppCompatActivity{
 
                     assert solvedQuestions != null;
                     assert gameIds != null;
-                    Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+                    Objects.requireNonNull(solvedQuestions.get("Piramit." + PiramitUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
 
                     Log.i("solvedQuestions",solvedQuestions+"");
 
-                    sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                    sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                    sharedPreferences.edit().putString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                     sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                 } catch (IOException e) {
@@ -173,203 +163,36 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void changeClicked(View view){
-        TextView box = (TextView) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        GridLayout numsLayout = findViewById(R.id.numsGL_ga);
-        String answerIndex = (box.getTag().toString()).replace("answer","");
-        if (!clickedBox.equals(answerIndex)){
-            if (!clickedBox.equals("-1")){
-                gridLayout.findViewWithTag("answer"+ clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                if (draftModeActive[Integer.parseInt(clickedBox)])
-                    ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.draft_grey));
-                else ((TextView)gridLayout.findViewWithTag("answer"+clickedBox)).setTextColor(getResources().getColor(R.color.light_red));
-
-            }
-            box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
-            box.setTextColor(getResources().getColor(R.color.f7f5fa));
-            clickedBox = answerIndex;
-        }
-        else{
-            if(!undoing){
-                box.setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                if (draftModeActive[Integer.parseInt(clickedBox)])
-                    box.setTextColor(getResources().getColor(R.color.draft_grey));
-                else box.setTextColor(getResources().getColor(R.color.light_red));
-                clickedBox = "-1";
-            }
-        }
-        if (!clickedBox.equals("-1")){
-            ImageView draftBtn = findViewById(R.id.draftbutton_ga);
-            if (draftModeActive[Integer.parseInt(clickedBox)]) {
-                for (int i = 1; i < 10; i++) {
-                    ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                }
-                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
-            }
-            else{
-                for (int i = 1; i < 10; i++) {
-                    ((Button) numsLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-                }
-                draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-            }
-        }
+        PiramitUtils.changeClicked(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view){
-        Button btn = (Button) view;
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(!clickedBox.equals("-1")){
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
-            if(currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox,"-1")));
-            }
-            if(draftModeActive[Integer.parseInt(clickedBox)]){
-                if(currentBox.getText().toString().length() == 0){
-                    currentBox.setText(btn.getTag().toString());
-                    if(gridSize<=4) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-                    else if(gridSize==5) currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                    else currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                    List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
-                    if(!newOp.equals(operations.get(operations.size() - 1))){
-                        operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
-                    }
-                }
-                else{
-                    if(currentBox.getText().toString().contains(btn.getTag().toString())){
-                        currentBox.setText(currentBox.getText().toString().replace(" "+btn.getTag().toString(),"").replace(btn.getTag().toString()+" ","").replace(btn.getTag().toString(),""));
-                        List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
-                        if(!newOp.equals(operations.get(operations.size() - 1))){
-                            operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
-                        }
-                        if(currentBox.getText().toString().length() == 1){
-                            currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                            draftModeActive[Integer.parseInt(clickedBox)] = false;
-                            findViewById(R.id.draftbutton_ga).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-                        }
-                    }
-                    else{
-                        if(currentBox.getText().toString().length() <= 8) {
-                            currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-                            List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString()));
-                            if(!newOp.equals(operations.get(operations.size() - 1))){
-                                operations.add(new ArrayList<>(Arrays.asList(clickedBox, currentBox.getText().toString())));
-                            }
-                        }
-                    }
-                }
-            }
-            else{
-                currentBox.setText(btn.getTag().toString());
-                List<String> newOp = new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString()));
-                if(!newOp.equals(operations.get(operations.size() - 1))){
-                    operations.add(new ArrayList<>(Arrays.asList(clickedBox, btn.getTag().toString())));
-                }
-            }
-            boolean isFull = true;
-            for (int i = 0; i<answerCount; i++){
-                if (((TextView)gridLayout.findViewWithTag("answer"+i)).getText().toString().equals("")){
-                    isFull = false;
-                    break;
-                }
-            }
-            if (isFull) checkAnswer(null);
-            Log.i("operations",operations+"");
-        }
+        if(!PiramitUtils.clickedBox.equals("-1") && PiramitUtils.numClicked(view)) checkAnswer(null);
     }
 
     public void deleteNum(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(!clickedBox.equals("-1")){
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
-            if(!currentBox.getText().toString().equals("")){
-                operations.add(new ArrayList<>(Arrays.asList(clickedBox, "-1")));
-                Log.i("operations",operations+"");
-                currentBox.setText("");
-            }
-        }
+        PiramitUtils.deleteNum();
     }
 
     public void undoOperation(View view){
-        if(operations.size() > 1){
-            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple = operations.get(operations.size()-1);
-            String co = tuple.get(0);
-            String num = tuple.get(1);
-            Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
-            if(num.equals("-1")){
-                currentBox.setText("");
-            }
-            else{
-                currentBox.setText(num);
-            }
-            undoing=true;
-            changeClicked(currentBox);
-            undoing=false;
-        }
+        PiramitUtils.undoOperation();
     }
 
     public void resetGrid(View view){
-        try {
-            final TextView resetTV = (TextView) view;
-            resetTV.setTextColor(getResources().getColor(R.color.light_red));
-            resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-            resetTV.setText(R.string.ResetNormal);
-            resetTV.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                    resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    resetTV.setText(R.string.ResetUnderlined);
-                }
-            }, 100);
-
-            operations = new ArrayList<>();
-            GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-            for (int i = 0; i < answerCount; i++) {
-                TextView currentBox = gridLayout.findViewWithTag("answer" + i);
-                currentBox.setText("");
-            }
-            if(!clickedBox.equals("-1")) {
-                gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-            }
-            clickedBox = "-1";
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
-                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                    if(tv!=null)tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-                }
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        PiramitUtils.resetGrid(view);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(int i = 0; i < answerCount; i++){
-            try {
-                if(!((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().equals(answer.get(i).toString())){
-                    checking=false;
-                }
-                Log.i("checking",((TextView)gridLayout.findViewWithTag("answer"+ i)).getText().toString()+" / "+(answer.get(i).toString()));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        Log.i("check",checking+"  "+answer);
-        if(checking){
+        if(PiramitUtils.checkAnswer(gridLayout)){
 
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
-                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                 assert questions != null;
@@ -377,12 +200,12 @@ public class GameActivityPiramit extends AppCompatActivity{
 
                 assert solvedQuestions != null;
                 assert gameIds != null;
-                Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
+                Objects.requireNonNull(solvedQuestions.get("Piramit." + PiramitUtils.gridSize)).add(gameIds.remove(0)+"-"+timerInSeconds);
 
                 Log.i("solvedQuestions",solvedQuestions+"");
 
-                sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
                 sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             } catch (IOException e) {
@@ -402,7 +225,7 @@ public class GameActivityPiramit extends AppCompatActivity{
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < answerCount; i++) {
+            for (int i = 0; i < PiramitUtils.answerCount; i++) {
                 gridLayout.findViewWithTag("answer" + i).setEnabled(false);
                 ((TextView) gridLayout.findViewWithTag("answer"+i)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
             }
@@ -442,35 +265,10 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void draftClicked(View view){
-        ImageView draftBtn = findViewById(R.id.draftbutton_ga);
-        GridLayout numGrid = findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = findViewById(R.id.gridGL_ga);
-        TextView currentClickedBox = questionGrid.findViewWithTag("answer"+clickedBox);
-        if(!clickedBox.equals("-1")) {
-            if (!draftModeActive[Integer.parseInt(clickedBox)]) {
-                if (currentClickedBox.getText().toString().length() == 1) {
-                    if(gridSize<=4) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-                    else if(gridSize==5) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
-                    else currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
-                }
-                for (int i = 1; i < 10; i++) {
-                    ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                }
-                draftModeActive[Integer.parseInt(clickedBox)] = true;
-                draftBtn.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
-            } else {
-                if (currentClickedBox.getText().toString().length() <= 1) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                    for (int i = 1; i < 10; i++) {
-                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
-                    }
-                    draftModeActive[Integer.parseInt(clickedBox)] = false;
-                    draftBtn.setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
-                }
-            }
-        }
+        PiramitUtils.draftClicked();
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
@@ -485,8 +283,8 @@ public class GameActivityPiramit extends AppCompatActivity{
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
-                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit." + gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit." + PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -544,9 +342,9 @@ public class GameActivityPiramit extends AppCompatActivity{
                 Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Piramit."+gridSize)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Piramit."+PiramitUtils.gridSize)).toString()+"ss");
                 for(int i = 0; i < idArray.length(); i++){
-                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Piramit."+gridSize)).toString().contains(idArray.getInt(i)+"-")) {
+                    if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Piramit."+PiramitUtils.gridSize)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
                         gameIds.add(idArray.getInt(i));
                     }
@@ -571,14 +369,14 @@ public class GameActivityPiramit extends AppCompatActivity{
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                sharedPreferences.edit().putString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit." + PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -591,44 +389,7 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void seperateGridAnswer(JSONArray grid){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        try {
-            if (gridSize == 3) {
-                ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("02")).setText(((JSONArray) grid.get(2)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("22")).setText(((JSONArray) grid.get(2)).get(2).toString());
-                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString())));
-            }
-            else if (gridSize == 4){
-                ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("12")).setText(((JSONArray) grid.get(2)).get(1).toString());
-                ((TextView) gridLayout.findViewWithTag("03")).setText(((JSONArray) grid.get(3)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("33")).setText(((JSONArray) grid.get(3)).get(3).toString());
-                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(0).toString(), ((JSONArray) grid.get(2)).get(2).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString())));
-            }
-            else if (gridSize == 5){
-                ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("02")).setText(((JSONArray) grid.get(2)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("22")).setText(((JSONArray) grid.get(2)).get(2).toString());
-                ((TextView) gridLayout.findViewWithTag("04")).setText(((JSONArray) grid.get(4)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("24")).setText(((JSONArray) grid.get(4)).get(2).toString());
-                ((TextView) gridLayout.findViewWithTag("44")).setText(((JSONArray) grid.get(4)).get(4).toString());
-                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString(), ((JSONArray) grid.get(3)).get(0).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString(), ((JSONArray) grid.get(3)).get(3).toString(), ((JSONArray) grid.get(4)).get(1).toString(), ((JSONArray) grid.get(4)).get(3).toString())));
-            }
-            else{
-                ((TextView) gridLayout.findViewWithTag("00")).setText(((JSONArray) grid.get(0)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("02")).setText(((JSONArray) grid.get(2)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("22")).setText(((JSONArray) grid.get(2)).get(2).toString());
-                ((TextView) gridLayout.findViewWithTag("14")).setText(((JSONArray) grid.get(4)).get(1).toString());
-                ((TextView) gridLayout.findViewWithTag("34")).setText(((JSONArray) grid.get(4)).get(3).toString());
-                ((TextView) gridLayout.findViewWithTag("05")).setText(((JSONArray) grid.get(5)).get(0).toString());
-                ((TextView) gridLayout.findViewWithTag("55")).setText(((JSONArray) grid.get(5)).get(5).toString());
-                answer = new JSONArray(new ArrayList<>(Arrays.asList(((JSONArray) grid.get(1)).get(0).toString(), ((JSONArray) grid.get(1)).get(1).toString(), ((JSONArray) grid.get(2)).get(1).toString(), ((JSONArray) grid.get(3)).get(0).toString(), ((JSONArray) grid.get(3)).get(1).toString(), ((JSONArray) grid.get(3)).get(2).toString(), ((JSONArray) grid.get(3)).get(3).toString(), ((JSONArray) grid.get(4)).get(0).toString(), ((JSONArray) grid.get(4)).get(2).toString(), ((JSONArray) grid.get(4)).get(4).toString(), ((JSONArray) grid.get(5)).get(1).toString(), ((JSONArray) grid.get(5)).get(2).toString(), ((JSONArray) grid.get(5)).get(3).toString(), ((JSONArray) grid.get(5)).get(4).toString())));
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
+        PiramitUtils.seperateGridAnswer(grid);
     }
 
     public void timerFunc(){
@@ -659,24 +420,8 @@ public class GameActivityPiramit extends AppCompatActivity{
         loadingDialog.startLoadingAnimation();
     }
 
-    public void initDraftModeActiveVar(){
-        for(int i = 0; i<answerCount; i++){
-            draftModeActive[i] = false;
-        }
-    }
-
     public void clearGrid(){
-        operations = new ArrayList<>();
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < answerCount; i++) {
-            TextView currentBox = gridLayout.findViewWithTag("answer" + i);
-            currentBox.setText("");
-            currentBox.setEnabled(true);
-        }
-        if(!clickedBox.equals("-1")){
-            gridLayout.findViewWithTag("answer" + clickedBox).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
-        }
-        clickedBox = "-1";
+        PiramitUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -694,10 +439,10 @@ public class GameActivityPiramit extends AppCompatActivity{
         deleteTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        initDraftModeActiveVar();
+        PiramitUtils.initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Piramit."+gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Piramit."+PiramitUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -705,6 +450,8 @@ public class GameActivityPiramit extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        PiramitUtils.initVars(this);
+        
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
@@ -713,25 +460,25 @@ public class GameActivityPiramit extends AppCompatActivity{
             case "Easy":
             case "Kolay":
                 setContentView(R.layout.activity_game_piramit3);
-                gridSize = 3;
-                answerCount = 3;
+                PiramitUtils.gridSize = 3;
+                PiramitUtils.answerCount = 3;
                 break;
             case "Medium":
             case "Orta":
                 setContentView(R.layout.activity_game_piramit4);
-                gridSize = 4;
-                answerCount = 6;
+                PiramitUtils.gridSize = 4;
+                PiramitUtils.answerCount = 6;
                 break;
             case "Hard":
             case "Zor":
                 setContentView(R.layout.activity_game_piramit5);
-                gridSize = 5;
-                answerCount = 9;
+                PiramitUtils.gridSize = 5;
+                PiramitUtils.answerCount = 9;
                 break;
             default:
                 setContentView(R.layout.activity_game_piramit6);
-                gridSize = 6;
-                answerCount = 14;
+                PiramitUtils.gridSize = 6;
+                PiramitUtils.answerCount = 14;
                 break;
         }
 
@@ -772,20 +519,20 @@ public class GameActivityPiramit extends AppCompatActivity{
     protected void onDestroy() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
-            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
             Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
-            sharedPreferences.edit().putString("Piramit."+gridSize, ObjectSerializer.serialize(questions)).apply();
-            sharedPreferences.edit().putString("IDPiramit."+gridSize, ObjectSerializer.serialize(gameIds)).apply();
+            sharedPreferences.edit().putString("Piramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+            sharedPreferences.edit().putString("IDPiramit."+PiramitUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            Objects.requireNonNull(solvedQuestions.get("Piramit." + gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("Piramit." + PiramitUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
             Log.i("solvedQuestions",solvedQuestions+"");
 
         } catch (IOException e) {
