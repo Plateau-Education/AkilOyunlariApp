@@ -72,32 +72,32 @@ public class GameListActivity extends AppCompatActivity {
     public void goToDifficulty(View view){
         Intent intent = new Intent(getApplicationContext(), DifficultyActivity.class);
 
-        if(currentExtendedRow == 1){
-            intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
-            if(type.contains("multi")){
-                intent.putExtra("pType",pType);
-            }
-        }
-        else if(currentExtendedRow % 2 == 1){
-            if(type.contains("multi")){
+        if(type.contains("multi")) {
+            if(currentExtendedRow == 2){
                 intent = new Intent(getApplicationContext(), MultiplayerActivity.class);
                 intent.putExtra("pType",pType);
+                intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(0)).getText());
+                startActivity(intent);
+                overridePendingTransition(R.anim.enter, R.anim.exit);
+            } else {
+                Toast.makeText(this, getString(R.string.feature_not_active), Toast.LENGTH_SHORT).show();
             }
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(1)).getText());
-        }
-        else{
-            if(type.contains("multi")){
-                intent = new Intent(getApplicationContext(), MultiplayerActivity.class);
-                intent.putExtra("pType",pType);
+        } else {
+            if (currentExtendedRow == 1) {
+                intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+            } else if (currentExtendedRow % 2 == 1) {
+                intent.putExtra("gameName", ((TextView) ((LinearLayout) ((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(1)).getText());
+            } else {
+                intent.putExtra("gameName", ((TextView) ((LinearLayout) ((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(0)).getText());
             }
-            intent.putExtra("gameName", ((TextView)((LinearLayout)((LinearLayout) view.getParent()).getChildAt(0)).getChildAt(0)).getText());
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         }
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     public void extendListItem(View view){
         int rowNum = Integer.parseInt(view.getTag().toString());
+
         if(rowNum<7) {
             if (currentExtendedRow == 0) {
                 final LinearLayout ll = (LinearLayout) view.getParent(); // basılan layout 

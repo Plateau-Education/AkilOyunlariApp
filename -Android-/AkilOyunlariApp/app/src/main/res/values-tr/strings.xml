@@ -94,5 +94,6 @@
     <string name="htp_sozcukturu">Sözcük Türü oyununda amaç, verilen harf sayılarına göre tablo içerisinde kelimeler bulmaktır. Bu oyunda; en az harfli kelimeden başlayıp yatay, dikey veya çapraz olarak kutular arasında hareket edilerek en çok harfli kelimenin son harfinde biten bir yol çizilmesi gerekir. Bunun yanında, her kutu yalnızca 1 kere kullanılmalı ve boşta kutu kalmamalıdır.</string>
     <string name="htp_piramit">Piramit oyununda, kutulardaki rakamlar altlarındaki 2 kutudaki rakamların toplamı veya farkı olmalıdır. Ayrıca bir satırda aynı rakam birden fazla bulunamaz ve yan yana olan kutularda ardışık sayılar bulunamaz. Bu kurallara uyularak tüm boş kutular doldurulmalıdır.</string>
     <string name="WaitingForScores">Skorlar bekleniyor...</string>
+    <string name="feature_not_active">Bu özellik aktif değil.</string>
 
 </resources>

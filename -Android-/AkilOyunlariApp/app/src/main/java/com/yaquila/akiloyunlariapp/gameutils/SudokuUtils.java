@@ -190,12 +190,11 @@ public class SudokuUtils {
                 final int index = Integer.parseInt(co.substring(0, 1)) * gridSize + Integer.parseInt(co.substring(1));
                 if(num.length()>1){
                     draftModeActive[index]=false;
-                    draftModeActive = draftClicked();
                 }
                 else{
                     draftModeActive[index]=true;
-                    draftClicked();
                 }
+                draftClicked(currentBox);
                 currentBox.setText(num);
             }
             undoing=true;
@@ -238,7 +237,8 @@ public class SudokuUtils {
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static boolean checkAnswer(final GridLayout gridLayout){
+    public static boolean checkAnswer(){
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++){
@@ -255,13 +255,21 @@ public class SudokuUtils {
         return checking;
     }
 
-    public static boolean[] draftClicked(){
+    public static void draftClicked(View view){
         ImageView draftBtn = context.findViewById(R.id.draftbutton_ga);
         GridLayout numGrid = context.findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = context.findViewById(R.id.gridGL_ga);
-        TextView currentClickedBox = questionGrid.findViewWithTag(clickedBox);
+        TextView currentClickedBox;
+        String cb;
+        if(view.getId() == R.id.draftbutton_ga){
+            currentClickedBox = questionGrid.findViewWithTag(clickedBox);
+            cb = clickedBox;
+        } else {
+            currentClickedBox = (TextView) view;
+            cb = (String) currentClickedBox.getTag();
+        }
         if(!clickedBox.equals("-1")){
-            int boxIndex = Integer.parseInt(clickedBox.substring(0,1))*gridSize+Integer.parseInt(clickedBox.substring(1));
+            int boxIndex = Integer.parseInt(cb.substring(0,1))*gridSize+Integer.parseInt(cb.substring(1));
             if(!draftModeActive[boxIndex]){
                 if(currentClickedBox.getText().toString().length() == 1) {
                     if(gridSize == 9)currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -285,7 +293,6 @@ public class SudokuUtils {
                 }
             }
         }
-        return draftModeActive;
     }
 
     public static void seperateGridAnswer(final JSONArray grid) throws JSONException {
@@ -312,6 +319,7 @@ public class SudokuUtils {
             draftModeActive[i] = false;
         }
     }
+
     public static void clearGrid(){
         operations = new ArrayList<>();
         GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);

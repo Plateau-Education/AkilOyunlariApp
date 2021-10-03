@@ -28,30 +28,46 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
 import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SayiBulmacaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SudokuUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
-@SuppressWarnings({"deprecation", "SuspiciousNameCombination"})
+import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.switchPosition;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.bitmap;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.blackList;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.canvas;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.paint;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.previousCoor;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.pxHeight;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.rowColumn;
+
+
+
+
+@SuppressWarnings({"deprecation", "SuspiciousNameCombination", "MismatchedQueryAndUpdateOfCollection"})
 public class GameGuideActivity extends AppCompatActivity {
 
-    String clickedBox = "-1";
-    String switchPosition = "diamond";
-    String gamename = "Hazine Avı";
+    String gameName = "Hazine Avı";
     String type = "single";
-    String previousCoor;
-    String[] rowColumn;
     int inNum = 0;
-    int pxHeight = 900;
-    int gridSize = 7;
     int counterIn5 = 0;
     boolean gameFinished=false;
     boolean is_moving = false;
 
     List<String> inStrings = new ArrayList<>();
+    Map<String, Class<?>> utilsMap = new HashMap<>();
     TextView inTV;
     GridLayout gl;
     ImageView switchIV;
@@ -59,16 +75,11 @@ public class GameGuideActivity extends AppCompatActivity {
     Handler animator;
     Runnable[] runnables = new Runnable[100];
 
-    List<String> blackList = new ArrayList<>();
-    List<String> allowedBoxes = new ArrayList<>();
-
-    Bitmap bitmap;
-    Canvas canvas;
-    Paint paint;
-
+   List<String> allowedBoxes = new ArrayList<>();
+   
     public void goBackToHTP(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
-        intent.putExtra("gameName", gamename);
+        intent.putExtra("gameName", gameName);
         intent.putExtra("type",type);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -99,25 +110,34 @@ public class GameGuideActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void changeClicked(View view){
-        switch (gamename){
-            case "Hazine Avı":
-                TextView box = (TextView) view;
-                String answerIndex = box.getTag().toString();
-                HazineAviUtils.changeClicked(view);
-                if(allowedBoxes.contains(answerIndex)) {
-                    allowedBoxes.remove(answerIndex);
-                    gl.findViewWithTag(answerIndex).clearAnimation();
-                }
-                break;
-            case "Patika":
-                break;
+        TextView box = (TextView) view;
+        String answerIndex = box.getTag().toString();
+        if(allowedBoxes.contains(answerIndex)) {
+            try {
+                utilsMap.get(gameName).getDeclaredMethod("changeClicked", View.class).invoke(null,view);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            allowedBoxes.remove(answerIndex);
+            gl.findViewWithTag(answerIndex).clearAnimation();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("SetTextI18n")
+    public void numClicked(View view) {
+        SayiBulmacaUtils.numClicked(view);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void notesOnGrid(View view) {
+        SayiBulmacaUtils.notesOnGrid(view);
     }
 
 
     @SuppressLint("SetTextI18n")
-    public void instructionChange(View view){
-        if(gamename.contains("Hazine")) {
+    public void instructionChange(View view) throws NoSuchFieldException, IllegalAccessException {
+        if(gameName.contains("Hazine")) {
             List<String> tapBoxes = new ArrayList<>();
             List<String> relatedClues = new ArrayList<>();
             List<String> relatedBoxes = new ArrayList<>();
@@ -345,7 +365,7 @@ public class GameGuideActivity extends AppCompatActivity {
                     gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
             }
         }
-        else if (gamename.contains("Patika")){
+        else if (gameName.contains("Patika")){
             List<String> relatedClues = new ArrayList<>();
 
             if (view.getTag().equals("+")) {
@@ -407,8 +427,8 @@ public class GameGuideActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 relatedClues = new ArrayList<>();
-                for (int i = 0; i < gridSize; i++) {
-                    for (int j = 0; j < gridSize; j++){
+                for (int i = 0; i < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); i++) {
+                    for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++){
                         if(!blackList.contains(Integer.toString(j) + i))
                             gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                     }
@@ -478,13 +498,60 @@ public class GameGuideActivity extends AppCompatActivity {
                 gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
 
         }
-        else if (gamename.contains("Bulmaca")){
+        else if (gameName.contains("Bulmaca")){
+            List<String> tapBoxes = new ArrayList<>();
+            List<String> relatedClues = new ArrayList<>();
+            List<String> relatedBoxes = new ArrayList<>();
+            List<ArrayList<Integer>> grid = new ArrayList<>();
+            allowedBoxes = new ArrayList<>();
 
+            if (view.getTag().equals("+")) {
+                if (inNum < inStrings.size() - 1){
+                    inNum++;
+                    view.setAlpha(1f);
+                    ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(1f);
+                }
+                if(inNum == inStrings.size()-1){
+                    view.setAlpha(0.3f);
+                }
+            }
+            else {
+                if (inNum > 0){
+                    inNum--;
+                    view.setAlpha(1f);
+                    ((LinearLayout)inTV.getParent()).findViewWithTag("+").setAlpha(1f);
+                }
+                if(inNum == 0){
+                    view.setAlpha(0.3f);
+                }
+            }
+            inTV.setText(inStrings.get(inNum));
+
+            if (inNum <= 3) {
+                Log.i("inNum", "<=3");
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4 - 1; j++) {
+                        TextView tv = gl.findViewWithTag(Integer.toString(j) + i);
+                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    }
+                    TextView rGuideTV = gl.findViewWithTag("g" + i);
+                    rGuideTV.setBackground(getResources().getDrawable(R.drawable.strokebg_shallow));
+                }
+            }
+
+            if (inNum == 3) {
+                relatedClues = new ArrayList<>(Collections.singletonList("g1"));
+            }
+
+            for (String index : relatedClues)
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+            for (String index : relatedBoxes)
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
         }
     }
 
     public void setInStrings() {
-        if (gamename.contains("Hazine")) {
+        if (gameName.contains("Hazine")) {
             inStrings.add("Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
             inStrings.add("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.");
             inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır.");
@@ -505,7 +572,7 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
-        else if (gamename.contains("Patika")){
+        else if (gameName.contains("Patika")){
             inStrings.add("Patika öğretici uygulamasına hoşgeldiniz. Öğretici boyunca animasyonlarla gösterilen çizgilerin üzerinden geçerek kendiniz de çözüme dahil olabilirsiniz.");
             inStrings.add("Patika oyununda amaç tüm boş karelerden geçen, kendini kesmeyen tek bir kapalı yol oluşturmaktır.");
             inStrings.add("Bir patika sorusu çözerken temelde 2 teknik vardır: Köşe bulma ve kapalı alan oluşmamasına dikkat etme.");
@@ -517,8 +584,17 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
-        else if (gamename.contains("Bulmaca")){
-
+        else if (gameName.contains("Bulmaca")){
+            inStrings.add("Sayı Bulmaca öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
+            inStrings.add("Sayı Bulmaca oyununda sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir.");
+            inStrings.add("Yanında '+' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını, Yanında '-' işareti olanlar ise farklı sütunda olduğunu gösterir.");
+            inStrings.add("Örneğin işaretli ipucunun olduğu satırda 2 adet sayı cevapta var ve yeri doğruyken 1 adet sayının yeri farklıdır.");
+//            inStrings.add("");
+//            inStrings.add("Benzer şekilde iki kenar komşusu kapalı diğer kutuların içine çizilmesi gereken köşeleri/kenarları çiziniz.");
+//            inStrings.add("2. çözüm tekniğinde; patikanın tek bir kapalı yol oluşması kuralına dayanarak, tüm kutuları kaplamayan küçük bir kapalı alan oluşması engellenir.");
+//            inStrings.add("Örneğin kırmızıyla işaretlenmiş kutuda yol ya sağ kutuya ya da yukarıya gidebilir. Eğer yukarıya giderse küçük bir kapalı yol oluşacağından sağa gitmek zorundadır.");
+//            inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
+            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
     }
 
@@ -531,11 +607,13 @@ public class GameGuideActivity extends AppCompatActivity {
         view.startAnimation(anim);
     }
 
-    public void createGridAndPlace(List<ArrayList<Integer>> grid){
-        if(gamename.contains("Hazine")) {
+    @SuppressLint("SetTextI18n")
+    public void createGridAndPlace(Object grid) {
+        if (gameName.contains("Hazine")) {
+            List<ArrayList<Integer>> lGrid = (List<ArrayList<Integer>>) grid;
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
-                    String n = grid.get(i).get(j).toString();
+                    String n = lGrid.get(i).get(j).toString();
                     if (Integer.parseInt(n) > 0) {
                         ((TextView) gl.findViewWithTag(Integer.toString(j) + i)).setText(n);
                         gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
@@ -549,12 +627,37 @@ public class GameGuideActivity extends AppCompatActivity {
                     gl.findViewWithTag(Integer.toString(j) + i).clearAnimation();
                 }
             }
-        } else if (gamename.contains("Patika")){
+        } else if (gameName.contains("Patika")){
             for(String cos: blackList){
                 gl.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
             }
-        } else if (gamename.contains("Bulmaca")){
-
+        } else if (gameName.contains("Bulmaca")){
+            JSONArray jGrid = (JSONArray) grid;
+            Log.i("jsonGrid",""+grid);
+            for (int i = 0; i < jGrid.length()-1; i++){
+                try {
+                    JSONArray row = (JSONArray) jGrid.get(i);
+                    for (int j = 0; j< row.length()-1; j++){
+                        TextView tv = gl.findViewWithTag(Integer.toString(j)+ i);
+                        tv.setText(row.get(j).toString());
+                    }
+                    JSONArray rguide = (JSONArray)row.get(row.length()-1);
+                    TextView rGuideTV = gl.findViewWithTag("g"+i);
+                    if(rguide.get(0).toString().equals("0")){
+                        rGuideTV.setText(rguide.get(1).toString());
+                    }
+                    else if(rguide.get(1).toString().equals("0")){
+                        rGuideTV.setText("+"+rguide.get(0).toString());
+                    }
+                    else{
+                        rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            TextView guideanswer = gl.findViewWithTag("answerguide");
+            guideanswer.setText("+4");
         }
     }
 
@@ -572,7 +675,12 @@ public class GameGuideActivity extends AppCompatActivity {
 
     public String[] xyToRowColumn(float x, float y){
         String[] rowColumn = new String[2];
-        float coef = (float)pxHeight/gridSize;
+        float coef = 0;
+        try {
+            coef = (float)pxHeight/Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         rowColumn[0] = Integer.toString((int) Math.floor(x/coef));
         rowColumn[1] = Integer.toString((int) Math.floor(y/coef));
         return rowColumn;
@@ -582,7 +690,12 @@ public class GameGuideActivity extends AppCompatActivity {
         int x = Integer.parseInt(String.valueOf(coor.charAt(0)));
         int y = Integer.parseInt(String.valueOf(coor.charAt(1)));
         int[] middle_point = new int[2];
-        float coef = (float)pxHeight/gridSize;
+        float coef = 0;
+        try {
+            coef = (float)pxHeight/Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         middle_point[0] = (int) (coef*x+coef/2);
         middle_point[1] = (int) (coef*y+coef/2);
         return middle_point;
@@ -816,31 +929,46 @@ public class GameGuideActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        utilsMap = new HashMap<>();
+        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put("Hazine Avı", HazineAviUtils.class);
+        utilsMap.put("Patika", PatikaUtils.class);
+        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
+        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
+        utilsMap.put("Piramit", PiramitUtils.class);
+
         Intent intent = getIntent();
-        gamename = intent.getStringExtra("gamename");
+        gameName = intent.getStringExtra("gameName");
         type = intent.getStringExtra("type");
 
-        assert gamename != null;
-        if(gamename.contains("Hazine")) {
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assert gameName != null;
+        if(gameName.contains("Hazine")) {
             setContentView(R.layout.activity_game_guide_hazineavi);
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);
-            switchIV = findViewById(R.id.switchIV);
-            arrow = findViewById(R.id.arrowIV_guide);
             setInStrings();
             inTV.setText(inStrings.get(0));
             ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(0.3f);
+            switchIV = findViewById(R.id.switchIV);
+            arrow = findViewById(R.id.arrowIV_guide);
             createGridAndPlace(new ArrayList<>(Arrays.asList(
                     new ArrayList<>(Arrays.asList(0, 0, 2, 4, 0)),
                     new ArrayList<>(Arrays.asList(1, 0, 0, 0, 0)),
                     new ArrayList<>(Arrays.asList(0, 3, 0, 0, 0)),
                     new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)),
                     new ArrayList<>(Arrays.asList(1, 0, 0, 2, 0)))));
-        } else if (gamename.contains("Patika")) {
+        }
+        else if (gameName.contains("Patika")) {
             setContentView(R.layout.activity_game_guide_patika);
+            blackList = new ArrayList<>(Arrays.asList("20","60","12","04","34","46","54"));
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);
-            blackList = new ArrayList<>(Arrays.asList("20","60","12","04","34","46","54"));
             setInStrings();
             inTV.setText(inStrings.get(0));
             ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(0.3f);
@@ -892,7 +1020,20 @@ public class GameGuideActivity extends AppCompatActivity {
                     return true;
                 }
             });
-        } else if (gamename.contains("Bulmaca")){
+        } else if (gameName.contains("Bulmaca")){
+            setContentView(R.layout.activity_game_guide_sayibulmaca);
+            inTV = findViewById(R.id.instructionTV_guide);
+            gl = findViewById(R.id.gridGL_guide);
+            setInStrings();
+            inTV.setText(inStrings.get(0));
+            ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(0.3f);
+            try {
+                String js = "[[4,0,6,5,[1,0]],[2,9,3,5,[2,-1]],[1,8,9,0,[2,0]],[3,4,5,7,[0,-1]],[2,8,9,5,[4,0]]]";
+                createGridAndPlace(new JSONArray(js));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (gameName.contains("iramit")){
 
         }
 

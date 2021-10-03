@@ -187,7 +187,7 @@ public class GameActivityPiramit extends AppCompatActivity{
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(PiramitUtils.checkAnswer(gridLayout)){
+        if(PiramitUtils.checkAnswer()){
 
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
@@ -265,7 +265,7 @@ public class GameActivityPiramit extends AppCompatActivity{
     }
 
     public void draftClicked(View view){
-        PiramitUtils.draftClicked();
+        PiramitUtils.draftClicked(view);
     }
 
     @SuppressWarnings("deprecation")

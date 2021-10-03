@@ -174,11 +174,19 @@ public class PiramitUtils {
             String num = tuple.get(1);
             Log.i("co/num",co+" / "+num);
             GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
-            TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
+            TextView currentBox = gridLayout.findViewWithTag("answer"+co);
             if(num.equals("-1")){
                 currentBox.setText("");
             }
             else{
+                final int index = Integer.parseInt(co);
+                if(num.length()>1){
+                    draftModeActive[index]=false;
+                }
+                else{
+                    draftModeActive[index]=true;
+                }
+                draftClicked(currentBox);
                 currentBox.setText(num);
             }
             undoing=true;
@@ -225,7 +233,8 @@ public class PiramitUtils {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static boolean checkAnswer(final GridLayout gridLayout){
+    public static boolean checkAnswer(){
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i < answerCount; i++){
             try {
@@ -241,13 +250,21 @@ public class PiramitUtils {
         return checking;
     }
 
-    public static void draftClicked(){
+    public static void draftClicked(View view){
         ImageView draftBtn = context.findViewById(R.id.draftbutton_ga);
         GridLayout numGrid = context.findViewById(R.id.numsGL_ga);
         GridLayout questionGrid = context.findViewById(R.id.gridGL_ga);
-        TextView currentClickedBox = questionGrid.findViewWithTag("answer"+clickedBox);
+        TextView currentClickedBox;
+        String cb;
         if(!clickedBox.equals("-1")) {
-            if (!draftModeActive[Integer.parseInt(clickedBox)]) {
+            if(view.getId() == R.id.draftbutton_ga){
+                currentClickedBox = questionGrid.findViewWithTag("answer"+clickedBox);
+                cb = clickedBox;
+            } else {
+                currentClickedBox = (TextView) view;
+                cb = (currentClickedBox.getTag().toString()).replace("answer","");
+            }
+            if (!draftModeActive[Integer.parseInt(cb)]) {
                 if (currentClickedBox.getText().toString().length() == 1) {
                     if(gridSize<=4) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
                     else if(gridSize==5) currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
@@ -256,7 +273,7 @@ public class PiramitUtils {
                 for (int i = 1; i < 10; i++) {
                     ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                 }
-                draftModeActive[Integer.parseInt(clickedBox)] = true;
+                draftModeActive[Integer.parseInt(cb)] = true;
                 draftBtn.setBackground(context.getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
             } else {
                 if (currentClickedBox.getText().toString().length() <= 1) {
@@ -264,7 +281,7 @@ public class PiramitUtils {
                     for (int i = 1; i < 10; i++) {
                         ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
                     }
-                    draftModeActive[Integer.parseInt(clickedBox)] = false;
+                    draftModeActive[Integer.parseInt(cb)] = false;
                     draftBtn.setBackground(context.getResources().getDrawable(R.drawable.nums_gl_bg));
                 }
             }

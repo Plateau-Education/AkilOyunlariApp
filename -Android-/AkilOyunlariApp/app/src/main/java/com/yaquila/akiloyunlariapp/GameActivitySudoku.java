@@ -154,7 +154,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(SudokuUtils.checkAnswer(gridLayout)){
+        if(SudokuUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Sudoku."+SudokuUtils.gridSize+"."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -227,7 +227,7 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void draftClicked(View view){
-        SudokuUtils.draftClicked();
+        SudokuUtils.draftClicked(view);
     }
 
     @SuppressWarnings("deprecation")

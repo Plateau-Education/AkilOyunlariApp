@@ -306,6 +306,69 @@ public class PatikaUtils {
         }
     }
 
+    public static boolean checkAnswer(){
+        boolean checking=true;
+        for(String s : PatikaUtils.answerCornerRD){
+            int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+            int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+            if(!PatikaUtils.lineGrid[r][c].equals("rd") && !PatikaUtils.lineGrid[r][c].equals("dr")){
+                checking = false;
+                break;
+            }
+        }
+        if(checking){
+            for(String s : PatikaUtils.answerCornerRU){
+                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+                if(!PatikaUtils.lineGrid[r][c].equals("ru") && !PatikaUtils.lineGrid[r][c].equals("ur")){
+                    checking = false;
+                    break;
+                }
+            }
+        }
+        if(checking){
+            for(String s : PatikaUtils.answerCornerLD){
+                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+                if(!PatikaUtils.lineGrid[r][c].equals("ld") && !PatikaUtils.lineGrid[r][c].equals("dl")){
+                    checking = false;
+                    break;
+                }
+            }
+        }
+        if(checking){
+            for(String s : PatikaUtils.answerCornerLU){
+                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+                if(!PatikaUtils.lineGrid[r][c].equals("lu") && !PatikaUtils.lineGrid[r][c].equals("ul")){
+                    checking = false;
+                    break;
+                }
+            }
+        }
+        if(checking){
+            for(String s : PatikaUtils.answerEdgeRL){
+                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+                if(!PatikaUtils.lineGrid[r][c].equals("rl") && !PatikaUtils.lineGrid[r][c].equals("lr")){
+                    checking = false;
+                    break;
+                }
+            }
+        }
+        if(checking){
+            for(String s : PatikaUtils.answerEdgeUD){
+                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
+                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
+                if(!PatikaUtils.lineGrid[r][c].equals("ud") && !PatikaUtils.lineGrid[r][c].equals("du")){
+                    checking = false;
+                    break;
+                }
+            }
+        }
+        return checking;
+    }
+
     public static void seperateGridAnswer(final JSONArray grid) throws JSONException {
         GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         JSONArray bl = (JSONArray) grid.get(0);

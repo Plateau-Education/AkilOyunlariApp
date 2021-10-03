@@ -148,16 +148,7 @@ public class GameActivityPatika extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        boolean checking=true;
-        for(String s : PatikaUtils.answerCornerRD){
-            int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-            int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-            if(!PatikaUtils.lineGrid[r][c].equals("rd") && !PatikaUtils.lineGrid[r][c].equals("dr")){
-                checking = false;
-                break;
-            }
-        }
-        if(checking){
+        if(PatikaUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -180,58 +171,6 @@ public class GameActivityPatika extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
-            for(String s : PatikaUtils.answerCornerRU){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!PatikaUtils.lineGrid[r][c].equals("ru") && !PatikaUtils.lineGrid[r][c].equals("ur")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : PatikaUtils.answerCornerLD){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!PatikaUtils.lineGrid[r][c].equals("ld") && !PatikaUtils.lineGrid[r][c].equals("dl")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : PatikaUtils.answerCornerLU){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!PatikaUtils.lineGrid[r][c].equals("lu") && !PatikaUtils.lineGrid[r][c].equals("ul")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : PatikaUtils.answerEdgeRL){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!PatikaUtils.lineGrid[r][c].equals("rl") && !PatikaUtils.lineGrid[r][c].equals("lr")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
-            for(String s : PatikaUtils.answerEdgeUD){
-                int r = Integer.parseInt(String.valueOf(s.charAt(0)));
-                int c = Integer.parseInt(String.valueOf(s.charAt(1)));
-                if(!PatikaUtils.lineGrid[r][c].equals("ud") && !PatikaUtils.lineGrid[r][c].equals("du")){
-                    checking = false;
-                    break;
-                }
-            }
-        }
-        if(checking){
             timerStopped = true;
             solvedQuestion = true;
             LayoutInflater factory = LayoutInflater.from(this);
@@ -317,7 +256,6 @@ public class GameActivityPatika extends AppCompatActivity {
                 InputStreamReader reader = new InputStreamReader(in);
                 int data = reader.read();
                 while (data != -1) {
-
                     char current = (char) data;
                     result.append(current);
                     data = reader.read();

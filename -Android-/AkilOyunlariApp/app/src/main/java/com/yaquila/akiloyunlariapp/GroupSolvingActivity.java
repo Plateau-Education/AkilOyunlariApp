@@ -158,43 +158,147 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-
         if(!clueIndexes.contains(answerIndex) && (isPermitted || type.contains("nstructor"))) {
-            Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
-            operations = (List<List<String>>) result[0];
-            clickedBox = (String) result[1];
-            String op = operations.get(operations.size()-1).get(1);
+            String op = null;
+            if (switchPosition.equals("diamond")) {
+                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    op = "0";
+                } else {
+                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                    op = "-1";
+                }
+            }
+            else if (switchPosition.equals("cross")) {
+                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
+                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    op = "0";
+                } else {
+                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                    op = "-2";
+                }
+            }
+            clickedBox = answerIndex;
             assert op != null;
             currentGrid.get(Integer.parseInt(String.valueOf(answerIndex.charAt(1)))).set(Integer.parseInt(String.valueOf(answerIndex.charAt(0))),Integer.parseInt(op));
             sendGrid(currentGrid);
             Log.i("currentGrid",currentGrid.toString());
+            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
+            if(!newOp.equals(operations.get(operations.size() - 1))){
+                operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
+            }
+            Log.i("operations",operations+"");
             checkAnswer(null);
         }
     } // Tıklanan kutuya elmas/çarpı koy
     public void changeSwitch(View view){
-        if(isPermitted || type.contains("nstructor")) switchPosition = AssistClass.changeSwitch(view, switchPosition);
+        ImageView switchTV = (ImageView) view;
+        if(isPermitted || type.contains("nstructor")) {
+            if (switchPosition.equals("diamond")) {
+                switchTV.setImageResource(R.drawable.ic_cross);
+                switchPosition = "cross";
+            } else if (switchPosition.equals("cross")) {
+                switchTV.setImageResource(R.drawable.ic_diamond);
+                switchPosition = "diamond";
+            }
+        }
     } // Elmas - çarpı değiştir
-
     public void undoOperation(View view){
         if(operations.size() > 1 && (isPermitted || type.contains("nstructor"))){
-            Object[] result = AssistClass.undoOperation(this, operations);
-            String co1 = (String) result[0];
-            String num2 = (String) result[1];
+//            operations = operations.subList(0,operations.size()-1);
+            List<String> tuple1 = operations.get(operations.size()-1);
+            operations = operations.subList(0,operations.size()-1);
+            String co1 = tuple1.get(0);
+            String num2 = "0";
+            String co2;
+            for(int i = operations.size()-1; i>0; i--){
+                List<String> tuple2 = operations.get(i);
+                co2 = tuple2.get(0);
+                if(co1.equals(co2)){
+                    num2 = tuple2.get(1);
+                    break;
+                }
+            }
+            Log.i("co/num",co1+" / "+num2);
+            GridLayout gridLayout = gridGL;
+            TextView currentBox = gridLayout.findViewWithTag(co1);
             currentGrid.get(Integer.parseInt(String.valueOf(co1.charAt(1)))).set(Integer.parseInt(String.valueOf(co1.charAt(0))),Integer.parseInt(num2));
             sendGrid(currentGrid);
+
+            if(num2.equals("-1")){
+                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+            }
+            else if(num2.equals("-2")){
+                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
+            }
+            else{
+                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+            }
         }
     } // Son işlemi geri al
     public void resetGrid(View view){
         if(isPermitted || type.contains("nstructor")) {
-            Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
-            operations = (List<List<String>>) result[0];
-            clickedBox = (String) result[1];
+            try {
+                final TextView resetTV = (TextView) view;
+                resetTV.setTextColor(getResources().getColor(R.color.light_red));
+                resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
+                resetTV.setText(R.string.ResetNormal);
+                resetTV.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
+                        resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                        resetTV.setText(R.string.ResetUnderlined);
+                    }
+                }, 100);
+
+                operations = new ArrayList<>();
+                operations.add(new ArrayList<>(Arrays.asList("00", "0")));
+                GridLayout gridLayout = gridGL;
+                clickedBox = "-1";
+                for (int i = 0; i < gridSize; i++) {
+                    for (int j = 0; j < gridSize; j++) {
+                        TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
+                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                        if (!clueIndexes.contains(Integer.toString(j) + i)) {
+                            tv.setText("");
+                        }
+                    }
+                }
+                for (int i = 0; i < gridSize; i++) {
+                    List<Integer> row = currentGrid.get(i);
+                    for (int j = 0; j < gridSize; j++) {
+                        if (row.get(j) < 0) row.set(j, 0);
+                    }
+                    currentGrid.set(i, row);
+                }
+                Log.i("currentGrid-reset", currentGrid.toString());
+                sendGrid(currentGrid);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     } // Tüm işlemleri sıfırla
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
         GridLayout gridLayout = gridGL;
-        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout) && answer.size()>0){ //&& type.contains("nstructor")){
+        boolean checking=true;
+        for(int i = 0; i<gridSize; i++){
+            for(int j = 0; j<gridSize; j++){
+                String co = Integer.toString(j)+i;
+                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                    checking=false;
+                    break;
+                }
+                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                    checking=false;
+                    break;
+                }
+            }
+        }
+        Log.i("check",checking+"  "+answer);
+        if(checking && answer.size()>0){ //&& type.contains("nstructor")){
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -207,7 +311,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             resetTV.setEnabled(false);
             Log.i("checkingTrue - type",type);
             nextQuestion(null);
+
+
+
         }
+
     } // Çözümün doğruluğunu kontrol et
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
@@ -436,7 +544,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             });
             ntDialog.show();
 
-             gameSpinner = ntLayout.findViewById(R.id.gameSpinner);
+            gameSpinner = ntLayout.findViewById(R.id.gameSpinner);
             diffSpinner = ntLayout.findViewById(R.id.diffSpinner);
             ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", "Hazine Avı", "Patika", "Sayı Bulmaca", "Sözcük Turu", "Piramit")));
             gameSpinner.setAdapter(gameAdapter);
@@ -476,7 +584,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         gridSize = Integer.parseInt(ntp[1]);
         gameName = (String) gameSpinner.getSelectedItem();
         difficulty = (String) diffSpinner.getSelectedItem();
-        ((TextView)findViewById(R.id.diffTV_game)).setText(translateDiff(difficulty));
+        ((TextView)findViewById(R.id.diffTV_game)).setText(difficulty);
         LayoutInflater inflater = getLayoutInflater();
         gridGL = (GridLayout) inflater.inflate(this.getResources().getIdentifier(gameName.toLowerCase().replace(" ","").
                 replace("ı","i").replace("ö","o").replace("ü","u")
@@ -954,32 +1062,32 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     @Override
                     public void run() {
 //                        if(!type.contains("nstructor")) {
-                            ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
-                            if(isCorrectDialogShown && !type.contains("nstructor")){
-                                correctDialog.dismiss();
-                                TextView undoTV = findViewById(R.id.undoTV_ga);
-                                TextView resetTV = findViewById(R.id.resetTV_game);
-                                undoTV.setEnabled(true);
-                                resetTV.setEnabled(true);
-                                findViewById(R.id.clickView).setVisibility(View.GONE);
-                            }
-                            try {
-                                JSONArray grid;
-                                String result = (String) args[0];
-                                JSONArray resultJB = new JSONArray(result);
-                                if(resultJB.length()==2){
-                                    grid = resultJB.getJSONArray(0);
-                                    if(!type.contains("nstructor")) {
-                                        JSONArray answerJA = resultJB.getJSONArray(1);
-                                        answer = new ArrayList<>();
-                                        for (int i = 0; i < answerJA.length(); i++) {
-                                            answer.add(String.format("%02d",(int) answerJA.get(i)));
-                                        }
-                                        Log.i("answerInSendGrid",answer.toString());
+                        ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
+                        if(isCorrectDialogShown && !type.contains("nstructor")){
+                            correctDialog.dismiss();
+                            TextView undoTV = findViewById(R.id.undoTV_ga);
+                            TextView resetTV = findViewById(R.id.resetTV_game);
+                            undoTV.setEnabled(true);
+                            resetTV.setEnabled(true);
+                            findViewById(R.id.clickView).setVisibility(View.GONE);
+                        }
+                        try {
+                            JSONArray grid;
+                            String result = (String) args[0];
+                            JSONArray resultJB = new JSONArray(result);
+                            if(resultJB.length()==2){
+                                grid = resultJB.getJSONArray(0);
+                                if(!type.contains("nstructor")) {
+                                    JSONArray answerJA = resultJB.getJSONArray(1);
+                                    answer = new ArrayList<>();
+                                    for (int i = 0; i < answerJA.length(); i++) {
+                                        answer.add(String.format("%02d",(int) answerJA.get(i)));
                                     }
-                                } else {
-                                    grid = resultJB;
+                                    Log.i("answerInSendGrid",answer.toString());
                                 }
+                            } else {
+                                grid = resultJB;
+                            }
 //                                try {
 //                                    String result = (String) args[0];
 //                                    grid = new JSONArray(result);
@@ -998,18 +1106,18 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 //                                    }
 //
 //                                }
-                                if(!checkIfGridHasDC(grid)){
-                                    clearGrid();
-                                    Log.i("grid","cleared");
-                                }
-                                seperateGridAnswer(grid, true);
-                                RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
-                                gridRL.removeAllViews();
-                                gridRL.addView(gridGL);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            if(!checkIfGridHasDC(grid)){
+                                clearGrid();
+                                Log.i("grid","cleared");
                             }
+                            seperateGridAnswer(grid, true);
+                            RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
+                            gridRL.removeAllViews();
+                            gridRL.addView(gridGL);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 //                        }
 
                         Log.i("sendGrid", args[0] + ".");
@@ -1028,9 +1136,6 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             JSONObject prtps = room.getJSONObject("participants");
                             if(instructorName == null){
                                 instructorName = prtps.getJSONObject("instructor").getString("username");
-                                if(!type.contains("nstructor")){
-                                    initUIandEvent();
-                                }
                             }
                             JSONArray students = prtps.getJSONArray("students");
                             List<String> stNameList = new ArrayList<>();
@@ -1053,6 +1158,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             if(isParticipantsShown){
                                 changeParticipantsInRT();
                             }
+                            if(instructorName == null){
+                                instructorName = prtps.getJSONObject("instructor").getString("username");
+                                if(!type.contains("nstructor")){
+                                    initUIandEvent();
+                                }
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

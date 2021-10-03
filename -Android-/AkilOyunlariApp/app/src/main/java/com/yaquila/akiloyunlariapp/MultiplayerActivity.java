@@ -25,6 +25,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SayiBulmacaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SudokuUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +47,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +81,12 @@ public class MultiplayerActivity extends AppCompatActivity {
     boolean inTheRoom = false;
     boolean gotScores;
     boolean timerStopped = false;
+    boolean enable_nextQuestion = false;
 
     List<String> playerNames = new ArrayList<>();
     List<Integer> solveTimeList = new ArrayList<>();
     JSONArray allQs = new JSONArray();
+    Map<String, Class<?>> utilsMap = new HashMap<>();
     TextView timerTV;
     Handler timerHandler;
     Runnable runnable;
@@ -135,12 +144,13 @@ public class MultiplayerActivity extends AppCompatActivity {
     } // Ana Menüye dönmek istiyor musun?
 
     public void nextQuestion(View view){
-        if(timerStopped){
+        if(timerStopped || enable_nextQuestion){
             LayoutInflater factory = LayoutInflater.from(this);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
             final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
             TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-            timerTV.setVisibility(GONE);
+            timerTV.setText(formatTime(solveTimeList.get(currentQ-1)));
+//            timerTV.setVisibility(GONE);
             correctDialog.setView(leaveDialogView);
 
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
@@ -169,131 +179,118 @@ public class MultiplayerActivity extends AppCompatActivity {
     } // Sonraki soruya geç
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked(View view){
-        switch (gameName){
-            case "Hazine Avı":
-                TextView box = (TextView) view;
-                String answerIndex = box.getTag().toString();
-                HazineAviUtils.changeClicked(view);
-                if(!HazineAviUtils.clueIndexes.contains(answerIndex)) checkAnswer(null);
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+    public void changeClicked(View view) {
+        TextView box = (TextView) view;
+        String answerIndex = box.getTag().toString();
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("changeClicked", View.class).invoke(null,view);
+            if(!utilsMap.get(gameName).getDeclaredField("clueIndexes").get(null).toString().contains(answerIndex)) checkAnswer(null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     } // Tıklanan kutuya elmas/çarpı koy
 
-    public void changeSwitch(View view){
+    public void changeSwitch(View view) {
         HazineAviUtils.changeSwitch(view);
     } // Elmas - çarpı değiştir
 
-    public void undoOperation(View view){
-        switch (gameName){
-            case "Hazine Avı":
-                HazineAviUtils.undoOperation();
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+    public void undoOperation(View view) {
+        try {
+            Log.i("utilName",utilsMap.get(gameName).getSimpleName());
+            utilsMap.get(gameName).getDeclaredMethod("undoOperation", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     } // Son işlemi geri al
 
-    public void resetGrid(View view){
-        switch (gameName){
-            case "Hazine Avı":
-                HazineAviUtils.resetGrid(view);
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+    public void resetGrid(View view) {
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("resetGrid", View.class).invoke(null,view);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
+    public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        switch (gameName){
-            case "Hazine Avı":
-                if(HazineAviUtils.checkAnswer(gridLayout)) {
-                    if (currentQ != numberOfQ) {
-                        timerStopped = true;
-                        LayoutInflater factory = LayoutInflater.from(this);
-                        final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-                        final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
-                        TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
-                        timerTV.setText(formatTime((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000))));
+        boolean checking = false;
+        try {
+            checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(checking) {
+            enable_nextQuestion=true;
+            if (currentQ != numberOfQ) {
+                timerStopped = true;
+                LayoutInflater factory = LayoutInflater.from(this);
+                final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
+                final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+                TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
+                timerTV.setText(formatTime((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000))));
 //                totalSolveTime += timerInSeconds;
-                        correctDialog.setView(leaveDialogView);
+                correctDialog.setView(leaveDialogView);
 
-                        findViewById(R.id.clickView).setVisibility(View.VISIBLE);
-                        TextView undoTV = findViewById(R.id.undoTV_ga);
-                        TextView resetTV = findViewById(R.id.resetTV_game);
-                        for (int i = 0; i < HazineAviUtils.gridSize; i++) {
-                            for (int j = 0; j < HazineAviUtils.gridSize; j++) {
-                                gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
-                            }
-                        }
-                        undoTV.setEnabled(false);
-                        resetTV.setEnabled(false);
+                findViewById(R.id.clickView).setVisibility(View.VISIBLE);
+                TextView undoTV = findViewById(R.id.undoTV_ga);
+                TextView resetTV = findViewById(R.id.resetTV_game);
 
-                        solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
 
-                        leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                try {
-                                    mainFunc();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                                correctDialog.dismiss();
-                            }
-                        });
-                        leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
-                        correctDialog.show();
-                    } else {
-                        currentQ++;
-                        Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ+" timerInSeconds: "+timerInSeconds);
-                        solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
-                        score = 10 + 30 + 60;
-                        if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
-                        if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
-                        if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
-                        Log.i("solveTimeList",solveTimeList.toString());
-                        Log.i("score",score+"");
-                        timerStopped=true;
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                setContentView(R.layout.activity_multiplayer);
-                                ((TextView)findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.WaitingForScores);
-                                findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
 
-//                sendScore(score);
-                            }
-                        },500);
+                for (int i = 0; i < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); i++) {
+                    for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++) {
+                        gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                     }
                 }
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+                undoTV.setEnabled(false);
+                resetTV.setEnabled(false);
+
+                solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
+
+                leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        try {
+                            mainFunc();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        correctDialog.dismiss();
+                    }
+                });
+                leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
+                correctDialog.show();
+            } else {
+                currentQ++;
+                Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ+" timerInSeconds: "+timerInSeconds);
+                solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
+                score = 10 + 30 + 60;
+                if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
+                if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
+                if(solveTimeList.get(2)<360) score += (int)(((360f-solveTimeList.get(2))/360f)*60f);
+                Log.i("solveTimeList",solveTimeList.toString());
+                Log.i("score",score+"");
+                timerStopped=true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        setContentView(R.layout.activity_multiplayer);
+                        ((TextView)findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.WaitingForScores);
+                        findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
+
+                sendScore(score);
+                    }
+                },500);
+            }
         }
     } // Çözümün doğruluğunu kontrol et
 
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        switch (gameName){
-            case "Hazine Avı":
-                HazineAviUtils.seperateGridAnswer(grid);
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("seperateGridAnswer", JSONArray.class).invoke(null,grid);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     } // Çekilen soruyu kullanıcıya göster
 
@@ -303,13 +300,17 @@ public class MultiplayerActivity extends AppCompatActivity {
 
         //noinspection deprecation
         timerHandler = new Handler();
-        timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
+                try{
+                    timerTV = findViewById(R.id.timeTV_game);
+                    timerTV.setText(formatTime((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
+                } catch (Exception e){
+//                    e.printStackTrace();
+                }
                 timerInSeconds = 1;
                 Log.i("countDown",((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
-                timerTV.setText(formatTime((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
 //                totalSolveTime = (int)(afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000;
                 if((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())>300){
                     timerStopped=false;
@@ -330,18 +331,16 @@ public class MultiplayerActivity extends AppCompatActivity {
                     findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
 
                     Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ +" time: "+totalSolveTime);
-                    sendScore(score);
+                    if(inTheRoom)sendScore(score);
                 }
                 if(!timerStopped){
                     timerHandler.postDelayed(this,1000);
                 } else{
                     timerHandler.removeCallbacks(this);
                 }
-
             }
         };
         timerHandler.post(runnable);
-
     } // Süreyi tut ve göster
 
     @SuppressLint("DefaultLocale")
@@ -350,14 +349,10 @@ public class MultiplayerActivity extends AppCompatActivity {
     }
 
     public void clearGrid(){
-        switch (gameName){
-            case "Hazine Avı":
-                HazineAviUtils.clearGrid();
-                break;
-            case "Patika":
-                break;
-            default:
-                break;
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("clearGrid", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         timerInSeconds = 0;
         timerStopped=true;
@@ -366,15 +361,21 @@ public class MultiplayerActivity extends AppCompatActivity {
     public void mainFunc() throws JSONException {
         if(currentQ == 1){
             solveTimeList.add(timerInSeconds);
-            setContentView(R.layout.activity_game_hazine_avi8);
             timerTV = findViewById(R.id.timeTV_game);
             switch (gameName){
                 case "Hazine Avı":
+                    setContentView(R.layout.activity_game_hazine_avi8);
                     HazineAviUtils.gridSize=8;
                     secondsToGo = 180;
                     afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
                     break;
                 case "Patika":
+                    break;
+                case "Piramit":
+                    setContentView(R.layout.activity_game_piramit4);
+                    PiramitUtils.gridSize=4;
+                    secondsToGo = 180;
+                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
                     break;
                 default:
                     break;
@@ -383,26 +384,39 @@ public class MultiplayerActivity extends AppCompatActivity {
         }
         else if(currentQ == 2){
             solveTimeList.add(timerInSeconds-solveTimeList.get(0));
-            setContentView(R.layout.activity_game_hazine_avi10);
             timerTV = findViewById(R.id.timeTV_game);
-            if(gameName.contains("azine")){
-                HazineAviUtils.gridSize=10;
-                secondsToGo = 300;
-                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+            switch (gameName){
+                case "Hazine Avı":
+                    setContentView(R.layout.activity_game_hazine_avi10);
+                    HazineAviUtils.gridSize=10;
+                    secondsToGo = 300;
+                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                    break;
+                case "Patika":
+                    break;
+                case "Piramit":
+                    setContentView(R.layout.activity_game_piramit5);
+                    PiramitUtils.gridSize=5;
+                    secondsToGo = 300;
+                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                    break;
+                default:
+                    break;
             }
             Log.i("solveTimeList",solveTimeList.toString());
         }
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
+        enable_nextQuestion=false;
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
         findViewById(R.id.clickView).setVisibility(GONE);
         clearGrid();
+        Log.i("timerVars",((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000)+"");
+        ((TextView)findViewById(R.id.timeTV_game)).setText(formatTime((int) (afterTenMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
         seperateGridAnswer(allQs.getJSONArray(currentQ).getJSONArray(0).getJSONArray(0));
         currentQ++;
     }
-
-
 
     public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
@@ -433,9 +447,6 @@ public class MultiplayerActivity extends AppCompatActivity {
             return dbToVisible.get(string);
         }
     }
-    public void doSthEveryXSec(){
-
-    }
 
     public void goToGameList(View view){
         disconnectSocket();
@@ -451,7 +462,7 @@ public class MultiplayerActivity extends AppCompatActivity {
     private Socket socket;
     {
         try {
-            socket = IO.socket("https://plato-multiplayer.herokuapp.com");
+            socket = IO.socket("https://plato-all-in-one.herokuapp.com");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -503,12 +514,22 @@ public class MultiplayerActivity extends AppCompatActivity {
                             findViewById(R.id.opponentNamesLL).setVisibility(View.VISIBLE);
                             allQs = (new JSONObject(room.getString("games"))).getJSONArray("Info");
                             currentQ = 1;
-                            setContentView(R.layout.activity_game_hazine_avi5);
 
-                            if(gameName.contains("azine")){
-                                HazineAviUtils.gridSize=5;
-                                secondsToGo = 60;
-                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                            switch (gameName){
+                                case "Hazine Avı":
+                                    setContentView(R.layout.activity_game_hazine_avi5);
+                                    HazineAviUtils.gridSize=5;
+                                    secondsToGo = 60;
+                                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                                    break;
+                                case "Patika":
+                                    break;
+                                case "Piramit":
+                                    setContentView(R.layout.activity_game_piramit3);
+                                    PiramitUtils.gridSize=3;
+                                    secondsToGo = 60;
+                                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
+                                    break;
                             }
                             TextView undoTV = findViewById(R.id.undoTV_ga);
                             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -550,11 +571,46 @@ public class MultiplayerActivity extends AppCompatActivity {
                         try {
                             gotScores=true;
                             findViewById(R.id.waitingDialogCL).setVisibility(GONE);
+
                             JSONArray players = (JSONArray) args[0];
-                            for(int i = 0; i<players.length(); i++){
-                                JSONObject player = players.getJSONObject(i);
+                            JSONArray sortedPlayers = new JSONArray();
+
+                            List<JSONObject> jsonValues = new ArrayList<JSONObject>();
+                            for (int i = 0; i < players.length(); i++) {
+                                jsonValues.add(players.getJSONObject(i));
+                            }
+                            Collections.sort( jsonValues, new Comparator<JSONObject>() {
+                                //You can change "Name" with "ID" if you want to sort by ID
+                                private static final String KEY_NAME = "score";
+
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public int compare(JSONObject a, JSONObject b) {
+                                    int valA = 0;
+                                    int valB = 0;
+
+                                    try {
+                                        valA = (int) a.get(KEY_NAME);
+                                        valB = (int) b.get(KEY_NAME);
+                                    }
+                                    catch (JSONException e) {
+                                        //do something
+                                    }
+//                                    if your value is numeric:
+                                    return Integer.compare(valA, valB);
+                                    //if you want to change the sort order, simply use the following:
+                                    //return -valA.compareTo(valB);
+                                }
+                            });
+
+                            for (int i = 0; i < players.length(); i++) {
+                                sortedPlayers.put(jsonValues.get(i));
+                            }
+
+                            for(int i = 0; i<sortedPlayers.length(); i++){
+                                JSONObject player = sortedPlayers.getJSONObject(i);
                                 String plName = player.getString("username");
-                                int plScore = players.getJSONObject(i).getInt("score");
+                                int plScore = sortedPlayers.getJSONObject(i).getInt("score");
                                 LinearLayout horLL = findViewById(R.id.scoresLL).findViewWithTag("LL" + (i + 1));
                                 ((TextView) horLL.getChildAt(1)).setText(plName); // kullanıcı adı
                                 ((TextView) horLL.getChildAt(2)).setText(Integer.toString(plScore));
@@ -564,7 +620,7 @@ public class MultiplayerActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                         Log.i("socket-scores","Scores: "+args[0]);
-
+                        disconnectSocket();
                     }
                 });
             }
@@ -572,6 +628,9 @@ public class MultiplayerActivity extends AppCompatActivity {
     }
 
     public void disconnectSocket(){
+        gotScores=true;
+        timerStopped=true;
+        inTheRoom=true;
         socket.disconnect();
     }
 
@@ -582,6 +641,7 @@ public class MultiplayerActivity extends AppCompatActivity {
         map.put("game", dbGameName);
         map.put("pType",pType);
 
+        socket.emit("usageType","multiplayer");
         socket.emit("playerJoin", new JSONObject(map));
         Log.i("socket","playerJoin");
     }
@@ -599,23 +659,25 @@ public class MultiplayerActivity extends AppCompatActivity {
     @SuppressWarnings("deprecation")
     public void sendScore(int score){
         Log.i("socket","sendScore: "+score);
-        socket.emit("sendScore",score);
-        final Handler getScoresHandler = new Handler();
-        Runnable getScoresRunnable = null;
-        final Runnable finalFindRoomRunnable = getScoresRunnable;
-        getScoresRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if(!gotScores) {
-                    getScoresHandler.postDelayed(this, 3000);
-                    getScores();
-                } else {
-                    getScoresHandler.removeCallbacks(this);
-                    getScoresHandler.removeCallbacks(finalFindRoomRunnable);
+        socket.emit("multiplayer_sendScore",score);
+        if((afterTenMinMillis-Calendar.getInstance().getTimeInMillis())<300){
+            final Handler getScoresHandler = new Handler();
+            Runnable getScoresRunnable = null;
+            final Runnable finalFindRoomRunnable = getScoresRunnable;
+            getScoresRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    if(!gotScores) {
+                        getScoresHandler.postDelayed(this, 3000);
+                        getScores();
+                    } else {
+                        getScoresHandler.removeCallbacks(this);
+                        getScoresHandler.removeCallbacks(finalFindRoomRunnable);
+                    }
                 }
-            }
-        };
-        getScoresHandler.post(getScoresRunnable);
+            };
+            getScoresHandler.post(getScoresRunnable);
+        }
     }
 
     public void getScores(){
@@ -629,6 +691,14 @@ public class MultiplayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multiplayer);
 
+        utilsMap = new HashMap<>();
+        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put("Hazine Avı", HazineAviUtils.class);
+        utilsMap.put("Patika", PatikaUtils.class);
+        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
+        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
+        utilsMap.put("Piramit", PiramitUtils.class);
+
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         Log.i("gameName",gameName);
@@ -639,64 +709,67 @@ public class MultiplayerActivity extends AppCompatActivity {
         dbGameName = game.split("\\.")[0];
         Log.i("dbGameName",dbGameName);
 
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         SharedPreferences sp =getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         username = sp.getString("username",getString(R.string.Unknown));
         Log.i("username",username);
         cluster = sp.getString(dbGameName+"Cluster",getString(R.string.Unknown));
         Log.i("cluster",cluster);
-        if(gameName.contains("iramit")){
-            numberOfQ = 4;
-        }
 
         connectSocket();
         playerJoin();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(!inTheRoom){
-//                    findRoom();
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            if(!inTheRoom){
-//                                findRoom();
-//                                new Handler().postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        if(!inTheRoom){
-//                                            findRoom();
-//                                            new Handler().postDelayed(new Runnable() {
-//                                                @Override
-//                                                public void run() {
-//                                                    findRoom();
-//                                                }
-//                                            },5000);
-//                                        }
-//                                    }
-//                                },5000);
-//                            }
-//                        }
-//                    },5000);
-//                }
-//            }
-//        }, 5000);
-
-        final Handler findRoomHandler = new Handler();
-        Runnable findRoomRunnable = null;
-        final Runnable finalFindRoomRunnable = findRoomRunnable;
-        findRoomRunnable = new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(!inTheRoom) {
-                    findRoomHandler.postDelayed(this, 5000);
+                if(!inTheRoom){
                     findRoom();
-                } else {
-                    findRoomHandler.removeCallbacks(this);
-                    findRoomHandler.removeCallbacks(finalFindRoomRunnable);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(!inTheRoom){
+                                findRoom();
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(!inTheRoom){
+                                            findRoom();
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    findRoom();
+                                                }
+                                            },5000);
+                                        }
+                                    }
+                                },5000);
+                            }
+                        }
+                    },5000);
                 }
             }
-        };
-        findRoomHandler.post(findRoomRunnable);
+        }, 5000);
+
+//        final Handler findRoomHandler = new Handler();
+//        Runnable findRoomRunnable = null;
+//        final Runnable finalFindRoomRunnable = findRoomRunnable;
+//        findRoomRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                if(!inTheRoom ){//&& getApplicationContext().getClass().getSimpleName().contains("ultiplayer")) {
+//                    findRoomHandler.postDelayed(this, 5000);
+//                    findRoom();
+//                } else {
+//                    findRoomHandler.removeCallbacks(this);
+//                    findRoomHandler.removeCallbacks(finalFindRoomRunnable);
+//                }
+//            }
+//        };
+//        findRoomHandler.post(findRoomRunnable);
     }
 
     @Override

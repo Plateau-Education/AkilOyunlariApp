@@ -93,4 +93,5 @@
     <string name="htp_sozcukturu">The aim of the Sözcük Türü game is to find words in the table according to the number of letters given. In this game; it is necessary to draw a path starting from the word with the fewest letters and moving between the boxes horizontally, vertically or diagonally and ending at the last letter of the word with the most letters. In addition, each box should be used only once and no empty boxes should be left.</string>
     <string name="htp_piramit">In the Piramit game, the numbers in the boxes must be the sum or difference of the numbers in the 2 boxes below them. In addition, the same number cannot be placed more than once in a row and consecutive numbers cannot be placed in adjacent boxes. All empty boxes must be filled in accordance with these rules.</string>
     <string name="WaitingForScores">Waiting For Scores...</string>
+    <string name="feature_not_active">This feature is not active.</string>
 </resources>

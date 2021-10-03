@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,20 +34,26 @@ public class HowToPlayActivity extends AppCompatActivity {
     }
 
     public void goToGuide(View view) {
+        Intent intent = new Intent(this, GameGuideActivity.class);
+        intent.putExtra("type",type);
         if (currentGameName.contains("azine")) {
-            Intent intent = new Intent(this, GameGuideActivity.class);
-            intent.putExtra("gamename", "Hazine Avı");
-            intent.putExtra("type",type);
+            intent.putExtra("gameName", "Hazine Avı");
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (currentGameName.contains("atika")){
-            Intent intent = new Intent(this, GameGuideActivity.class);
-            intent.putExtra("gamename", "Patika");
-            intent.putExtra("type",type);
+            intent.putExtra("gameName", "Patika");
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
+//        } else if (currentGameName.contains("ulmaca")){
+//            intent.putExtra("gameName", "Sayı Bulmaca");
+//            startActivity(intent);
+//            overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else {
+            Toast.makeText(this, getString(R.string.feature_not_active), Toast.LENGTH_SHORT).show();
+            Log.i("goToGuide","guide not active");
         }
     }
+
     public void howToPlayGameListOpen(View view){
         ConstraintLayout constraintLayout = (ConstraintLayout) view.getParent();
         RelativeLayout howToPlayGameListRL = (RelativeLayout) constraintLayout.getChildAt(2);

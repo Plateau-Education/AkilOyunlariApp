@@ -130,46 +130,25 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     public void changeClicked(View view) {
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-//        try {
-//            utilsMap.get(gameName).getDeclaredMethod("changeClicked", View.class).invoke(null,view);
-//            if(!utilsMap.get(gameName).getDeclaredField("clueIndexes").get(null).toString().contains(answerIndex)) checkAnswer(null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         HazineAviUtils.changeClicked(view);
-        if(HazineAviUtils.clueIndexes.contains(answerIndex)) checkAnswer(null);
+        if(!HazineAviUtils.clueIndexes.contains(answerIndex)) checkAnswer(null);
     } // Tıklanan kutuya elmas/çarpı koy
 
     public void changeSwitch(View view) {
         HazineAviUtils.changeSwitch(view);
-//        try {
-//            utilsMap.get(gameName).getDeclaredMethod("changeSwitch", View.class).invoke(null,view);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     } // Elmas - çarpı değiştir
 
     public void undoOperation(View view) {
         HazineAviUtils.undoOperation();
-//        try {
-//            utilsMap.get(gameName).getDeclaredMethod("undoOperation", (Class<?>) null).invoke(null, (Object) null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     } // Son işlemi geri al
 
     public void resetGrid(View view) {
         HazineAviUtils.resetGrid(view);
-//        try {
-//            utilsMap.get(gameName).getDeclaredMethod("resetGrid", View.class).invoke(null,view);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     } // Tüm işlemleri sıfırla
 
     public void checkAnswer(View view){
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        if(HazineAviUtils.checkAnswer(gridLayout)){
+        if(HazineAviUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("HazineAvi."+HazineAviUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -386,11 +365,6 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         HazineAviUtils.clearGrid();
         timerStopped = true;
         timerInSeconds = 0;
-//        try {
-//            utilsMap.get(gameName).getDeclaredMethod("clearGrid", View.class).invoke(null,null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     public void mainFunc(){

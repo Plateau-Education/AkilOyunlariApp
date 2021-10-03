@@ -26,6 +26,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SayiBulmacaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SudokuUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,10 +56,12 @@ import static android.view.View.VISIBLE;
 
 public class TournamentActivity extends AppCompatActivity {
 
+    AppCompatActivity mAppCompatActivity;
     String username;
     String code = "0";
     String userType = "participant";
     String organizatorName;
+    String currentGameName = "Hazine Avı";
     int currentQ = 0;
     int totalNumberOfQs = 0;
     int currentTotalScore = 0;
@@ -65,23 +74,13 @@ public class TournamentActivity extends AppCompatActivity {
 
     Map<String, Integer> gamesMap = new HashMap<>();
     Map<String, Integer> playersMap = new HashMap<>();
+    Map<String, Class<?>> utilsMap = new HashMap<>();
     List<List<String>> tournamentProperties = new ArrayList<>();
     List<String> gameOrder = new ArrayList<>();
     JSONObject allQs = new JSONObject();
 
-
-    //Hazine Avi Variables
-    String clickedBox = "-1";
-    String switchPosition = "diamond";
-    int gridSize = 5;
     int timerInSeconds = 0;
     boolean timerStopped=false;
-    boolean paused = false;
-    boolean gotQuestion = false;
-
-    List<List<String>> operations = new ArrayList<>();
-    List<String> clueIndexes = new ArrayList<>();
-    List<String> answer = new ArrayList<>();
     Handler timerHandler;
     Runnable runnable;
 
@@ -175,33 +174,48 @@ public class TournamentActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void changeClicked_HA(View view){
+    public void changeClicked(View view) {
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-//        Object[] result = AssistClass.changeClicked(this, view, switchPosition, clueIndexes, operations, clickedBox);
-//        operations = (List<List<String>>) result[0];
-//        clickedBox = (String) result[1];
-        if(!clueIndexes.contains(answerIndex)) checkAnswer_HA(null);
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("changeClicked", View.class).invoke(null,view);
+            if(!utilsMap.get(currentGameName).getDeclaredField("clueIndexes").get(null).toString().contains(answerIndex)) checkAnswer(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     } // Tıklanan kutuya elmas/çarpı koy
 
-    public void changeSwitch_HA(View view){
-//        switchPosition = AssistClass.changeSwitch(view, switchPosition);
+    public void changeSwitch(View view) {
+        HazineAviUtils.changeSwitch(view);
     } // Elmas - çarpı değiştir
 
-    public void undoOperation_HA(View view){
-//        operations = (List<List<String>>) AssistClass.undoOperation( this, operations)[0];
+    public void undoOperation(View view) {
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("undoOperation", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     } // Son işlemi geri al
 
-    public void resetGrid_HA(View view){
-//        Object[] result = AssistClass.resetGrid( this, view, gridSize, clueIndexes, operations, clickedBox);
-//        operations = (List<List<String>>) result[0];
-//        clickedBox = (String) result[1];
+    public void resetGrid(View view) {
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("resetGrid", View.class).invoke(null,view);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     } // Tüm işlemleri sıfırla
 
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer_HA(View view){
+    public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-//        if(AssistClass.checkAnswer(this, gridSize, answer, gridLayout)) {
+        boolean checking = false;
+        try {
+            checking = (boolean) utilsMap.get(currentGameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(checking) {
             solvedTheQuestion = true;
             if (currentQ != totalNumberOfQs) {
                 timerStopped = true;
@@ -218,8 +232,8 @@ public class TournamentActivity extends AppCompatActivity {
                 findViewById(R.id.clickView).setVisibility(View.VISIBLE);
                 TextView undoTV = findViewById(R.id.undoTV_ga);
                 TextView resetTV = findViewById(R.id.resetTV_game);
-                for (int i = 0; i < gridSize; i++) {
-                    for (int j = 0; j < gridSize; j++) {
+                for (int i = 0; i < Integer.parseInt(utilsMap.get(currentGameName).getDeclaredField("gridSize").get(null).toString()); i++) {
+                    for (int j = 0; j < Integer.parseInt(utilsMap.get(currentGameName).getDeclaredField("gridSize").get(null).toString()); j++) {
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                     }
                 }
@@ -249,14 +263,14 @@ public class TournamentActivity extends AppCompatActivity {
                     }
                 },300);
             }
-//        }
+        }
     } // Çözümün doğruluğunu kontrol et
 
-    public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        if(gameOrder.get(0).contains("HazineAvi")) {
-//            Object[] result = AssistClass.seperateGridAnswer(this, grid, gridSize, clueIndexes, answer);
-//            clueIndexes = (List<String>) result[0];
-//            answer = (List<String>) result[1];
+    public void seperateGridAnswer(JSONArray grid){
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("seperateGridAnswer", JSONArray.class).invoke(null,grid);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     } // Çekilen soruyu kullanıcıya göster
 
@@ -313,20 +327,11 @@ public class TournamentActivity extends AppCompatActivity {
     }
 
     public void clearGrid(){
-        operations = new ArrayList<>();
-        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
-        for (int i = 0; i < gridSize; i++) {
-            for (int j = 0; j < gridSize; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setText("");
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                tv.setEnabled(true);
-            }
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("clearGrid", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
         timerInSeconds = 0;
         timerStopped=true;
     }
@@ -336,13 +341,13 @@ public class TournamentActivity extends AppCompatActivity {
         currentQ += 1;
         Log.i("gameOrder",gameOrder.toString());
         Log.i("JsonArray",allQs.getJSONArray(gameOrder.get(0))+"");
-        gridSize = Integer.parseInt(gameOrder.get(0).split("\\.")[1]);
         if(gameOrder.get(0).contains("HazineAvi")){
-            if(gridSize == 5) secondsToGo = 60;
-            else if(gridSize == 8) secondsToGo = 180;
-            else if(gridSize == 10) secondsToGo = 360;
+            HazineAviUtils.gridSize = Integer.parseInt(gameOrder.get(0).split("\\.")[1]);
+            Log.i("gridSize",HazineAviUtils.gridSize+"");
+            if(HazineAviUtils.gridSize == 5) secondsToGo = 60;
+            else if(HazineAviUtils.gridSize == 8) secondsToGo = 180;
+            else if(HazineAviUtils.gridSize == 10) secondsToGo = 360;
         }
-        Log.i("gridSize", gridSize+"");
         setContentView(gameDiffToLayoutID(gameOrder.get(0)));
         clearGrid();
         solvedTheQuestion=false;
@@ -374,7 +379,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", "Hazine Avı", "Patika", "Sayı Bulmaca", "Sözcük Turu", "Piramit")));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Hazine Avı")));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -417,7 +422,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", "Hazine Avı", "Patika", "Sayı Bulmaca", "Sözcük Turu", "Piramit")));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Hazine Avı")));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -465,6 +470,13 @@ public class TournamentActivity extends AppCompatActivity {
             for(int j = 0; j<gamesMap.get(gameName); j++){
                 gameOrder.add(gameName);
             }
+        }
+        String[] s = shownToDatabase("databaseToShown",gameOrder.get(0)).split(" ");
+        currentGameName = s[0] + " " + s[1];
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Log.i("gamesMap",gamesMap.toString());
         findViewById(R.id.tournamentOptionsCL).setVisibility(GONE);
@@ -666,6 +678,13 @@ public class TournamentActivity extends AppCompatActivity {
                                         gameOrder.add(gameName);
                                     }
                                 }
+                                String[] s = shownToDatabase("databaseToShown",gameOrder.get(0)).split(" ");
+                                currentGameName = s[0] + " " + s[1];
+                                try {
+                                    utilsMap.get(currentGameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
 //                            currentQ += 1;
 //                            setContentView(gameDiffToLayoutID(gameOrder.get(0)));
@@ -797,6 +816,15 @@ public class TournamentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tournament);
+        mAppCompatActivity = this;
+
+        utilsMap = new HashMap<>();
+        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put("Hazine Avı", HazineAviUtils.class);
+        utilsMap.put("Patika", PatikaUtils.class);
+        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
+        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
+        utilsMap.put("Piramit", PiramitUtils.class);
 
         findViewById(R.id.waitingDialogCL).setVisibility(GONE);
         findViewById(R.id.createOrJoinLL).setVisibility(GONE);
@@ -825,9 +853,6 @@ public class TournamentActivity extends AppCompatActivity {
         } else {
             if(!scoresShown)findViewById(R.id.createOrJoinLL).setVisibility(VISIBLE);
         }
-
-
-
     }
 
     @Override

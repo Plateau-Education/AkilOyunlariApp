@@ -1,9 +1,6 @@
 package com.yaquila.akiloyunlariapp.gameutils;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Build;
-import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
@@ -159,7 +156,8 @@ public class HazineAviUtils {
     } // Tüm işlemleri sıfırla
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static boolean checkAnswer(final GridLayout gridLayout){
+    public static boolean checkAnswer(){
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         boolean checking=true;
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GameTypesActivity extends AppCompatActivity {
 
@@ -17,12 +18,16 @@ public class GameTypesActivity extends AppCompatActivity {
 
     public void goToGameList(View view) {
         TextView tvdiff = (TextView) view;
-        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
-        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
-        Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-        intent.putExtra("type", view.getTag().toString());
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+        if("multi3P multi5P".contains(view.getTag().toString())){
+            Toast.makeText(this, getString(R.string.feature_not_active), Toast.LENGTH_SHORT).show();
+        } else {
+            tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+            tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+            Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+            intent.putExtra("type", view.getTag().toString());
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
+        }
     }
 
     public void goToTournament(View view){
