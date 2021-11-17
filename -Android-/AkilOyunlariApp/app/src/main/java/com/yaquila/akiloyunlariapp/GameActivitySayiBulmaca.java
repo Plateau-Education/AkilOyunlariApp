@@ -431,11 +431,11 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
+        if(difficulty.equals(getString(R.string.Easy))){
             setContentView(R.layout.activity_game_sayibulmaca3);
             SayiBulmacaUtils.gridSize=3;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+        else if(difficulty.equals(getString(R.string.Medium))){
             setContentView(R.layout.activity_game_sayibulmaca4);
             SayiBulmacaUtils.gridSize=4;
         }

@@ -402,67 +402,58 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         SpannableString ss1;
 
         assert difficulty != null;
-        switch (difficulty) {
-            case "Easy":
-            case "Kolay":
-                setContentView(R.layout.activity_game_sozcuk_turu34);
+        if (difficulty.equals(getString(R.string.Easy))) {
+            setContentView(R.layout.activity_game_sozcuk_turu34);
 
-                s= getString(R.string.Easy) + " - 3,4,5 "+getString(R.string.letters);
-                ss1=  new SpannableString(s);
-                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
-                textView = findViewById(R.id.diffTV_game);
-                textView.setText(ss1);
+            s = getString(R.string.Easy) + " - 3,4,5 " + getString(R.string.letters);
+            ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.diffTV_game);
+            textView.setText(ss1);
 
-                Log.i("diff", "easy");
-                difficulty = "Easy";
-                SozcukTuruUtils.gridSizeX = 3;
-                SozcukTuruUtils.gridSizeY = 4;
-                break;
-            case "Medium":
-            case "Orta":
-                setContentView(R.layout.activity_game_sozcuk_turu35);
+            Log.i("diff", "easy");
+            difficulty = "Easy";
+            SozcukTuruUtils.gridSizeX = 3;
+            SozcukTuruUtils.gridSizeY = 4;
+        } else if (difficulty.equals(getString(R.string.Medium))) {
+            setContentView(R.layout.activity_game_sozcuk_turu35);
 
+            s = getString(R.string.Medium) + " - 4,5,6 " + getString(R.string.letters);
+            ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.diffTV_game);
+            textView.setText(ss1);
 
-                s= getString(R.string.Medium) + " - 4,5,6 "+getString(R.string.letters);
-                ss1=  new SpannableString(s);
-                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
-                textView = findViewById(R.id.diffTV_game);
-                textView.setText(ss1);
+            SozcukTuruUtils.gridSizeX = 3;
+            SozcukTuruUtils.gridSizeY = 5;
+            difficulty = "Medium";
+            Log.i("diff", "medium");
+        } else if (difficulty.equals(getString(R.string.Hard))) {
+            setContentView(R.layout.activity_game_sozcuk_turu45);
 
-                SozcukTuruUtils.gridSizeX = 3;
-                SozcukTuruUtils.gridSizeY = 5;
-                difficulty = "Medium";
-                Log.i("diff", "medium");
-                break;
-            case "Hard":
-            case "Zor":
-                setContentView(R.layout.activity_game_sozcuk_turu45);
+            s = getString(R.string.Hard) + " - 2,3,4,5,6 " + getString(R.string.letters);
+            ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.diffTV_game);
+            textView.setText(ss1);
 
-                s= getString(R.string.Hard) + " - 2,3,4,5,6 "+getString(R.string.letters);
-                ss1=  new SpannableString(s);
-                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
-                textView = findViewById(R.id.diffTV_game);
-                textView.setText(ss1);
+            SozcukTuruUtils.gridSizeX = 4;
+            SozcukTuruUtils.gridSizeY = 5;
+            difficulty = "Hard";
+            Log.i("diff", "medium");
+        } else {
+            setContentView(R.layout.activity_game_sozcuk_turu55);
 
-                SozcukTuruUtils.gridSizeX = 4;
-                SozcukTuruUtils.gridSizeY = 5;
-                difficulty = "Hard";
-                Log.i("diff", "medium");
-                break;
-            default:
-                setContentView(R.layout.activity_game_sozcuk_turu55);
+            s = getString(R.string.VeryHard) + " - 3,4,5,6,7 " + getString(R.string.letters);
+            ss1 = new SpannableString(s);
+            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.diffTV_game);
+            textView.setText(ss1);
 
-                s= getString(R.string.VeryHard) + " - 3,4,5,6,7 "+getString(R.string.letters);
-                ss1=  new SpannableString(s);
-                ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"),s.length(), 0); // set size
-                textView = findViewById(R.id.diffTV_game);
-                textView.setText(ss1);
-
-                SozcukTuruUtils.gridSizeX = 5;
-                SozcukTuruUtils.gridSizeY = 5;
-                difficulty = "Hardest";
-                Log.i("diff", "hard");
-                break;
+            SozcukTuruUtils.gridSizeX = 5;
+            SozcukTuruUtils.gridSizeY = 5;
+            difficulty = "Hardest";
+            Log.i("diff", "hard");
         }
 
         final GridLayout gridLayout = findViewById(R.id.gridGL_ga);
@@ -611,4 +602,6 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         }
         super.onDestroy();
     }
+
+
 }

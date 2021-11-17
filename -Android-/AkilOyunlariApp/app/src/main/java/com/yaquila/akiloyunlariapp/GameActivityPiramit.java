@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
 import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
 
 import org.json.JSONArray;
@@ -456,32 +457,30 @@ public class GameActivityPiramit extends AppCompatActivity{
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        switch (difficulty) {
-            case "Easy":
-            case "Kolay":
-                setContentView(R.layout.activity_game_piramit3);
-                PiramitUtils.gridSize = 3;
-                PiramitUtils.answerCount = 3;
-                break;
-            case "Medium":
-            case "Orta":
-                setContentView(R.layout.activity_game_piramit4);
-                PiramitUtils.gridSize = 4;
-                PiramitUtils.answerCount = 6;
-                break;
-            case "Hard":
-            case "Zor":
-                setContentView(R.layout.activity_game_piramit5);
-                PiramitUtils.gridSize = 5;
-                PiramitUtils.answerCount = 9;
-                break;
-            default:
-                setContentView(R.layout.activity_game_piramit6);
-                PiramitUtils.gridSize = 6;
-                PiramitUtils.answerCount = 14;
-                break;
+        if(difficulty.equals(getString(R.string.Easy))){
+            setContentView(R.layout.activity_game_piramit3);
+            Log.i("diff","easy");
+            PiramitUtils.gridSize = 3;
+            PiramitUtils.answerCount = 3;
         }
-
+        else if(difficulty.equals(getString(R.string.Medium))){
+            setContentView(R.layout.activity_game_piramit4);
+            PiramitUtils.gridSize = 4;
+            PiramitUtils.answerCount = 6;
+            Log.i("diff","medium");
+        }
+        else if(difficulty.equals(getString(R.string.Hard))){
+            setContentView(R.layout.activity_game_piramit5);
+            PiramitUtils.gridSize = 5;
+            PiramitUtils.answerCount = 9;
+            Log.i("diff","hard");
+        }
+        else {
+            setContentView(R.layout.activity_game_piramit6);
+            PiramitUtils.gridSize = 6;
+            PiramitUtils.answerCount = 14;
+            Log.i("diff","Very Hard");
+        }
         mainFunc();
     }
 

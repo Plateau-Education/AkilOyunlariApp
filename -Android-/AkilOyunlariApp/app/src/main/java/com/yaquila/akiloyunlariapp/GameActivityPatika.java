@@ -447,12 +447,12 @@ public class GameActivityPatika extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
+        if(difficulty.equals(getString(R.string.Easy))){
             setContentView(R.layout.activity_game_patika5);
             Log.i("diff","easy");
             PatikaUtils.gridSize=5;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+        else if(difficulty.equals(getString(R.string.Medium))){
             setContentView(R.layout.activity_game_patika7);
             PatikaUtils.gridSize=7;
             Log.i("diff","medium");

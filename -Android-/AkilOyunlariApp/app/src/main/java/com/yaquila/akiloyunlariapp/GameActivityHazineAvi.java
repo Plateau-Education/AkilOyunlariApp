@@ -390,11 +390,11 @@ public class GameActivityHazineAvi extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")){
+        if(difficulty.equals(getString(R.string.Easy))){
             setContentView(R.layout.activity_game_hazine_avi5);
             HazineAviUtils.gridSize=5;
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")){
+        else if(difficulty.equals(getString(R.string.Medium))){
             setContentView(R.layout.activity_game_hazine_avi8);
             HazineAviUtils.gridSize=8;
         }

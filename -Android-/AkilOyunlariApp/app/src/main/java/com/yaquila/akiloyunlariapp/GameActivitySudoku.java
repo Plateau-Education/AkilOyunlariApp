@@ -431,11 +431,11 @@ public class GameActivitySudoku extends AppCompatActivity {
             SudokuUtils.gridSize=9;
         }
 
-        if(difficulty.equals("Easy") || difficulty.equals("Kolay")) {
+        if(difficulty.equals(getString(R.string.Easy))) {
             ((TextView)findViewById(R.id.diffTV_game)).setText(R.string.Easy);
             difficulty = "Easy";
         }
-        else if(difficulty.equals("Medium") || difficulty.equals("Orta")) {
+        else if(difficulty.equals(getString(R.string.Medium))) {
             ((TextView)findViewById(R.id.diffTV_game)).setText(R.string.Medium);
             difficulty = "Medium";
         }

@@ -691,7 +691,10 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         vSettings().mChannelName = channelName;
 
         RtcTokenBuilder token = new RtcTokenBuilder();
-        vSettings().mToken = token.buildTokenWithUid(getString(R.string.private_app_id), getString(R.string.private_app_certificate),
+        vSettings().mToken =
+//                "006098bfc97f1b44408b6dedc2c0d6e5568IAD3nQlRYp8qhtzZ71u9UM/HBErFPMmtdUNdbyShjwIKbH2D22oAAAAAEAD89T1fsoSTYQEAAQC3hJNh";
+
+                token.buildTokenWithUid(getString(R.string.private_app_id), getString(R.string.private_app_certificate),
                 channelName, 0, RtcTokenBuilder.Role.Role_Publisher, (int)(System.currentTimeMillis() / 1000 + 36000));
 
 
@@ -1136,6 +1139,10 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             JSONObject prtps = room.getJSONObject("participants");
                             if(instructorName == null){
                                 instructorName = prtps.getJSONObject("instructor").getString("username");
+                                if(!type.contains("nstructor")){
+                                    Log.i("instructor","degil");
+                                    initUIandEvent();
+                                }
                             }
                             JSONArray students = prtps.getJSONArray("students");
                             List<String> stNameList = new ArrayList<>();
@@ -1158,13 +1165,6 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             if(isParticipantsShown){
                                 changeParticipantsInRT();
                             }
-                            if(instructorName == null){
-                                instructorName = prtps.getJSONObject("instructor").getString("username");
-                                if(!type.contains("nstructor")){
-                                    initUIandEvent();
-                                }
-                            }
-
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
