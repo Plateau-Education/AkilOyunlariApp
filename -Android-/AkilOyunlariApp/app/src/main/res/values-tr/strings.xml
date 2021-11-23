@@ -100,5 +100,24 @@
     <string name="SayıBulmaca">Sayı Bulmaca</string>
     <string name="SözcükTuru">Sözcük Turu</string>
     <string name="Piramit">Piramit</string>
+    <string name="hazineAvi_instrings1">Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.</string>
+    <string name="hazineAvi_instrings2">Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.</string>
+    <string name="hazineAvi_instrings3">Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır.</string>
+    <string name="hazineAvi_instrings4">Örnekte görüldüğü üzere, içinde 4 yazılı ipucunun sadece 4 komşusu vardır. Bu komşular kesin olarak elmasla doldurulabilir.</string>
+    <string name="hazineAvi_instrings5">Farkedilebileceği üzere koyduğumuz 4 elmastan 2\'si, yandaki içinde 2 yazan ipucunun da komşusudur.</string>
+    <string name="hazineAvi_instrings6">Yani içinde 2 yazan ipucu, alması gereken tüm elmasları almıştır ve diğer komşularında elmas olamaz. Bu komşulara sol aşağıdaki değişim kutusundan çarpıya geçilerek çarpı koyulur.</string>
+    <string name="hazineAvi_instrings7">İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir.</string>
+    <string name="hazineAvi_instrings8">Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.</string>
+    <string name="hazineAvi_instrings9">Örneğin bu 2 ipucusunun 3 komşusu vardır ve bu 3 kutudan 2\'si elmas olmak zorundadır.</string>
+    <string name="hazineAvi_instrings10">Görüldüğü üzere bu 3 kutu aynı zamanda bir üstteki 2 ipucusunun da komşusudur. Yani bu 3 kutudaki 2 elmas onu da etkiler.</string>
+    <string name="hazineAvi_instrings11">Bu gri renkli 3 komşuda kesin olarak 2 elmas bulunacağı için diğer komşularda elmas olamaz. Bu komşulara çarpı koyulur.</string>
+    <string name="hazineAvi_instrings12">Sağdaki 1 ipucusunun tek boş komşusu kalmıştır. Bu komşuya da değişim kutusundan elmasa geçilerek elmas koyulur.</string>
+    <string name="hazineAvi_instrings13">Yeşille işaretlenmiş 2 ipucusunun komşularından biri elmastır. Yani kalan 2 komşudan birisi elmas olmak zorundadır.</string>
+    <string name="hazineAvi_instrings14">Yeşille işaretlenen 1 ipucusunun da 2 komşusundan birinde elmas olmak zorundadır.</string>
+    <string name="hazineAvi_instrings15">Yani bu 4 kutuda toplam 2 elmas bulunmaktadır.</string>
+    <string name="hazineAvi_instrings16">Bu 4 kutuda bulunan 2 elmas, yeşille işaretli 2 ipucusunu da etkiler. Bu nedenle, 2 ipucusunun kalan komşusuna çarpı koyulur.</string>
+    <string name="hazineAvi_instrings17">Yeşille işaretlenen 1 ipucusunun tek komşusu kalmıştır. Bu komşuya da elmas gelmelidir.</string>
+    <string name="hazineAvi_instrings18">Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.</string>
+    <string name="hazineAvi_instrings19">Bu öğreticinin sonuna geldiniz.🏁 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.</string>
 
 </resources>

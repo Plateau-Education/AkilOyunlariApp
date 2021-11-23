@@ -100,4 +100,23 @@
     <string name="SayıBulmaca">Number Puzzle</string>
     <string name="SözcükTuru">Word Tour</string>
     <string name="Piramit">Pyramid</string>
+    <string name="hazineAvi_instrings19">You have come to the end of this tutorial.🏁 You can exit with the help of the back button at the top left or return to the previous steps with the arrow keys.</string>
+    <string name="hazineAvi_instrings18">The clue marked in green with a 3 in it has a diamond in one of its neighbors. The remaining 2 neighbors should also receive diamonds.</string>
+    <string name="hazineAvi_instrings17">The clue marked in green with a 1 in it has only one neighbor left. This neighbor should also receive a diamond.</string>
+    <string name="hazineAvi_instrings16">The 2 diamonds in these 4 boxes also affect the clue marked in green. Therefore, a cross should be placed to the remaining neighbor of the clue with 2 in it.</string>
+    <string name="hazineAvi_instrings15">So there are 2 diamonds in total in these 4 boxes.</string>
+    <string name="hazineAvi_instrings14">The clue marked in green and containing 1 must also have a diamond in one of its 2 neighbors.</string>
+    <string name="hazineAvi_instrings13">One of the neighbors of the clue marked in green has a diamond. So one of the remaining 2 neighbors has to have a diamond.</string>
+    <string name="hazineAvi_instrings12">The clue with 1 in it on the right has only one empty neighbor left. A diamond is put to the last empty neighbor by switching to the diamond from the switch box.</string>
+    <string name="hazineAvi_instrings11">Since there will definitely be 2 diamonds in these 3 gray-coloured neighbors, the other neighbors cannot have diamonds. Crosses should be placed in these neighbors.</string>
+    <string name="hazineAvi_instrings10">As you can see, these 3 boxes are also neighbors of the clue with 2 in it. So the 2 diamonds in these 3 boxes affect it as well.</string>
+    <string name="hazineAvi_instrings9">For example these 2 clues have 3 neighbors and 2 of these 3 boxes must be diamonds.</string>
+    <string name="hazineAvi_instrings8">What needs to be looked at in these cases is the common effects of diamonds placed on the neighbors of the clues on the other clues.</string>
+    <string name="hazineAvi_instrings7">Clues that have as many neighbors as the number written in them may not be found in every question or may be insufficient to reach a solution.</string>
+    <string name="hazineAvi_instrings6">So the clue with 2 in it has got all the diamonds it should have and its other neighbors cannot have diamonds. Crosses are placed on these neighbors by switching to the cross by pressing switch box.</string>
+    <string name="hazineAvi_instrings5">As you can notice, 2 of the 4 diamonds we have placed are the neighbors of the clue with the number 2 in it.</string>
+    <string name="hazineAvi_instrings4">As seen in the example, clues with 4 written in it have only 4 neighbors. These neighbors can definitely be filled with diamonds</string>
+    <string name="hazineAvi_instrings3">The first thing to look for when solving is the clues that have as many neighbors as the number written in them.</string>
+    <string name="hazineAvi_instrings2">"In Mine Sweeper, number clues show how many of their neighbours have diamonds. "</string>
+    <string name="hazineAvi_instrings1">Welcome to Mine Sweeper Tutorial. You can take part in the solbving process by tapping the blinking boxes throughout the tutorial.</string>
 </resources>

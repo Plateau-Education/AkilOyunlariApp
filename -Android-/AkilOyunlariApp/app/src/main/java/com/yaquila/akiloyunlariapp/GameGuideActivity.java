@@ -552,25 +552,25 @@ public class GameGuideActivity extends AppCompatActivity {
 
     public void setInStrings() {
         if (gameName.contains(getString(R.string.HazineAvı))) {
-            inStrings.add("Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
-            inStrings.add("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.");
-            inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır.");
-            inStrings.add("Örnekte görüldüğü üzere, içinde 4 yazılı ipucunun sadece 4 komşusu vardır. Bu komşular kesin olarak elmasla doldurulabilir.");
-            inStrings.add("Farkedilebileceği üzere koyduğumuz 4 elmastan 2'si, yandaki içinde 2 yazan ipucunun da komşusudur.");
-            inStrings.add("Yani içinde 2 yazan ipucu, alması gereken tüm elmasları almıştır ve diğer komşularında elmas olamaz. Bu komşulara sol aşağıdaki değişim kutusundan çarpıya geçilerek çarpı koyulur.");
-            inStrings.add("İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir.");
-            inStrings.add("Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
-            inStrings.add("Örneğin bu 2 ipucusunun 3 komşusu vardır ve bu 3 kutudan 2'si elmas olmak zorundadır.");
-            inStrings.add("Görüldüğü üzere bu 3 kutu aynı zamanda bir üstteki 2 ipucusunun da komşusudur. Yani bu 3 kutudaki 2 elmas onu da etkiler.");
-            inStrings.add("Bu gri renkli 3 komşuda kesin olarak 2 elmas bulunacağı için diğer komşularda elmas olamaz. Bu komşulara çarpı koyulur.");
-            inStrings.add("Sağdaki 1 ipucusunun tek boş komşusu kalmıştır. Bu komşuya da değişim kutusundan elmasa geçilerek elmas koyulur.");
-            inStrings.add("Yeşille işaretlenmiş 2 ipucusunun komşularından biri elmastır. Yani kalan 2 komşudan birisi elmas olmak zorundadır.");
-            inStrings.add("Yeşille işaretlenen 1 ipucusunun da 2 komşusundan birinde elmas olmak zorundadır.");
-            inStrings.add("Yani bu 4 kutuda toplam 2 elmas bulunmaktadır.");
-            inStrings.add("Bu 4 kutuda bulunan 2 elmas, yeşille işaretli 2 ipucusunu da etkiler. Bu nedenle, 2 ipucusunun kalan komşusuna çarpı koyulur.");
-            inStrings.add("Yeşille işaretlenen 1 ipucusunun tek komşusu kalmıştır. Bu komşuya da elmas gelmelidir.");
-            inStrings.add("Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.");
-            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
+            inStrings.add(getString(R.string.hazineAvi_instrings1));
+            inStrings.add(getString(R.string.hazineAvi_instrings2));
+            inStrings.add(getString(R.string.hazineAvi_instrings3));
+            inStrings.add(getString(R.string.hazineAvi_instrings4));
+            inStrings.add(getString(R.string.hazineAvi_instrings5));
+            inStrings.add(getString(R.string.hazineAvi_instrings6));
+            inStrings.add(getString(R.string.hazineAvi_instrings7));
+            inStrings.add(getString(R.string.hazineAvi_instrings8));
+            inStrings.add(getString(R.string.hazineAvi_instrings9));
+            inStrings.add(getString(R.string.hazineAvi_instrings10));
+            inStrings.add(getString(R.string.hazineAvi_instrings11));
+            inStrings.add(getString(R.string.hazineAvi_instrings12));
+            inStrings.add(getString(R.string.hazineAvi_instrings13));
+            inStrings.add(getString(R.string.hazineAvi_instrings14));
+            inStrings.add(getString(R.string.hazineAvi_instrings15));
+            inStrings.add(getString(R.string.hazineAvi_instrings16));
+            inStrings.add(getString(R.string.hazineAvi_instrings17));
+            inStrings.add(getString(R.string.hazineAvi_instrings18));
+            inStrings.add(getString(R.string.hazineAvi_instrings19));
         }
         else if (gameName.contains("Patika")){
             inStrings.add("Patika öğretici uygulamasına hoşgeldiniz. Öğretici boyunca animasyonlarla gösterilen çizgilerin üzerinden geçerek kendiniz de çözüme dahil olabilirsiniz.");

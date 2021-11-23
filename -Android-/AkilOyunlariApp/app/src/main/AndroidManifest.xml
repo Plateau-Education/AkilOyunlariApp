@@ -18,7 +18,6 @@
         android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GeneratorAnimActivity"></activity>
         <activity android:name=".TournamentActivity" />
         <activity android:name=".MultiplayerActivity" />
         <activity android:name=".GameTypesActivity" />
