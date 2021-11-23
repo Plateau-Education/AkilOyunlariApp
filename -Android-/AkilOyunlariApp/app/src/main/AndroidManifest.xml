@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
-
     <application
         android:name=".AGApplication"
         android:allowBackup="false"
@@ -19,7 +18,8 @@
         android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".TournamentActivity"></activity>
+        <activity android:name=".GeneratorAnimActivity"></activity>
+        <activity android:name=".TournamentActivity" />
         <activity android:name=".MultiplayerActivity" />
         <activity android:name=".GameTypesActivity" />
         <activity android:name=".GroupSolvingActivity" />

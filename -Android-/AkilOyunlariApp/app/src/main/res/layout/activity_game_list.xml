@@ -151,7 +151,7 @@
                     android:orientation="horizontal">
 
                     <TextView android:id="@+id/hazineAviTV_gl"
-                        android:text="Hazine Avı"
+                        android:text="@string/HazineAvı"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
@@ -229,7 +229,7 @@
                         android:layout_marginRight="15dp"/>
 
                     <TextView android:id="@+id/patikaTV_gl"
-                        android:text="Patika"
+                        android:text="@string/Patika"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
@@ -290,7 +290,7 @@
                     android:tag="4">
 
                     <TextView android:id="@+id/sayiBulmacaTV_gl"
-                        android:text="Sayı Bulmaca"
+                        android:text="@string/SayıBulmaca"
                         android:layout_width="0dp"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"
@@ -368,7 +368,7 @@
                         android:layout_marginRight="15dp"/>
 
                     <TextView android:id="@+id/sozcukTuruTV_gl"
-                        android:text="Sözcük Türü"
+                        android:text="@string/SözcükTuru"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
                         android:fontFamily="@font/mohave_bold"
@@ -429,7 +429,7 @@
                     android:tag="6">
 
                     <TextView android:id="@+id/PiramitTV_gl"
-                        android:text="Piramit"
+                        android:text="@string/Piramit"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:layout_weight="1"

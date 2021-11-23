@@ -198,12 +198,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = new Intent(getApplicationContext(), GeneratorAnimActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter, R.anim.exit);
+
         Log.i("cacheDir",getCacheDir().getAbsolutePath());
         try {
             checkSavedQuestions();
         } catch (IOException e) {
             e.printStackTrace();
         }//checkSavedQuestions
+
 
 //        try{
 //            Intent intent = getIntent();

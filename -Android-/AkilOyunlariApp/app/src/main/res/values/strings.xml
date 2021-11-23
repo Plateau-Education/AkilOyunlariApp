@@ -94,4 +94,9 @@
     <string name="htp_piramit">In the Piramit game, the numbers in the boxes must be the sum or difference of the numbers in the 2 boxes below them. In addition, the same number cannot be placed more than once in a row and consecutive numbers cannot be placed in adjacent boxes. All empty boxes must be filled in accordance with these rules.</string>
     <string name="WaitingForScores">Waiting For Scores...</string>
     <string name="feature_not_active">This feature is not active.</string>
+    <string name="HazineAvı">Mine Sweeper</string>
+    <string name="Patika">Loop</string>
+    <string name="SayıBulmaca">Number Puzzle</string>
+    <string name="SözcükTuru">Word Tour</string>
+    <string name="Piramit">Pyramid</string>
 </resources>

@@ -95,4 +95,9 @@
     <string name="htp_piramit">.</string>
     <string name="WaitingForScores">.</string>
     <string name="feature_not_active">.</string>
+    <string name="HazineAvı">Mine Sweeper</string>
+    <string name="Patika">Loop</string>
+    <string name="SayıBulmaca">Number Puzzle</string>
+    <string name="SözcükTuru">Word Tour</string>
+    <string name="Piramit">Pyramid</string>
 </resources>

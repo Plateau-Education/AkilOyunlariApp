@@ -362,46 +362,34 @@ public class MultiplayerActivity extends AppCompatActivity {
         if(currentQ == 1){
             solveTimeList.add(timerInSeconds);
             timerTV = findViewById(R.id.timeTV_game);
-            switch (gameName){
-                case "Hazine Avı":
-                    setContentView(R.layout.activity_game_hazine_avi8);
-                    HazineAviUtils.gridSize=8;
-                    secondsToGo = 180;
-                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                    break;
-                case "Patika":
-                    break;
-                case "Piramit":
-                    setContentView(R.layout.activity_game_piramit4);
-                    PiramitUtils.gridSize=4;
-                    secondsToGo = 180;
-                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                    break;
-                default:
-                    break;
+            if (getString(R.string.HazineAvı).equals(gameName)) {
+                setContentView(R.layout.activity_game_hazine_avi8);
+                HazineAviUtils.gridSize = 8;
+                secondsToGo = 180;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+            } else if (getString(R.string.Patika).equals(gameName)) {
+            } else if (getString(R.string.Piramit).equals(gameName)) {
+                setContentView(R.layout.activity_game_piramit4);
+                PiramitUtils.gridSize = 4;
+                secondsToGo = 180;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
             }
             Log.i("solveTimeList",solveTimeList.toString());
         }
         else if(currentQ == 2){
             solveTimeList.add(timerInSeconds-solveTimeList.get(0));
             timerTV = findViewById(R.id.timeTV_game);
-            switch (gameName){
-                case "Hazine Avı":
-                    setContentView(R.layout.activity_game_hazine_avi10);
-                    HazineAviUtils.gridSize=10;
-                    secondsToGo = 300;
-                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                    break;
-                case "Patika":
-                    break;
-                case "Piramit":
-                    setContentView(R.layout.activity_game_piramit5);
-                    PiramitUtils.gridSize=5;
-                    secondsToGo = 300;
-                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                    break;
-                default:
-                    break;
+            if (getString(R.string.HazineAvı).equals(gameName)) {
+                setContentView(R.layout.activity_game_hazine_avi10);
+                HazineAviUtils.gridSize = 10;
+                secondsToGo = 300;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+            } else if (getString(R.string.Patika).equals(gameName)) {
+            } else if (getString(R.string.Piramit).equals(gameName)) {
+                setContentView(R.layout.activity_game_piramit5);
+                PiramitUtils.gridSize = 5;
+                secondsToGo = 300;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
             }
             Log.i("solveTimeList",solveTimeList.toString());
         }
@@ -423,11 +411,11 @@ public class MultiplayerActivity extends AppCompatActivity {
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
                 "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
-                "Hazine Avı "+getString(R.string.Easy), "Hazine Avı "+getString(R.string.Medium), "Hazine Avı "+getString(R.string.Hard),
-                "Patika "+getString(R.string.Easy), "Patika "+getString(R.string.Medium), "Patika "+getString(R.string.Hard),
-                "Sayı Bulmaca "+getString(R.string.Easy), "Sayı Bulmaca "+getString(R.string.Medium), "Sayı Bulmaca "+getString(R.string.Hard),
-                "Sözcük Turu "+getString(R.string.Easy), "Sözcük Turu "+getString(R.string.Medium), "Sözcük Turu "+getString(R.string.Hard), "Sözcük Turu "+getString(R.string.VeryHard),
-                "Piramit "+getString(R.string.Easy), "Piramit "+getString(R.string.Medium), "Piramit "+getString(R.string.Hard), "Piramit "+getString(R.string.VeryHard)));
+                getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
+                getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
+                getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),
+                getString(R.string.SözcükTuru)+" "+getString(R.string.Easy), getString(R.string.SözcükTuru)+" "+getString(R.string.Medium), getString(R.string.SözcükTuru)+" "+getString(R.string.Hard), getString(R.string.SözcükTuru)+" "+getString(R.string.VeryHard),
+                getString(R.string.Piramit)+" "+getString(R.string.Easy), getString(R.string.Piramit)+" "+getString(R.string.Medium), getString(R.string.Piramit)+" "+getString(R.string.Hard), getString(R.string.Piramit)+" "+getString(R.string.VeryHard)));
         List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
@@ -515,21 +503,17 @@ public class MultiplayerActivity extends AppCompatActivity {
                             allQs = (new JSONObject(room.getString("games"))).getJSONArray("Info");
                             currentQ = 1;
 
-                            switch (gameName){
-                                case "Hazine Avı":
-                                    setContentView(R.layout.activity_game_hazine_avi5);
-                                    HazineAviUtils.gridSize=5;
-                                    secondsToGo = 60;
-                                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                                    break;
-                                case "Patika":
-                                    break;
-                                case "Piramit":
-                                    setContentView(R.layout.activity_game_piramit3);
-                                    PiramitUtils.gridSize=3;
-                                    secondsToGo = 60;
-                                    afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo*1000;
-                                    break;
+                            if (getString(R.string.HazineAvı).equals(gameName)) {
+                                setContentView(R.layout.activity_game_hazine_avi5);
+                                HazineAviUtils.gridSize = 5;
+                                secondsToGo = 60;
+                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+                            } else if (getString(R.string.Patika).equals(gameName)) {
+                            } else if (getString(R.string.Piramit).equals(gameName)) {
+                                setContentView(R.layout.activity_game_piramit3);
+                                PiramitUtils.gridSize = 3;
+                                secondsToGo = 60;
+                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
                             }
                             TextView undoTV = findViewById(R.id.undoTV_ga);
                             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -693,11 +677,11 @@ public class MultiplayerActivity extends AppCompatActivity {
 
         utilsMap = new HashMap<>();
         utilsMap.put("Sudoku", SudokuUtils.class);
-        utilsMap.put("Hazine Avı", HazineAviUtils.class);
-        utilsMap.put("Patika", PatikaUtils.class);
-        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
-        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
-        utilsMap.put("Piramit", PiramitUtils.class);
+        utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
+        utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
+        utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);
+        utilsMap.put(getString(R.string.SözcükTuru), SozcukTuruUtils.class);
+        utilsMap.put(getString(R.string.Piramit), PiramitUtils.class);
 
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");

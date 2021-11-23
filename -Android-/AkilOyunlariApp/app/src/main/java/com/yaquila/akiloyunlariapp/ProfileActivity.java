@@ -323,12 +323,16 @@ public class ProfileActivity extends AppCompatActivity {
 
         else if("Patika HazineAvi SayiBulmaca".contains(gameName)){
             String dif1,dif2,dif3;
+            final String gameDisplayName;
             if(gameName.contains("HazineAvi")){
                 dif1 = ".5"; dif2 = ".8"; dif3 = ".10";
+                gameDisplayName = getString(R.string.HazineAvı);
             } else if(gameName.contains("Patika")) {
                 dif1 = ".5"; dif2 = ".7"; dif3 = ".9";
+                gameDisplayName = getString(R.string.Patika);
             } else {
                 dif1 = ".3"; dif2 = ".4"; dif3 = ".5";
+                gameDisplayName = getString(R.string.SayıBulmaca);
             }
             JSONArray game1 = jb.getJSONArray(gameName+dif1);
             JSONArray game2= jb.getJSONArray(gameName+dif2);
@@ -366,12 +370,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series1.setTitle(gameName+" "+getString(R.string.Easy));
+            series1.setTitle(gameDisplayName+" "+getString(R.string.Easy));
             pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -388,12 +392,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series2.setTitle(gameName+" "+getString(R.string.Medium));
+            series2.setTitle(gameDisplayName+" "+getString(R.string.Medium));
             pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -410,12 +414,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series3.setTitle(gameName+" "+getString(R.string.Hard));
+            series3.setTitle(gameDisplayName+" "+getString(R.string.Hard));
             pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -433,7 +437,7 @@ public class ProfileActivity extends AppCompatActivity {
             graphView.addSeries(pseries2);
             graphView.addSeries(pseries3);
 
-            graphView.setTitle(gameName+" "+getString(R.string.avgTime));
+            graphView.setTitle(gameDisplayName+" "+getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
 //            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
@@ -485,10 +489,13 @@ public class ProfileActivity extends AppCompatActivity {
 
         else{
             String dif1,dif2,dif3,dif4;
+            final String gameDisplayName;
             if(gameName.contains("SozcukTuru")){
                 dif1 = ".Easy"; dif2 = ".Medium"; dif3 = ".Hard"; dif4 = ".Hardest";
+                gameDisplayName = getString(R.string.SözcükTuru);
             } else {
                 dif1 = ".3"; dif2 = ".4"; dif3 = ".5"; dif4 = ".6";
+                gameDisplayName = getString(R.string.Piramit);
             }
             JSONArray game1 = jb.getJSONArray(gameName+dif1);
             JSONArray game2= jb.getJSONArray(gameName+dif2);
@@ -531,12 +538,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series1.setTitle(gameName+" "+getString(R.string.Easy));
+            series1.setTitle(gameDisplayName+" "+getString(R.string.Easy));
             pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -553,12 +560,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series2.setTitle(gameName+" "+getString(R.string.Medium));
+            series2.setTitle(gameDisplayName+" "+getString(R.string.Medium));
             pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -575,12 +582,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series3.setTitle(gameName+" "+getString(R.string.Hard));
+            series3.setTitle(gameDisplayName+" "+getString(R.string.Hard));
             pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -598,12 +605,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series4.setTitle(gameName+" "+getString(R.string.VeryHard));
+            series4.setTitle(gameDisplayName+" "+getString(R.string.VeryHard));
             pseries4.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, gameName+" "+getString(R.string.VeryHard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, gameDisplayName+" "+getString(R.string.VeryHard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -623,7 +630,7 @@ public class ProfileActivity extends AppCompatActivity {
             graphView.addSeries(pseries3);
             graphView.addSeries(pseries4);
 
-            graphView.setTitle(gameName+" "+getString(R.string.avgTime));
+            graphView.setTitle(gameDisplayName+" "+getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
 //            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));

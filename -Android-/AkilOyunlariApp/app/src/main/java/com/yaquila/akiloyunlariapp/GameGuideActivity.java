@@ -59,7 +59,7 @@ import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.rowColumn;
 @SuppressWarnings({"deprecation", "SuspiciousNameCombination", "MismatchedQueryAndUpdateOfCollection"})
 public class GameGuideActivity extends AppCompatActivity {
 
-    String gameName = "Hazine Avı";
+    String gameName;
     String type = "single";
     int inNum = 0;
     int counterIn5 = 0;
@@ -137,7 +137,7 @@ public class GameGuideActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void instructionChange(View view) throws NoSuchFieldException, IllegalAccessException {
-        if(gameName.contains("Hazine")) {
+        if(gameName.contains(getString(R.string.HazineAvı))) {
             List<String> tapBoxes = new ArrayList<>();
             List<String> relatedClues = new ArrayList<>();
             List<String> relatedBoxes = new ArrayList<>();
@@ -551,7 +551,7 @@ public class GameGuideActivity extends AppCompatActivity {
     }
 
     public void setInStrings() {
-        if (gameName.contains("Hazine")) {
+        if (gameName.contains(getString(R.string.HazineAvı))) {
             inStrings.add("Hazine Avı öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen kutulara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
             inStrings.add("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir.");
             inStrings.add("Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır.");
@@ -609,7 +609,7 @@ public class GameGuideActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     public void createGridAndPlace(Object grid) {
-        if (gameName.contains("Hazine")) {
+        if (gameName.contains(getString(R.string.HazineAvı))) {
             List<ArrayList<Integer>> lGrid = (List<ArrayList<Integer>>) grid;
             for (int i = 0; i < 5; i++) {
                 for (int j = 0; j < 5; j++) {
@@ -931,11 +931,11 @@ public class GameGuideActivity extends AppCompatActivity {
 
         utilsMap = new HashMap<>();
         utilsMap.put("Sudoku", SudokuUtils.class);
-        utilsMap.put("Hazine Avı", HazineAviUtils.class);
-        utilsMap.put("Patika", PatikaUtils.class);
-        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
-        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
-        utilsMap.put("Piramit", PiramitUtils.class);
+        utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
+        utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
+        utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);
+        utilsMap.put(getString(R.string.SözcükTuru), SozcukTuruUtils.class);
+        utilsMap.put(getString(R.string.Piramit), PiramitUtils.class);
 
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
@@ -948,7 +948,7 @@ public class GameGuideActivity extends AppCompatActivity {
         }
 
         assert gameName != null;
-        if(gameName.contains("Hazine")) {
+        if(gameName.contains(getString(R.string.HazineAvı))) {
             setContentView(R.layout.activity_game_guide_hazineavi);
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);

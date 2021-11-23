@@ -36,12 +36,12 @@ public class HowToPlayActivity extends AppCompatActivity {
     public void goToGuide(View view) {
         Intent intent = new Intent(this, GameGuideActivity.class);
         intent.putExtra("type",type);
-        if (currentGameName.contains("azine")) {
-            intent.putExtra("gameName", "Hazine Avı");
+        if (currentGameName.contains(getString(R.string.HazineAvı))) {
+            intent.putExtra("gameName", getString(R.string.HazineAvı));
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-        } else if (currentGameName.contains("atika")){
-            intent.putExtra("gameName", "Patika");
+        } else if (currentGameName.contains(getString(R.string.Patika))){
+            intent.putExtra("gameName", getString(R.string.Patika));
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
 //        } else if (currentGameName.contains("ulmaca")){
@@ -77,11 +77,22 @@ public class HowToPlayActivity extends AppCompatActivity {
         TextView gameNameTV = findViewById(R.id.gameNameTV_htp);
         gameNameTV.setText((CharSequence) tv.getTag());
         //TODO change content of the how to play text
-        if(tv.getTag().equals("Hazine Avı"))
-            ((TextView)findViewById(R.id.howToPlay_text)).setText("Hazine Avı oyununda, verilen sayılar komşularında kaç elmas bulunduğunu gösterir. Çözerken ilk bakılması gereken şey, içinde yazan sayı kadar komşusu olan ipuçlarıdır. İçinde yazan sayı kadar komşusu olan ipuçları, her soruda bulunmayabilir veya çözüme ulaşmada yetersiz kalabilir. Bu durumlarda bakılması gereken şey, ipuçlarının komşularına koyulacak elmasların diğer ipuçlarındaki ortak etkileridir.");
-        else {
-            ((TextView)findViewById(R.id.howToPlay_text)).setText("Yakında...");
+        if ("Sudoku".equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
+        } else if (getString(R.string.HazineAvı).equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_hazineavi);
+        } else if (getString(R.string.Patika).equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_patika);
+        } else if (getString(R.string.SayıBulmaca).equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sayibulmaca);
+        } else if (getString(R.string.SözcükTuru).equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sozcukturu);
+        } else if (getString(R.string.Piramit).equals(tv.getTag())) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_piramit);
+        } else {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.Comingsoon);
         }
+
         LinearLayout howToPlayGameListLL = (LinearLayout) tv.getParent();
         Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
         tv.setTypeface(mohave_bold);
@@ -119,28 +130,20 @@ public class HowToPlayActivity extends AppCompatActivity {
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
         ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
 
-        switch (currentGameName) {
-            case "Sudoku":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
-                break;
-            case "Hazine Avı":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_hazineavi);
-                break;
-            case "Patika":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_patika);
-                break;
-            case "Sayı Bulmaca":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sayibulmaca);
-                break;
-            case "Sözcük Türü":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sozcukturu);
-                break;
-            case "Piramit":
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_piramit);
-                break;
-            default:
-                ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.Comingsoon);
-                break;
+        if ("Sudoku".equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
+        } else if (getString(R.string.HazineAvı).equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_hazineavi);
+        } else if (getString(R.string.Patika).equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_patika);
+        } else if (getString(R.string.SayıBulmaca).equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sayibulmaca);
+        } else if (getString(R.string.SözcükTuru).equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sozcukturu);
+        } else if (getString(R.string.Piramit).equals(currentGameName)) {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_piramit);
+        } else {
+            ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.Comingsoon);
         }
     }
 

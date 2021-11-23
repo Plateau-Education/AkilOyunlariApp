@@ -461,7 +461,7 @@ def main(size, tkinterOn=False):
 
 
 # start = timeit.default_timer()
-# cozulmus = main(5)
+cozulmus = main(5)
 # print(np.matrix(cozulmus))
 # end = timeit.default_timer()
 # print(f"{end-start}seconds")

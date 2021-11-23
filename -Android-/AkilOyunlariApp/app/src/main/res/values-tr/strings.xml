@@ -95,5 +95,10 @@
     <string name="htp_piramit">Piramit oyununda, kutulardaki rakamlar altlarındaki 2 kutudaki rakamların toplamı veya farkı olmalıdır. Ayrıca bir satırda aynı rakam birden fazla bulunamaz ve yan yana olan kutularda ardışık sayılar bulunamaz. Bu kurallara uyularak tüm boş kutular doldurulmalıdır.</string>
     <string name="WaitingForScores">Skorlar bekleniyor...</string>
     <string name="feature_not_active">Bu özellik aktif değil.</string>
+    <string name="HazineAvı">Hazine Avı</string>
+    <string name="Patika">Patika</string>
+    <string name="SayıBulmaca">Sayı Bulmaca</string>
+    <string name="SözcükTuru">Sözcük Turu</string>
+    <string name="Piramit">Piramit</string>
 
 </resources>

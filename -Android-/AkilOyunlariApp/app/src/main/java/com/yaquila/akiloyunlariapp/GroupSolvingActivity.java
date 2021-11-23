@@ -446,11 +446,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
                 "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
-                "Hazine Avı "+getString(R.string.Easy), "Hazine Avı "+getString(R.string.Medium), "Hazine Avı "+getString(R.string.Hard),
-                "Patika "+getString(R.string.Easy), "Patika "+getString(R.string.Medium), "Patika "+getString(R.string.Hard),
-                "Sayı Bulmaca "+getString(R.string.Easy), "Sayı Bulmaca "+getString(R.string.Medium), "Sayı Bulmaca "+getString(R.string.Hard),
-                "Sözcük Turu "+getString(R.string.Easy), "Sözcük Turu "+getString(R.string.Medium), "Sözcük Turu "+getString(R.string.Hard), "Sözcük Turu "+getString(R.string.VeryHard),
-                "Piramit "+getString(R.string.Easy), "Piramit "+getString(R.string.Medium), "Piramit "+getString(R.string.Hard), "Piramit "+getString(R.string.VeryHard)));
+                getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
+                getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
+                getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),
+                getString(R.string.SözcükTuru)+" "+getString(R.string.Easy), getString(R.string.SözcükTuru)+" "+getString(R.string.Medium), getString(R.string.SözcükTuru)+" "+getString(R.string.Hard), getString(R.string.SözcükTuru)+" "+getString(R.string.VeryHard),
+                getString(R.string.Piramit)+" "+getString(R.string.Easy), getString(R.string.Piramit)+" "+getString(R.string.Medium), getString(R.string.Piramit)+" "+getString(R.string.Hard), getString(R.string.Piramit)+" "+getString(R.string.VeryHard)));
         List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
@@ -546,7 +546,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
             gameSpinner = ntLayout.findViewById(R.id.gameSpinner);
             diffSpinner = ntLayout.findViewById(R.id.diffSpinner);
-            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", "Hazine Avı", "Patika", "Sayı Bulmaca", "Sözcük Turu", "Piramit")));
+            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit))));
             gameSpinner.setAdapter(gameAdapter);
             final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                     new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -586,8 +586,14 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         difficulty = (String) diffSpinner.getSelectedItem();
         ((TextView)findViewById(R.id.diffTV_game)).setText(difficulty);
         LayoutInflater inflater = getLayoutInflater();
-        gridGL = (GridLayout) inflater.inflate(this.getResources().getIdentifier(gameName.toLowerCase().replace(" ","").
-                replace("ı","i").replace("ö","o").replace("ü","u")
+
+        List<String> gns = new ArrayList<>(Arrays.asList("Sudoku", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
+        List<String> lns = new ArrayList<>(Arrays.asList("sudoku", "hazineavi", "patika", "sayibulmaca", "sozcukturu", "piramit"));
+        Map<String,String> glmap = new HashMap<>();
+        for(int i = 0; i<gns.size(); i++)
+            glmap.put(gns.get(i),lns.get(i));
+
+        gridGL = (GridLayout) inflater.inflate(this.getResources().getIdentifier(glmap.get(gameName)
                 +gridSize+"_grid", "layout", this.getPackageName()),null);
         RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
         gridRL.addView(gridGL);

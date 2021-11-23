@@ -9,6 +9,13 @@ class HazineAvi:
         self.boyut = 8
         self.grid = []
         self.solutions = []
+        self.steps = [
+            # [0, 0, 0, 0, 0],
+            # [0, 0, 0, 0, 0],
+            # [0, 0, 0, 0, 0],
+            # [0, 0, 0, 0, 0],
+            # [0, 0, 0, 0, 0],
+        ]
 
     def orta_nokta(self, row, column, genislik):
         ortanokta_x = (row + 1 / 2) * genislik + 10
@@ -157,9 +164,11 @@ class HazineAvi:
                     elif (n - count1) == 0:
                         for y2, x2 in list0:
                             grid[y2][x2] = -2
+                            self.steps.append(copy.deepcopy(grid))
                     elif (n - count1) == count0:
                         for y3, x3 in list0:
                             grid[y3][x3] = -1
+                            self.steps.append(copy.deepcopy(grid))
                     elif (n - count1) < count0:
                         pass
 
@@ -177,6 +186,7 @@ class HazineAvi:
                                 continue
                             y4, x4, n4 = pc
                             grid[y4][x4] = n4
+                            self.steps.append(copy.deepcopy(grid))
 
     def isFullCheck(self, grid):
         return all(
@@ -221,8 +231,10 @@ class HazineAvi:
         columns = [random.randint(0, self.boyut - 1) for i in range(self.elmas_sayisi)]
         zipped = zip(rows, columns)
         grid = np.zeros((self.boyut, self.boyut), dtype=int)
+        self.steps.append(grid.tolist())
         for row, column in zipped:
             grid[row][column] = -1
+            self.steps.append(grid.tolist())
         return grid
 
     def sayi_belirleme(self, grid):
@@ -232,7 +244,7 @@ class HazineAvi:
                 if grid[r][c] == 0:
                     count0 += 1
                     grid[r][c] = self.count01(r, c, grid)[1]
-
+                    self.steps.append(grid.tolist())
         return grid
 
     def sayi_adedi(self, grid):
@@ -246,6 +258,7 @@ class HazineAvi:
         )
 
     def sayi_azaltma2(self):
+        self.steps = []
         if self.boyut == 5:
             cozulmus = self.sayi_belirleme(
                 self.elmas_yerlestirme(6, 13, np.zeros((self.boyut, self.boyut)))
@@ -284,6 +297,7 @@ class HazineAvi:
             rndIndex = random.choice(cells)
             cells.remove(rndIndex)
             grid[rndIndex[0]][rndIndex[1]] = 0
+            self.steps.append(grid)
             self.solutions = []
             if self.solver2(copy.deepcopy(grid)) == "Wrong Question":
                 if tur >= self.sayi_adedi(
@@ -345,7 +359,7 @@ class HazineAvi:
                 break
             except:
                 pass
-        return cozulmus
+        return cozulmus, self.steps
 
 
 def main(size, count):
@@ -363,3 +377,19 @@ def main(size, count):
             datacontrol.discard(str(i))
             database.append(i)
     return database
+
+
+def ques_anim():
+
+    soru = HazineAvi()
+    soru.boyut = 5
+    a, steps = soru.class_main()
+
+    # print(steps)
+    print(len(steps))
+    steps = "\n".join([str([list(i) for i in s]) for s in steps])
+    with open("stepsStr.txt", "w") as f:
+        f.write(steps)
+
+
+ques_anim()

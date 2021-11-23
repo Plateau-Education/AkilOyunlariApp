@@ -38,22 +38,22 @@ public class DifficultyActivity extends AppCompatActivity {
         tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
         tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
         Intent intent = null;
-        if (gameName.matches("Sayı Bulmaca")) {
+        if (gameName.matches(getString(R.string.SayıBulmaca))) {
             intent = new Intent(getApplicationContext(), GameActivitySayiBulmaca.class);
         }
-        else if (gameName.matches("Piramit")){
+        else if (gameName.matches(getString(R.string.Piramit))){
             intent = new Intent(getApplicationContext(), GameActivityPiramit.class);
         }
         else if (gameName.contains("Sudoku")){
             intent = new Intent(getApplicationContext(), GameActivitySudoku.class);
         }
-        else if (gameName.matches("Hazine Avı")){
+        else if (gameName.matches(getString(R.string.HazineAvı))){
             intent = new Intent(getApplicationContext(), GameActivityHazineAvi.class);
         }
-        else if (gameName.matches("Patika")){
+        else if (gameName.matches(getString(R.string.Patika))){
             intent = new Intent(getApplicationContext(), GameActivityPatika.class);
         }
-        else if (gameName.matches("Sözcük Türü")){
+        else if (gameName.matches(getString(R.string.SözcükTuru))){
             intent = new Intent(getApplicationContext(), GameActivitySozcukTuru.class);
         }
         else if (gameName.matches("Pentomino")){
@@ -84,7 +84,7 @@ public class DifficultyActivity extends AppCompatActivity {
     public void arrangeDifficulties(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        if (Arrays.asList(new String[]{"Sözcük Türü", "Piramit"}).contains(gameName)){
+        if (Arrays.asList(new String[]{getString(R.string.SözcükTuru), getString(R.string.Piramit)}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
             String[] diffs = {"Easy","Medium","Hard","VeryHard"};
             for (int i = 0; i < 4; i++){
@@ -93,13 +93,13 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setText(diffIds[i]);
                 currentRL.setVisibility(View.VISIBLE);
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
-                if(gameName.equals("Sözcük Türü"))
+                if(gameName.equals(getString(R.string.SözcükTuru)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSozcukTuru."+diffs[i], "0")))));
                 else
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
             }
         }
-        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", "Patika", "Hazine Avı", "Sayı Bulmaca"}).contains(gameName)){
+        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", getString(R.string.Patika), getString(R.string.HazineAvı), getString(R.string.SayıBulmaca)}).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             String[] diffs = {"Easy","Medium","Hard"};
             for (int i = 0; i < 3; i++){
@@ -108,11 +108,11 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setText(diffIds[i]);
                 if(gameName.contains("Sudoku"))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSudoku."+gameName.charAt(gameName.length()-1)+"."+diffs[i], "0")))));
-                else if(gameName.equals("Patika"))
+                else if(gameName.equals(getString(R.string.Patika)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPatika."+diffs[i], "0")))));
-                else if(gameName.equals("Hazine Avı"))
+                else if(gameName.equals(getString(R.string.HazineAvı)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestHazineAvi."+diffs[i], "0")))));
-                else if(gameName.equals("Sayı Bulmaca"))
+                else if(gameName.equals(getString(R.string.SayıBulmaca)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSayiBulmaca."+diffs[i], "0")))));
 
             }
@@ -121,7 +121,7 @@ public class DifficultyActivity extends AppCompatActivity {
         else{
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             for (int i = 0; i < 3; i++){
-                ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i));
+                ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i+1));
                 TextView currentTV = (TextView) currentRL.getChildAt(1);
                 currentTV.setText(diffIds[i]);
             }

@@ -214,31 +214,31 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         //tab2
         spec = tabHost.newTabSpec("tab2");
         spec.setContent(R.id.tab2);
-        spec.setIndicator("Hazine Avı");
+        spec.setIndicator(getString(R.string.HazineAvı));
         tabHost.addTab(spec);
 
         //tab3
         spec = tabHost.newTabSpec("tab3");
         spec.setContent(R.id.tab3);
-        spec.setIndicator("Patika");
+        spec.setIndicator(getString(R.string.Patika));
         tabHost.addTab(spec);
 
         //tab4
         spec = tabHost.newTabSpec("tab4");
         spec.setContent(R.id.tab4);
-        spec.setIndicator("Sayı Bulmaca");
+        spec.setIndicator(getString(R.string.SayıBulmaca));
         tabHost.addTab(spec);
 
         //tab5
         spec = tabHost.newTabSpec("tab5");
         spec.setContent(R.id.tab5);
-        spec.setIndicator("Sözcük Türü");
+        spec.setIndicator(getString(R.string.SözcükTuru));
         tabHost.addTab(spec);
 
         //tab6
         spec = tabHost.newTabSpec("tab6");
         spec.setContent(R.id.tab6);
-        spec.setIndicator("Piramit");
+        spec.setIndicator(getString(R.string.Piramit));
         tabHost.addTab(spec);
 
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {

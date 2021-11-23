@@ -61,7 +61,7 @@ public class TournamentActivity extends AppCompatActivity {
     String code = "0";
     String userType = "participant";
     String organizatorName;
-    String currentGameName = "Hazine Avı";
+    String currentGameName;
     int currentQ = 0;
     int totalNumberOfQs = 0;
     int currentTotalScore = 0;
@@ -89,11 +89,11 @@ public class TournamentActivity extends AppCompatActivity {
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
                 "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
-                "Hazine Avı "+getString(R.string.Easy), "Hazine Avı "+getString(R.string.Medium), "Hazine Avı "+getString(R.string.Hard),
-                "Patika "+getString(R.string.Easy), "Patika "+getString(R.string.Medium), "Patika "+getString(R.string.Hard),
-                "Sayı Bulmaca "+getString(R.string.Easy), "Sayı Bulmaca "+getString(R.string.Medium), "Sayı Bulmaca "+getString(R.string.Hard),
-                "Sözcük Turu "+getString(R.string.Easy), "Sözcük Turu "+getString(R.string.Medium), "Sözcük Turu "+getString(R.string.Hard), "Sözcük Turu "+getString(R.string.VeryHard),
-                "Piramit "+getString(R.string.Easy), "Piramit "+getString(R.string.Medium), "Piramit "+getString(R.string.Hard), "Piramit "+getString(R.string.VeryHard)));
+                getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
+                getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
+                getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),
+                getString(R.string.SözcükTuru)+" "+getString(R.string.Easy), getString(R.string.SözcükTuru)+" "+getString(R.string.Medium), getString(R.string.SözcükTuru)+" "+getString(R.string.Hard), getString(R.string.SözcükTuru)+" "+getString(R.string.VeryHard),
+                getString(R.string.Piramit)+" "+getString(R.string.Easy), getString(R.string.Piramit)+" "+getString(R.string.Medium), getString(R.string.Piramit)+" "+getString(R.string.Hard), getString(R.string.Piramit)+" "+getString(R.string.VeryHard)));
         List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
                 "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
@@ -379,7 +379,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Hazine Avı")));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.HazineAvı))));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -422,7 +422,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Hazine Avı")));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.HazineAvı))));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -820,11 +820,11 @@ public class TournamentActivity extends AppCompatActivity {
 
         utilsMap = new HashMap<>();
         utilsMap.put("Sudoku", SudokuUtils.class);
-        utilsMap.put("Hazine Avı", HazineAviUtils.class);
-        utilsMap.put("Patika", PatikaUtils.class);
-        utilsMap.put("Sayı Bulmaca", SayiBulmacaUtils.class);
-        utilsMap.put("Sözcük Turu", SozcukTuruUtils.class);
-        utilsMap.put("Piramit", PiramitUtils.class);
+        utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
+        utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
+        utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);
+        utilsMap.put(getString(R.string.SözcükTuru), SozcukTuruUtils.class);
+        utilsMap.put(getString(R.string.Piramit), PiramitUtils.class);
 
         findViewById(R.id.waitingDialogCL).setVisibility(GONE);
         findViewById(R.id.createOrJoinLL).setVisibility(GONE);
