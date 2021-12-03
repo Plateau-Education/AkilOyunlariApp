@@ -2,6 +2,7 @@
     android:width="90dp"
     android:height="90dp"
     android:viewportWidth="92"
+    android:name="ic_diamond"
     android:viewportHeight="92">
   <path
       android:strokeWidth="1.85"

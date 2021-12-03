@@ -119,5 +119,9 @@
     <string name="hazineAvi_instrings17">Yeşille işaretlenen 1 ipucusunun tek komşusu kalmıştır. Bu komşuya da elmas gelmelidir.</string>
     <string name="hazineAvi_instrings18">Yeşille işaretlenen 3 ipucusunun bir komşusunda elmas vardır. Geriye kalan 2 komşusuna da elmas gelmelidir.</string>
     <string name="hazineAvi_instrings19">Bu öğreticinin sonuna geldiniz.🏁 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.</string>
+    <string name="ChooseStudent">Öğrenci Seçiniz</string>
+    <string name="ChooseGame">Tür Seçiniz :</string>
+    <string name="ChooseDifficulty">Zorluk Seçiniz :</string>
+    <string name="EnterNumberOfPuzzles">Soru sayısı giriniz :</string>
 
 </resources>

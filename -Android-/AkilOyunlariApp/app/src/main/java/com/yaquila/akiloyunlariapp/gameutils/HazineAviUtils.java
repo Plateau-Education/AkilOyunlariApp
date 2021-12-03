@@ -32,6 +32,7 @@ public class HazineAviUtils {
     public static List<List<String>> operations = new ArrayList<>();
     public static List<String> clueIndexes = new ArrayList<>();
     public static List<String> answer = new ArrayList<>();
+    public static String[][] gridDCs = new String[10][10];
 
     public static void initVars(AppCompatActivity ctx){
         clickedBox = "-1";
@@ -47,22 +48,28 @@ public class HazineAviUtils {
     public static void changeClicked(final View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
+        int i1 = Integer.parseInt(String.valueOf(answerIndex.charAt(0)));
+        int i2 = Integer.parseInt(String.valueOf(answerIndex.charAt(1)));
         if (!clueIndexes.contains(answerIndex)) {
             String op = null;
             if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
+                if (gridDCs[i1][i2].equals("-1")) {
                     box.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[i1][i2] = "0";
                     op = "0";
                 } else {
                     box.setBackground(context.getResources().getDrawable(R.drawable.ic_diamond));
+                    gridDCs[i1][i2] = "-1";
                     op = "-1";
                 }
             } else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
+                if (gridDCs[i1][i2].equals("-2")) {
                     box.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[i1][i2] = "0";
                     op = "0";
                 } else {
                     box.setBackground(context.getResources().getDrawable(R.drawable.ic_cross));
+                    gridDCs[i1][i2] = "-2";
                     op = "-2";
                 }
             }
@@ -108,14 +115,19 @@ public class HazineAviUtils {
             Log.i("co/num",co1+" / "+num2);
             GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
             TextView currentBox = gridLayout.findViewWithTag(co1);
+            final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
+            final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
             if(num2.equals("-1")){
                 currentBox.setBackground(context.getResources().getDrawable(R.drawable.ic_diamond));
+                gridDCs[i1][i2] = "-1";
             }
             else if(num2.equals("-2")){
                 currentBox.setBackground(context.getResources().getDrawable(R.drawable.ic_cross));
+                gridDCs[i1][i2] = "-2";
             }
             else{
                 currentBox.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                gridDCs[i1][i2] = "0";
             }
         }
         return new Object[]{co1, num2};
@@ -144,6 +156,7 @@ public class HazineAviUtils {
                 for (int j = 0; j < gridSize; j++) {
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                     tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[j][i] = "0";
                     if(!clueIndexes.contains(Integer.toString(j)+i)){
                         tv.setText("");
                     }
@@ -162,11 +175,11 @@ public class HazineAviUtils {
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){
                 String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                if(answer.contains(co) && !gridDCs[j][i].equals("-1")){
                     checking=false;
                     break;
                 }
-                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                else if(!answer.contains(co) && gridDCs[j][i].equals("-1")){
                     checking=false;
                     break;
                 }
@@ -201,6 +214,7 @@ public class HazineAviUtils {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                 tv.setText("");
                 tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
+                gridDCs[j][i] = "0";
                 tv.setEnabled(true);
             }
         }

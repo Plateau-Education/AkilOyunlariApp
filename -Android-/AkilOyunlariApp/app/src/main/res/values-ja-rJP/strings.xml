@@ -119,4 +119,8 @@
     <string name="hazineAvi_instrings3">The first thing to look for when solving is the clues that have as many neighbors as the number written in them.</string>
     <string name="hazineAvi_instrings2">"In Mine Sweeper, number clues show how many of their neighbours have diamonds. "</string>
     <string name="hazineAvi_instrings1">Welcome to Mine Sweeper Tutorial. You can take part in the solbving process by tapping the blinking boxes throughout the tutorial.</string>
+    <string name="EnterNumberOfPuzzles">パズルの数を入力 ：</string>
+    <string name="ChooseStudent">学生を選ぶ</string>
+    <string name="ChooseGame">ゲームを選ぶ ：</string>
+    <string name="ChooseDifficulty">難易度を選ぶ ：</string>
 </resources>

@@ -293,6 +293,7 @@ public class MyClassActivity extends AppCompatActivity {
             nameSpinner = ntLayout.findViewById(R.id.nameSpinner);
             gameSpinner = ntLayout.findViewById(R.id.gameSpinner);
             diffSpinner = ntLayout.findViewById(R.id.diffSpinner);
+            if(studentNames.get(0).equals(getString(R.string.Everyone))) studentNames.remove(0);
             studentNames.add(0, getString(R.string.Everyone));
             ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, studentNames);
             nameSpinner.setAdapter(nameAdapter);

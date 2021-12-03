@@ -118,4 +118,8 @@
     <string name="hazineAvi_instrings17">The clue marked in green with a 1 in it has only one neighbor left. This neighbor should also receive a diamond.</string>
     <string name="hazineAvi_instrings18">The clue marked in green with a 3 in it has a diamond in one of its neighbors. The remaining 2 neighbors should also receive diamonds.</string>
     <string name="hazineAvi_instrings19">You have come to the end of this tutorial.🏁 You can exit with the help of the back button at the top left or return to the previous steps with the arrow keys.</string>
+    <string name="ChooseStudent">Choose A Student</string>
+    <string name="ChooseGame">Choose A Game :</string>
+    <string name="ChooseDifficulty">Choose A Difficulty :</string>
+    <string name="EnterNumberOfPuzzles">Enter Number Of Puzzles :</string>
 </resources>

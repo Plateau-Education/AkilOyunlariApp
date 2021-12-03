@@ -1,11 +1,10 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.NonNull;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,11 +17,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -30,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
@@ -41,8 +39,6 @@ import com.yaquila.akiloyunlariapp.model.ConstantApp;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,6 +84,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     List<String> clueIndexes = new ArrayList<>();
     List<String> answer = new ArrayList<>();
     List<String> newTaskProperties = new ArrayList<>();
+    String[][] gridDCs = new String[10][10];
     Map<String,Boolean> participantMap = new HashMap<>();
     LoadingDialog loadingDialog;
     GridLayout gridGL;
@@ -158,29 +155,36 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void changeClicked(View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
+        int i1 = Integer.parseInt(String.valueOf(answerIndex.charAt(0)));
+        int i2 = Integer.parseInt(String.valueOf(answerIndex.charAt(1)));
         if(!clueIndexes.contains(answerIndex) && (isPermitted || type.contains("nstructor"))) {
             String op = null;
             if (switchPosition.equals("diamond")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())) {
+                if (gridDCs[i1][i2].equals("-1")) {
                     box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[i1][i2] = "0";
                     op = "0";
                 } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                    Drawable diamond = getResources().getDrawable(R.drawable.ic_diamond);
+                    box.setBackground(diamond);
+                    gridDCs[i1][i2] = "-1";
                     op = "-1";
                 }
             }
             else if (switchPosition.equals("cross")) {
-                if (Objects.equals(box.getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_cross).getConstantState())) {
+                if (gridDCs[i1][i2].equals("-2")) {
                     box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[i1][i2] = "0";
                     op = "0";
                 } else {
                     box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                    gridDCs[i1][i2] = "-2";
                     op = "-2";
                 }
             }
             clickedBox = answerIndex;
             assert op != null;
-            currentGrid.get(Integer.parseInt(String.valueOf(answerIndex.charAt(1)))).set(Integer.parseInt(String.valueOf(answerIndex.charAt(0))),Integer.parseInt(op));
+            currentGrid.get(i2).set(i1,Integer.parseInt(op));
             sendGrid(currentGrid);
             Log.i("currentGrid",currentGrid.toString());
             List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
@@ -222,17 +226,22 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             Log.i("co/num",co1+" / "+num2);
             GridLayout gridLayout = gridGL;
             TextView currentBox = gridLayout.findViewWithTag(co1);
-            currentGrid.get(Integer.parseInt(String.valueOf(co1.charAt(1)))).set(Integer.parseInt(String.valueOf(co1.charAt(0))),Integer.parseInt(num2));
+            final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
+            final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
+            currentGrid.get(i1).set(i2,Integer.parseInt(num2));
             sendGrid(currentGrid);
 
             if(num2.equals("-1")){
                 currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                gridDCs[i1][i2] = "-1";
             }
             else if(num2.equals("-2")){
                 currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                gridDCs[i1][i2] = "-2";
             }
             else{
                 currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                gridDCs[i1][i2] = "0";
             }
         }
     } // Son işlemi geri al
@@ -260,6 +269,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     for (int j = 0; j < gridSize; j++) {
                         TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                         tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                        gridDCs[j][i] = "-1";
                         if (!clueIndexes.contains(Integer.toString(j) + i)) {
                             tv.setText("");
                         }
@@ -287,11 +297,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){
                 String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                if(answer.contains(co) && !gridDCs[j][i].equals("-1")){
                     checking=false;
                     break;
                 }
-                else if(!answer.contains(co) && Objects.equals(gridLayout.findViewWithTag(co).getBackground().getConstantState(), getResources().getDrawable(R.drawable.ic_diamond).getConstantState())){
+                else if(!answer.contains(co) && gridDCs[j][i].equals("-1")){
                     checking=false;
                     break;
                 }
@@ -395,11 +405,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     currentGrid.get(i).set(j,Integer.parseInt(n));
                     if(!fromStudent || !type.contains("nstructor")) clueIndexes.add(Integer.toString(j)+i);
                     ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
+                    gridDCs[j][i] = n;
                 }
                 else if(n.equals("-1")){
                     if(!type.contains("nstructor") || fromStudent) {
                         currentGrid.get(i).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                        gridDCs[j][i] = "-1";
                     }
                     if(!fromStudent) // || !type.contains("nstructor"))
                         answer.add(Integer.toString(j)+i);
@@ -407,10 +419,12 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                    gridDCs[j][i] = "-2";
                 }
                 else if(n.equals("0") && (!type.contains("nstructor") || fromStudent)){
                     currentGrid.get(i).set(j, Integer.parseInt(n));
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                    gridDCs[j][i] = "0";
                 }
             }
         }
@@ -495,6 +509,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                 tv.setText("");
                 tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                gridDCs[j][i] = "0";
                 tv.setEnabled(true);
                 row.add(0);
             }
