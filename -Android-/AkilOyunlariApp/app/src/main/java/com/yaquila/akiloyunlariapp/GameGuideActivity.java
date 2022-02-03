@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.gridDCs;
 import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.switchPosition;
 import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.bitmap;
 import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.blackList;
@@ -617,13 +618,17 @@ public class GameGuideActivity extends AppCompatActivity {
                     if (Integer.parseInt(n) > 0) {
                         ((TextView) gl.findViewWithTag(Integer.toString(j) + i)).setText(n);
                         gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                        gridDCs[j][i] = n;
                     } else if (Integer.parseInt(n) == 0) {
                         gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    } else if (Integer.parseInt(n) == -1)
+                        gridDCs[j][i] = "0";
+                    } else if (Integer.parseInt(n) == -1) {
                         gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                    else
+                        gridDCs[j][i] = "-1";
+                    } else {
                         gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
-
+                        gridDCs[j][i] = "-2";
+                    }
                     gl.findViewWithTag(Integer.toString(j) + i).clearAnimation();
                 }
             }
