@@ -13,9 +13,9 @@
     <application
         android:name=".AGApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/mindpuzzles_icon_3xxhdpi"
+        android:icon="@mipmap/mind_puzzles_icon_3xxhdpi"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/mindpuzzles_icon_3xxhdpi"
+        android:roundIcon="@mipmap/mind_puzzles_icon_3xxhdpi"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".TournamentActivity" />

@@ -44,10 +44,10 @@ public class HowToPlayActivity extends AppCompatActivity {
             intent.putExtra("gameName", getString(R.string.Patika));
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
-//        } else if (currentGameName.contains("ulmaca")){
-//            intent.putExtra("gameName", "Sayı Bulmaca");
-//            startActivity(intent);
-//            overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (currentGameName.contains(getString(R.string.SayıBulmaca))){
+            intent.putExtra("gameName", "Sayı Bulmaca");
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
             Toast.makeText(this, getString(R.string.feature_not_active), Toast.LENGTH_SHORT).show();
             Log.i("goToGuide","guide not active");

@@ -544,6 +544,11 @@ public class GameGuideActivity extends AppCompatActivity {
                 relatedClues = new ArrayList<>(Collections.singletonList("g1"));
             }
 
+            if (inNum == 5) {
+                relatedClues = new ArrayList<>(Arrays.asList("g0","g2"));
+                tapBoxes = new ArrayList<>(Collections.singletonList("01"));
+            }
+
             for (String index : relatedClues)
                 gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
             for (String index : relatedBoxes)
@@ -590,6 +595,9 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Sayı Bulmaca oyununda sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir.");
             inStrings.add("Yanında '+' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını, Yanında '-' işareti olanlar ise farklı sütunda olduğunu gösterir.");
             inStrings.add("Örneğin işaretli ipucunun olduğu satırda 2 adet sayı cevapta var ve yeri doğruyken 1 adet sayının yeri farklıdır.");
+            inStrings.add("Sayı Bulmaca çözerken ilk dikkat edilmesi gereken ipuçları, + olan ipuçlarıdır. '+' bulunan iki farklı satırda bir sayı farklı yerlerde bulunuyorsa o sayı elenebilir.");
+            inStrings.add("Örneğin işaretli ipuçlarının olduğu satırlarda 0 rakamı ortaktır ve iki ipucunda da yalnızca '+' bulunmaktadır. 0 rakamı farklı yerlerde bulunduğu için ve iki yerde aynı anda bulunamayacağı için elenir.");
+
 //            inStrings.add("");
 //            inStrings.add("Benzer şekilde iki kenar komşusu kapalı diğer kutuların içine çizilmesi gereken köşeleri/kenarları çiziniz.");
 //            inStrings.add("2. çözüm tekniğinde; patikanın tek bir kapalı yol oluşması kuralına dayanarak, tüm kutuları kaplamayan küçük bir kapalı alan oluşması engellenir.");
@@ -954,7 +962,7 @@ public class GameGuideActivity extends AppCompatActivity {
 
         assert gameName != null;
         if(gameName.contains(getString(R.string.HazineAvı))) {
-            setContentView(R.layout.activity_game_guide_hazineavi);
+            setContentView(R.layout.activity_game_guide_hazine_avi);
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);
             setInStrings();
