@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.gridDCs;
 import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.switchPosition;
@@ -68,6 +69,7 @@ public class GameGuideActivity extends AppCompatActivity {
     boolean is_moving = false;
 
     List<String> inStrings = new ArrayList<>();
+    List<String> unrelatedBoxes = new ArrayList<>(Arrays.asList("00","01","02","03","10","11","12","13","20","21","22","23","30","31","32","33"));
     Map<String, Class<?>> utilsMap = new HashMap<>();
     TextView inTV;
     GridLayout gl;
@@ -136,7 +138,7 @@ public class GameGuideActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void instructionChange(View view) throws NoSuchFieldException, IllegalAccessException {
         if(gameName.contains(getString(R.string.HazineAvı))) {
             List<String> tapBoxes = new ArrayList<>();
@@ -366,7 +368,7 @@ public class GameGuideActivity extends AppCompatActivity {
                     gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
             }
         }
-        else if (gameName.contains("Patika")){
+        else if (gameName.equals(getString(R.string.Patika))){
             List<String> relatedClues = new ArrayList<>();
 
             if (view.getTag().equals("+")) {
@@ -499,13 +501,15 @@ public class GameGuideActivity extends AppCompatActivity {
                 gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
 
         }
-        else if (gameName.contains("Bulmaca")){
-            List<String> tapBoxes = new ArrayList<>();
+        else if (gameName.equals(getString(R.string.SayıBulmaca))){
+            List<String> greenTapBoxes = new ArrayList<>();
+            List<String> redTapBoxes = new ArrayList<>();
+            List<String> grBoxes = new ArrayList<>();
             List<String> relatedClues = new ArrayList<>();
-            List<String> relatedBoxes = new ArrayList<>();
-            List<ArrayList<Integer>> grid = new ArrayList<>();
             allowedBoxes = new ArrayList<>();
-
+            grBoxes = new ArrayList<>();
+            View.OnClickListener gocl = null;
+            final View.OnClickListener[] rocl = {null};
             if (view.getTag().equals("+")) {
                 if (inNum < inStrings.size() - 1){
                     inNum++;
@@ -546,13 +550,169 @@ public class GameGuideActivity extends AppCompatActivity {
 
             if (inNum == 5) {
                 relatedClues = new ArrayList<>(Arrays.asList("g0","g2"));
-                tapBoxes = new ArrayList<>(Collections.singletonList("01"));
+                redTapBoxes = new ArrayList<>(Arrays.asList("10", "32"));
+                grBoxes.addAll(Arrays.asList("10","32"));
+                final List<String> finalRedTapBoxes = redTapBoxes;
+                rocl[0] = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        for(String index : finalRedTapBoxes){
+                            gl.findViewWithTag(index).clearAnimation();
+                            allowedBoxes.clear();
+                        }
+                    }
+                };
+            }
+            if (inNum == 6){
+                relatedClues = new ArrayList<>(Arrays.asList("g0","g1","g2","g3"));
+                grBoxes.addAll(Arrays.asList("10","32"));
+                for(String index : grBoxes) gl.findViewWithTag(index).clearAnimation();
+            }
+            if (inNum == 7){
+                grBoxes.addAll(Arrays.asList("10","32"));
+                for(String index : grBoxes) gl.findViewWithTag(index).clearAnimation();
+            }
+            if (inNum == 8){
+//                relatedClues = new ArrayList<>(Arrays.asList("g0","g3"));
+                for (String index : Arrays.asList("00","20","33","21","13","03")) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03"));
+                for(String index : grBoxes) gl.findViewWithTag(index).clearAnimation();
+                greenTapBoxes = new ArrayList<>(Arrays.asList("30","31","23"));
+                final List<String> finalGreenTapBoxes = greenTapBoxes;
+                gocl = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        for(String index : finalGreenTapBoxes){
+                            gl.findViewWithTag(index).clearAnimation();
+                            gl.findViewWithTag(index).setOnClickListener(null);
+                        }
+                        allowedBoxes = new ArrayList<>(Arrays.asList("00","20","21","03","13","33"));
+                        rocl[0] = new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if ("00 13".contains((String)view.getTag())){
+                                    gl.findViewWithTag("00").clearAnimation();
+                                    allowedBoxes.remove("00");
+                                    gl.findViewWithTag("13").clearAnimation();
+                                    allowedBoxes.remove("13");
+                                } else if ("21 03".contains((String)view.getTag())){
+                                    gl.findViewWithTag("21").clearAnimation();
+                                    allowedBoxes.remove("21");
+                                    gl.findViewWithTag("03").clearAnimation();
+                                    allowedBoxes.remove("03");
+                                }
+                                else {
+                                    view.clearAnimation();
+                                    allowedBoxes.remove((String)view.getTag());
+                                }
+                            }
+                        };
+                        for (String index : Arrays.asList("00","20","21","03","13","33")) {
+                            gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                            animateView(gl.findViewWithTag(index), 0.5f, 1.0f);
+                            gl.findViewWithTag(index).setOnClickListener(rocl[0]);
+                        }
+                    }
+                };
+                ((TextView)gl.findViewWithTag("answer3")).setText("");
+            }
+            if (inNum==9){
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03"));
+                for(String index : grBoxes) {
+                    gl.findViewWithTag(index).clearAnimation();
+                    gl.findViewWithTag(index).setOnClickListener(null);
+                }
+                for (String index : Arrays.asList("10","32","00","20","33","21","13","03"))
+                    gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                for (String index : Arrays.asList("30","31","23"))
+                    gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
+                ((TextView)gl.findViewWithTag("answer2")).setText("");
+                ((TextView)gl.findViewWithTag("answer3")).setText("5");
+                allowedBoxes.clear();
+            }
+            if (inNum==10){
+                relatedClues = new ArrayList<>(Collections.singletonList("g1"));
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22"));
+                greenTapBoxes = new ArrayList<>(Arrays.asList("01","11","22"));
+                gocl = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if ("11 22".contains((String)view.getTag())){
+                            gl.findViewWithTag("11").clearAnimation();
+                            allowedBoxes.remove("11");
+                            gl.findViewWithTag("22").clearAnimation();
+                            allowedBoxes.remove("22");
+                        } else {
+                            view.clearAnimation();
+                            allowedBoxes.remove((String)view.getTag());
+                        }
+                    }
+                };
+            }
+            if (inNum==11){
+                relatedClues = new ArrayList<>(Collections.singletonList("g2"));
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22"));
+                ((TextView)gl.findViewWithTag("answer0")).setText("");
+                ((TextView)gl.findViewWithTag("answer2")).setText("9");
+                allowedBoxes.clear();
+            }
+            if (inNum==12){
+                relatedClues = new ArrayList<>(Collections.singletonList("g1"));
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22"));
+                ((TextView)gl.findViewWithTag("answer1")).setText("");
+                ((TextView)gl.findViewWithTag("answer0")).setText("2");
+                allowedBoxes.clear();
+            }
+            if (inNum==13){
+                relatedClues = new ArrayList<>(Collections.singletonList("g2"));
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22","12"));
+                greenTapBoxes = new ArrayList<>(Collections.singletonList("12"));
+                gocl = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view.clearAnimation();
+                        allowedBoxes.remove((String)view.getTag());
+                    }
+                };
+            }
+            if (inNum==14){
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22","12"));
+                ((TextView)gl.findViewWithTag("answer1")).setText("8");
+                allowedBoxes.clear();
+            }
+            if (inNum>14){
+                grBoxes.addAll(Arrays.asList("10","32","30","31","23","00","20","33","21","13","03","01","11","22","12"));
+                allowedBoxes.clear();
             }
 
-            for (String index : relatedClues)
+
+            List<String> unrelatedClues = new ArrayList<>(Arrays.asList("g0","g1","g2","g3"));
+            unrelatedBoxes = new ArrayList<>(Arrays.asList("00","01","02","03","10","11","12","13","20","21","22","23","30","31","32","33"));
+            for (String index : relatedClues) {
                 gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
-            for (String index : relatedBoxes)
-                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_shallow_light));
+                unrelatedClues.remove(index);
+            }
+            for (String index : unrelatedClues)
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.strokebg_shallow));
+            for (String index : redTapBoxes) {
+                allowedBoxes.add(index);
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_red));
+                animateView(gl.findViewWithTag(index), 0.5f, 1.0f);
+                gl.findViewWithTag(index).setOnClickListener(rocl[0]);
+                unrelatedBoxes.remove(index);
+            }
+            for(String index : greenTapBoxes) {
+                allowedBoxes.add(index);
+                gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg_bluegreen));
+                animateView(gl.findViewWithTag(index), 0.5f, 1.0f);
+                gl.findViewWithTag(index).setOnClickListener(gocl);
+                unrelatedBoxes.remove(index);
+            }
+            for (String index : unrelatedBoxes) {
+                if (!grBoxes.contains(index)) gl.findViewWithTag(index).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                gl.findViewWithTag(index).clearAnimation();
+            }
+
         }
     }
 
@@ -578,7 +738,7 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add(getString(R.string.hazineAvi_instrings18));
             inStrings.add(getString(R.string.hazineAvi_instrings19));
         }
-        else if (gameName.contains("Patika")){
+        else if (gameName.equals(getString(R.string.Patika))){
             inStrings.add("Patika öğretici uygulamasına hoşgeldiniz. Öğretici boyunca animasyonlarla gösterilen çizgilerin üzerinden geçerek kendiniz de çözüme dahil olabilirsiniz.");
             inStrings.add("Patika oyununda amaç tüm boş karelerden geçen, kendini kesmeyen tek bir kapalı yol oluşturmaktır.");
             inStrings.add("Bir patika sorusu çözerken temelde 2 teknik vardır: Köşe bulma ve kapalı alan oluşmamasına dikkat etme.");
@@ -590,19 +750,22 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
-        else if (gameName.contains("Bulmaca")){
+        else if (gameName.equals(getString(R.string.SayıBulmaca))){
             inStrings.add("Sayı Bulmaca öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
             inStrings.add("Sayı Bulmaca oyununda sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir.");
             inStrings.add("Yanında '+' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını, Yanında '-' işareti olanlar ise farklı sütunda olduğunu gösterir.");
             inStrings.add("Örneğin işaretli ipucunun olduğu satırda 2 adet sayı cevapta var ve yeri doğruyken 1 adet sayının yeri farklıdır.");
             inStrings.add("Sayı Bulmaca çözerken ilk dikkat edilmesi gereken ipuçları, + olan ipuçlarıdır. '+' bulunan iki farklı satırda bir sayı farklı yerlerde bulunuyorsa o sayı elenebilir.");
             inStrings.add("Örneğin işaretli ipuçlarının olduğu satırlarda 0 rakamı ortaktır ve iki ipucunda da yalnızca '+' bulunmaktadır. 0 rakamı farklı yerlerde bulunduğu için ve iki yerde aynı anda bulunamayacağı için elenir.");
-
-//            inStrings.add("");
-//            inStrings.add("Benzer şekilde iki kenar komşusu kapalı diğer kutuların içine çizilmesi gereken köşeleri/kenarları çiziniz.");
-//            inStrings.add("2. çözüm tekniğinde; patikanın tek bir kapalı yol oluşması kuralına dayanarak, tüm kutuları kaplamayan küçük bir kapalı alan oluşması engellenir.");
-//            inStrings.add("Örneğin kırmızıyla işaretlenmiş kutuda yol ya sağ kutuya ya da yukarıya gidebilir. Eğer yukarıya giderse küçük bir kapalı yol oluşacağından sağa gitmek zorundadır.");
-//            inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
+            inStrings.add("Daha sonra, toplam ipucu sayısına bakılmalıdır. Örnekte bu sayı 1+3+2+1=7 dir. Yani, 7 ipucudan 4 sayı oluşacaktır. Bu durum, bazı sayıların satırlarda ortak olması gerektiğini gösterir.");
+            inStrings.add("Toplam ipucu sayısı 7 gibi 4x4 lük bir Sayı bulmaca sorusu için orta-yüksek bir sayı ise çok satırda ortak olan sayılardan gidilmelidir. Bu sayı az olsaydı ortak olmayan sayılardan gidilebilirdi.");
+            inStrings.add("Örnekte görüleceği üzere 5 sayısı üç satırda ortaktır. Bu sayıya basarak yeşil gölgeli duruma getirebilirsiniz. Daha sonra, ipucu hakkını dolduran satırlardaki kalan sayıları eleyebiliriz.");
+            inStrings.add("İlk satırda ipucu +1 ve 5 sayısı yeşil renklidir. Dolayısıyla 5 sayısı cevapta vardır ve yeri doğrudur. Cevabın son basamağına 5 yazılmalıdır.");
+            inStrings.add("Sayılar elendiğinde, 2.satırda olabilecek 2 sayı kalır ve ipucuda da 2 sayı kaldığı için bu sayılar kesin olarak cevapta yer alacaktır. Bu sayılar yeşille işaretlenir.");
+            inStrings.add("3.satırda yeşil ile işaretlenen 9 sayısının yeri (ipucu +2 olduğu için) doğru olduğu söylenebilir. Cevabın 3.basamağına 9 yazılmalıdır.");
+            inStrings.add("2.satırda yeşil ile işaretlenen 5 sayısının yeri doğru, 9 sayısının yeri yanlış olduğu görülmektedir. Yani ipucudan geriye yalnızca +1 kalmıştır. Dolayısıyla 2 sayısının yeri doğrudur ve ilk basamaktadır.");
+            inStrings.add("Geriye yalnızca 2.basamaktaki sayı kalmıştır. 3.satırda 9 sayısının yeri doğrudur ve ipucudan geriye +1 kalmıştır. Boş olan basamak yalnızca 2.basamak olduğu için 3.satırdaki 8 sayısı cevapta olmalıdır.");
+            inStrings.add("Çözüm sona erdiğinde cevap 2895 olarak bulunur. Sayı Bulmaca soruları genel olarak bu yöntemlerle çözülebilir. Ancak çözer bir yerde tıkanırsa, en çok satırda ortak olan sayılardan deneme-yanılma ile gidilebilir.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
     }
@@ -640,11 +803,11 @@ public class GameGuideActivity extends AppCompatActivity {
                     gl.findViewWithTag(Integer.toString(j) + i).clearAnimation();
                 }
             }
-        } else if (gameName.contains("Patika")){
+        } else if (gameName.equals(getString(R.string.Patika))){
             for(String cos: blackList){
                 gl.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
             }
-        } else if (gameName.contains("Bulmaca")){
+        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
             JSONArray jGrid = (JSONArray) grid;
             Log.i("jsonGrid",""+grid);
             for (int i = 0; i < jGrid.length()-1; i++){
@@ -977,7 +1140,7 @@ public class GameGuideActivity extends AppCompatActivity {
                     new ArrayList<>(Arrays.asList(0, 2, 0, 2, 1)),
                     new ArrayList<>(Arrays.asList(1, 0, 0, 2, 0)))));
         }
-        else if (gameName.contains("Patika")) {
+        else if (gameName.equals(getString(R.string.Patika))) {
             setContentView(R.layout.activity_game_guide_patika);
             blackList = new ArrayList<>(Arrays.asList("20","60","12","04","34","46","54"));
             inTV = findViewById(R.id.instructionTV_guide);
@@ -1033,7 +1196,7 @@ public class GameGuideActivity extends AppCompatActivity {
                     return true;
                 }
             });
-        } else if (gameName.contains("Bulmaca")){
+        }   else if (gameName.equals(getString(R.string.SayıBulmaca))) {
             setContentView(R.layout.activity_game_guide_sayibulmaca);
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);
@@ -1046,8 +1209,6 @@ public class GameGuideActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else if (gameName.contains("iramit")){
-
         }
 
     }

@@ -45,7 +45,7 @@ public class HowToPlayActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else if (currentGameName.contains(getString(R.string.SayıBulmaca))){
-            intent.putExtra("gameName", "Sayı Bulmaca");
+            intent.putExtra("gameName", getString(R.string.SayıBulmaca));
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
@@ -125,11 +125,11 @@ public class HowToPlayActivity extends AppCompatActivity {
             gameNameTV.setText(currentGameName);
         }
         ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.scrollView_htp).getParent();
-        RelativeLayout howToPlayGameListRL = (RelativeLayout) constraintLayout.getChildAt(2);
-        Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
-        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
-        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
-
+//        RelativeLayout howToPlayGameListRL = (RelativeLayout) constraintLayout.getChildAt(2);
+//        Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
+//        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
+//        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
+        Log.i("C-SB",getString(R.string.SayıBulmaca)+ "   -   "+currentGameName);
         if ("Sudoku".equals(currentGameName)) {
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
         } else if (getString(R.string.HazineAvı).equals(currentGameName)) {
