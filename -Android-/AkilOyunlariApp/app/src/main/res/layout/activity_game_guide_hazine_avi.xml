@@ -1,0 +1,640 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/f7f5fa"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GameGuideActivity">
+
+    <LinearLayout
+        android:id="@+id/backButtonLL_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:onClick="goBackToHTP"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintVertical_bias="0.05"
+        tools:ignore="UseCompoundDrawables,UsingOnClickInXml">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_arrowbutton"
+            app:tint="@color/light_red"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mohave_bold"
+            android:padding="10dp"
+            android:text="@string/Back"
+            android:textColor="@color/light_red"
+            android:textSize="22sp" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="318dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@id/gridGL_guide"
+        app:layout_constraintEnd_toEndOf="@id/gridGL_guide"
+        app:layout_constraintStart_toStartOf="@id/gridGL_guide"
+        app:layout_constraintTop_toBottomOf="@id/backButtonLL_game"
+        app:layout_constraintVertical_bias="0.5">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="instructionChange"
+            android:paddingStart="15dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="20dp"
+            android:src="@drawable/ic_lefticon"
+            android:tag="-"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/instructionTV_guide"
+            android:layout_width="248dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_medium"
+            android:padding="15dp"
+            android:text=""
+            android:textColor="@color/near_black_blue"
+            android:textSize="17sp"
+            tools:ignore="HardcodedText,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="instructionChange"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="15dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="20dp"
+            android:src="@drawable/ic_righticon"
+            android:tag="+"
+            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+
+    </LinearLayout>
+
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/gridGL_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.65">
+
+        <TextView
+            android:id="@+id/grid5_00"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="00"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_10"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="10"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_20"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="20"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_30"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="30"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_40"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="40"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="1"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_01"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="01"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="2"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_11"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="11"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="2"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_21"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="21"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="2"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_31"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="31"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="2"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_41"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="41"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="2"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_02"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="02"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_12"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="12"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_22"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="22"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_32"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="32"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_42"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="42"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_03"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="03"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="4"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_13"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="13"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="4"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_23"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="23"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="4"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_33"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="33"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="4"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_43"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="43"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="4"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_04"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="04"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="1"
+            app:layout_row="5"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_14"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="14"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="2"
+            app:layout_row="5"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_24"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="24"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="3"
+            app:layout_row="5"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_34"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="34"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="4"
+            app:layout_row="5"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <TextView
+            android:id="@+id/grid5_44"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/stroke_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:onClick="changeClicked"
+            android:tag="44"
+            android:textColor="@color/near_black_blue"
+            android:textSize="30sp"
+            app:layout_column="5"
+            app:layout_row="5"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:layout_width="306dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_column="0"
+            app:layout_columnSpan="7"
+            app:layout_row="0" />
+
+        <ImageView
+            android:layout_width="306dp"
+            android:layout_height="3dp"
+            android:src="@color/near_black_blue"
+            app:layout_column="0"
+            app:layout_columnSpan="7"
+            app:layout_row="6" />
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="306dp"
+            android:src="@color/near_black_blue"
+            app:layout_column="0"
+            app:layout_row="0"
+            app:layout_rowSpan="7" />
+
+        <ImageView
+            android:layout_width="3dp"
+            android:layout_height="306dp"
+            android:src="@color/near_black_blue"
+            app:layout_column="6"
+            app:layout_row="0"
+            app:layout_rowSpan="7" />
+
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <View
+        android:id="@+id/clickView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:onClick="nextQuestion"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridGL_guide"
+        app:layout_constraintVertical_bias="0.3">
+
+        <ImageView
+            android:id="@+id/switchIV"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="changeSwitch"
+            android:src="@drawable/ic_diamond"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
+
+        <ImageView
+            android:id="@+id/arrowIV_guide"
+            android:visibility="invisible"
+            android:layout_width="130dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:tint="@color/near_black_blue"
+            android:src="@drawable/ic_leftarrow"/>
+<!--        <Button-->
+<!--            android:id="@+id/undoTV_ga"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:paddingStart="35dp"-->
+<!--            android:paddingEnd="35dp"-->
+<!--            android:paddingTop="5dp"-->
+<!--            android:paddingBottom="5dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:gravity="center"-->
+<!--            android:enabled="false"-->
+<!--            android:visibility="invisible"-->
+<!--            android:text="@string/Undo"-->
+<!--            android:textColor="@color/f7f5fa"-->
+<!--            android:textSize="22sp"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:fontFamily="@font/mohave_bold"-->
+<!--            android:background="@drawable/nums_gl_bg"/>-->
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

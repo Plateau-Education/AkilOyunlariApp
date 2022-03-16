@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -129,14 +130,27 @@ public class GameGuideActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public void numClicked(View view) {
-        SayiBulmacaUtils.numClicked(view);
+        String num = view.getTag().toString();
+        Log.i("num",num + " - allowedBoxes - "+allowedBoxes.toString());
+        if(allowedBoxes.contains(num)){
+            TextView currentBox = gl.findViewWithTag("answer"+ PiramitUtils.clickedBox);
+            if(PiramitUtils.draftModeActive[Integer.parseInt(PiramitUtils.clickedBox)]) {
+                if(currentBox.getText().toString().length() == 0){
+                    currentBox.setText(view.getTag().toString());
+                    currentBox.setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                }
+                else{
+                    currentBox.setText(currentBox.getText().toString()+" "+view.getTag().toString());
+                }
+            } else currentBox.setText(view.getTag().toString());
+            view.clearAnimation();
+            allowedBoxes.remove((String)view.getTag());
+        }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void notesOnGrid(View view) {
-        SayiBulmacaUtils.notesOnGrid(view);
+    public void draftClicked(View view){
+        if(inNum==5)PiramitUtils.draftClicked(view);
     }
-
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void instructionChange(View view) throws NoSuchFieldException, IllegalAccessException {
@@ -714,6 +728,254 @@ public class GameGuideActivity extends AppCompatActivity {
             }
 
         }
+        else if (gameName.equals(getString(R.string.Piramit))){
+            List<String> tapBoxes = new ArrayList<>();
+            List<String> tapNums = new ArrayList<>();
+            List<String> relatedBoxes = new ArrayList<>();
+            List<String> grid = new ArrayList<>();
+            allowedBoxes = new ArrayList<>();
+
+            if (view.getTag().equals("+")) {
+                if (inNum < inStrings.size() - 1){
+                    inNum++;
+                    view.setAlpha(1f);
+                    ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(1f);
+                }
+                if(inNum == inStrings.size()-1){
+                    view.setAlpha(0.3f);
+                }
+            } else {
+                if (inNum > 0){
+                    inNum--;
+                    view.setAlpha(1f);
+                    ((LinearLayout)inTV.getParent()).findViewWithTag("+").setAlpha(1f);
+                }
+                if(inNum == 0){
+                    view.setAlpha(0.3f);
+                }
+            }
+            inTV.setText(inStrings.get(inNum));
+
+            final GridLayout numGL = findViewById(R.id.numsGL_ga);
+            if(inNum <= 4){
+                allowedBoxes.clear();
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                for(int i = 0; i < coos.size() ; i++){
+                    gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                }
+
+                for(int i = 0; i<10 ; i++){
+                    numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                }
+            }
+            PiramitUtils.context = this;
+            if(inNum == 5){
+                allowedBoxes.clear();
+
+                PiramitUtils.clickedBox = "2";
+                gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.f7f5fa));
+
+                View draftBox = numGL.findViewWithTag("0");
+                animateView(draftBox, 0.5f, 1.0f);
+                draftBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view.setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
+                        view.clearAnimation();
+                        view.setOnClickListener(null);
+                        PiramitUtils.draftModeActive[2] = true;
+                        allowedBoxes = new ArrayList<>(Arrays.asList("1","2","9"));
+                        animateView(numGL.findViewWithTag("1"),0.5f,1.0f);
+                        animateView(numGL.findViewWithTag("2"),0.5f,1.0f);
+                        animateView(numGL.findViewWithTag("9"),0.5f,1.0f);
+                    }
+                });
+            }
+            if (inNum == 6){
+                allowedBoxes.clear();
+                ((TextView)gl.findViewWithTag("answer2")).setText("1 2 9");
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.light_blue_green));
+                ((TextView)gl.findViewWithTag("answer2")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                for(int i = 0; i < coos.size() ; i++){
+                    gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                }
+                for(int i = 0; i<10 ; i++){
+                    numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                    numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                }
+
+                PiramitUtils.clickedBox = "0";
+                gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.draft_grey));
+                gl.findViewWithTag("answer0").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                ((TextView)gl.findViewWithTag("answer0")).setTextColor(getResources().getColor(R.color.f7f5fa));
+
+                numGL.findViewWithTag("0").setBackground(getResources().getDrawable(R.drawable.rounded_light_bluegreen_bg));
+                PiramitUtils.draftModeActive[0] = true;
+                final int[] counter = {0};
+                View.OnClickListener ocl = new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onClick(View view) {
+                        counter[0]++;
+                        allowedBoxes = new ArrayList<>(Arrays.asList("3","5","2","6"));
+                        numClicked(view);
+//                        allowedBoxes.remove((String)view.getTag());
+                        view.clearAnimation();
+                        view.setOnClickListener(null);
+                        if(counter[0] == 4){
+                            PiramitUtils.clickedBox = "1";
+                            gl.findViewWithTag("answer0").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                            ((TextView)gl.findViewWithTag("answer0")).setTextColor(getResources().getColor(R.color.draft_grey));
+                            gl.findViewWithTag("answer1").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                            ((TextView)gl.findViewWithTag("answer1")).setTextColor(getResources().getColor(R.color.f7f5fa));
+
+                            PiramitUtils.draftModeActive[1] = true;
+                            allowedBoxes = new ArrayList<>(Arrays.asList("6","8","5","9","2"));
+                            for (View v : Arrays.asList(numGL.findViewWithTag("6"),numGL.findViewWithTag("8"),numGL.findViewWithTag("5"),numGL.findViewWithTag("9"),numGL.findViewWithTag("2"))){
+                                v.setOnClickListener(new View.OnClickListener() {
+                                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                    @Override
+                                    public void onClick(View view) {
+                                        numClicked(view);
+                                    }
+                                });
+                                animateView(v,0.5f,1.0f);
+                            }
+                        }
+                    }
+                };
+                for (View v : Arrays.asList(numGL.findViewWithTag("3"),numGL.findViewWithTag("5"),numGL.findViewWithTag("2"),numGL.findViewWithTag("6"))){
+                    animateView(v,0.5f,1.0f);
+                    v.setOnClickListener(ocl);
+                }
+            }
+            if (inNum == 7 || inNum == 8){
+                allowedBoxes.clear();
+                ((TextView)gl.findViewWithTag("answer2")).setText("1 2 9");
+                ((TextView)gl.findViewWithTag("answer0")).setText("3 5 2 6");
+                ((TextView)gl.findViewWithTag("answer1")).setText("6 8 5 9 2");
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.draft_grey));
+                ((TextView)gl.findViewWithTag("answer0")).setTextColor(getResources().getColor(R.color.draft_grey));
+                ((TextView)gl.findViewWithTag("answer1")).setTextColor(getResources().getColor(R.color.draft_grey));
+                ((TextView)gl.findViewWithTag("answer0")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                ((TextView)gl.findViewWithTag("answer1")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+                ((TextView)gl.findViewWithTag("answer2")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
+
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                for(int i = 0; i < coos.size() ; i++){
+                    gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                }
+                for(int i = 0; i<10 ; i++){
+                    numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                    numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                }
+            }
+            if(inNum == 8){
+                final TextView answer0 = gl.findViewWithTag("answer0");
+                final TextView answer1 = gl.findViewWithTag("answer1");
+                final TextView answer2 = gl.findViewWithTag("answer2");
+                final View delete = findViewById(R.id.deleteTV_guide);
+                gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.f7f5fa));
+                animateView(answer2,0.5f,1.0f);
+                answer2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        view.clearAnimation();
+                        view.setOnClickListener(null);
+                        animateView(delete, 0.5f, 1.0f);
+                        delete.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                view.clearAnimation();
+                                view.setOnClickListener(null);
+                                answer2.setText("");
+                                PiramitUtils.draftModeActive[2] = false;
+                                answer2.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                                answer2.setTextColor(getResources().getColor(R.color.light_red));
+                                animateView(numGL.findViewWithTag("1"),0.5f,1.0f);
+                                numGL.findViewWithTag("1").setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        view.clearAnimation();
+                                        view.setOnClickListener(null);
+                                        answer2.setText("1");
+                                        gl.findViewWithTag("answer0").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                                        ((TextView)gl.findViewWithTag("answer0")).setTextColor(getResources().getColor(R.color.f7f5fa));
+                                        gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                                        animateView(answer0,0.5f,1.0f);
+                                        answer0.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                view.clearAnimation();
+                                                view.setOnClickListener(null);
+                                                animateView(delete, 0.5f, 1.0f);
+                                                delete.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        view.clearAnimation();
+                                                        view.setOnClickListener(null);
+                                                        answer0.setText("");
+                                                        PiramitUtils.draftModeActive[0] = false;
+                                                        answer0.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                                                        answer0.setTextColor(getResources().getColor(R.color.light_red));
+                                                        animateView(numGL.findViewWithTag("3"),0.5f,1.0f);
+                                                        numGL.findViewWithTag("3").setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View view) {
+                                                                view.clearAnimation();
+                                                                view.setOnClickListener(null);
+                                                                answer0.setText("3");
+                                                                gl.findViewWithTag("answer1").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
+                                                                ((TextView)gl.findViewWithTag("answer1")).setTextColor(getResources().getColor(R.color.f7f5fa));
+                                                                gl.findViewWithTag("answer0").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                                                                animateView(answer1,0.5f,1.0f);
+                                                                answer1.setOnClickListener(new View.OnClickListener() {
+                                                                    @Override
+                                                                    public void onClick(View view) {
+                                                                        view.clearAnimation();
+                                                                        view.setOnClickListener(null);
+                                                                        animateView(delete, 0.5f, 1.0f);
+                                                                        delete.setOnClickListener(new View.OnClickListener() {
+                                                                            @Override
+                                                                            public void onClick(View view) {
+                                                                                view.clearAnimation();
+                                                                                view.setOnClickListener(null);
+                                                                                answer1.setText("");
+                                                                                PiramitUtils.draftModeActive[1] = false;
+                                                                                answer1.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                                                                                answer1.setTextColor(getResources().getColor(R.color.light_red));
+                                                                                animateView(numGL.findViewWithTag("8"), 0.5f, 1.0f);
+                                                                                numGL.findViewWithTag("8").setOnClickListener(new View.OnClickListener() {
+                                                                                    @Override
+                                                                                    public void onClick(View view) {
+                                                                                        view.clearAnimation();
+                                                                                        view.setOnClickListener(null);
+                                                                                        answer1.setText("8");
+                                                                                    }
+                                                                                });
+                                                                            }
+                                                                        });
+                                                                    }
+                                                                });
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }
     }
 
     public void setInStrings() {
@@ -768,6 +1030,18 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add("Çözüm sona erdiğinde cevap 2895 olarak bulunur. Sayı Bulmaca soruları genel olarak bu yöntemlerle çözülebilir. Ancak çözer bir yerde tıkanırsa, en çok satırda ortak olan sayılardan deneme-yanılma ile gidilebilir.");
             inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
         }
+        else if (gameName.equals(getString(R.string.Piramit))){
+            inStrings.add("Piramit öğretici uygulamasına hoşgeldiniz. Öğretici boyunca işaretli butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
+            inStrings.add("Piramit oyununda çözerden istenen piramitteki boş kutuları kurallı bir şekilde doldurmasıdır. Oyunun kuralları şöyledir: 1. Her iki yan yana sayının toplamı ya da farkı üstündeki sayıya eşittir.");
+            inStrings.add("2. Aynı satırda rakam tekrarı olamaz. 3. Yan yana olan sayılar ardışık olamaz. Bu 3 kurala dikkat edilerek piramit soruları çözülür. Piramit çözerken kullanılan en yaygın yöntem eleme yöntemidir.");
+            inStrings.add("Örnekte 3 satırlık bir piramit sorusu verilmiştir. Örneğin, bu piramitte en alt satırdaki boş kutudan başlanabilir.");
+            inStrings.add("En alt satırda 4 ve 7 ipuçları verilmiştir. Ardışık olmama ve tekrarlamama kurallarından yola çıkılarak boş kutunun 3,4,5,6,7 ve 8 sayılarını alamayacağı söylenebilir.");
+            inStrings.add("Dolayısıyla bu kutuya yalnızca 1,2 veya 9 sayıları yazılabilir. Sağ alttaki not alma moduna geçilerek bu ihtimaller not alınabilir. Daha sonra bu ihtimallerin tek tek ipuçlarıyla farkı ve toplamı alınabilir.");
+            inStrings.add("Örneğin 1,2 ve 9 ihtimalleri üstündeki kutuda sırasıyla (3,5), (2,6) ve 5 ihtimallerini ortaya çıkarır. Aynı şekilde yanındaki kutuda da sırasıyla (6,8), (5,9) ve 2 ihtimalleri oluşur.");
+            inStrings.add("Bu ihtimaller akıldan bulunabilir veya not alınabilir. Son bir adım olarak bu ihtimallerden hangisinin farkı veya toplamının üstteki sayıyı yani 5'i verdiği bulunmalıdır.");
+            inStrings.add("İhtimaller incelendiğinde 3 ve 8 sayılarının farkının 5 olduğu görülebilir. Dolayısıyla bu ihtimalleri veren 1 ihtimali de doğrudur. Sağlama yapıldığında piramidin kurallara uyduğu görülür.");
+            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
+        }
     }
 
     public void animateView(View view,float s1, float s2){
@@ -803,11 +1077,13 @@ public class GameGuideActivity extends AppCompatActivity {
                     gl.findViewWithTag(Integer.toString(j) + i).clearAnimation();
                 }
             }
-        } else if (gameName.equals(getString(R.string.Patika))){
+        }
+        else if (gameName.equals(getString(R.string.Patika))){
             for(String cos: blackList){
                 gl.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
             }
-        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+        }
+        else if (gameName.equals(getString(R.string.SayıBulmaca))){
             JSONArray jGrid = (JSONArray) grid;
             Log.i("jsonGrid",""+grid);
             for (int i = 0; i < jGrid.length()-1; i++){
@@ -834,6 +1110,13 @@ public class GameGuideActivity extends AppCompatActivity {
             }
             TextView guideanswer = gl.findViewWithTag("answerguide");
             guideanswer.setText("+4");
+        }
+        else if (gameName.equals(getString(R.string.Piramit))){
+            List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+            List<String> gridl = (ArrayList<String>)grid;
+            for(int i = 0; i < coos.size() ; i++){
+                ((TextView) gl.findViewWithTag(coos.get(i))).setText(gridl.get(i));
+            }
         }
     }
 
@@ -1196,7 +1479,8 @@ public class GameGuideActivity extends AppCompatActivity {
                     return true;
                 }
             });
-        }   else if (gameName.equals(getString(R.string.SayıBulmaca))) {
+        }
+        else if (gameName.equals(getString(R.string.SayıBulmaca))) {
             setContentView(R.layout.activity_game_guide_sayibulmaca);
             inTV = findViewById(R.id.instructionTV_guide);
             gl = findViewById(R.id.gridGL_guide);
@@ -1209,6 +1493,15 @@ public class GameGuideActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        else if (gameName.equals(getString(R.string.Piramit))){
+            setContentView(R.layout.activity_game_guide_piramit);
+            inTV = findViewById(R.id.instructionTV_guide);
+            gl = findViewById(R.id.gridGL_guide);
+            setInStrings();
+            inTV.setText(inStrings.get(0));
+            ((LinearLayout)inTV.getParent()).findViewWithTag("-").setAlpha(0.3f);
+            createGridAndPlace(new ArrayList<>(Arrays.asList("5","","","4","","7")));
         }
 
     }

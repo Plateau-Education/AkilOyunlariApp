@@ -494,7 +494,6 @@
         <Button
             android:id="@+id/nums4_1"
             android:tag="1"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -510,7 +509,6 @@
         <Button
             android:id="@+id/nums4_2"
             android:tag="2"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -526,7 +524,6 @@
         <Button
             android:id="@+id/nums4_3"
             android:tag="3"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -542,7 +539,6 @@
         <Button
             android:id="@+id/nums4_4"
             android:tag="4"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -558,7 +554,6 @@
         <Button
             android:id="@+id/nums4_5"
             android:tag="5"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -574,7 +569,6 @@
         <Button
             android:id="@+id/nums4_6"
             android:tag="6"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -590,7 +584,6 @@
         <Button
             android:id="@+id/nums4_7"
             android:tag="7"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -606,7 +599,6 @@
         <Button
             android:id="@+id/nums4_8"
             android:tag="8"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -622,7 +614,6 @@
         <Button
             android:id="@+id/nums4_9"
             android:tag="9"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"
@@ -638,7 +629,6 @@
         <Button
             android:id="@+id/nums4_0"
             android:tag="0"
-            android:onClick="numClicked"
             android:layout_width="44dp"
             android:layout_height="44dp"
             android:layout_margin="5dp"

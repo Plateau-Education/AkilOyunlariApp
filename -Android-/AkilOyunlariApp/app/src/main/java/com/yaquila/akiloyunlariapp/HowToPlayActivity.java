@@ -48,6 +48,10 @@ public class HowToPlayActivity extends AppCompatActivity {
             intent.putExtra("gameName", getString(R.string.SayıBulmaca));
             startActivity(intent);
             overridePendingTransition(R.anim.enter, R.anim.exit);
+        } else if (currentGameName.contains(getString(R.string.Piramit))){
+            intent.putExtra("gameName", getString(R.string.Piramit));
+            startActivity(intent);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         } else {
             Toast.makeText(this, getString(R.string.feature_not_active), Toast.LENGTH_SHORT).show();
             Log.i("goToGuide","guide not active");
