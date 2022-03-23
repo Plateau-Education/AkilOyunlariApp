@@ -444,8 +444,8 @@ public class GameGuideActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 relatedClues = new ArrayList<>();
-                for (int i = 0; i < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); i++) {
-                    for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++){
+                for (int i = 0; i < 7; i++) {
+                    for (int j = 0; j < 7; j++){
                         if(!blackList.contains(Integer.toString(j) + i))
                             gl.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                     }
@@ -454,6 +454,7 @@ public class GameGuideActivity extends AppCompatActivity {
                 bitmap.eraseColor(Color.TRANSPARENT);
                 canvas = new Canvas(bitmap);
                 allowedBoxes.clear();
+                gl.findViewWithTag("16").setBackground(getResources().getDrawable(R.drawable.stroke_bg));
 
                 drawALine(middlePoint("01")[0], middlePoint("01")[1], middlePoint("00")[0], middlePoint("00")[1], false);
                 drawALine(middlePoint("00")[0], middlePoint("00")[1], middlePoint("10")[0], middlePoint("10")[1], false);
@@ -492,6 +493,7 @@ public class GameGuideActivity extends AppCompatActivity {
             }
             if(inNum==8){
                 relatedClues = new ArrayList<>();
+                gl.findViewWithTag("16").setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                 drawALine(middlePoint("16")[0], middlePoint("16")[1], middlePoint("26")[0], middlePoint("26")[1], false);
                 counterIn5=0;
                 addAnim("15","14","",18,false);
@@ -1136,7 +1138,7 @@ public class GameGuideActivity extends AppCompatActivity {
         String[] rowColumn = new String[2];
         float coef = 0;
         try {
-            coef = (float)pxHeight/Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString());
+            coef = (float)pxHeight/7;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1151,7 +1153,7 @@ public class GameGuideActivity extends AppCompatActivity {
         int[] middle_point = new int[2];
         float coef = 0;
         try {
-            coef = (float)pxHeight/Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString());
+            coef = (float)pxHeight/7;
         } catch (Exception e) {
             e.printStackTrace();
         }
