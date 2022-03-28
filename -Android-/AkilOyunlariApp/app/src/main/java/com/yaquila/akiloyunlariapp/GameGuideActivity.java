@@ -1,5 +1,15 @@
 package com.yaquila.akiloyunlariapp;
 
+import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.gridDCs;
+import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.switchPosition;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.bitmap;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.blackList;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.canvas;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.paint;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.previousCoor;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.pxHeight;
+import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.rowColumn;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -44,22 +54,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.gridDCs;
-import static com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils.switchPosition;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.bitmap;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.blackList;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.canvas;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.paint;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.previousCoor;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.pxHeight;
-import static com.yaquila.akiloyunlariapp.gameutils.PatikaUtils.rowColumn;
 
 
-
-
-@SuppressWarnings({"deprecation", "SuspiciousNameCombination", "MismatchedQueryAndUpdateOfCollection"})
+@SuppressWarnings({"SuspiciousNameCombination", "MismatchedQueryAndUpdateOfCollection"})
 public class GameGuideActivity extends AppCompatActivity {
 
     String gameName;
@@ -153,7 +150,7 @@ public class GameGuideActivity extends AppCompatActivity {
     }
 
     @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
-    public void instructionChange(View view) throws NoSuchFieldException, IllegalAccessException {
+    public void instructionChange(View view) {
         if(gameName.contains(getString(R.string.HazineAvı))) {
             List<String> tapBoxes = new ArrayList<>();
             List<String> relatedClues = new ArrayList<>();
@@ -520,7 +517,7 @@ public class GameGuideActivity extends AppCompatActivity {
         else if (gameName.equals(getString(R.string.SayıBulmaca))){
             List<String> greenTapBoxes = new ArrayList<>();
             List<String> redTapBoxes = new ArrayList<>();
-            List<String> grBoxes = new ArrayList<>();
+            List<String> grBoxes;
             List<String> relatedClues = new ArrayList<>();
             allowedBoxes = new ArrayList<>();
             grBoxes = new ArrayList<>();
@@ -731,10 +728,6 @@ public class GameGuideActivity extends AppCompatActivity {
 
         }
         else if (gameName.equals(getString(R.string.Piramit))){
-            List<String> tapBoxes = new ArrayList<>();
-            List<String> tapNums = new ArrayList<>();
-            List<String> relatedBoxes = new ArrayList<>();
-            List<String> grid = new ArrayList<>();
             allowedBoxes = new ArrayList<>();
 
             if (view.getTag().equals("+")) {
@@ -768,15 +761,34 @@ public class GameGuideActivity extends AppCompatActivity {
 
                 for(int i = 0; i<10 ; i++){
                     numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                    numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                    numGL.findViewWithTag(String.valueOf(i)).setOnClickListener(null);
                 }
             }
             PiramitUtils.context = this;
             if(inNum == 5){
                 allowedBoxes.clear();
+                ((TextView)gl.findViewWithTag("answer2")).setText("");
+                ((TextView)gl.findViewWithTag("answer0")).setText("");
+                ((TextView)gl.findViewWithTag("answer1")).setText("");
+                gl.findViewWithTag("answer0").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                gl.findViewWithTag("answer1").setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
 
                 PiramitUtils.clickedBox = "2";
                 gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
                 ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.f7f5fa));
+
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                for(int i = 0; i < coos.size() ; i++){
+                    gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                    gl.findViewWithTag(coos.get(i)).clearAnimation();
+                    gl.findViewWithTag(coos.get(i)).setOnClickListener(null);
+                }
+                for(int i = 0; i<10 ; i++){
+                    numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                    numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                    numGL.findViewWithTag(String.valueOf(i)).setOnClickListener(null);
+                }
 
                 View draftBox = numGL.findViewWithTag("0");
                 animateView(draftBox, 0.5f, 1.0f);
@@ -799,14 +811,18 @@ public class GameGuideActivity extends AppCompatActivity {
                 ((TextView)gl.findViewWithTag("answer2")).setText("1 2 9");
                 ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.light_blue_green));
                 ((TextView)gl.findViewWithTag("answer2")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 17);
-
+                ((TextView)gl.findViewWithTag("answer0")).setText("");
+                ((TextView)gl.findViewWithTag("answer1")).setText("");
                 List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
                 for(int i = 0; i < coos.size() ; i++){
                     gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                    gl.findViewWithTag(coos.get(i)).clearAnimation();
+                    gl.findViewWithTag(coos.get(i)).setOnClickListener(null);
                 }
                 for(int i = 0; i<10 ; i++){
                     numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                     numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                    numGL.findViewWithTag(String.valueOf(i)).setOnClickListener(null);
                 }
 
                 PiramitUtils.clickedBox = "0";
@@ -870,10 +886,13 @@ public class GameGuideActivity extends AppCompatActivity {
                 List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
                 for(int i = 0; i < coos.size() ; i++){
                     gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                    gl.findViewWithTag(coos.get(i)).clearAnimation();
+                    gl.findViewWithTag(coos.get(i)).setOnClickListener(null);
                 }
                 for(int i = 0; i<10 ; i++){
                     numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
                     numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                    numGL.findViewWithTag(String.valueOf(i)).setOnClickListener(null);
                 }
             }
             if(inNum == 8){
@@ -977,6 +996,27 @@ public class GameGuideActivity extends AppCompatActivity {
                     }
                 });
             }
+            if(inNum == 9){
+                allowedBoxes.clear();
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                for(int i = 0; i < coos.size() ; i++){
+                    gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
+                    gl.findViewWithTag(coos.get(i)).clearAnimation();
+                }
+                for(int i = 0; i<10 ; i++){
+                    numGL.findViewWithTag(String.valueOf(i)).setBackground(getResources().getDrawable(R.drawable.nums_gl_bg));
+                    numGL.findViewWithTag(String.valueOf(i)).clearAnimation();
+                }
+                ((TextView)gl.findViewWithTag("answer0")).setText("3");
+                ((TextView)gl.findViewWithTag("answer1")).setText("8");
+                ((TextView)gl.findViewWithTag("answer2")).setText("1");
+                ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.light_red));
+                ((TextView)gl.findViewWithTag("answer0")).setTextColor(getResources().getColor(R.color.light_red));
+                ((TextView)gl.findViewWithTag("answer1")).setTextColor(getResources().getColor(R.color.light_red));
+                ((TextView)gl.findViewWithTag("answer0")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                ((TextView)gl.findViewWithTag("answer1")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+                ((TextView)gl.findViewWithTag("answer2")).setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
+            }
         }
     }
 
@@ -1055,7 +1095,7 @@ public class GameGuideActivity extends AppCompatActivity {
         view.startAnimation(anim);
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables"})
     public void createGridAndPlace(Object grid) {
         if (gameName.contains(getString(R.string.HazineAvı))) {
             List<ArrayList<Integer>> lGrid = (List<ArrayList<Integer>>) grid;
@@ -1471,9 +1511,6 @@ public class GameGuideActivity extends AppCompatActivity {
                                 if(!is_moving){
                                     Log.i("Pressed","Pressed");
                                 }
-//                            if(isGridFull()){
-//                                checkAnswer(null);
-//                            }
                                 break;
                         }
                     }

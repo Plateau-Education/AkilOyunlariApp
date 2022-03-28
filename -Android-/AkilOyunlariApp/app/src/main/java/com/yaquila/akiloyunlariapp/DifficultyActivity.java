@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 
 public class DifficultyActivity extends AppCompatActivity {
@@ -84,7 +85,7 @@ public class DifficultyActivity extends AppCompatActivity {
     public void arrangeDifficulties(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        if (Arrays.asList(new String[]{getString(R.string.SözcükTuru), getString(R.string.Piramit)}).contains(gameName)){
+        if (Objects.equals(getString(R.string.Piramit), gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard,R.string.VeryHard};
             String[] diffs = {"Easy","Medium","Hard","VeryHard"};
             for (int i = 0; i < 4; i++){
@@ -93,13 +94,10 @@ public class DifficultyActivity extends AppCompatActivity {
                 currentTV.setText(diffIds[i]);
                 currentRL.setVisibility(View.VISIBLE);
                 currentTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 33);
-                if(gameName.equals(getString(R.string.SözcükTuru)))
-                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSozcukTuru."+diffs[i], "0")))));
-                else
-                    ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
+                ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
             }
         }
-        else if (Arrays.asList(new String[]{"Sudoku6", "Sudoku9", getString(R.string.Patika), getString(R.string.HazineAvı), getString(R.string.SayıBulmaca)}).contains(gameName)){
+        else if (Arrays.asList("Sudoku6", "Sudoku9", getString(R.string.Patika), getString(R.string.HazineAvı), getString(R.string.SayıBulmaca)).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             String[] diffs = {"Easy","Medium","Hard"};
             for (int i = 0; i < 3; i++){
