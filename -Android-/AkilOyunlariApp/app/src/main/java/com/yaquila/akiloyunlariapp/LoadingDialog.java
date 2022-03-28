@@ -2,7 +2,6 @@ package com.yaquila.akiloyunlariapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.view.LayoutInflater;
 import android.view.View;
 
 public class LoadingDialog {

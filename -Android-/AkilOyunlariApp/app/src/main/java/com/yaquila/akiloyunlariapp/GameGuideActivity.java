@@ -778,7 +778,7 @@ public class GameGuideActivity extends AppCompatActivity {
                 gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
                 ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.f7f5fa));
 
-                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
+                List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","22"));
                 for(int i = 0; i < coos.size() ; i++){
                     gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));
                     gl.findViewWithTag(coos.get(i)).clearAnimation();
@@ -800,9 +800,16 @@ public class GameGuideActivity extends AppCompatActivity {
                         view.setOnClickListener(null);
                         PiramitUtils.draftModeActive[2] = true;
                         allowedBoxes = new ArrayList<>(Arrays.asList("1","2","9"));
-                        animateView(numGL.findViewWithTag("1"),0.5f,1.0f);
-                        animateView(numGL.findViewWithTag("2"),0.5f,1.0f);
-                        animateView(numGL.findViewWithTag("9"),0.5f,1.0f);
+                        for (View v : Arrays.asList(numGL.findViewWithTag("1"),numGL.findViewWithTag("2"),numGL.findViewWithTag("9"))){
+                            v.setOnClickListener(new View.OnClickListener() {
+                                @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void onClick(View view) {
+                                    numClicked(view);
+                                }
+                            });
+                            animateView(v,0.5f,1.0f);
+                        }
                     }
                 });
             }

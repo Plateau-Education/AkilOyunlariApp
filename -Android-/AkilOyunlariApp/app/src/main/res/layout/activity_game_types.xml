@@ -111,109 +111,30 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.8">
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/secondTV_d"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="@drawable/rounded_light_red_bg"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
+                    android:background="@drawable/type_selector_mp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
+                    android:onClick="goToGameList"
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
+                    android:tag="multi2P"
+                    android:text="@string/multiplayer"
+                    android:textColor="@color/diff_selector_tvcolor"
+                    android:textSize="40sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <TextView
-                        android:id="@+id/secondTV_d"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:background="@drawable/rounded_light_red_bg"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:fontFamily="@font/mohave_bold"
-                        android:gravity="center"
-                        android:paddingStart="20dp"
-                        android:paddingTop="10dp"
-                        android:paddingEnd="20dp"
-                        android:paddingBottom="10dp"
-                        android:text="@string/multiplayer"
-                        android:textColor="@color/diff_selector_tvcolor"
-                        android:textSize="40sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_light_red_bg"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/p2_TV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/type_selector_mp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:fontFamily="@font/mohave_bold"
-                            android:gravity="center"
-                            android:onClick="goToGameList"
-                            android:paddingStart="20dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="20dp"
-                            android:paddingBottom="10dp"
-                            android:tag="multi2"
-                            android:text="2P"
-                            android:textColor="@color/diff_selector_tvcolor"
-                            android:textSize="35sp" />
-
-                        <TextView
-                            android:id="@+id/p3_TV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/type_selector_mp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:fontFamily="@font/mohave_bold"
-                            android:gravity="center"
-                            android:onClick="goToGameList"
-                            android:paddingStart="20dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="20dp"
-                            android:paddingBottom="10dp"
-                            android:tag="multi3"
-                            android:text="3P"
-                            android:textColor="@color/diff_selector_tvcolor"
-                            android:textSize="35sp" />
-
-                        <TextView
-                            android:id="@+id/p5_TV"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:background="@drawable/type_selector_mp"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:fontFamily="@font/mohave_bold"
-                            android:gravity="center"
-                            android:onClick="goToGameList"
-                            android:paddingStart="20dp"
-                            android:paddingTop="10dp"
-                            android:paddingEnd="20dp"
-                            android:paddingBottom="10dp"
-                            android:tag="multi5"
-                            android:text="5P"
-                            android:textColor="@color/diff_selector_tvcolor"
-                            android:textSize="35sp" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

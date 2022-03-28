@@ -1,24 +1,21 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 
 public class DifficultyActivity extends AppCompatActivity {
@@ -34,6 +31,8 @@ public class DifficultyActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void goToGame(View view){
         TextView tvdiff = (TextView) view;
         tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
@@ -72,6 +71,7 @@ public class DifficultyActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
+    @SuppressLint({"UseCompatLoadingForDrawables", "UseCompatLoadingForColorStateLists"})
     public void initDiffs(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
         for (int i = 0; i < 4; i++){

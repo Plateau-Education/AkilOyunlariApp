@@ -100,7 +100,6 @@ public class ProfileActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -124,6 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint({"UseCompatLoadingForDrawables", "UseCompatLoadingForColorStateLists"})
     public void profileInfoChange(View view){
         TextView statsTV = findViewById(R.id.stats_tabTV);
         TextView infoTV = findViewById(R.id.info_tabTV);
@@ -719,8 +719,7 @@ public class ProfileActivity extends AppCompatActivity {
         scrollViewLL.addView(infoCl);
 
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com","fx!Ay:;<p6Q?C8N{", id);
+        getRequest.execute("https://mind-plateau-api.herokuapp.com","fx!Ay:;<p6Q?C8N{", id);
 
     }
 }

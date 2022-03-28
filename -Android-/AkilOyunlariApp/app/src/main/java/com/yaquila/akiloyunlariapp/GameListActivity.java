@@ -3,7 +3,6 @@ package com.yaquila.akiloyunlariapp;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,6 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -95,6 +94,7 @@ public class GameListActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void extendListItem(View view){
         int rowNum = Integer.parseInt(view.getTag().toString());
 
@@ -266,7 +266,6 @@ public class GameListActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -309,8 +308,7 @@ public class GameListActivity extends AppCompatActivity {
                         try{
                             Log.i("getReq","in putReq onresponse");
                             GetRequest getRequest = new GetRequest();
-                            //noinspection deprecation
-                            getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
+                            getRequest.execute("https://mind-plateau-api.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
 
 
                         } catch (Exception e){
@@ -337,8 +335,7 @@ public class GameListActivity extends AppCompatActivity {
                         try{
                             Log.i("getReq","in putReq onErrorResponse");
                             GetRequest getRequest = new GetRequest();
-                            //noinspection deprecation
-                            getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
+                            getRequest.execute("https://mind-plateau-api.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
 
 
                         } catch (Exception e){
@@ -366,6 +363,7 @@ public class GameListActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -385,6 +383,10 @@ public class GameListActivity extends AppCompatActivity {
                 pType = String.valueOf(type.charAt(type.length()-1));
                 type = type.substring(0,type.length()-1);
                 findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.light_red));
+                LinearLayout linearLayout = (LinearLayout) ((ScrollView)findViewById(R.id.scrollView_gl)).getChildAt(0);
+                for (String ll : Arrays.asList("sudoku_ll","patika_ll","sayibulmaca_ll","sozcukturu_ll","piramit_ll","comingsoon2_ll")){
+                    linearLayout.findViewWithTag(ll).setVisibility(View.GONE);
+                }
             } else {
                 findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.yellowish));
             }
@@ -398,10 +400,9 @@ public class GameListActivity extends AppCompatActivity {
             Log.i("getReq","in onCreate");
             GetRequest getRequest = new GetRequest();
             if(type.equals("single")) {
-                //noinspection deprecation
-                getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest", "fx!Ay:;<p6Q?C8N{");
+                getRequest.execute("https://mind-plateau-api.herokuapp.com/userBest", "fx!Ay:;<p6Q?C8N{");
             } else{
-                getRequest.execute("https://akiloyunlariapp.herokuapp.com/userCluster", "fx!Ay:;<p6Q?C8N{");
+                getRequest.execute("https://mind-plateau-api.herokuapp.com/userCluster", "fx!Ay:;<p6Q?C8N{");
             }
 
         } catch (Exception e){
@@ -418,8 +419,7 @@ public class GameListActivity extends AppCompatActivity {
                 if(Objects.requireNonNull(solvedQuestions.get(s)).size() == 0)
                     continue;
                 PutRequest putRequest = new PutRequest();
-                //noinspection deprecation
-                putRequest.execute("https://akiloyunlariapp.herokuapp.com/user",
+                putRequest.execute("https://mind-plateau-api.herokuapp.com/user",
                         "Update", "fx!Ay:;<p6Q?C8N{", id, s,
                         new ArrayList<>(new HashSet<>(Objects.requireNonNull(
                                 solvedQuestions.get(s))))
@@ -436,8 +436,7 @@ public class GameListActivity extends AppCompatActivity {
             try{
                 Log.i("getReq","in catch");
                 GetRequest getRequest = new GetRequest();
-                //noinspection deprecation
-                getRequest.execute("https://akiloyunlariapp.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
+                getRequest.execute("https://mind-plateau-api.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
 
 
             } catch (Exception e2){

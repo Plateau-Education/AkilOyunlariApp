@@ -128,7 +128,6 @@ public class HowToPlayActivity extends AppCompatActivity {
         else{
             gameNameTV.setText(currentGameName);
         }
-        ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.scrollView_htp).getParent();
 //        RelativeLayout howToPlayGameListRL = (RelativeLayout) constraintLayout.getChildAt(2);
 //        Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
 //        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);

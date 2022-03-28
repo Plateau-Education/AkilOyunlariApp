@@ -92,6 +92,7 @@ public class MyClassActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void goToGroupSolving(View view){
         TextView tvdiff = (TextView) view;
         tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
@@ -101,6 +102,7 @@ public class MyClassActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void goToTournament(View view){
         TextView tvdiff = (TextView) view;
@@ -122,8 +124,7 @@ public class MyClassActivity extends AppCompatActivity {
             loadingDialogFunc();
             PutRequest putRequest = new PutRequest();
             SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-            //noinspection deprecation
-            putRequest.execute("https://akiloyunlariapp.herokuapp.com/class", "Update", "fx!Ay:;<p6Q?C8N{", sP.getString("id","none"), sP.getString("displayname","none"), sP.getString("username","none"), ((EditText)findViewById(R.id.classCodeEditText)).getText().toString());
+            putRequest.execute("https://mind-plateau-api.herokuapp.com/class", "Update", "fx!Ay:;<p6Q?C8N{", sP.getString("id","none"), sP.getString("displayname","none"), sP.getString("username","none"), ((EditText)findViewById(R.id.classCodeEditText)).getText().toString());
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -144,8 +145,7 @@ public class MyClassActivity extends AppCompatActivity {
                     loadingDialogFunc();
                     LeavePutRequest putRequest = new LeavePutRequest();
                     SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-                    //noinspection deprecation
-                    putRequest.execute("https://akiloyunlariapp.herokuapp.com/leave", "Class", "fx!Ay:;<p6Q?C8N{", sP.getString("id","none"), sP.getString("classid","none"));
+                    putRequest.execute("https://mind-plateau-api.herokuapp.com/leave", "Class", "fx!Ay:;<p6Q?C8N{", sP.getString("id","none"), sP.getString("classid","none"));
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -162,7 +162,7 @@ public class MyClassActivity extends AppCompatActivity {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint({"SetTextI18n", "UseCompatLoadingForDrawables", "UseCompatLoadingForColorStateLists"})
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void classInfoChange(View view) throws JSONException {
         TextView tasksTV = findViewById(R.id.tasks_tabTV);
@@ -329,9 +329,6 @@ public class MyClassActivity extends AppCompatActivity {
     }
 
     public void sendNewTask(View view){
-//        scrollViewLL.addView(taskRowInstructor);
-//        ((TextView)taskRowInstructor.findViewById(R.id.taskInfoTV)).setText("");
-
         newTaskProperties = new ArrayList<>();
         if(String.valueOf(nameSpinner.getSelectedItem()).equals(getString(R.string.Everyone))) newTaskProperties.add("all");
         else newTaskProperties.add(studentIds.get(studentNames.indexOf(String.valueOf(nameSpinner.getSelectedItem()))-1));
@@ -340,8 +337,7 @@ public class MyClassActivity extends AppCompatActivity {
         newTaskProperties.add(String.valueOf(((EditText)view.findViewById(R.id.editTextNumber)).getText()));
 
         PostRequest postRequest = new PostRequest();
-        //noinspection deprecation
-        postRequest.execute("https://akiloyunlariapp.herokuapp.com/task" , "Send", "fx!Ay:;<p6Q?C8N{",
+        postRequest.execute("https://mind-plateau-api.herokuapp.com/task" , "Send", "fx!Ay:;<p6Q?C8N{",
                 newTaskProperties.get(0), newTaskProperties.get(1), newTaskProperties.get(2),
                 getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).getString("classid", "None"));
 
@@ -395,7 +391,6 @@ public class MyClassActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -441,7 +436,7 @@ public class MyClassActivity extends AppCompatActivity {
                 info.put("goal",strings[5]);
                 info.put("class",strings[6]);
 
-                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
+                result = "{\"Info\":" + (new JSONObject(info)) + ", \"Token\":"+ "\""+strings[2]+ "\"}";
 
                 Log.i("request",result);
                 String URL = strings[0]+strings[1];
@@ -459,8 +454,7 @@ public class MyClassActivity extends AppCompatActivity {
                         }
                         Log.i("Volley", response);
                         GetRequest getRequest = new GetRequest();
-                        //noinspection deprecation
-                        getRequest.execute("https://akiloyunlariapp.herokuapp.com/classGet","fx!Ay:;<p6Q?C8N{");
+                        getRequest.execute("https://mind-plateau-api.herokuapp.com/classGet","fx!Ay:;<p6Q?C8N{");
                     }
                 }, new Response.ErrorListener() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -789,8 +783,7 @@ public class MyClassActivity extends AppCompatActivity {
             try{
                 loadingDialogFunc();
                 GetRequest getRequest = new GetRequest();
-                //noinspection deprecation
-                getRequest.execute("https://akiloyunlariapp.herokuapp.com/classGet","fx!Ay:;<p6Q?C8N{");
+                getRequest.execute("https://mind-plateau-api.herokuapp.com/classGet","fx!Ay:;<p6Q?C8N{");
             } catch (Exception e){
                 e.printStackTrace();
             }

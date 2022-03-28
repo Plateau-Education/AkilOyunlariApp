@@ -38,7 +38,6 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     LinearLayout tab1,tab2,tab3,tab4,tab5,tab6;
     ScrollView leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6;
 
-    @SuppressWarnings("deprecation")
     TabHost tabHost;
 
     LoadingDialog loadingDialog;
@@ -95,7 +94,6 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
             try {
@@ -167,15 +165,13 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/","fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://mind-plateau-api.herokuapp.com/","fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
 
         final LayoutInflater inflater = getLayoutInflater();

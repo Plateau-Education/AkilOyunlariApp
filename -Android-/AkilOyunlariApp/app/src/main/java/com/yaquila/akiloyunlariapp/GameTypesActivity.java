@@ -31,12 +31,13 @@ public class GameTypesActivity extends AppCompatActivity {
     }
 
     public void goToTournament(View view){
-        TextView tvdiff = (TextView) view;
-        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
-        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
-        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+//        TextView tvdiff = (TextView) view;
+//        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+//        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+        Toast.makeText(this, getString(R.string.Comingsoon), Toast.LENGTH_SHORT).show();
+//        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
+//        startActivity(intent);
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
     }
 
     @Override

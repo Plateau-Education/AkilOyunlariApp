@@ -1,15 +1,9 @@
 package com.yaquila.akiloyunlariapp;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.gridlayout.widget.GridLayout;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,9 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.gridlayout.widget.GridLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +34,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -90,6 +87,7 @@ public class GameActivityPentomino extends AppCompatActivity {
         leaveDialog.show();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void changeClicked(View view){
         TextView box = (TextView) view;
@@ -118,6 +116,7 @@ public class GameActivityPentomino extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void undoOperation(View view){
         if(operations.size() > 1){
@@ -150,6 +149,7 @@ public class GameActivityPentomino extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void resetGrid(View view){
         try {
             final TextView resetTV = (TextView) view;
@@ -157,6 +157,7 @@ public class GameActivityPentomino extends AppCompatActivity {
             resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
             resetTV.setText(R.string.ResetNormal);
             resetTV.postDelayed(new Runnable() {
+                @SuppressLint("UseCompatLoadingForColorStateLists")
                 @Override
                 public void run() {
                     resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
@@ -200,8 +201,8 @@ public class GameActivityPentomino extends AppCompatActivity {
         gridLayoutGrid.removeView(clickedIV);
         gridLayoutGrid.addView(clickedIV, new GridLayout.LayoutParams(GridLayout.spec(cYCoor, cColumnSpan, GridLayout.CENTER), GridLayout.spec(cXCoor, cRowSpan, GridLayout.CENTER)));
 
-        clickedIV.getLayoutParams().width = (int) (clickedIV.getHeight());
-        clickedIV.getLayoutParams().height = (int) (clickedIV.getWidth());
+        clickedIV.getLayoutParams().width = clickedIV.getHeight();
+        clickedIV.getLayoutParams().height = clickedIV.getWidth();
 
     }
 
@@ -275,6 +276,7 @@ public class GameActivityPentomino extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
+    @SuppressWarnings("deprecation")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
         @Override
@@ -318,7 +320,6 @@ public class GameActivityPentomino extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
             try {
@@ -336,6 +337,7 @@ public class GameActivityPentomino extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         final GridLayout gridGL = findViewById(R.id.gridGL_ga);
         Log.i("index",gridGL.findViewWithTag("22").getX() +" / "+ gridGL.findViewWithTag("22").getX());
@@ -415,7 +417,6 @@ public class GameActivityPentomino extends AppCompatActivity {
     }
 
     public void timerFunc(){
-        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -442,6 +443,7 @@ public class GameActivityPentomino extends AppCompatActivity {
         loadingDialog.startLoadingAnimation();
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void clearGrid(){
         operations = new ArrayList<>();
         operations.add(new ArrayList<>(Arrays.asList("00", "0")));
@@ -469,7 +471,7 @@ public class GameActivityPentomino extends AppCompatActivity {
 //        clearGrid();
         GetRequest getRequest = new GetRequest();
         //noinspection deprecationre
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Pentomino."+difficulty,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://mind-plateau-api.herokuapp.com/Pentomino."+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -727,6 +729,7 @@ public class GameActivityPentomino extends AppCompatActivity {
 
     }
     public View.OnDragListener dragListener = new View.OnDragListener() {
+        @SuppressLint("UseCompatLoadingForDrawables")
         @Override
         public boolean onDrag(View view, final DragEvent dragEvent) {
             switch(dragEvent.getAction()){

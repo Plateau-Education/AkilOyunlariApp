@@ -52,7 +52,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -151,6 +150,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         correctDialog.show();
         isCorrectDialogShown=true;
     } // Sonraki soruya geç
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void changeClicked(View view){
         TextView box = (TextView) view;
@@ -207,6 +207,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             }
         }
     } // Elmas - çarpı değiştir
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void undoOperation(View view){
         if(operations.size() > 1 && (isPermitted || type.contains("nstructor"))){
 //            operations = operations.subList(0,operations.size()-1);
@@ -245,6 +246,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             }
         }
     } // Son işlemi geri al
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void resetGrid(View view){
         if(isPermitted || type.contains("nstructor")) {
             try {
@@ -253,6 +255,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
                 resetTV.setText(R.string.ResetNormal);
                 resetTV.postDelayed(new Runnable() {
+                    @SuppressLint("UseCompatLoadingForColorStateLists")
                     @Override
                     public void run() {
                         resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
@@ -374,14 +377,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
             try {
                 JSONObject jb = new JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
-                Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
+                Log.i("idarray", idArray +"  "+idArray.length()+"    ga:"+gridArrays.length());
                 seperateGridAnswer(gridArrays.getJSONArray(0).getJSONArray(0).getJSONArray(0), false);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -391,6 +393,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             ((ConstraintLayout)findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
         }
     } // API'den soru çek
+    @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void seperateGridAnswer(JSONArray grid, boolean fromStudent) throws JSONException {
         GridLayout gridLayout = gridGL;
@@ -448,13 +451,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         loadingDialog = new LoadingDialog(GroupSolvingActivity.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
-    public int translateDiff(String diff){
-        Map<String,Integer> map = new HashMap<>();
-        map.put("Kolay",R.string.Easy);
-        map.put("Orta",R.string.Medium);
-        map.put("Zor",R.string.Hard);
-        return map.get(diff);
-    }
+
     public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
@@ -498,6 +495,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         }
         return flag;
     }
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void clearGrid(){
         operations = new ArrayList<>();
         operations.add(new ArrayList<>(Arrays.asList("00", "0")));
@@ -528,8 +526,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         answer = new ArrayList<>();
         clueIndexes = new ArrayList<>();
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/"+newTaskProperties.get(0),"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://mind-plateau-api.herokuapp.com/"+newTaskProperties.get(0),"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 
@@ -783,16 +780,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                                 return;
                             }
 
-                            switch (msg.what) {
-                                case UPDATE_UI_MESSAGE:
-                                    String content = (String) (msg.obj);
-                                    Log.i("UPDATE_UI_MESSAGE",content);
+                            if (msg.what == UPDATE_UI_MESSAGE) {
+                                String content = (String) (msg.obj);
+                                Log.i("UPDATE_UI_MESSAGE", content);
 //                                    mMessageList.setText(content);
 //                                    mMessageList.setSelection(content.length());
-                                    break;
-
-                                default:
-                                    break;
                             }
 
                         }
@@ -805,7 +797,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 Message envelop = new Message();
                 envelop.what = UPDATE_UI_MESSAGE;
                 envelop.obj = mMessageCache.toString();
-                mMainHandler.sendMessageDelayed(envelop, 1000l);
+                mMainHandler.sendMessageDelayed(envelop, 1000L);
             }
         });
     }
@@ -1026,7 +1018,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 //        }
     }
 
-    private Socket socket;
+    private final Socket socket;
     {
         try {
             socket = IO.socket("https://server4groups.herokuapp.com");

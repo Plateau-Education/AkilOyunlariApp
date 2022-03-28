@@ -2,6 +2,7 @@ package com.yaquila.akiloyunlariapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,7 @@ public class SizeActivityForTwoSizedGames extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void goToDiffs(View view){
         TextView tvdiff = (TextView) view;
         tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
@@ -35,6 +37,7 @@ public class SizeActivityForTwoSizedGames extends AppCompatActivity {
     }
 
 
+    @SuppressLint({"UseCompatLoadingForDrawables", "UseCompatLoadingForColorStateLists"})
     public void initDiffs(){
         LinearLayout diffList = findViewById(R.id.diffList_d);
         for (int i = 0; i < 2; i++){

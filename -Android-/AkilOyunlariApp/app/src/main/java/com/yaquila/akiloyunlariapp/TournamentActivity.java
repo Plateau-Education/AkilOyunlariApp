@@ -1,5 +1,8 @@
 package com.yaquila.akiloyunlariapp;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -8,14 +11,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,18 +42,15 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class TournamentActivity extends AppCompatActivity {
 
@@ -64,7 +62,6 @@ public class TournamentActivity extends AppCompatActivity {
     String currentGameName;
     int currentQ = 0;
     int totalNumberOfQs = 0;
-    int currentTotalScore = 0;
     int solveTime = 360;
     int secondsToGo = 60;
     long currentTimeInMillis;
@@ -191,7 +188,7 @@ public class TournamentActivity extends AppCompatActivity {
 
     public void undoOperation(View view) {
         try {
-            utilsMap.get(currentGameName).getDeclaredMethod("undoOperation", null).invoke(null, null);
+            utilsMap.get(currentGameName).getDeclaredMethod("undoOperation", (Class<?>) null).invoke(null, (Object) null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -211,12 +208,13 @@ public class TournamentActivity extends AppCompatActivity {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking = false;
         try {
-            checking = (boolean) utilsMap.get(currentGameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
+            checking = (boolean) utilsMap.get(currentGameName).getDeclaredMethod("checkAnswer", (Class<?>) null).invoke(null, (Object) null);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if(checking) {
             solvedTheQuestion = true;
+            //                sendScore(score);
             if (currentQ != totalNumberOfQs) {
                 timerStopped = true;
                 solveTime = (int) (secondsToGo - ((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
@@ -240,29 +238,20 @@ public class TournamentActivity extends AppCompatActivity {
                 undoTV.setEnabled(false);
                 resetTV.setEnabled(false);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setContentView(R.layout.activity_tournament);
-                        findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
-//                sendScore(score);
-                    }
-                },300);
-
             } else {
                 Log.i("socket-qnums","current: "+currentQ+" total: "+totalNumberOfQs);
                 timerStopped=true;
                 solveTime = (int) (secondsToGo - ((afterFiveMinMillis-Calendar.getInstance().getTimeInMillis())/1000));
                 Log.i("solveTime - theLastQ", solveTime+"");
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        setContentView(R.layout.activity_tournament);
-                        findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
-//                sendScore(score);
-                    }
-                },300);
             }
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setContentView(R.layout.activity_tournament);
+                    findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
+//                sendScore(score);
+                }
+            },300);
         }
     } // Çözümün doğruluğunu kontrol et
 
@@ -276,8 +265,7 @@ public class TournamentActivity extends AppCompatActivity {
 
     public void timerFunc(final int secondsToGo){
         currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
-        afterFiveMinMillis = currentTimeInMillis + secondsToGo*1000;
-        //noinspection deprecation
+        afterFiveMinMillis = currentTimeInMillis + secondsToGo* 1000L;
         timerHandler = new Handler();
         timerInSeconds = 0;
         final TextView timerTV = this.findViewById(R.id.timeTV_game);
@@ -328,7 +316,7 @@ public class TournamentActivity extends AppCompatActivity {
 
     public void clearGrid(){
         try {
-            utilsMap.get(currentGameName).getDeclaredMethod("clearGrid", null).invoke(null, null);
+            utilsMap.get(currentGameName).getDeclaredMethod("clearGrid", (Class<?>) null).invoke(null, (Object) null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -379,7 +367,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.HazineAvı))));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Collections.singletonList(getString(R.string.HazineAvı))));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -422,7 +410,7 @@ public class TournamentActivity extends AppCompatActivity {
         final Spinner diffSpinner = gameSelectionRow.findViewById(R.id.diffSpinner);
         ArrayAdapter<String> amountAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5")));
         amountSpinner.setAdapter(amountAdapter);
-        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.HazineAvı))));
+        ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Collections.singletonList(getString(R.string.HazineAvı))));
         gameSpinner.setAdapter(gameAdapter);
         final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                 new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -540,7 +528,7 @@ public class TournamentActivity extends AppCompatActivity {
 
 
 
-    private Socket socket;
+    private final Socket socket;
     {
         try {
             socket = IO.socket("https://plato-all-in-one.herokuapp.com");

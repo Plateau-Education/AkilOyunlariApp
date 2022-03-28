@@ -273,17 +273,16 @@ public class GameActivityPatika extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
             try {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
-                Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
+                Log.i("idarray", idArray +"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Patika."+PatikaUtils.gridSize)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Patika."+PatikaUtils.gridSize)) +"ss");
                 for(int i = 0; i < idArray.length(); i++){
                     if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Patika."+PatikaUtils.gridSize)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).getJSONArray(0).getJSONArray(0).toString());
@@ -330,6 +329,7 @@ public class GameActivityPatika extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     public void seperateGridAnswer(JSONArray grid) throws JSONException {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
 
@@ -386,7 +386,6 @@ public class GameActivityPatika extends AppCompatActivity {
     }
 
     public void timerFunc(){
-        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -427,8 +426,7 @@ public class GameActivityPatika extends AppCompatActivity {
         findViewById(R.id.clickView).setVisibility(View.GONE);
         clearGrid();
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Patika."+PatikaUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://mind-plateau-api.herokuapp.com/Patika."+PatikaUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 

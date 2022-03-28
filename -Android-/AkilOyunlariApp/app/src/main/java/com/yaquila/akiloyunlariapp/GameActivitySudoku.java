@@ -292,7 +292,6 @@ public class GameActivitySudoku extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected void onPostExecute(String result) {
-            //noinspection deprecation
             super.onPostExecute(result);
 
 //            JSONObject jsonObject = null;
@@ -300,10 +299,10 @@ public class GameActivitySudoku extends AppCompatActivity {
                 org.json.JSONObject jb = new org.json.JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
-                Log.i("idarray",idArray.toString()+"  "+idArray.length()+"    ga:"+gridArrays.length());
+                Log.i("idarray", idArray +"  "+idArray.length()+"    ga:"+gridArrays.length());
                 Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
-                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).toString()+"ss");
+                Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)) +"ss");
                 for(int i = 0; i < idArray.length(); i++){
                     if(!gameIds.contains(idArray.getInt(i))&&!Objects.requireNonNull(solvedQuestions.get("Sudoku." + SudokuUtils.gridSize+"."+difficulty)).toString().contains(idArray.getInt(i)+"-")) {
                         questions.add(gridArrays.getJSONArray(i).toString());
@@ -355,7 +354,6 @@ public class GameActivitySudoku extends AppCompatActivity {
     }
 
     public void timerFunc(){
-        //noinspection deprecation
         timerHandler = new Handler();
         final TextView timerTV = findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
@@ -403,8 +401,7 @@ public class GameActivitySudoku extends AppCompatActivity {
         clearGrid();
         SudokuUtils.initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
-        //noinspection deprecation
-        getRequest.execute("https://akiloyunlariapp.herokuapp.com/Sudoku."+SudokuUtils.gridSize+"."+difficulty,"fx!Ay:;<p6Q?C8N{");
+        getRequest.execute("https://mind-plateau-api.herokuapp.com/Sudoku."+SudokuUtils.gridSize+"."+difficulty,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
     }
 

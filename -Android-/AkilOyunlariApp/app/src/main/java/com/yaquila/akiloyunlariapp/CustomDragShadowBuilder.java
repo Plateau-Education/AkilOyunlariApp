@@ -1,11 +1,8 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;

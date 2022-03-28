@@ -1,7 +1,5 @@
 package com.yaquila.akiloyunlariapp;
 
-import android.util.Log;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -38,11 +36,11 @@ public class ObjectSerializer {
     }
 
     public static String encodeBytes(byte[] bytes) {
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuf = new StringBuilder();
 
-        for (int i = 0; i < bytes.length; i++) {
-            strBuf.append((char) (((bytes[i] >> 4) & 0xF) + ((int) 'a')));
-            strBuf.append((char) (((bytes[i]) & 0xF) + ((int) 'a')));
+        for (byte aByte : bytes) {
+            strBuf.append((char) (((aByte >> 4) & 0xF) + ((int) 'a')));
+            strBuf.append((char) ((aByte & 0xF) + ((int) 'a')));
         }
 
         return strBuf.toString();

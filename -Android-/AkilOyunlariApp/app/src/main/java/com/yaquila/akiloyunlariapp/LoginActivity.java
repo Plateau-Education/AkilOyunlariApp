@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 
@@ -299,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         try {
                                             loadingDialogFunc();
                                             //noinspection deprecation
-                                            postMessage = postRequest.execute("https://akiloyunlariapp.herokuapp.com/user" , "SignUp", "fx!Ay:;<p6Q?C8N{", displayname, username, email, password, type).get();
+                                            postMessage = postRequest.execute("https://mind-plateau-api.herokuapp.com/user" , "SignUp", "fx!Ay:;<p6Q?C8N{", displayname, username, email, password, type).get();
                                             Log.i("postId", postMessage);
                                         } catch (ExecutionException | InterruptedException e) {
                                             e.printStackTrace();
@@ -399,7 +400,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 loadingDialogFunc();
                 //noinspection deprecation
-                postMessage = postRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "SignIn", "fx!Ay:;<p6Q?C8N{", email, password).get();
+                postMessage = postRequest.execute("https://mind-plateau-api.herokuapp.com/user", "SignIn", "fx!Ay:;<p6Q?C8N{", email, password).get();
                 Log.i("postId", postMessage);
             } catch (ExecutionException e) {
                 e.printStackTrace();
@@ -419,7 +420,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 loadingDialogFunc();
                 //noinspection deprecation
-                postMessage = codePostRequest.execute("https://akiloyunlariapp.herokuapp.com/user" , "Send", "fx!Ay:;<p6Q?C8N{", username, email, type).get();
+                postMessage = codePostRequest.execute("https://mind-plateau-api.herokuapp.com/user" , "Send", "fx!Ay:;<p6Q?C8N{", username, email, type).get();
                 Log.i("postId", postMessage);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -523,7 +524,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     loadingDialogFunc();
                     //noinspection deprecation
-                    postMessage = postRequest.execute("https://akiloyunlariapp.herokuapp.com/user", "Google", "fx!Ay:;<p6Q?C8N{", account.getEmail()).get();
+                    postMessage = postRequest.execute("https://mind-plateau-api.herokuapp.com/user", "Google", "fx!Ay:;<p6Q?C8N{", account.getEmail()).get();
                     Log.i("postId", postMessage);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
@@ -607,6 +608,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         if(!alreadyHaveID) {
@@ -615,9 +617,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 // Signed in successfully, show authenticated UI.
                 updateUI(account);
+
             } catch (ApiException e) {
                 // The ApiException status code indicates the detailed failure reason.
                 // Please refer to the GoogleSignInStatusCodes class reference for more information.
+                e.printStackTrace();
                 Log.w("signInFail", "signInResult:failed code=" + e.getStatusCode());
                 updateUI(null);
             }

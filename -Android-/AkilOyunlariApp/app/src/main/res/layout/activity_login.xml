@@ -154,12 +154,11 @@
 
 
 
-        <com.google.android.gms.common.internal.SignInButtonImpl
+        <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/common_google_signin_btn_text_light"
             android:text="@string/Login"
             android:textAllCaps="false"
             android:textColor="@color/near_black_blue" />
