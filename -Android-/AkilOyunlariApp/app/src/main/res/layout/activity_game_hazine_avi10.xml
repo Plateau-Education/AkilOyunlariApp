@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:tint="@color/light_red"
-            android:src="@drawable/ic_arrowbutton" />
+            android:src="@drawable/ic_arrowbutton"
+            app:tint="@color/light_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -1796,6 +1796,19 @@
             android:background="@drawable/nums_gl_bg"/>
 
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/multiplayer_opponent_progress_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/mohave_bold"
+        android:textColor="@color/near_black_blue"
+        android:textSize="20sp"
+        android:background="@drawable/more_rounded_yellowish_bg"
+        android:padding="20dp"
+        android:visibility="gone"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

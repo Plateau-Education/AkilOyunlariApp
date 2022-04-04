@@ -8,8 +8,8 @@ android {
         applicationId "com.yaquila.akiloyunlariapp"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "0.1.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -31,7 +31,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation  'com.android.volley:volley:1.2.0'
+    implementation  'com.android.volley:volley:1.1.1'
     //noinspection DuplicatePlatformClasses
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'com.jjoe64:graphview:4.2.2'

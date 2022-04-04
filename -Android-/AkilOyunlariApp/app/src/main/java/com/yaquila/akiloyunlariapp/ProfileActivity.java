@@ -1,6 +1,7 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -53,6 +54,36 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+    public void logOut(View view){
+        LayoutInflater factory = LayoutInflater.from(this);
+        final View leaveDialogView = factory.inflate(R.layout.leave_dialog, null);
+        final AlertDialog leaveDialog = new AlertDialog.Builder(this).create();
+        leaveDialog.setView(leaveDialogView);
+        ((TextView)leaveDialogView.findViewById(R.id.leaveDialogText)).setText(getString(R.string.wannaLogOut));
+
+        leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences sp = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                sp.edit().clear().apply();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialogView.findViewById(R.id.leaveDialogNo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                leaveDialog.dismiss();
+            }
+        });
+        leaveDialog.show();
+
+
+
     }
 
     @SuppressWarnings("deprecation")

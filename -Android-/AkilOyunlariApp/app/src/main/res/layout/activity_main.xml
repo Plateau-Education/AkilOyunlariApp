@@ -35,6 +35,23 @@
         app:layout_constraintTop_toTopOf="@+id/profileIcon"
         tools:ignore="ContentDescription" />
 
+    <TextView
+        android:id="@+id/changeLanguageTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_yellowish_bg"
+        android:fontFamily="@font/mohave_bold"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="EN 🇬🇧"
+        android:textSize="30sp"
+        android:textColor="@color/near_black_blue"
+        android:onClick="changeLanguage"
+        app:layout_constraintBottom_toBottomOf="@+id/rankingsIcon"
+        app:layout_constraintStart_toStartOf="@+id/uygulama_ismi1"
+        app:layout_constraintTop_toTopOf="@+id/rankingsIcon"
+        tools:ignore="ContentDescription" />
+
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

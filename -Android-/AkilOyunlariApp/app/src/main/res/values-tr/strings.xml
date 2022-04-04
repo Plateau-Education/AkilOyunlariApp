@@ -123,5 +123,22 @@
     <string name="ChooseGame">Tür Seçiniz :</string>
     <string name="ChooseDifficulty">Zorluk Seçiniz :</string>
     <string name="EnterNumberOfPuzzles">Soru sayısı giriniz :</string>
+    <string name="General">Genel</string>
+    <string name="LogOut">Çıkış Yap</string>
+    <string name="wannaLogOut">Hesabınızdan çıkış yapmak istiyor musunuz?</string>
+    <string name="hands_on_tutorial">Uygulamalı\nÖğretici</string>
+    <string name="patika_instrings0">Patika öğretici uygulamasına hoşgeldiniz. Öğretici boyunca animasyonlarla gösterilen çizgilerin üzerinden geçerek kendiniz de çözüme dahil olabilirsiniz.</string>
+    <string name="patika_instrings1">Patika oyununda amaç tüm boş karelerden geçen, kendini kesmeyen tek bir kapalı yol oluşturmaktır.</string>
+    <string name="patika_instrings2">Bir patika sorusu çözerken temelde 2 teknik vardır: Köşe bulma ve kapalı alan oluşmamasına dikkat etme.</string>
+    <string name="patika_instrings3">Köşe bulma tekniğinde; eğer bir kutunun iki kenar komşusu kapalı, yani yol çizilemeyecek, ise kapalı olmayan diğer iki kenar komşusuna doğru bir köşe/kenar çizilir.</string>
+    <string name="patika_instrings4">Örneğin sol üst kutunun üst ve sol kenar komşuları kapalıdır yani bu kutudan üste veya sola doğru bir yol çizilemez. Dolayısıyla aşağı ve sağa doğru bir köşe çizilmelidir.</string>
+    <string name="patika_instrings5">Benzer şekilde iki kenar komşusu kapalı diğer kutuların içine çizilmesi gereken köşeleri/kenarları çiziniz.</string>
+    <string name="patika_instrings6">2. çözüm tekniğinde; patikanın tek bir kapalı yol oluşturması kuralına dayanarak, tüm kutuları kaplamayan küçük bir kapalı alan oluşması engellenir.</string>
+    <string name="patika_instrings7">Örneğin kırmızıyla işaretlenmiş kutuda yol ya sağ kutuya ya da yukarıya gidebilir. Eğer yukarıya giderse küçük bir kapalı yol oluşacağından sağa gitmek zorundadır.</string>
+    <string name="patika_instrings8">Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.</string>
+    <string name="patika_instrings9">Bu öğreticinin sonuna geldiniz.🏁 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.</string>
+    <string name="your_opponent_solved_all_of_the_puzzles">Rakibin tüm soruları çözdü.</string>
+    <string name="your_opponent_solved_the">Rakibin</string>
+    <string name="nth_puzzle">. soruyu çözdü.</string>
 
 </resources>

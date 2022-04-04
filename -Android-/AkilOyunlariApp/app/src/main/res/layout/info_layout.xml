@@ -149,6 +149,22 @@
             android:fontFamily="@font/mohave_medium"
             android:textSize="22sp" />
 
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/leaveClassButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/clicked_diff_bg"
+        android:fontFamily="@font/mohave_bold"
+        android:onClick="logOut"
+        android:padding="5dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/LogOut"
+        android:textAllCaps="false"
+        android:textColor="@color/f7f5fa"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/emailLL" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

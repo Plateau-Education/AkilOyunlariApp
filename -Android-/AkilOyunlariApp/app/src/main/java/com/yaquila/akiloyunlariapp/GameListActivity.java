@@ -146,6 +146,16 @@ public class GameListActivity extends AppCompatActivity {
     public void transferBests(JSONObject jo) throws JSONException {
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
 
+        JSONArray htpCounts = jo.getJSONArray("HTPCounts");
+        Log.i("htpcounts-userBest",htpCounts.toString());
+        ArrayList<String> splist = new ArrayList<>(Arrays.asList("SudokuHTPCount","HazineAviHTPCount","PatikaHTPCount","SayiBulmacaHTPCount","SozcukTuruHTPCount","PiramitHTPCount"));
+        for (int i = 0; i<6 ; i++) {
+            String htpc = htpCounts.getString(i);
+            if(Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0])<Integer.parseInt(htpc.split(" ")[0]))
+                sP.edit().putString(splist.get(i),htpc).apply();
+                Log.i("sp, htp", Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0]) + " , " + Integer.parseInt(htpc.split(" ")[0]));
+        }
+
         if(type.equals("single")) {
             sP.edit().putString("ScoreSudoku.6.Easy", Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(0))).apply();
             sP.edit().putString("ScoreSudoku.6.Medium", Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(0))).apply();
@@ -297,7 +307,28 @@ public class GameListActivity extends AppCompatActivity {
 //                info.put("Query",strings[4]);
 //                info.put("Ids",strings[5]);
 //                result = "{\"Info\":" + (new JSONObject(info)).toString() + ", \"Token\":"+ "\""+strings[2]+ "\"}";
-                result = "{\"Info\":"+ "{\"Id\":\"" + strings[3] + "\", \"Query\":\"" + strings[4] + "\", \"Ids\":"+ new JSONArray(strings[5]) + "}, \"Token\":"+ "\""+strings[2]+ "\"}";
+
+                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
+                ArrayList<String> htpCountList = new ArrayList<>(Arrays.asList(sharedPreferences.getString("SudokuHTPCount","0 0"),
+                        sharedPreferences.getString("HazineAviHTPCount","0 0"), sharedPreferences.getString("PatikaHTPCount","0 0"),
+                        sharedPreferences.getString("SayiBulmacaHTPCount","0 0"), sharedPreferences.getString("SozcukTuruHTPCount","0 0"),
+                        sharedPreferences.getString("PiramitHTPCount","0 0")));
+
+                JSONArray htpJsonArray = new JSONArray();
+                for(int i = 0; i<6; i++){
+                    htpJsonArray.put(i,htpCountList.get(i));
+                }
+
+                Log.i("htpcountJSONArray",htpJsonArray+"");
+
+                Map<String,Object> info = new HashMap<>();
+
+                info.put("Id", strings[3]);
+                info.put("Query",strings[4]);
+                info.put("Ids",new JSONArray(strings[5]));
+                info.put("HTPCounts",htpCountList);
+
+                result = "{\"Info\":" + (new JSONObject(info)) + ", \"Token\":"+ "\""+strings[2]+ "\"}";
 
                 Log.i("request",result);
                 String URL = strings[0]+strings[1];
@@ -310,7 +341,6 @@ public class GameListActivity extends AppCompatActivity {
                             GetRequest getRequest = new GetRequest();
                             getRequest.execute("https://mind-plateau-api.herokuapp.com/userBest","fx!Ay:;<p6Q?C8N{");
 
-
                         } catch (Exception e){
                             e.printStackTrace();
                         }
@@ -319,8 +349,6 @@ public class GameListActivity extends AppCompatActivity {
                             JSONObject objres = new JSONObject(result);
                             Log.i("objres",objres+"");
                             responseMessage = response;
-
-
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -331,6 +359,7 @@ public class GameListActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("Volley",error.getMessage()+"");
+
 
                         try{
                             Log.i("getReq","in putReq onErrorResponse");
@@ -380,7 +409,7 @@ public class GameListActivity extends AppCompatActivity {
             if(type.equals("single")){
                 findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.light_blue_green));
             } else if(type.contains("multi")){
-                pType = String.valueOf(type.charAt(type.length()-1));
+                pType = String.valueOf(type.charAt(type.length()-1));//TODO Burada sadece sondaki P harfini alıyor, sayıyı almıyor burayı bir sonraki güncellemede düzelt.
                 type = type.substring(0,type.length()-1);
                 findViewById(R.id.scrollView_gl).setBackground(getResources().getDrawable(R.color.light_red));
                 LinearLayout linearLayout = (LinearLayout) ((ScrollView)findViewById(R.id.scrollView_gl)).getChildAt(0);
@@ -415,6 +444,7 @@ public class GameListActivity extends AppCompatActivity {
             Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
             Log.i("solvedQuestions1",solvedQuestions+"");
             assert solvedQuestions != null;
+
             for(String s : solvedQuestions.keySet()) {
                 if(Objects.requireNonNull(solvedQuestions.get(s)).size() == 0)
                     continue;

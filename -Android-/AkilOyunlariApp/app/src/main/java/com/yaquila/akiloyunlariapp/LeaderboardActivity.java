@@ -35,8 +35,8 @@ import java.util.List;
 public class LeaderboardActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, View.OnTouchListener {
 
     private GestureDetector mGestureDetector;
-    LinearLayout tab1,tab2,tab3,tab4,tab5,tab6;
-    ScrollView leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6;
+    LinearLayout tab0,tab1,tab2,tab3,tab4,tab5,tab6;
+    ScrollView leaderboard_tab_sl0,leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6;
 
     TabHost tabHost;
 
@@ -100,12 +100,14 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 JSONObject jb = new JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}") + 1).replace("\\",""));
 
                 LayoutInflater inflater = getLayoutInflater();
+                leaderboard_tab_sl1 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl2 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl3 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl4 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl5 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
                 leaderboard_tab_sl6 = (ScrollView) inflater.inflate(getApplicationContext().getResources().getIdentifier("leaderboard_tab_sl", "layout", getApplicationContext().getPackageName()),null);
 
+                tab1.addView(leaderboard_tab_sl1);
                 tab2.addView(leaderboard_tab_sl2);
                 tab3.addView(leaderboard_tab_sl3);
                 tab4.addView(leaderboard_tab_sl4);
@@ -125,9 +127,9 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String username = sP.getString("username","-");
                 String userRank;
-                List<String> games = new ArrayList<>(Arrays.asList("Sudoku", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit"));
-                List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
-                for(int g = 0; g<games.size(); g++){
+                List<String> games = new ArrayList<>(Arrays.asList("Genel","Sudoku", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit"));
+                List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl0,leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
+                for(int g = 0; g<games.size()+1; g++){
                     String game = games.get(g);
                     JSONArray usernameAndScores = jb.getJSONArray(game);
                     ScrollView sl = slList.get(g);
@@ -139,8 +141,6 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                             ((TextView) horLL.getChildAt(2)).setText(
                                     usernameAndScores.getJSONArray(i).getString(1)); // skoru
                         }
-
-
                         if (usernameAndScores.getJSONArray(i).getString(0).equals(username)) {
                             userRank = Integer.toString((i + 1));
                             LinearLayout horLL = sl.findViewWithTag("LLYou");
@@ -175,12 +175,13 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         loadingDialogFunc();
 
         final LayoutInflater inflater = getLayoutInflater();
-        leaderboard_tab_sl1= (ScrollView) inflater.inflate(
+        leaderboard_tab_sl0= (ScrollView) inflater.inflate(
                 this.getResources().getIdentifier(
                         "leaderboard_tab_sl",
                         "layout", this.getPackageName())
                 ,null);
 
+        tab0 = findViewById(R.id.tab0);
         tab1 = findViewById(R.id.tab1);
         tab2 = findViewById(R.id.tab2);
         tab3 = findViewById(R.id.tab3);
@@ -188,20 +189,23 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         tab5 = findViewById(R.id.tab5);
         tab6 = findViewById(R.id.tab6);
 
-        tab1.addView(leaderboard_tab_sl1);
+        tab0.addView(leaderboard_tab_sl0);
 
 
         tabHost = findViewById(R.id.tabhost);
         tabHost.setOnTouchListener(this);
         tabHost.setup();
 
+        //tab0
+        TabHost.TabSpec spec = tabHost.newTabSpec("tab0");
+        spec.setContent(R.id.tab0);
+        spec.setIndicator(getString(R.string.General));
+        tabHost.addTab(spec);
+
+
         //tab1
-        TabHost.TabSpec spec = tabHost.newTabSpec("tab1");
+        spec = tabHost.newTabSpec("tab1");
         spec.setContent(R.id.tab1);
-
-
-//        TextView sudokuTV= (TextView) inflater.inflate(this.getResources().getIdentifier("sudoku_tab_tv", "layout", this.getPackageName()),null);
-
         spec.setIndicator("Sudoku");
         tabHost.addTab(spec);
 
@@ -241,7 +245,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
             @Override
             public void onTabChanged(String s) {
                 List<ScrollView> slList = new ArrayList<>(Arrays.asList(
-                        leaderboard_tab_sl1, leaderboard_tab_sl2,leaderboard_tab_sl3,
+                        leaderboard_tab_sl0, leaderboard_tab_sl1, leaderboard_tab_sl2,leaderboard_tab_sl3,
                         leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
                 ScrollView currentsl = slList.get(tabHost.getCurrentTab());
                 currentsl.setScrollY(0);
@@ -254,7 +258,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
-        if(new ArrayList<>(Arrays.asList(leaderboard_tab_sl1.getId(),leaderboard_tab_sl2.getId(),leaderboard_tab_sl3.getId(),leaderboard_tab_sl4.getId(),leaderboard_tab_sl5.getId(),leaderboard_tab_sl6.getId())).contains(view.getId())){
+        if(new ArrayList<>(Arrays.asList(leaderboard_tab_sl0.getId(),leaderboard_tab_sl1.getId(),leaderboard_tab_sl2.getId(),leaderboard_tab_sl3.getId(),leaderboard_tab_sl4.getId(),leaderboard_tab_sl5.getId(),leaderboard_tab_sl6.getId())).contains(view.getId())){
             mGestureDetector.onTouchEvent(motionEvent);
             return true;
         }

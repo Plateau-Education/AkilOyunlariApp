@@ -82,6 +82,7 @@ public class GameGuideActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         intent.putExtra("gameName", gameName);
         intent.putExtra("type",type);
+        intent.putExtra("comefrom","GameGuide");
         startActivity(intent);
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
@@ -156,6 +157,7 @@ public class GameGuideActivity extends AppCompatActivity {
             List<String> relatedClues = new ArrayList<>();
             List<String> relatedBoxes = new ArrayList<>();
             List<ArrayList<Integer>> grid = new ArrayList<>();
+            switchIV.setOnClickListener(null);
             allowedBoxes = new ArrayList<>();
 
             if (view.getTag().equals("+")) {
@@ -1050,16 +1052,16 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add(getString(R.string.hazineAvi_instrings19));
         }
         else if (gameName.equals(getString(R.string.Patika))){
-            inStrings.add("Patika öğretici uygulamasına hoşgeldiniz. Öğretici boyunca animasyonlarla gösterilen çizgilerin üzerinden geçerek kendiniz de çözüme dahil olabilirsiniz.");
-            inStrings.add("Patika oyununda amaç tüm boş karelerden geçen, kendini kesmeyen tek bir kapalı yol oluşturmaktır.");
-            inStrings.add("Bir patika sorusu çözerken temelde 2 teknik vardır: Köşe bulma ve kapalı alan oluşmamasına dikkat etme.");
-            inStrings.add("Köşe bulma tekniğinde; eğer bir kutunun iki kenar komşusu kapalı, yani yol çizilemeyecek, ise kapalı olmayan diğer iki kenar komşusuna doğru bir köşe/kenar çizilir.");
-            inStrings.add("Örneğin sol üst kutunun üst ve sol kenar komşuları kapalıdır yani bu kutudan üste veya sola doğru bir yol çizilemez. Dolayısıyla aşağı ve sağa doğru bir köşe çizilmelidir.");
-            inStrings.add("Benzer şekilde iki kenar komşusu kapalı diğer kutuların içine çizilmesi gereken köşeleri/kenarları çiziniz.");
-            inStrings.add("2. çözüm tekniğinde; patikanın tek bir kapalı yol oluşması kuralına dayanarak, tüm kutuları kaplamayan küçük bir kapalı alan oluşması engellenir.");
-            inStrings.add("Örneğin kırmızıyla işaretlenmiş kutuda yol ya sağ kutuya ya da yukarıya gidebilir. Eğer yukarıya giderse küçük bir kapalı yol oluşacağından sağa gitmek zorundadır.");
-            inStrings.add("Benzer şekilde kapalı alan oluşmasını engelleme yöntemiyle, gösterilen çizgileri çiziniz.");
-            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
+            inStrings.add(getString(R.string.patika_instrings0));
+            inStrings.add(getString(R.string.patika_instrings1));
+            inStrings.add(getString(R.string.patika_instrings2));
+            inStrings.add(getString(R.string.patika_instrings3));
+            inStrings.add(getString(R.string.patika_instrings4));
+            inStrings.add(getString(R.string.patika_instrings5));
+            inStrings.add(getString(R.string.patika_instrings6));
+            inStrings.add(getString(R.string.patika_instrings7));
+            inStrings.add(getString(R.string.patika_instrings8));
+            inStrings.add(getString(R.string.patika_instrings9));
         }
         else if (gameName.equals(getString(R.string.SayıBulmaca))){
             inStrings.add("Sayı Bulmaca öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");

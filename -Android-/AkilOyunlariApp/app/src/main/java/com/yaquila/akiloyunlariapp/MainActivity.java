@@ -1,11 +1,16 @@
 package com.yaquila.akiloyunlariapp;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,10 +19,13 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    SharedPreferences sharedPreferences;
 
     public void goToGameList(View view){
         Intent intent = new Intent(getApplicationContext(),
@@ -42,6 +50,33 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(getApplicationContext(), MyClassActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void changeLanguage(View view){
+        Locale currentLocale = getResources().getConfiguration().locale;
+        if (currentLocale.getLanguage().contains("tr")){
+            setLocale(this, "en");
+            ((TextView)view).setText("EN \uD83C\uDDEC\uD83C\uDDE7");
+            sharedPreferences.edit().putString("locale","en").apply();
+        } else {
+            setLocale(this, "tr");
+            ((TextView)view).setText("TR \uD83C\uDDF9\uD83C\uDDF7");
+            sharedPreferences.edit().putString("locale","tr").apply();
+        }
+        ((TextView)findViewById(R.id.uygulama_ismi1)).setText(R.string.app_name1);
+        ((TextView)findViewById(R.id.uygulama_ismi2)).setText(R.string.app_name2);
+        ((TextView)findViewById(R.id.playTV)).setText(R.string.play_button);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static void setLocale(Activity activity, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     public void checkSavedQuestions() throws IOException {
@@ -199,7 +234,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.i("cacheDir",getCacheDir().getAbsolutePath());
+        sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+        String localeString = sharedPreferences.getString("locale","en");
+        if (localeString.equals("tr")){
+            setLocale(this, "tr");
+            ((TextView)findViewById(R.id.changeLanguageTV)).setText("TR \uD83C\uDDF9\uD83C\uDDF7");
+        } else {
+            setLocale(this, "en");
+            ((TextView)findViewById(R.id.changeLanguageTV)).setText("EN \uD83C\uDDEC\uD83C\uDDE7");
+        }
+        ((TextView)findViewById(R.id.uygulama_ismi1)).setText(R.string.app_name1);
+        ((TextView)findViewById(R.id.uygulama_ismi2)).setText(R.string.app_name2);
+        ((TextView)findViewById(R.id.playTV)).setText(R.string.play_button);
+
+//        Log.i("cacheDir",getCacheDir().getAbsolutePath());
         try {
             checkSavedQuestions();
         } catch (IOException e) {

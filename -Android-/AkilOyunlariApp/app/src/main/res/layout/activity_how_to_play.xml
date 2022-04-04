@@ -25,7 +25,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/backButtonLL_htp"
@@ -90,26 +90,52 @@
                     app:layout_constraintTop_toBottomOf="@id/HowToPlayTV"
                     app:layout_constraintVertical_bias="1.0" />
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/ic_playbutton"
-                    android:background="@drawable/nums_gl_bg"
-                    android:tint="@color/f7f5fa"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/more_rounded_yellowish_bg"
                     android:onClick="goToGuide"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="14dp"
-                    android:paddingRight="10dp"
+                    android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:paddingStart="14dp"
-
-                    app:layout_constraintBottom_toBottomOf="@+id/gameNameTV_htp"
+                    android:layout_marginBottom="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/gameNameTV_htp"
-                    app:layout_constraintTop_toTopOf="@+id/gameNameTV_htp"
                     app:layout_constraintHorizontal_bias="0.4"
-                     />
+                    app:layout_constraintStart_toEndOf="@+id/gameNameTV_htp"
+                    app:layout_constraintTop_toBottomOf="@+id/HowToPlayTV"
+                    app:layout_constraintVertical_bias="1.0">
+
+                    <ImageView
+                        android:id="@+id/play_IV"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:paddingStart="14dp"
+                        android:paddingLeft="14dp"
+                        android:paddingTop="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingBottom="10dp"
+                        android:src="@drawable/ic_playbutton"
+                        android:tint="@color/near_black_blue"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/mohave_bold"
+                        android:gravity="center"
+                        android:text="@string/hands_on_tutorial"
+                        android:textColor="@color/near_black_blue"
+                        android:textSize="20sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/play_IV" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -223,7 +249,7 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Hazine Avı"
+                    android:text="@string/HazineAvı"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 
@@ -238,7 +264,7 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Patika"
+                    android:text="@string/Patika"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 
@@ -253,7 +279,7 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Sayı Bulmaca"
+                    android:text="@string/SayıBulmaca"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 
@@ -268,7 +294,7 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Sözcük Türü"
+                    android:text="@string/SözcükTuru"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 
@@ -283,39 +309,39 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Piramit"
+                    android:text="@string/Piramit"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 
-                <TextView
-                    android:id="@+id/pentomino_htpgl"
-                    android:tag="Pentomino"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="7dp"
-                    android:fontFamily="@font/mohave_regular"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:onClick="howToPlayChangeGame"
-                    android:text="Pentomino"
-                    android:textColor="@color/f7f5fa"
-                    android:textSize="37sp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/pentomino_htpgl"-->
+<!--                    android:tag="Pentomino"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_margin="7dp"-->
+<!--                    android:fontFamily="@font/mohave_regular"-->
+<!--                    android:gravity="center"-->
+<!--                    android:clickable="true"-->
+<!--                    android:onClick="howToPlayChangeGame"-->
+<!--                    android:text="Pentomino"-->
+<!--                    android:textColor="@color/f7f5fa"-->
+<!--                    android:textSize="37sp" />-->
 
-                <TextView
-                    android:id="@+id/anagram_htpgl"
-                    android:tag="Anagram"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="7dp"
-                    android:fontFamily="@font/mohave_regular"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:onClick="howToPlayChangeGame"
-                    android:text="Anagram"
-                    android:textColor="@color/f7f5fa"
-                    android:textSize="37sp" />
+<!--                <TextView-->
+<!--                    android:id="@+id/anagram_htpgl"-->
+<!--                    android:tag="Anagram"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_margin="7dp"-->
+<!--                    android:fontFamily="@font/mohave_regular"-->
+<!--                    android:gravity="center"-->
+<!--                    android:clickable="true"-->
+<!--                    android:onClick="howToPlayChangeGame"-->
+<!--                    android:text="Anagram"-->
+<!--                    android:textColor="@color/f7f5fa"-->
+<!--                    android:textSize="37sp" />-->
             </LinearLayout>
 
         </ScrollView>

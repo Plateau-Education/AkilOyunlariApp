@@ -603,7 +603,6 @@
             android:layout_height="60dp"
             android:clickable="true"
             android:focusable="true"
-            android:onClick="changeSwitch"
             android:src="@drawable/ic_diamond"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck" />
 

@@ -177,10 +177,12 @@ public class HazineAviUtils {
                 String co = Integer.toString(j)+i;
                 if(answer.contains(co) && !gridDCs[j][i].equals("-1")){
                     checking=false;
+                    Log.i("checkfalse1","i,j: "+ i + ", "+ j);
                     break;
                 }
                 else if(!answer.contains(co) && gridDCs[j][i].equals("-1")){
                     checking=false;
+                    Log.i("checkfalse2","i,j: "+ i + ", "+ j);
                     break;
                 }
             }

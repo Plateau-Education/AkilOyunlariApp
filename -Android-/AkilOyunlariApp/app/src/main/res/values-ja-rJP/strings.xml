@@ -87,14 +87,14 @@
     <string name="InvalidCode">無効なコード</string>
     <string name="msg_no_network_connection" translatable="false">ネットワークに接続されていません。ネットワーク設定を確認してください</string>
     <string name="WaitingInsNextQ">インストラクターが次の質問に進むのを待っています。</string>
-    <string name="htp_sudoku">.</string>
-    <string name="htp_hazineavi">.</string>
-    <string name="htp_patika">.</string>
-    <string name="htp_sayibulmaca">.</string>
-    <string name="htp_sozcukturu">.</string>
-    <string name="htp_piramit">.</string>
-    <string name="WaitingForScores">.</string>
-    <string name="feature_not_active">.</string>
+    <string name="htp_sudoku">Sudoku is played on a grid of 6x6 or 9x9 spaces. Each row, column and square needs to be filled out with the numbers 1-6 or 1-9, without repeating any numbers within the row, column or square. While solving a Sudoku question, by looking at the numbers in the same rows, columns and squares, the numbers that cannot be found in the spaces are determined and the possibilities are reduced. For example, if 8 out of 9 numbers cannot be placed in a space, the remaining 1 number can be placed precisely.</string>
+    <string name="htp_hazineavi">In Mine Sweeper game, the numbers given show how many diamonds their neighbors have. While solving a Hazine Avı question, the first thing to look for is clues that have as many neighbors as the number written in them. Clues that have as many neighbors as the number written in them may not be found in every question or may be insufficient to reach a solution. What needs to be looked for in these cases is the common effects of the diamonds which will be placed on the neighbors of the clues, on the other clues.</string>
+    <string name="htp_patika">The aim of the Loop game is to draw a path that will fill all empty boxes, will not cross over itself, pass through each box once and form a single closed shape when completed. When solving the Patika question, first of all, corners are found. If 2 of the 4 neighbors (horizontal and vertical neighbors) of any square are closed, a path is drawn to its other two neighbors. This process is continued until no more corners can be drawn. In addition, another method that should be used is to utilize the single-closed-path rule. For example, if there are 2 directions for the path to go in a box and a small closed shape is formed when continuing from one of them, the other path should be taken.</string>
+    <string name="htp_sayibulmaca">In the Number Puzzle game, the numbers on the right show how many of the numbers in that row are included in the answer. Numbers with a \'+\' sign next to them indicate that the numbers in that row are in the same column in the answer. Those with a \'-\' sign next to them indicate that the numbers in that row are in a different column in the answer. For example, in a line that says \'+1 -2\' on the right side, it can be deduced that 3 of the numbers are in the answer and 1 of them is in the correct place and 2 of them are in the wrong place.</string>
+    <string name="htp_sozcukturu">The aim of the Word Tour game is to find words in the table according to the number of letters given. In this game; it is necessary to draw a path starting from the word with the fewest letters and moving between the boxes horizontally, vertically or diagonally and ending at the last letter of the word with the most letters. In addition, each box should be used only once and no empty boxes should be left.</string>
+    <string name="htp_piramit">In the Pyramid game, the numbers in the boxes must be the sum or difference of the numbers in the 2 boxes below them. In addition, the same number cannot be placed more than once in a row and consecutive numbers cannot be placed in adjacent boxes. All empty boxes must be filled in accordance with these rules.</string>
+    <string name="WaitingForScores">Waiting For Scores...</string>
+    <string name="feature_not_active">This feature is not active.</string>
     <string name="HazineAvı">Mine Sweeper</string>
     <string name="Patika">Loop</string>
     <string name="SayıBulmaca">Number Puzzle</string>
@@ -123,4 +123,21 @@
     <string name="ChooseStudent">学生を選ぶ</string>
     <string name="ChooseGame">ゲームを選ぶ ：</string>
     <string name="ChooseDifficulty">難易度を選ぶ ：</string>
+    <string name="General">General</string>
+    <string name="LogOut">Log Out</string>
+    <string name="wannaLogOut">Do you want to log out of your account?</string>
+    <string name="hands_on_tutorial">Hands-on\nTutorial</string>
+    <string name="patika_instrings0">Welcome to the Loop Puzzle Tutorial. You can take part in the solving process by drawing lines as shown in the animations throughout the tutorial.</string>
+    <string name="patika_instrings2">While solving Loop Puzzle, you should use 2 basic tecniques: Finding corners and edges, being careful not to form a small closed path.</string>
+    <string name="patika_instrings1">In Loop Puzzle, the purpose is to draw a closed path which does not cross itself and passes through each white box.</string>
+    <string name="patika_instrings3">"Finding corner and edges means that, if two neighbors of a box is closed (cannot draw a line to them) you should draw a line to the remaining 2 neighbors forming a corner or edge. "</string>
+    <string name="patika_instrings4">For example, the top and left neighbors of the box on the top left is closed, which means there cannot be a path drawn towards these neighbors. Therefore, you should draw a line towards bottom and right neighbors, forming a corner.</string>
+    <string name="patika_instrings5">Like shown in the previous step, draw corners/edges into other boxes that have 2 closed neighbors.</string>
+    <string name="patika_instrings6">In the 2nd solving technique, you should obstruct the formation of a small closed path which do not pass from each box on the grid.</string>
+    <string name="patika_instrings7">For example in the box which is marked red, path can go either upwards or to the right. If it goes upwards, a small closed path will be formed. Therefore, the path should go to the right.</string>
+    <string name="patika_instrings8">Like shown in the previous step, follow the animations and draw suitable lines using the method of obstructing the formation of small closed paths.</string>
+    <string name="patika_instrings9">You have come to the end of this tutorial.🏁 You can exit with the help of the back button at the top left or return to the previous steps with the arrow keys.</string>
+    <string name="your_opponent_solved_all_of_the_puzzles">Your opponent solved all of the puzzles.</string>
+    <string name="your_opponent_solved_the">Your opponent solved the</string>
+    <string name="nth_puzzle">. puzzle.</string>
 </resources>

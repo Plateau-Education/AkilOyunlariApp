@@ -1,23 +1,32 @@
 package com.yaquila.akiloyunlariapp;
 
-import static android.view.View.GONE;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.gridlayout.widget.GridLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.format.Time;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.gridlayout.widget.GridLayout;
+import android.widget.Toast;
 
 import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
 import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
@@ -30,7 +39,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -39,10 +56,13 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
+import static android.view.View.GONE;
 
 public class MultiplayerActivity extends AppCompatActivity {
 
@@ -57,6 +77,7 @@ public class MultiplayerActivity extends AppCompatActivity {
     int currentQ = 0;
     int totalSolveTime;
     int score = 0;
+    int currentScore = 0;
     int secondsToGo = 60;
     int timerInSeconds = 0;
     long currentTimeInMillis;
@@ -181,7 +202,7 @@ public class MultiplayerActivity extends AppCompatActivity {
     public void undoOperation(View view) {
         try {
             Log.i("utilName",utilsMap.get(gameName).getSimpleName());
-            utilsMap.get(gameName).getDeclaredMethod("undoOperation", (Class<?>) null).invoke(null, (Object) null);
+            utilsMap.get(gameName).getDeclaredMethod("undoOperation", null).invoke(null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -200,7 +221,7 @@ public class MultiplayerActivity extends AppCompatActivity {
         GridLayout gridLayout = findViewById(R.id.gridGL_ga);
         boolean checking = false;
         try {
-            checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", (Class<?>) null).invoke(null, (Object) null);
+            checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -232,6 +253,8 @@ public class MultiplayerActivity extends AppCompatActivity {
 
                 solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
 
+                sendSolvedQ();
+
                 leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -249,6 +272,9 @@ public class MultiplayerActivity extends AppCompatActivity {
                 currentQ++;
                 Log.i("socket-qnums","current: "+currentQ+" total: "+numberOfQ+" timerInSeconds: "+timerInSeconds);
                 solveTimeList.add((int) (secondsToGo - ((afterSecondsToGoMinMillis-Calendar.getInstance().getTimeInMillis())/1000)));
+
+                sendSolvedQ();
+
                 score = 10 + 30 + 60;
                 if(solveTimeList.get(0)<60) score += (int)(((60f-solveTimeList.get(0))/60f)*10f);
                 if(solveTimeList.get(1)<180) score += (int)(((180f-solveTimeList.get(1))/180f)*30f);
@@ -263,7 +289,7 @@ public class MultiplayerActivity extends AppCompatActivity {
                         ((TextView)findViewById(R.id.waitingDialogCL).findViewById(R.id.loadingTextView2)).setText(R.string.WaitingForScores);
                         findViewById(R.id.waitingDialogCL).setVisibility(View.VISIBLE);
 
-                sendScore(score);
+                        sendScore(score);
                     }
                 },500);
             }
@@ -282,6 +308,7 @@ public class MultiplayerActivity extends AppCompatActivity {
         currentTimeInMillis = Calendar.getInstance().getTimeInMillis();
         afterTenMinMillis = currentTimeInMillis + 600000;
 
+        //noinspection deprecation
         timerHandler = new Handler();
         runnable = new Runnable() {
             @Override
@@ -333,7 +360,7 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     public void clearGrid(){
         try {
-            utilsMap.get(gameName).getDeclaredMethod("clearGrid", (Class<?>) null).invoke(null, (Object) null);
+            utilsMap.get(gameName).getDeclaredMethod("clearGrid", null).invoke(null, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -343,34 +370,36 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     public void mainFunc() throws JSONException {
         if(currentQ == 1){
-            solveTimeList.add(timerInSeconds);
+//            solveTimeList.add(timerInSeconds);
             timerTV = findViewById(R.id.timeTV_game);
             if (getString(R.string.HazineAvı).equals(gameName)) {
                 setContentView(R.layout.activity_game_hazine_avi8);
                 HazineAviUtils.gridSize = 8;
                 secondsToGo = 180;
-                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+            } else if (getString(R.string.Patika).equals(gameName)) {
             } else if (getString(R.string.Piramit).equals(gameName)) {
                 setContentView(R.layout.activity_game_piramit4);
                 PiramitUtils.gridSize = 4;
                 secondsToGo = 180;
-                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
             }
             Log.i("solveTimeList",solveTimeList.toString());
         }
         else if(currentQ == 2){
-            solveTimeList.add(timerInSeconds-solveTimeList.get(0));
+//            solveTimeList.add(timerInSeconds-solveTimeList.get(0));
             timerTV = findViewById(R.id.timeTV_game);
             if (getString(R.string.HazineAvı).equals(gameName)) {
                 setContentView(R.layout.activity_game_hazine_avi10);
                 HazineAviUtils.gridSize = 10;
                 secondsToGo = 300;
-                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+            } else if (getString(R.string.Patika).equals(gameName)) {
             } else if (getString(R.string.Piramit).equals(gameName)) {
                 setContentView(R.layout.activity_game_piramit5);
                 PiramitUtils.gridSize = 5;
                 secondsToGo = 300;
-                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
             }
             Log.i("solveTimeList",solveTimeList.toString());
         }
@@ -428,7 +457,43 @@ public class MultiplayerActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
     }
 
-    private final Socket socket;
+    @SuppressLint("SetTextI18n")
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void showOpponentProgress(int opponentQ){
+        try{
+            final TextView multiplayerOpponentProgressTV = findViewById(R.id.multiplayer_opponent_progress_tv);
+            multiplayerOpponentProgressTV.setVisibility(View.VISIBLE);
+            Animation anim = new AlphaAnimation(0f,0.7f);
+            anim.setDuration(500);
+            anim.setStartOffset(20);
+            multiplayerOpponentProgressTV.startAnimation(anim);
+            multiplayerOpponentProgressTV.setAlpha(0.7f);
+            if(opponentQ>=numberOfQ) multiplayerOpponentProgressTV.setText(getString(R.string.your_opponent_solved_all_of_the_puzzles));
+            else multiplayerOpponentProgressTV.setText(getString(R.string.your_opponent_solved_the)+" "+opponentQ+getString(R.string.nth_puzzle));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    multiplayerOpponentProgressTV.clearAnimation();
+                    Animation anim = new AlphaAnimation(0.7f,0f);
+                    anim.setDuration(500);
+                    anim.setStartOffset(20);
+                    multiplayerOpponentProgressTV.startAnimation(anim);
+                    multiplayerOpponentProgressTV.setAlpha(0.7f);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            multiplayerOpponentProgressTV.clearAnimation();
+                            multiplayerOpponentProgressTV.setVisibility(GONE);
+                        }
+                    },500);
+                }
+            },3000);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private Socket socket;
     {
         try {
             socket = IO.socket("https://plato-all-in-one.herokuapp.com");
@@ -488,12 +553,13 @@ public class MultiplayerActivity extends AppCompatActivity {
                                 setContentView(R.layout.activity_game_hazine_avi5);
                                 HazineAviUtils.gridSize = 5;
                                 secondsToGo = 60;
-                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
+                            } else if (getString(R.string.Patika).equals(gameName)) {
                             } else if (getString(R.string.Piramit).equals(gameName)) {
                                 setContentView(R.layout.activity_game_piramit3);
                                 PiramitUtils.gridSize = 3;
                                 secondsToGo = 60;
-                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000L;
+                                afterSecondsToGoMinMillis = Calendar.getInstance().getTimeInMillis() + secondsToGo * 1000;
                             }
                             TextView undoTV = findViewById(R.id.undoTV_ga);
                             TextView resetTV = findViewById(R.id.resetTV_game);
@@ -525,6 +591,19 @@ public class MultiplayerActivity extends AppCompatActivity {
                 });
             }
         });
+        socket.on("opponentProgress", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+                    @Override
+                    public void run() {
+                        Log.i("socket-opponentProgress","opponentProgress:"+(int)args[0]);
+                        if(!timerStopped)showOpponentProgress((int)args[0]);
+                    }
+                });     
+            }
+        });
         socket.on("scores", new Emitter.Listener() {
             @Override
             public void call(final Object... args) {
@@ -539,7 +618,7 @@ public class MultiplayerActivity extends AppCompatActivity {
                             JSONArray players = (JSONArray) args[0];
                             JSONArray sortedPlayers = new JSONArray();
 
-                            List<JSONObject> jsonValues = new ArrayList<>();
+                            List<JSONObject> jsonValues = new ArrayList<JSONObject>();
                             for (int i = 0; i < players.length(); i++) {
                                 jsonValues.add(players.getJSONObject(i));
                             }
@@ -561,7 +640,7 @@ public class MultiplayerActivity extends AppCompatActivity {
                                         //do something
                                     }
 //                                    if your value is numeric:
-                                    return Integer.compare(valA, valB);
+                                    return -Integer.compare(valA, valB);
                                     //if you want to change the sort order, simply use the following:
                                     //return -valA.compareTo(valB);
                                 }
@@ -620,6 +699,12 @@ public class MultiplayerActivity extends AppCompatActivity {
         socket.emit("getInRoom",socketId);
     }
 
+    public void sendSolvedQ(){
+        Log.i("socket","sendSolvedQ");
+        socket.emit("sendSolvedQ",currentQ);
+    }
+
+    @SuppressWarnings("deprecation")
     public void sendScore(int score){
         Log.i("socket","sendScore: "+score);
         socket.emit("multiplayer_sendScore",score);
@@ -648,6 +733,7 @@ public class MultiplayerActivity extends AppCompatActivity {
         socket.emit("getScores");
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
