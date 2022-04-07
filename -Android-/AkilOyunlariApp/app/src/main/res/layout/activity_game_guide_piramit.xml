@@ -416,7 +416,6 @@
             android:paddingBottom="5dp"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:onClick="deleteNum"
             android:text="@string/Delete"
             android:textAllCaps="false"
             android:textColor="@color/f7f5fa"

@@ -882,6 +882,7 @@ public class GameGuideActivity extends AppCompatActivity {
             }
             if (inNum == 7 || inNum == 8){
                 allowedBoxes.clear();
+                findViewById(R.id.deleteTV_guide).setOnClickListener(null);
                 ((TextView)gl.findViewWithTag("answer2")).setText("1 2 9");
                 ((TextView)gl.findViewWithTag("answer0")).setText("3 5 2 6");
                 ((TextView)gl.findViewWithTag("answer1")).setText("6 8 5 9 2");
@@ -912,6 +913,7 @@ public class GameGuideActivity extends AppCompatActivity {
                 gl.findViewWithTag("answer2").setBackground(getResources().getDrawable(R.drawable.stroke_bg2_shallow));
                 ((TextView)gl.findViewWithTag("answer2")).setTextColor(getResources().getColor(R.color.f7f5fa));
                 animateView(answer2,0.5f,1.0f);
+                delete.setOnClickListener(null);
                 answer2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1007,6 +1009,7 @@ public class GameGuideActivity extends AppCompatActivity {
             }
             if(inNum == 9){
                 allowedBoxes.clear();
+                findViewById(R.id.deleteTV_guide).setOnClickListener(null);
                 List<String> coos = new ArrayList<>(Arrays.asList("00","answer0","answer1","02","answer2","22"));
                 for(int i = 0; i < coos.size() ; i++){
                     gl.findViewWithTag(coos.get(i)).setBackground(getResources().getDrawable(R.drawable.stroke_bg2));

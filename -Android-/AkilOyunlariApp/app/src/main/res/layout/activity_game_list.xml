@@ -111,7 +111,7 @@
                     android:visibility="gone"
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
-                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:background="@drawable/sudoku_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView
@@ -180,7 +180,7 @@
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
 
-                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:background="@drawable/hazine_avi_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView
@@ -252,7 +252,7 @@
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
 
-                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:background="@drawable/patika_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView
@@ -321,7 +321,7 @@
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
 
-                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:background="@drawable/sayi_bulmaca_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView
@@ -393,7 +393,7 @@
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
 
-                    android:background="@drawable/hazineavi_gamelist_image"
+                    android:background="@drawable/sozcuk_turu_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView
@@ -462,7 +462,7 @@
                     android:onClick="goToDifficulty"
                     android:layout_marginBottom="15dp"
 
-                    android:background="@drawable/piramit_gamelist_image"
+                    android:background="@drawable/piramit_gamelist"
                     android:layout_weight="0.5">
 
                     <ImageView

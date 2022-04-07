@@ -433,6 +433,7 @@ public class GameActivityPiramit extends AppCompatActivity{
         for(int i = 1; i<10; i++){
             numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
         }
+        findViewById(R.id.draftbutton_ga).setEnabled(true);
         undoTV.setEnabled(true);
         deleteTV.setEnabled(true);
         resetTV.setEnabled(true);

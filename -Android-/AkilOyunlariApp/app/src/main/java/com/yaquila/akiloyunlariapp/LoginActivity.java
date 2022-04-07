@@ -1,5 +1,7 @@
 package com.yaquila.akiloyunlariapp;
 
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     GoogleSignInClient mGoogleSignInClient;
     String signInUpStatus = "SignUp";
+    boolean isGoogleSignUp = false;
     boolean alreadyHaveID = false;
     EditText usernameET;
     EditText passwordET;
@@ -123,14 +126,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             } else if (resId.contains("Not Found")){
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
-                                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                                 displaynameET.setVisibility(View.VISIBLE);
                                 usernameET.setVisibility(View.VISIBLE);
                                 //TODO Change some UI maybe
-                                passwordET.setVisibility(View.GONE);
+                                passwordET.setVisibility(GONE);
+                                findViewById(R.id.sign_in_button).setVisibility(GONE);
                                 displaynameET.setText(signInAccount.getDisplayName());
                                 emailET.setText(signInAccount.getEmail());
                                 usernameET.setText("");
@@ -263,14 +265,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             } else if (objres.getString("Message").contains("Not Found")){
                                 signInUpStatus = "SignUp";
                                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
-                                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                                 displaynameET.setVisibility(View.VISIBLE);
                                 usernameET.setVisibility(View.VISIBLE);
                                 //TODO Change some UI maybe
-                                passwordET.setVisibility(View.GONE);
+                                passwordET.setVisibility(GONE);
+                                findViewById(R.id.sign_in_button).setVisibility(View.GONE);
                                 displaynameET.setText(signInAccount.getDisplayName());
                                 emailET.setText(signInAccount.getEmail());
                                 usernameET.setText("");
@@ -408,7 +409,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
         }
-        else{
+        else if (!isGoogleSignUp){
             String type;
             if(view.getId()==R.id.signUpAsStudentBtn){
                 type = "Student";
@@ -421,6 +422,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 loadingDialogFunc();
                 //noinspection deprecation
                 postMessage = codePostRequest.execute("https://mind-plateau-api.herokuapp.com/user" , "Send", "fx!Ay:;<p6Q?C8N{", username, email, type).get();
+                Log.i("postId", postMessage);
+            } catch (ExecutionException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            String type;
+            if(view.getId()==R.id.signUpAsStudentBtn){
+                type = "Student";
+            }else{
+                type = "Instructor";
+            }
+            PostRequest postRequest = new PostRequest();
+            String postMessage;
+            try {
+                loadingDialogFunc();
+                //noinspection deprecation
+                postMessage = postRequest.execute("https://mind-plateau-api.herokuapp.com/user" , "SignUp", "fx!Ay:;<p6Q?C8N{", displayname, username, email, password, type).get();
                 Log.i("postId", postMessage);
             } catch (ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -525,6 +544,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     loadingDialogFunc();
                     //noinspection deprecation
                     postMessage = postRequest.execute("https://mind-plateau-api.herokuapp.com/user", "Google", "fx!Ay:;<p6Q?C8N{", account.getEmail()).get();
+                    isGoogleSignUp=true;
                     Log.i("postId", postMessage);
                 } catch (ExecutionException | InterruptedException e) {
                     e.printStackTrace();
@@ -540,8 +560,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //        super.onBackPressed();
         signInUpStatus = "SignUp";
         ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
-        ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-        findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
         ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
         ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
         displaynameET.setVisibility(View.VISIBLE);
@@ -551,6 +569,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         passwordET.setText("");
         displaynameET.setText("");
         emailET.setText("");
+        findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
         passwordET.setVisibility(View.VISIBLE);
     }
 
@@ -563,18 +582,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(signInUpStatus.equals("SignUp")){
                 signInUpStatus = "SignIn";
                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignIn);
-                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.GONE);
                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.DontHaveAccount);
                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignIn);
-                displaynameET.setVisibility(View.GONE);
-                usernameET.setVisibility(View.GONE);
+                displaynameET.setVisibility(GONE);
+                usernameET.setVisibility(GONE);
+                findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
                 passwordET.setVisibility(View.VISIBLE);
                 //TODO Change some UI maybe
             } else {
                 signInUpStatus = "SignUp";
                 ((Button)findViewById(R.id.signUpAsStudentBtn)).setText(R.string.SignUp);
-                ((Button)findViewById(R.id.signUpAsTeacherBtn)).setText(R.string.SignUpAsInstructer);
-                findViewById(R.id.signUpAsTeacherBtn).setVisibility(View.VISIBLE);
                 ((TextView)findViewById(R.id.signInChangeButton)).setText(R.string.HaveAccount);
                 ((TextView)findViewById(R.id.signTV)).setText(R.string.SignUp);
                 displaynameET.setVisibility(View.VISIBLE);

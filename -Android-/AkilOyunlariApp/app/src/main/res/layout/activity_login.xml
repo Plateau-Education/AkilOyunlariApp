@@ -34,7 +34,7 @@
             android:id="@+id/displaynameEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/light_red_rounded_bg"
             android:ems="10"
             android:fontFamily="@font/mohave_bold"
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/light_red_rounded_bg"
             android:inputType="textFilter"
             android:textColor="#000000"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/light_red_rounded_bg"
             android:inputType="textFilter"
             android:textColor="#000000"
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:fontFamily="@font/mohave_bold"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/light_red_rounded_bg"
             android:inputType="textPassword"
             android:textColor="#000000"
@@ -134,34 +134,17 @@
                 android:textSize="18sp"
                 android:text="@string/SignUp" />
 
-            <Button
-                android:id="@+id/signUpAsTeacherBtn"
-                android:gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/mohave_bold"
-                android:background="@drawable/clicked_diff_bg"
-                android:textColor="#ffffff"
-                android:onClick="signClicked"
-                android:textAllCaps="false"
-                android:padding="10dp"
-                android:textSize="18sp"
-                android:text="@string/SignUpAsInstructer" />
 
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/Login"
+                android:textAllCaps="false"
+                android:textColor="@color/near_black_blue" />
 
         </LinearLayout>
-
-
-
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/Login"
-            android:textAllCaps="false"
-            android:textColor="@color/near_black_blue" />
 
     </LinearLayout>
 
