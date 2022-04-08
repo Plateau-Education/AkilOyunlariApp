@@ -2,6 +2,7 @@ package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
@@ -10,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -41,18 +43,17 @@ import java.util.Objects;
 
 public class GameActivityPatika extends AppCompatActivity {
 
-    String gameName;
-    String difficulty;
-    int timerInSeconds = 0;
-    boolean timerStopped=false;
-    boolean paused = false;
-    boolean gotQuestion = false;
-    boolean is_moving = false;
-    boolean solvedQuestion = false;
+    public static String gameName;
+    public static String difficulty;
+    public static int timerInSeconds = 0;
+    public static boolean timerStopped=false;
+    public static boolean paused = false;
+    public static boolean gotQuestion = false;
+    public static boolean solvedQuestion = false;
 
-    LoadingDialog loadingDialog;
-    Handler timerHandler;
-    Runnable runnable;
+    public static LoadingDialog loadingDialog;
+    public static Handler timerHandler;
+    public static Runnable runnable;
 
 
     public void wannaLeaveDialog(View view){
@@ -115,10 +116,11 @@ public class GameActivityPatika extends AppCompatActivity {
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
+            final AppCompatActivity appCompatActivity = this;
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainFunc();
+                    mainFunc(appCompatActivity);
                     correctDialog.dismiss();
                 }
             });
@@ -146,10 +148,10 @@ public class GameActivityPatika extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+    public static void checkAnswer(final AppCompatActivity context, View view){
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         if(PatikaUtils.checkAnswer()){
-            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
                 ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPatika."+PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
@@ -173,16 +175,16 @@ public class GameActivityPatika extends AppCompatActivity {
             }
             timerStopped = true;
             solvedQuestion = true;
-            LayoutInflater factory = LayoutInflater.from(this);
+            LayoutInflater factory = LayoutInflater.from(context);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+            final AlertDialog correctDialog = new AlertDialog.Builder(context).create();
             TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
-            findViewById(R.id.clickView).setVisibility(View.VISIBLE);
-            TextView undoTV = findViewById(R.id.undoTV_ga);
-            TextView resetTV = findViewById(R.id.resetTV_game);
+            context.findViewById(R.id.clickView).setVisibility(View.VISIBLE);
+            TextView undoTV = context.findViewById(R.id.undoTV_ga);
+            TextView resetTV = context.findViewById(R.id.resetTV_game);
             for (int i = 0; i < PatikaUtils.gridSize; i++) {
                 for (int j = 0; j < PatikaUtils.gridSize; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
@@ -194,17 +196,17 @@ public class GameActivityPatika extends AppCompatActivity {
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainFunc();
+                    mainFunc(context);
                     correctDialog.dismiss();
                 }
             });
             leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    Intent intent = new Intent(context.getApplicationContext(), GameListActivity.class);
                     intent.putExtra("type","single");
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                    context.startActivity(intent);
+                    context.overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                     correctDialog.dismiss();
                 }
             });
@@ -214,17 +216,22 @@ public class GameActivityPatika extends AppCompatActivity {
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    public class GetRequest extends AsyncTask<String, Void, String> {
+    public static class GetRequest extends AsyncTask<String, Void, String> {
 
         ArrayList<String> questions = new ArrayList<>();
         ArrayList<Integer> gameIds = new ArrayList<>();
-        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+
+        AppCompatActivity ctx = null;
+
+        public GetRequest(AppCompatActivity context){
+            ctx = context;
+        }
 
         @Override
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                SharedPreferences sharedPreferences = ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
                     questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Patika." + PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -280,7 +287,7 @@ public class GameActivityPatika extends AppCompatActivity {
                 JSONArray gridArrays = (JSONArray)jb.get("Info");
                 JSONArray idArray = (JSONArray)jb.get("Ids");
                 Log.i("idarray", idArray +"  "+idArray.length()+"    ga:"+gridArrays.length());
-                Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
+                Map<String, ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
                 assert solvedQuestions != null;
                 Log.i("solvedQuestion", Objects.requireNonNull(solvedQuestions.get("Patika."+PatikaUtils.gridSize)) +"ss");
                 for(int i = 0; i < idArray.length(); i++){
@@ -295,49 +302,49 @@ public class GameActivityPatika extends AppCompatActivity {
             }
 
             if(questions.size() == 0){
-                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                Intent intent = new Intent(ctx.getApplicationContext(), GameListActivity.class);
                 intent.putExtra("type","single");
                 intent.putExtra("message","Need internet connection to view " + gameName +" "+ difficulty);
-                startActivity(intent);
-                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                ctx.startActivity(intent);
+                ctx.overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 timerStopped=true;
                 loadingDialog.dismissDialog();
             }
 
             try {
-                seperateGridAnswer(new JSONArray(questions.get(0)));
+                seperateGridAnswer(ctx,new JSONArray(questions.get(0)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDPatika."+PatikaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
+                ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).edit().putString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
+                ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).edit().putString("IDPatika."+PatikaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDPatika." + PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+                Log.i("gameIds", ObjectSerializer.deserialize(ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE).getString("IDPatika." + PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
             timerStopped=false;
             gotQuestion = true;
-            timerFunc();
+            timerFunc(ctx);
             loadingDialog.dismissDialog();
         }
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
-    public void seperateGridAnswer(JSONArray grid) throws JSONException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+    public static void seperateGridAnswer(AppCompatActivity context, JSONArray grid) throws JSONException {
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
 
         JSONArray bl = (JSONArray) grid.get(0);
         for(int bli = 0; bli < bl.length(); bli++){
             JSONArray co = (JSONArray) bl.get(bli);
             String cos = (co.getInt(0))+(Integer.toString(co.getInt(1)));
-            gridLayout.findViewWithTag(cos).setBackground(getResources().getDrawable(R.color.near_black_blue));
+            gridLayout.findViewWithTag(cos).setBackground(context.getResources().getDrawable(R.color.near_black_blue));
             PatikaUtils.blackList.add(cos);
             PatikaUtils.lineGrid[co.getInt(0)][co.getInt(1)] = "rldu";
         }
@@ -385,9 +392,9 @@ public class GameActivityPatika extends AppCompatActivity {
         }
     }
 
-    public void timerFunc(){
+    public static void timerFunc(AppCompatActivity context){
         timerHandler = new Handler();
-        final TextView timerTV = findViewById(R.id.timeTV_game);
+        final TextView timerTV = context.findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -407,27 +414,29 @@ public class GameActivityPatika extends AppCompatActivity {
     }
 
     @SuppressLint("InflateParams")
-    public void loadingDialogFunc(){
-        loadingDialog = new LoadingDialog(GameActivityPatika.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+    public static void loadingDialogFunc(AppCompatActivity context){
+        loadingDialog = new LoadingDialog(context, context.getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
 
-    public void clearGrid(){
+    public static AppCompatActivity appCompatActivity = null;
+
+    public static void clearGrid(){
         PatikaUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
     }
 
-    public void mainFunc(){
-        TextView undoTV = findViewById(R.id.undoTV_ga);
-        TextView resetTV = findViewById(R.id.resetTV_game);
+    public static void mainFunc(AppCompatActivity context){
+        TextView undoTV = context.findViewById(R.id.undoTV_ga);
+        TextView resetTV = context.findViewById(R.id.resetTV_game);
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
-        findViewById(R.id.clickView).setVisibility(View.GONE);
+        context.findViewById(R.id.clickView).setVisibility(View.GONE);
         clearGrid();
-        GetRequest getRequest = new GetRequest();
+        GetRequest getRequest = new GetRequest(context);
         getRequest.execute("https://mind-plateau-api.herokuapp.com/Patika."+PatikaUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
-        loadingDialogFunc();
+        loadingDialogFunc(context);
     }
 
     public void initSomeVar(){
@@ -439,6 +448,7 @@ public class GameActivityPatika extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        appCompatActivity = this;
         PatikaUtils.initVars(this);
 
         Intent intent = getIntent();
@@ -472,79 +482,84 @@ public class GameActivityPatika extends AppCompatActivity {
 //                Log.i("pxheight",pxHeight+"");
 //            }
 //        }, 200);
+
         PatikaUtils.pxHeight = (int) (300 * getResources().getDisplayMetrics().density);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            Log.i("pxheight, hpx, sd, ddpi",PatikaUtils.pxHeight+", "+ DisplayMetrics.DENSITY_DEVICE_STABLE+","+getResources().getDisplayMetrics().densityDpi);
+        }
         initSomeVar();
-        gridLayout.setOnTouchListener(new View.OnTouchListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                float mx = motionEvent.getX();
-                float my = motionEvent.getY();
-                Log.i("x / y",mx + " / " + my);
-                if(mx >= 0 && mx <= PatikaUtils.pxHeight && my >= 0 && my <= PatikaUtils.pxHeight){
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
-                            PatikaUtils.previousCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
-                            is_moving=false;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
-                            String currentCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
-//                            Log.i("coor",currentCoor);
-                            if(PatikaUtils.lineCanBeDrawn(currentCoor,PatikaUtils.previousCoor) || (PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
-                                is_moving=true;
-                                int[] firstMP = PatikaUtils.middlePoint(PatikaUtils.previousCoor);
-                                int[] secondMP = PatikaUtils.middlePoint(currentCoor);
-                                if((PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
-//                                    Log.i("eraseMode","ON");
-                                    PatikaUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    paint.setColor(Color.TRANSPARENT);
-                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/60);
-                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true,(ImageView) findViewById(R.id.canvasIV));
-                                    if(PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor)){
-                                        PatikaUtils.removeLine(PatikaUtils.previousCoor,currentCoor);
-                                        PatikaUtils.operations.remove(PatikaUtils.previousCoor+currentCoor);
-                                    }
-                                    else{
-                                        PatikaUtils.removeLine(currentCoor,PatikaUtils.previousCoor);
-                                        PatikaUtils.operations.remove(currentCoor+PatikaUtils.previousCoor);
-                                    }
-                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"-");
-                                    PatikaUtils.paint.setXfermode(null);
-//                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
-                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/75);
-                                }
-                                else{
-                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ PatikaUtils.previousCoor);
-                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false,(ImageView) findViewById(R.id.canvasIV));
-                                    PatikaUtils.addLine(PatikaUtils.previousCoor, currentCoor);
-                                    PatikaUtils.operations.add(PatikaUtils.previousCoor+currentCoor);
-                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"+");
-                                }
-                                PatikaUtils.previousCoor = currentCoor;
-                                if(PatikaUtils.isGridFull()){
-                                    checkAnswer(null);
-                                }
-                                Log.i("PatikaUtils.lineGrid", Arrays.deepToString(PatikaUtils.lineGrid));
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            if(!is_moving){
-                                Log.i("Pressed","Pressed");
-                            }
-//                            if(isGridFull()){
-//                                checkAnswer(null);
+//        gridLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                float mx = motionEvent.getX();
+//                float my = motionEvent.getY();
+//                Log.i("x / y",mx + " / " + my);
+//                if(mx >= 0 && mx <= PatikaUtils.pxHeight && my >= 0 && my <= PatikaUtils.pxHeight){
+//                    switch (motionEvent.getAction()){
+//                        case MotionEvent.ACTION_DOWN:
+//                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
+//                            PatikaUtils.previousCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
+//                            is_moving=false;
+//                            break;
+//                        case MotionEvent.ACTION_MOVE:
+//                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
+//                            String currentCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
+////                            Log.i("coor",currentCoor);
+//                            if(PatikaUtils.lineCanBeDrawn(currentCoor,PatikaUtils.previousCoor) || (PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
+//                                is_moving=true;
+//                                int[] firstMP = PatikaUtils.middlePoint(PatikaUtils.previousCoor);
+//                                int[] secondMP = PatikaUtils.middlePoint(currentCoor);
+//                                if((PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
+////                                    Log.i("eraseMode","ON");
+//                                    PatikaUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+////                                    paint.setColor(Color.TRANSPARENT);
+//                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/60);
+//                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true,(ImageView) findViewById(R.id.canvasIV));
+//                                    if(PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor)){
+//                                        PatikaUtils.removeLine(PatikaUtils.previousCoor,currentCoor);
+//                                        PatikaUtils.operations.remove(PatikaUtils.previousCoor+currentCoor);
+//                                    }
+//                                    else{
+//                                        PatikaUtils.removeLine(currentCoor,PatikaUtils.previousCoor);
+//                                        PatikaUtils.operations.remove(currentCoor+PatikaUtils.previousCoor);
+//                                    }
+//                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"-");
+//                                    PatikaUtils.paint.setXfermode(null);
+////                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
+//                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/75);
+//                                }
+//                                else{
+//                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ PatikaUtils.previousCoor);
+//                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false,(ImageView) findViewById(R.id.canvasIV));
+//                                    PatikaUtils.addLine(PatikaUtils.previousCoor, currentCoor);
+//                                    PatikaUtils.operations.add(PatikaUtils.previousCoor+currentCoor);
+//                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"+");
+//                                }
+//                                PatikaUtils.previousCoor = currentCoor;
+//                                if(PatikaUtils.isGridFull()){
+//                                    checkAnswer(null);
+//                                }
+//                                Log.i("PatikaUtils.lineGrid", Arrays.deepToString(PatikaUtils.lineGrid));
 //                            }
-                            break;
-                    }
-                }
+//                            break;
+//                        case MotionEvent.ACTION_UP:
+//                            if(!is_moving){
+//                                Log.i("Pressed","Pressed");
+//                            }
+////                            if(isGridFull()){
+////                                checkAnswer(null);
+////                            }
+//                            break;
+//                    }
+//                }
+//
+//                return true;
+//            }
+//        });
 
-                return true;
-            }
-        });
-
-        mainFunc();
+        mainFunc(this);
 
     }
 
@@ -573,7 +588,7 @@ public class GameActivityPatika extends AppCompatActivity {
         if(paused&&gotQuestion){
             timerStopped=false;
             paused=false;
-            timerFunc();
+            timerFunc(this);
         }
     }
 

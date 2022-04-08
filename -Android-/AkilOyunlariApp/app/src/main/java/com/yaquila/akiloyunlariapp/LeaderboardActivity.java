@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -53,6 +54,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
     @SuppressLint("StaticFieldLeak")
     public class GetRequest extends AsyncTask<String, Void, String> {
 
+        @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -73,7 +75,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 else  {
                     in = connection.getInputStream();
                 }
-                InputStreamReader reader = new InputStreamReader(in);
+                InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
                 int data = reader.read();
                 while (data != -1) {
 
@@ -90,6 +92,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
             }
             return null;
         }
+
         @SuppressLint({"SetTextI18n", "ClickableViewAccessibility"})
         @RequiresApi(api = Build.VERSION_CODES.KITKAT)
         @Override
@@ -129,7 +132,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
                 String userRank;
                 List<String> games = new ArrayList<>(Arrays.asList("Genel","Sudoku", "HazineAvi", "Patika", "SayiBulmaca", "SozcukTuru", "Piramit"));
                 List<ScrollView> slList = new ArrayList<>(Arrays.asList(leaderboard_tab_sl0,leaderboard_tab_sl1,leaderboard_tab_sl2,leaderboard_tab_sl3,leaderboard_tab_sl4,leaderboard_tab_sl5,leaderboard_tab_sl6));
-                for(int g = 0; g<games.size()+1; g++){
+                for(int g = 0; g<games.size(); g++){
                     String game = games.get(g);
                     JSONArray usernameAndScores = jb.getJSONArray(game);
                     ScrollView sl = slList.get(g);

@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:tint="@color/light_red"
-            android:src="@drawable/ic_arrowbutton" />
+            android:src="@drawable/ic_arrowbutton"
+            app:tint="@color/light_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,6 +106,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
 
+        <com.yaquila.akiloyunlariapp.DrawView
+            android:id="@+id/drawing"
+            android:layout_width="298dp"
+            android:layout_height="298dp"
+            app:layout_row="1"
+            app:layout_column="1"
+            app:layout_rowSpan="7"
+            app:layout_columnSpan="7"
+            android:visibility="visible"
+            android:background="#FFFFFFFF" />
         <ImageView
             android:id="@+id/canvasIV"
             android:layout_width="wrap_content"
@@ -820,6 +830,7 @@
             android:paddingEnd="35dp"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:gravity="center"
             android:onClick="undoOperation"
