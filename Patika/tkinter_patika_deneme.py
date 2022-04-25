@@ -1455,7 +1455,7 @@ def koseleri_bul(canvas, blackList, genislik, patika_boyutu=6, tkinterOn=False):
 
 
 def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
-
+    discard = False
     sonuc = koseleri_bul(canvas, blackList, genislik, patika_boyutu)
     if sonuc == "Wrong Question":
         is_solvable = False
@@ -1494,6 +1494,7 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
                     for c in range(patika_boyutu)
                 ]
             )
+        
         if is_solvable:
             is_solvable = tracking_check(
                 kose_sag_asagi,
@@ -1505,6 +1506,8 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
                 patika_boyutu,
                 siyah_kare_sayisi,
             )
+            discard = not is_solvable
+        
     # print("Tüm kenar ve köşeler: ",sorted(tum_kenar_koseler))
     # print("Soru çözülebilir: ", is_solvable)
 
@@ -1519,7 +1522,7 @@ def solver(canvas, blackList, genislik, patika_boyutu=6, siyah_kare_sayisi=0):
             kenar_yukari_asagi,
         ]
 
-    return is_solvable, []
+    return is_solvable, [], discard
 
 
 def class_main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0, tkinterOn=False):
@@ -1528,6 +1531,7 @@ def class_main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0, tkinterOn=Fals
     # blackList = create_grid(c,genislik, patika_boyutu, siyah_kare_sayisi)
     # solver(c, blackList, genislik,patika_boyutu, siyah_kare_sayisi)
     # start = timeit.default_timer()
+    discarded = 0
     for _ in range(1000000):
         blackList = create_grid(c, genislik, patika_boyutu, siyah_kare_sayisi)
         is_solvable = solver(c, blackList, genislik, patika_boyutu, siyah_kare_sayisi)
@@ -1535,12 +1539,17 @@ def class_main(c, genislik, patika_boyutu=6, siyah_kare_sayisi=0, tkinterOn=Fals
             # print("BlackList: ", blackList, "is solvable")
             break
         else:
+            if is_solvable[2]: discarded+=1
             if tkinterOn:
                 c.delete("all")
     # end = timeit.default_timer()
     # print(f"It took {end-start} seconds.")
+    global globaldiscard
+    globaldiscard+=discarded
     return is_solvable[1]
 
+global globaldiscard 
+globaldiscard = 0
 
 def main(size):
     tkinterOn = False
@@ -1602,7 +1611,10 @@ def main(size):
 # df = pd.DataFrame(tum_dogru_blackListler,columns=["4x4","5x5","6x6"])
 # print(df)
 
-# print(main(8))
+for _ in range(10):
+    main(9)
+print(globaldiscard)
+
 
 
 """

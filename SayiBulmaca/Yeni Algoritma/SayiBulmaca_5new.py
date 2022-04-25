@@ -151,3 +151,25 @@ def main():
             return main()
     else:
         return main()
+
+def main(count):
+    discarded = 0
+    gridList = []
+    for _ in range(count):
+        game = SayiBulmaca()
+        game.SetAnswer()
+        game.PerfectGrid()
+        if game.ClueGuide():
+            game.isUnique()
+            if game.solutions == 1:
+                game.answer.append([5, 0])
+                game.grid.append(game.answer)
+                gridList.append(game.grid)
+            else:
+                discarded+=1
+        else:
+            discarded+=1
+    print("Discarded: ",discarded)
+    print("Saved: ",len(gridList))
+    print("Discarded percentage: %", (discarded/(discarded+len(gridList))*100))
+main(1000)

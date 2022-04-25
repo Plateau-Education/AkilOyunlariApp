@@ -14,7 +14,6 @@ import android.graphics.Shader;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,11 +21,9 @@ import android.widget.ImageView;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
 
-import java.util.Arrays;
-
-public class DrawView extends View {
+public class WordTourView extends View {
 
 
     /**
@@ -58,9 +55,9 @@ public class DrawView extends View {
 
     public static AppCompatActivity ctx;
 
-    public DrawView(Context context, AttributeSet attrs){
+    public WordTourView(Context context, AttributeSet attrs){
         super(context,attrs);
-        ctx = GameActivityPatika.appCompatActivity;
+        ctx = GameActivitySozcukTuru.appCompatActivity;
         setupDrawing();
     }
 
@@ -72,9 +69,9 @@ public class DrawView extends View {
         drawPaint = new Paint();
         drawPaint.setColor(paintColor);
         drawPaint.setAntiAlias(true);
-        drawPaint.setStrokeWidth((float)PatikaUtils.pxHeight/75);//TODO density
+        drawPaint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/75);//TODO density
         drawPaint.setStyle(Paint.Style.STROKE);
-        PatikaUtils.paint=drawPaint;
+        SozcukTuruUtils.paint=drawPaint;
         canvasPaint = new Paint(Paint.DITHER_FLAG);
     }
 
@@ -84,8 +81,8 @@ public class DrawView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         canvasBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         drawCanvas = new Canvas(canvasBitmap);
-        PatikaUtils.bitmap = canvasBitmap;
-        PatikaUtils.canvas = drawCanvas;
+        SozcukTuruUtils.bitmap = canvasBitmap;
+        SozcukTuruUtils.canvas = drawCanvas;
     }
 
     //draw the view - will be called after touch event
@@ -102,58 +99,64 @@ public class DrawView extends View {
         float touchX = event.getX();
         float touchY = event.getY();
         //respond to down, move and up events
-        if(touchX >= 0 && touchX <= PatikaUtils.pxHeight && touchY >= 0 && touchY <= PatikaUtils.pxHeight){
-            switch (event.getAction()) {
+        if(touchX >= 0 && touchX <= SozcukTuruUtils.pxHeightX && touchY >= 0 && touchY <= SozcukTuruUtils.pxHeightY){
+            switch (event.getAction()){
                 case MotionEvent.ACTION_DOWN:
-                    PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(touchX,touchY);
-                    PatikaUtils.previousCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
+                    SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(touchX,touchY);
+                    SozcukTuruUtils.previousCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
                     is_moving=false;
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(touchX,touchY);
-                    String currentCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
+                    SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(touchX,touchY);
+                    String currentCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
 //                            Log.i("coor",currentCoor);
-                    if(PatikaUtils.lineCanBeDrawn(currentCoor,PatikaUtils.previousCoor) || (PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
+                    if(SozcukTuruUtils.lineCanBeDrawn(currentCoor,SozcukTuruUtils.previousCoor) || (SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
                         is_moving=true;
-                        int[] firstMP = PatikaUtils.middlePoint(PatikaUtils.previousCoor);
-                        int[] secondMP = PatikaUtils.middlePoint(currentCoor);
-                        if((PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
+                        int[] firstMP = SozcukTuruUtils.middlePoint(SozcukTuruUtils.previousCoor);
+                        int[] secondMP = SozcukTuruUtils.middlePoint(currentCoor);
+                        if((SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
 //                                    Log.i("eraseMode","ON");
-                            PatikaUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    paint.setColor(Color.TRANSPARENT);
-                            PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/60);
-                            PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true,(ImageView) findViewById(R.id.canvasIV));
-                            if(PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor)){
-                                PatikaUtils.removeLine(PatikaUtils.previousCoor,currentCoor);
-                                PatikaUtils.operations.remove(PatikaUtils.previousCoor+currentCoor);
+                            SozcukTuruUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.f7f5fa));
+                            SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/60);
+                            SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
+                            if(SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor)){
+                                SozcukTuruUtils.removeLine(SozcukTuruUtils.previousCoor,currentCoor);
+                                SozcukTuruUtils.operations.remove(SozcukTuruUtils.previousCoor+currentCoor);
                             }
                             else{
-                                PatikaUtils.removeLine(currentCoor,PatikaUtils.previousCoor);
-                                PatikaUtils.operations.remove(currentCoor+PatikaUtils.previousCoor);
+                                SozcukTuruUtils.removeLine(currentCoor,SozcukTuruUtils.previousCoor);
+                                SozcukTuruUtils.operations.remove(currentCoor+SozcukTuruUtils.previousCoor);
                             }
-                            PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"-");
-                            PatikaUtils.paint.setXfermode(null);
-//                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
-                            PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/75);
+                            SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"-");
+                            SozcukTuruUtils.paint.setXfermode(null);
+//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.near_black_blue));
+                            SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/75);
                         }
                         else{
-                            Log.i("eraseMode","OFF  "+currentCoor+ "  "+ PatikaUtils.previousCoor);
-                            PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false,(ImageView) findViewById(R.id.canvasIV));
-                            PatikaUtils.addLine(PatikaUtils.previousCoor, currentCoor);
-                            PatikaUtils.operations.add(PatikaUtils.previousCoor+currentCoor);
-                            PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"+");
+                            Log.i("eraseMode","OFF  "+currentCoor+ "  "+ SozcukTuruUtils.previousCoor);
+                            SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
+                            SozcukTuruUtils.addLine(SozcukTuruUtils.previousCoor, currentCoor);
+                            SozcukTuruUtils.operations.add(SozcukTuruUtils.previousCoor+currentCoor);
+                            SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"+");
                         }
-                        PatikaUtils.previousCoor = currentCoor;
-                        if(PatikaUtils.isGridFull()){
-                            GameActivityPatika.checkAnswer(ctx, null);
+                        SozcukTuruUtils.previousCoor = currentCoor;
+                        Log.i("operations",SozcukTuruUtils.operations+"      /      "+SozcukTuruUtils.answer);
+                        if(SozcukTuruUtils.isGridFull()){
+                            Log.i("isGridFull","grid is full");
+                            GameActivitySozcukTuru.checkAnswer(ctx,null);
                         }
-                        Log.i("PatikaUtils.lineGrid", Arrays.deepToString(PatikaUtils.lineGrid));
+//                                Log.i("LineGrid", Arrays.deepToString(lineGrid));
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+//                            if(!is_moving){
+//                                Log.i("Pressed","Pressed");
+//                            }
+//                            if(isGridFull()){
+//                                checkAnswer(null);
+//                            }
                     break;
-                default:
-                    return false;
             }
         }
         //redraw

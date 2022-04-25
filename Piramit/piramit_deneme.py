@@ -8,6 +8,7 @@ class Piramit:
         self.boyut = 3
         self.solutions = []
         self.tkinterOn = False
+        self.discarded = 0
 
     def orta_nokta(self, row, column, genislik):
         ortanokta_x = (row + 1 / 2) * genislik * (8 / 5) + (
@@ -230,6 +231,7 @@ class Piramit:
 
             if len(self.solutions) == 1:
                 break
+            else: self.discarded+=1
         # end = timeit.default_timer()
         # print(f"It took {end-start} seconds.")
 
@@ -251,7 +253,7 @@ class Piramit:
                 root.mainloop()
 
             root.mainloop()
-        return self.solutions[0]
+        return self.solutions[0], self.discarded
 
 
 def main(size):
@@ -261,8 +263,11 @@ def main(size):
     return soru.class_main()
 
 
-start = timeit.default_timer()
+# start = timeit.default_timer()
+total_discarded = 0
 for _ in range(10):
-    print(main(6))
-end = timeit.default_timer()
-print(end - start)
+    # print(main(6))
+    total_discarded += main(6)[1]
+print(total_discarded)
+# end = timeit.default_timer()
+# print(end - start)

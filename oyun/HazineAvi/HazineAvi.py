@@ -1,3 +1,4 @@
+from dis import dis
 import random
 import copy
 import numpy as np
@@ -9,13 +10,15 @@ class HazineAvi:
         self.boyut = 8
         self.grid = []
         self.solutions = []
-        self.steps = [
+        self.discarded = 0
+        self.depth = 0
+        # self.steps = [
             # [0, 0, 0, 0, 0],
             # [0, 0, 0, 0, 0],
             # [0, 0, 0, 0, 0],
             # [0, 0, 0, 0, 0],
             # [0, 0, 0, 0, 0],
-        ]
+        # ]
 
     def orta_nokta(self, row, column, genislik):
         ortanokta_x = (row + 1 / 2) * genislik + 10
@@ -164,11 +167,11 @@ class HazineAvi:
                     elif (n - count1) == 0:
                         for y2, x2 in list0:
                             grid[y2][x2] = -2
-                            self.steps.append(copy.deepcopy(grid))
+                            # self.steps.append(copy.deepcopy(grid))
                     elif (n - count1) == count0:
                         for y3, x3 in list0:
                             grid[y3][x3] = -1
-                            self.steps.append(copy.deepcopy(grid))
+                            # self.steps.append(copy.deepcopy(grid))
                     elif (n - count1) < count0:
                         pass
 
@@ -186,7 +189,7 @@ class HazineAvi:
                                 continue
                             y4, x4, n4 = pc
                             grid[y4][x4] = n4
-                            self.steps.append(copy.deepcopy(grid))
+                            # self.steps.append(copy.deepcopy(grid))
 
     def isFullCheck(self, grid):
         return all(
@@ -208,6 +211,7 @@ class HazineAvi:
         return True
 
     def solver2(self, grid):
+        self.depth=0
         for __ in range(10):
             for _ in range(3):
                 cgrid = copy.deepcopy(grid)
@@ -215,10 +219,12 @@ class HazineAvi:
                     return "Wrong Question"
                 if np.array_equal(cgrid, grid):
                     break
+                else: self.depth+=1
             cgrid = copy.deepcopy(grid)
             self.second_base(grid)
             if np.array_equal(cgrid, grid):
                 break
+            else: self.depth+=1
         if self.isFullCheck(grid) and self.isAllEmptyHasNumNeighbor:
             self.solutions.append(copy.deepcopy(grid))
             return
@@ -231,10 +237,10 @@ class HazineAvi:
         columns = [random.randint(0, self.boyut - 1) for i in range(self.elmas_sayisi)]
         zipped = zip(rows, columns)
         grid = np.zeros((self.boyut, self.boyut), dtype=int)
-        self.steps.append(grid.tolist())
+        # self.steps.append(grid.tolist())
         for row, column in zipped:
             grid[row][column] = -1
-            self.steps.append(grid.tolist())
+            # self.steps.append(grid.tolist())
         return grid
 
     def sayi_belirleme(self, grid):
@@ -244,7 +250,7 @@ class HazineAvi:
                 if grid[r][c] == 0:
                     count0 += 1
                     grid[r][c] = self.count01(r, c, grid)[1]
-                    self.steps.append(grid.tolist())
+                    # self.steps.append(grid.tolist())
         return grid
 
     def sayi_adedi(self, grid):
@@ -258,7 +264,7 @@ class HazineAvi:
         )
 
     def sayi_azaltma2(self):
-        self.steps = []
+        # self.steps = []
         if self.boyut == 5:
             cozulmus = self.sayi_belirleme(
                 self.elmas_yerlestirme(6, 13, np.zeros((self.boyut, self.boyut)))
@@ -297,7 +303,7 @@ class HazineAvi:
             rndIndex = random.choice(cells)
             cells.remove(rndIndex)
             grid[rndIndex[0]][rndIndex[1]] = 0
-            self.steps.append(grid)
+            # self.steps.append(grid)
             self.solutions = []
             if self.solver2(copy.deepcopy(grid)) == "Wrong Question":
                 if tur >= self.sayi_adedi(
@@ -310,47 +316,8 @@ class HazineAvi:
                     return cozulmus, cozulmemis
                 break
             previous_grid = copy.deepcopy(grid)
-        return self.sayi_azaltma2()
-
-    def sayi_azaltma1(self):
-        cozulmus = self.sayi_belirleme(
-            self.elmas_yerlestirme(6, 13, np.zeros((self.boyut, self.boyut)))
-        )
-        cozulmemis = []
-        for y in range(self.boyut):
-            cozulmemis.append([])
-            for x in range(self.boyut):
-                if cozulmus[y][x] >= 0:
-                    cozulmemis[y].append(cozulmus[y][x])
-                else:
-                    cozulmemis[y].append(0)
-
-        grid = copy.deepcopy(cozulmemis)
-        cells = [
-            (y, x)
-            for y in range(self.boyut)
-            for x in range(self.boyut)
-            if grid[y][x] > 0
-        ]
-        print("First grid:", grid)
-        for silinen_ipucu_sayisi in range(
-            len(cells) - self.boyut + 1, self.boyut - 1, -1
-        ):
-            for sis in combinations(cells, silinen_ipucu_sayisi):
-                copy_g = copy.deepcopy(grid)
-                for si in sis:
-                    copy_g[si[0]][si[1]] = 0
-
-                if not self.isAllEmptyHasNumNeighbor(copy_g):
-                    continue
-
-                self.solutions = []
-                if self.solver2(copy.deepcopy(copy_g)) != "Wrong Question":
-                    cozulmemis = copy.deepcopy(copy_g)
-                    self.solver2(copy_g)
-                    cozulmus = copy_g
-                    return cozulmus, cozulmemis
-        self.sayi_azaltma1()
+        self.discarded+=1
+        return self.sayi_azaltma2
 
     def class_main(self):
         while True:
@@ -359,7 +326,7 @@ class HazineAvi:
                 break
             except:
                 pass
-        return cozulmus, self.steps
+        return cozulmus
 
 
 def main(size, count):
@@ -378,18 +345,30 @@ def main(size, count):
             database.append(i)
     return database
 
-
-def ques_anim():
-
+size = 5
+count = 1
+discarded = 0
+for i in range(count):
     soru = HazineAvi()
-    soru.boyut = 5
-    a, steps = soru.class_main()
+    soru.boyut = size
+    a = soru.class_main()
+    discarded+=soru.discarded
+    print(soru.discarded)
+    print("Depth",soru.depth)
+    print(np.matrix(a))
+print("total_discarded: ",discarded)
 
-    # print(steps)
-    print(len(steps))
-    steps = "\n".join([str([list(i) for i in s]) for s in steps])
-    with open("stepsStr.txt", "w") as f:
-        f.write(steps)
+# def ques_anim():
+
+#     soru = HazineAvi()
+#     soru.boyut = 5
+#     a, steps = soru.class_main()
+
+#     # print(steps)
+#     print(len(steps))
+#     steps = "\n".join([str([list(i) for i in s]) for s in steps])
+#     with open("stepsStr.txt", "w") as f:
+#         f.write(steps)
 
 
-ques_anim()
+# ques_anim()

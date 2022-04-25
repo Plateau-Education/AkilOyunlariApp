@@ -412,7 +412,6 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
         deleteTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        SayiBulmacaUtils.initDraftModeActiveVar();
         GetRequest getRequest = new GetRequest();
         getRequest.execute("https://mind-plateau-api.herokuapp.com/SayiBulmaca."+SayiBulmacaUtils.gridSize,"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();

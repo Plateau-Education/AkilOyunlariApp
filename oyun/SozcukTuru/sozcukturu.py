@@ -30,7 +30,7 @@ class SozcukTuru:
         kelimeler = []
         for harf_sayisi in range(self.harf_range[0], self.harf_range[1] + 1):
             f = open(
-                f"{harf_sayisi}.txt",
+                f"C:\\Users\\ezrea\\Documents\\GitHub\\AkilOyunlariApp\\oyun\\SozcukTuru\\{harf_sayisi}.txt",
                 encoding="utf-8",
             )
             lst = f.read()
@@ -113,3 +113,11 @@ def main(level, count):
             datacontrol.discard(str(i))
             database.append(i)
     return database
+
+count = 5
+level = "Easy"
+for i in range(count):
+    obj = SozcukTuru()
+    obj.zorluk = level
+    a = obj.class_main()
+    print(a)

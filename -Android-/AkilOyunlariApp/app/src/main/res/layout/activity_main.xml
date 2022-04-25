@@ -59,7 +59,7 @@
         android:onClick="goToClassroom"
         android:padding="10dp"
         android:src="@drawable/ic_classroom"
-        android:visibility="gone"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/rankingsIcon"
         app:layout_constraintEnd_toStartOf="@+id/rankingsIcon"
         app:layout_constraintTop_toTopOf="@+id/rankingsIcon"

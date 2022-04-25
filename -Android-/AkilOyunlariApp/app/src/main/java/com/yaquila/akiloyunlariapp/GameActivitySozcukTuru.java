@@ -41,18 +41,17 @@ import java.util.Objects;
 
 public class GameActivitySozcukTuru extends AppCompatActivity {
 
-    String gameName;
-    String difficulty;
-    int timerInSeconds = 0;
-    boolean timerStopped=false;
-    boolean paused = false;
-    boolean gotQuestion = false;
-    boolean is_moving = false;
-    boolean solvedQuestion = false;
+    public static String gameName;
+    public static String difficulty;
+    public static int timerInSeconds = 0;
+    public static boolean timerStopped=false;
+    public static boolean paused = false;
+    public static boolean gotQuestion = false;
+    public static boolean solvedQuestion = false;
 
-    LoadingDialog loadingDialog;
-    Handler timerHandler;
-    Runnable runnable;
+    public static LoadingDialog loadingDialog;
+    public static Handler timerHandler;
+    public static Runnable runnable;
 
 
     public void wannaLeaveDialog(View view){
@@ -113,10 +112,11 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
+            final AppCompatActivity appCompatActivity = this;
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainFunc();
+                    mainFunc(appCompatActivity);
                     correctDialog.dismiss();
                 }
             });
@@ -144,10 +144,10 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+    public static void checkAnswer(final AppCompatActivity context,View view){
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
         if(SozcukTuruUtils.checkAnswer()){
-            SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+            SharedPreferences sharedPreferences = context.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
                 ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
                 ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
@@ -172,16 +172,16 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
             timerStopped = true;
             solvedQuestion = true;
-            LayoutInflater factory = LayoutInflater.from(this);
+            LayoutInflater factory = LayoutInflater.from(context);
             final View leaveDialogView = factory.inflate(R.layout.correct_dialog, null);
-            final AlertDialog correctDialog = new AlertDialog.Builder(this).create();
+            final AlertDialog correctDialog = new AlertDialog.Builder(context).create();
             TextView timerTV = leaveDialogView.findViewById(R.id.timeTV_correctDialog);
             timerTV.setText(formatTime(timerInSeconds));
             correctDialog.setView(leaveDialogView);
 
-            findViewById(R.id.clickView).setVisibility(View.VISIBLE);
-            TextView undoTV = findViewById(R.id.undoTV_ga);
-            TextView resetTV = findViewById(R.id.resetTV_game);
+            context.findViewById(R.id.clickView).setVisibility(View.VISIBLE);
+            TextView undoTV = context.findViewById(R.id.undoTV_ga);
+            TextView resetTV = context.findViewById(R.id.resetTV_game);
             for (int i = 0; i < SozcukTuruUtils.gridSizeY; i++) {
                 for (int j = 0; j < SozcukTuruUtils.gridSizeX; j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
@@ -193,17 +193,17 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             leaveDialogView.findViewById(R.id.correctDialogNext).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mainFunc();
+                    mainFunc(context);
                     correctDialog.dismiss();
                 }
             });
             leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                    Intent intent = new Intent(context.getApplicationContext(), GameListActivity.class);
                     intent.putExtra("type","single");
-                    startActivity(intent);
-                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                    context.startActivity(intent);
+                    context.overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                     correctDialog.dismiss();
                 }
             });
@@ -213,17 +213,24 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
     @SuppressWarnings("deprecation")
     @SuppressLint("StaticFieldLeak")
-    public class GetRequest extends AsyncTask<String, Void, String> {
+    public static class GetRequest extends AsyncTask<String, Void, String> {
 
         ArrayList<String> questions = new ArrayList<>();
         ArrayList<Integer> gameIds = new ArrayList<>();
-        SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+
+        AppCompatActivity ctx;
+        SharedPreferences sharedPreferences;
+
+        public GetRequest(AppCompatActivity context){
+            ctx = context;
+            sharedPreferences = ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+        }
 
         @Override
         protected String doInBackground(String... strings) {
             try {
                 StringBuilder result = new StringBuilder();
-                SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
+                SharedPreferences sharedPreferences = ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
                     questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
@@ -295,11 +302,11 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             }
 
             if(questions.size() == 0){
-                Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
+                Intent intent = new Intent(ctx.getApplicationContext(), GameListActivity.class);
                 intent.putExtra("type","single");
                 intent.putExtra("message","Need internet connection to view " + gameName +" "+ difficulty);
-                startActivity(intent);
-                overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+                ctx.startActivity(intent);
+                ctx.overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
                 timerStopped=true;
                 loadingDialog.dismissDialog();
             }
@@ -325,18 +332,18 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             timerStopped=false;
             gotQuestion = true;
             solvedQuestion=false;
-            timerFunc();
+            timerFunc(ctx);
             loadingDialog.dismissDialog();
         }
     }
 
-    public void seperateGridAnswer(JSONArray grid) throws JSONException {
+    public static void seperateGridAnswer(JSONArray grid) throws JSONException {
         SozcukTuruUtils.seperateGridAnswer(grid);
     }
 
-    public void timerFunc(){
+    public static void timerFunc(AppCompatActivity context){
         timerHandler = new Handler();
-        final TextView timerTV = findViewById(R.id.timeTV_game);
+        final TextView timerTV = context.findViewById(R.id.timeTV_game);
         runnable = new Runnable() {
             @Override
             public void run() {
@@ -357,38 +364,41 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     }
 
     @SuppressLint("InflateParams")
-    public void loadingDialogFunc(){
-        loadingDialog = new LoadingDialog(GameActivitySozcukTuru.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
+    public static void loadingDialogFunc(AppCompatActivity context){
+        loadingDialog = new LoadingDialog(context, context.getLayoutInflater().inflate(R.layout.loading_dialog,null));
         loadingDialog.startLoadingAnimation();
     }
 
-    public void clearGrid(){
+    public static void clearGrid(){
         SozcukTuruUtils.clearGrid();
         timerInSeconds = 0;
         timerStopped=true;
     }
 
-    public void mainFunc(){
-        findViewById(R.id.clickView).setVisibility(View.GONE);
-        TextView undoTV = findViewById(R.id.undoTV_ga);
-        TextView resetTV = findViewById(R.id.resetTV_game);
+    public static void mainFunc(AppCompatActivity context){
+        context.findViewById(R.id.clickView).setVisibility(View.GONE);
+        TextView undoTV = context.findViewById(R.id.undoTV_ga);
+        TextView resetTV = context.findViewById(R.id.resetTV_game);
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
         clearGrid();
-        GetRequest getRequest = new GetRequest();
+        GetRequest getRequest = new GetRequest(context);
         getRequest.execute("https://mind-plateau-api.herokuapp.com/SozcukTuru."+difficulty,"fx!Ay:;<p6Q?C8N{");
-        loadingDialogFunc();
+        loadingDialogFunc(context);
     }
 
     public void initSomeVar(){
         SozcukTuruUtils.initSomeVar();
     }
 
+    public static AppCompatActivity appCompatActivity = null;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        appCompatActivity = this;
         SozcukTuruUtils.initVars(this);
         
         Intent intent = getIntent();
@@ -470,78 +480,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         Log.i("pxheightX",SozcukTuruUtils.pxHeightX+"");
         Log.i("pxheightY",SozcukTuruUtils.pxHeightY+"");
         initSomeVar();
-        gridLayout.setOnTouchListener(new View.OnTouchListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                float mx = motionEvent.getX();
-                float my = motionEvent.getY();
-//                Log.i("x / y",mx + " / " + my);
-                if(mx >= 0 && mx <= SozcukTuruUtils.pxHeightX && my >= 0 && my <= SozcukTuruUtils.pxHeightY){
-                    switch (motionEvent.getAction()){
-                        case MotionEvent.ACTION_DOWN:
-                            SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(mx,my);
-                            SozcukTuruUtils.previousCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
-                            is_moving=false;
-                            break;
-                        case MotionEvent.ACTION_MOVE:
-                            SozcukTuruUtils.rowColumn = SozcukTuruUtils.xyToRowColumn(mx,my);
-                            String currentCoor = SozcukTuruUtils.rowColumn[0] + SozcukTuruUtils.rowColumn[1];
-//                            Log.i("coor",currentCoor);
-                            if(SozcukTuruUtils.lineCanBeDrawn(currentCoor,SozcukTuruUtils.previousCoor) || (SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
-                                is_moving=true;
-                                int[] firstMP = SozcukTuruUtils.middlePoint(SozcukTuruUtils.previousCoor);
-                                int[] secondMP = SozcukTuruUtils.middlePoint(currentCoor);
-                                if((SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor) || SozcukTuruUtils.operations.contains(currentCoor+SozcukTuruUtils.previousCoor))){
-//                                    Log.i("eraseMode","ON");
-                                    SozcukTuruUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.f7f5fa));
-                                    SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/60);
-                                    SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true);
-                                    if(SozcukTuruUtils.operations.contains(SozcukTuruUtils.previousCoor+currentCoor)){
-                                        SozcukTuruUtils.removeLine(SozcukTuruUtils.previousCoor,currentCoor);
-                                        SozcukTuruUtils.operations.remove(SozcukTuruUtils.previousCoor+currentCoor);
-                                    }
-                                    else{
-                                        SozcukTuruUtils.removeLine(currentCoor,SozcukTuruUtils.previousCoor);
-                                        SozcukTuruUtils.operations.remove(currentCoor+SozcukTuruUtils.previousCoor);
-                                    }
-                                    SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"-");
-                                    SozcukTuruUtils.paint.setXfermode(null);
-//                                    SozcukTuruUtils.paint.setColor(getResources().getColor(R.color.near_black_blue));
-                                    SozcukTuruUtils.paint.setStrokeWidth((float)SozcukTuruUtils.pxHeightY/75);
-                                }
-                                else{
-                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ SozcukTuruUtils.previousCoor);
-                                    SozcukTuruUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false);
-                                    SozcukTuruUtils.addLine(SozcukTuruUtils.previousCoor, currentCoor);
-                                    SozcukTuruUtils.operations.add(SozcukTuruUtils.previousCoor+currentCoor);
-                                    SozcukTuruUtils.opsForUndo.add(SozcukTuruUtils.previousCoor+currentCoor+"+");
-                                }
-                                SozcukTuruUtils.previousCoor = currentCoor;
-                                Log.i("operations",SozcukTuruUtils.operations+"      /      "+SozcukTuruUtils.answer);
-                                if(SozcukTuruUtils.isGridFull()){
-                                    Log.i("isGridFull","grid is full");
-                                    checkAnswer(null);
-                                }
-//                                Log.i("LineGrid", Arrays.deepToString(lineGrid));
-                            }
-                            break;
-                        case MotionEvent.ACTION_UP:
-//                            if(!is_moving){
-//                                Log.i("Pressed","Pressed");
-//                            }
-//                            if(isGridFull()){
-//                                checkAnswer(null);
-//                            }
-                            break;
-                    }
-                }
-                return true;
-            }
-        });
-
-        mainFunc();
+        mainFunc(this);
 
     }
 
@@ -570,7 +509,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         if(paused&&gotQuestion){
             timerStopped=false;
             paused=false;
-            timerFunc();
+            timerFunc(this);
         }
     }
 

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/nums_buttons_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/gridGL_ga"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.gridlayout.widget.GridLayout
+        android:id="@+id/numsGL_ga"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/nums3_1"
+            android:tag="1"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="0"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/nums3_2"
+            android:tag="2"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="2"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="1"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/nums3_3"
+            android:tag="3"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="2"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/nums3_4"
+            android:tag="4"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="4"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="3"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/nums3_5"
+            android:tag="5"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="5"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="4"
+            app:layout_row="0" />
+
+        <Button
+            android:id="@+id/nums3_6"
+            android:tag="6"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="6"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="0"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/nums3_7"
+            android:tag="7"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="7"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="1"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/nums3_8"
+            android:tag="8"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="8"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="2"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/nums3_9"
+            android:tag="9"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="9"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="3"
+            app:layout_row="1" />
+
+        <Button
+            android:id="@+id/nums3_0"
+            android:tag="0"
+            android:onClick="numClicked"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/nums_gl_bg"
+            android:fontFamily="@font/mohave_bold"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            app:layout_column="4"
+            app:layout_row="1" />
+
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/undoTV_ga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="35dp"
+            android:paddingEnd="35dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="undoOperation"
+            android:text="@string/Undo"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            android:textAllCaps="false"
+            android:fontFamily="@font/mohave_bold"
+            android:background="@drawable/nums_gl_bg"/>
+
+        <Button
+            android:id="@+id/deleteTV_ga"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:onClick="deleteNum"
+            android:text="@string/Delete"
+            android:textAllCaps="false"
+            android:textColor="@color/f7f5fa"
+            android:textSize="22sp"
+            android:fontFamily="@font/mohave_bold"
+            android:background="@drawable/nums_gl_bg"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

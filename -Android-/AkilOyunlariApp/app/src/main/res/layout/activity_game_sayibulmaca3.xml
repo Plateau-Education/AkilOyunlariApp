@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:tint="@color/light_red"
-            android:src="@drawable/ic_arrowbutton" />
+            android:src="@drawable/ic_arrowbutton"
+            app:tint="@color/light_red" />
 
         <TextView
             android:layout_width="wrap_content"

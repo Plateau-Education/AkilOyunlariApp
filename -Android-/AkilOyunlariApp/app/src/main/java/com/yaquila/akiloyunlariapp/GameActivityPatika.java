@@ -221,7 +221,7 @@ public class GameActivityPatika extends AppCompatActivity {
         ArrayList<String> questions = new ArrayList<>();
         ArrayList<Integer> gameIds = new ArrayList<>();
 
-        AppCompatActivity ctx = null;
+        AppCompatActivity ctx;
 
         public GetRequest(AppCompatActivity context){
             ctx = context;
@@ -485,80 +485,10 @@ public class GameActivityPatika extends AppCompatActivity {
 
         PatikaUtils.pxHeight = (int) (300 * getResources().getDisplayMetrics().density);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.i("pxheight, hpx, sd, ddpi",PatikaUtils.pxHeight+", "+ DisplayMetrics.DENSITY_DEVICE_STABLE+","+getResources().getDisplayMetrics().densityDpi);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            Log.i("pxheight, hpx, sd, ddpi",PatikaUtils.pxHeight+", "+ DisplayMetrics.DENSITY_DEVICE_STABLE+","+getResources().getDisplayMetrics().densityDpi);
+//        }
         initSomeVar();
-//        gridLayout.setOnTouchListener(new View.OnTouchListener() {
-//            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                float mx = motionEvent.getX();
-//                float my = motionEvent.getY();
-//                Log.i("x / y",mx + " / " + my);
-//                if(mx >= 0 && mx <= PatikaUtils.pxHeight && my >= 0 && my <= PatikaUtils.pxHeight){
-//                    switch (motionEvent.getAction()){
-//                        case MotionEvent.ACTION_DOWN:
-//                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
-//                            PatikaUtils.previousCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
-//                            is_moving=false;
-//                            break;
-//                        case MotionEvent.ACTION_MOVE:
-//                            PatikaUtils.rowColumn = PatikaUtils.xyToRowColumn(mx,my);
-//                            String currentCoor = PatikaUtils.rowColumn[0] + PatikaUtils.rowColumn[1];
-////                            Log.i("coor",currentCoor);
-//                            if(PatikaUtils.lineCanBeDrawn(currentCoor,PatikaUtils.previousCoor) || (PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
-//                                is_moving=true;
-//                                int[] firstMP = PatikaUtils.middlePoint(PatikaUtils.previousCoor);
-//                                int[] secondMP = PatikaUtils.middlePoint(currentCoor);
-//                                if((PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor) || PatikaUtils.operations.contains(currentCoor+PatikaUtils.previousCoor))){
-////                                    Log.i("eraseMode","ON");
-//                                    PatikaUtils.paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-////                                    paint.setColor(Color.TRANSPARENT);
-//                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/60);
-//                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],true,(ImageView) findViewById(R.id.canvasIV));
-//                                    if(PatikaUtils.operations.contains(PatikaUtils.previousCoor+currentCoor)){
-//                                        PatikaUtils.removeLine(PatikaUtils.previousCoor,currentCoor);
-//                                        PatikaUtils.operations.remove(PatikaUtils.previousCoor+currentCoor);
-//                                    }
-//                                    else{
-//                                        PatikaUtils.removeLine(currentCoor,PatikaUtils.previousCoor);
-//                                        PatikaUtils.operations.remove(currentCoor+PatikaUtils.previousCoor);
-//                                    }
-//                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"-");
-//                                    PatikaUtils.paint.setXfermode(null);
-////                                    paint.setColor(getResources().getColor(R.color.near_black_blue));
-//                                    PatikaUtils.paint.setStrokeWidth((float)PatikaUtils.pxHeight/75);
-//                                }
-//                                else{
-//                                    Log.i("eraseMode","OFF  "+currentCoor+ "  "+ PatikaUtils.previousCoor);
-//                                    PatikaUtils.drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1],false,(ImageView) findViewById(R.id.canvasIV));
-//                                    PatikaUtils.addLine(PatikaUtils.previousCoor, currentCoor);
-//                                    PatikaUtils.operations.add(PatikaUtils.previousCoor+currentCoor);
-//                                    PatikaUtils.opsForUndo.add(PatikaUtils.previousCoor+currentCoor+"+");
-//                                }
-//                                PatikaUtils.previousCoor = currentCoor;
-//                                if(PatikaUtils.isGridFull()){
-//                                    checkAnswer(null);
-//                                }
-//                                Log.i("PatikaUtils.lineGrid", Arrays.deepToString(PatikaUtils.lineGrid));
-//                            }
-//                            break;
-//                        case MotionEvent.ACTION_UP:
-//                            if(!is_moving){
-//                                Log.i("Pressed","Pressed");
-//                            }
-////                            if(isGridFull()){
-////                                checkAnswer(null);
-////                            }
-//                            break;
-//                    }
-//                }
-//
-//                return true;
-//            }
-//        });
-
         mainFunc(this);
 
     }

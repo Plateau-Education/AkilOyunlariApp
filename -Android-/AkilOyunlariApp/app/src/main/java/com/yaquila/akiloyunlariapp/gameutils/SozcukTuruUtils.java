@@ -1,5 +1,6 @@
 package com.yaquila.akiloyunlariapp.gameutils;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.WordTourView;
 import com.yaquila.akiloyunlariapp.R;
 
 import org.json.JSONArray;
@@ -88,9 +90,13 @@ public class SozcukTuruUtils {
         return middle_point;
     }
 
+    @SuppressLint("CutPasteId")
     public static void drawALine(final float startX, final float startY, final float stopX, final float stopY, final boolean erasing){
-        ImageView imageView = context.findViewById(R.id.canvasIV);
+//        ImageView imageView = context.findViewById(R.id.canvasIV);
 //        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
+        canvas = ((WordTourView)context.findViewById(R.id.drawing)).getDrawCanvas();
+        paint = ((WordTourView)context.findViewById(R.id.drawing)).getDrawPaint();
+        bitmap = ((WordTourView)context.findViewById(R.id.drawing)).getCanvasBitmap();
         if(!erasing) {
             int offset = pxHeightY / 150;
             if (startY - stopY == 0 && startX - stopX != 0) {
@@ -168,7 +174,9 @@ public class SozcukTuruUtils {
                 }
             }
         }
-        imageView.setImageBitmap(bitmap);
+        ((WordTourView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+        ((WordTourView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
+//        imageView.setImageBitmap(bitmap);
     }
 
     public static void addLine(final String firstRC, final String secondRC){
@@ -321,6 +329,7 @@ public class SozcukTuruUtils {
             if(op.charAt(4) == '+'){
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 paint.setStrokeWidth((float)pxHeightY/60);
+                ((WordTourView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
                 drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], true);
                 removeLine(previousC,currentC);
                 for(int i = operations.size()-1; i >= 0; i--){
@@ -338,6 +347,7 @@ public class SozcukTuruUtils {
                 }
                 paint.setXfermode(null);
                 paint.setStrokeWidth((float)pxHeightY/75);
+                ((WordTourView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
 
             } else {
                 drawALine(firstMP[0],firstMP[1],secondMP[0],secondMP[1], false);
@@ -378,6 +388,8 @@ public class SozcukTuruUtils {
 
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
+            ((WordTourView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+            ((WordTourView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
 
             for (int i = 0; i < gridSizeX; i++){
                 for(int j = 0; j < gridSizeY; j++){
@@ -446,6 +458,8 @@ public class SozcukTuruUtils {
         try{
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
+            ((WordTourView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+            ((WordTourView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -458,14 +472,12 @@ public class SozcukTuruUtils {
     }
 
     public static void initSomeVar(){
-        bitmap = Bitmap.createBitmap(pxHeightX, pxHeightY, Bitmap.Config.ARGB_8888);
-        canvas = new Canvas(bitmap);
-        canvas.drawColor(context.getResources().getColor(R.color.transparent));
         paint = new Paint();
         paint.setColor(context.getResources().getColor(R.color.shallow_light_red2));
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth((float)pxHeightY/75);
         paint.setAntiAlias(true);
+        ((WordTourView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
 
         for (int i = 0; i < SozcukTuruUtils.gridSizeX; i++){
             for(int j = 0; j < SozcukTuruUtils.gridSizeY; j++){

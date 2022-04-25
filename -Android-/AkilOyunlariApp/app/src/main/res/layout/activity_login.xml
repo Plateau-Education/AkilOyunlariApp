@@ -135,17 +135,32 @@
                 android:text="@string/SignUp" />
 
 
-            <com.google.android.gms.common.SignInButton
-                android:id="@+id/sign_in_button"
+            <Button
+                android:id="@+id/signUpAsTeacherBtn"
+                android:gravity="center"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/Login"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/mohave_bold"
+                android:background="@drawable/clicked_diff_bg"
+                android:textColor="#ffffff"
+                android:onClick="signClicked"
                 android:textAllCaps="false"
-                android:textColor="@color/near_black_blue" />
+                android:padding="10dp"
+                android:textSize="18sp"
+                android:text="@string/SignUpAsInstructer" />
+
 
         </LinearLayout>
 
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/Login"
+            android:textAllCaps="false"
+            android:textColor="@color/near_black_blue" />
     </LinearLayout>
 
 

@@ -41,12 +41,12 @@ public class SayiBulmacaUtils {
         undoing=false;
         draftModeActive= new boolean[5];
         operations = new ArrayList<>();
-        answer = null;
+        answer = new JSONArray();
     }
 
     public static void changeClicked(final View view){
         TextView box = (TextView) view;
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         int answerIndex = Integer.parseInt((box.getTag().toString()).substring(box.getTag().toString().length()-1));
         if (clickedBox != answerIndex){
             if (clickedBox != -1){
@@ -90,7 +90,7 @@ public class SayiBulmacaUtils {
     @SuppressLint("SetTextI18n")
     public static boolean numClicked(final View view){
         Button btn = (Button) view;
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         if(clickedBox != -1){
             TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(currentBox.getText().toString().equals("")){
@@ -120,7 +120,7 @@ public class SayiBulmacaUtils {
     }
 
     public static void deleteNum(){
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         if(clickedBox != -1){
             TextView currentBox = gridLayout.findViewWithTag("answer"+ clickedBox);
             if(!currentBox.getText().toString().equals("")){
@@ -139,7 +139,7 @@ public class SayiBulmacaUtils {
             int co = tuple.get(0);
             int num = tuple.get(1);
             Log.i("co/num",co+" / "+num);
-            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
             TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
             if(num == -1){
                 currentBox.setText("");
@@ -169,7 +169,7 @@ public class SayiBulmacaUtils {
             }, 100);
 
             operations = new ArrayList<>();
-            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
             for (int i = 0; i < gridSize; i++) {
                 TextView currentBox = gridLayout.findViewWithTag("answer" + i);
                 currentBox.setText("");
@@ -197,7 +197,7 @@ public class SayiBulmacaUtils {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void notesOnGrid(final View view) {
         TextView clickedTV = (TextView) view;
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         String clickedNum = clickedTV.getText().toString();
         if (Objects.equals(clickedTV.getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
             for (int i = 0; i < gridSize; i++) {
@@ -233,7 +233,7 @@ public class SayiBulmacaUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static boolean checkAnswer(){
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         boolean checking=true;
         for(int i = 0; i < gridSize; i++){
             try {
@@ -246,12 +246,12 @@ public class SayiBulmacaUtils {
             }
         }
         Log.i("check",checking+"  "+answer);
-        return checking;
+        return checking && answer.length()>0;
     }
 
     public static void draftClicked(){
         GridLayout numGrid = context.findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = context.findViewById(R.id.gridGL_ga);
+        GridLayout questionGrid = context.findViewById(R.id.gridGL_grid);
         if(clickedBox != -1){
             TextView currentClickedBox = questionGrid.findViewWithTag("answer"+ clickedBox);
             if(currentClickedBox.getText().toString().length() == 1){
@@ -295,7 +295,7 @@ public class SayiBulmacaUtils {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public static void seperateGridAnswer(final JSONArray grid) throws JSONException {
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         answer = (JSONArray) grid.get(grid.length() - 1);
         Log.i("jsonGrid",""+grid);
         for (int i = 0; i < grid.length()-1; i++){
@@ -321,15 +321,9 @@ public class SayiBulmacaUtils {
         answer.remove(answer.length()-1);
     }
 
-    public static void initDraftModeActiveVar(){
-        for(int i = 0; i<gridSize; i++){
-            draftModeActive[i] = false;
-        }
-    }
-
     public static void clearGrid(){
         operations = new ArrayList<>();
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         for (int i = 0; i < gridSize; i++) {
             TextView currentBox = gridLayout.findViewWithTag("answer" + i);
             currentBox.setText("");

@@ -1,5 +1,6 @@
 package com.yaquila.akiloyunlariapp.gameutils;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,7 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
-import com.yaquila.akiloyunlariapp.DrawView;
+import com.yaquila.akiloyunlariapp.LoopView;
 import com.yaquila.akiloyunlariapp.R;
 
 import org.json.JSONArray;
@@ -70,7 +71,6 @@ public class PatikaUtils {
         bitmap = null;
         canvas = null;
         paint = null;
-        DrawView drawView = context.findViewById(R.id.drawing);
     }
 
     public static String[] xyToRowColumn(final float x, final float y){
@@ -91,11 +91,12 @@ public class PatikaUtils {
         return middle_point;
     }
 
+    @SuppressLint("CutPasteId")
     public static void drawALine(final float startX, final float startY, final float stopX, final float stopY, final boolean erasing, final ImageView imageView){
-        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
-        canvas = ((DrawView)context.findViewById(R.id.drawing)).getDrawCanvas();
-        paint = ((DrawView)context.findViewById(R.id.drawing)).getDrawPaint();
-        bitmap = ((DrawView)context.findViewById(R.id.drawing)).getCanvasBitmap();
+//        Log.i("x1,y1,x2,y2",startX+"  "+startY+"  "+stopX+"  "+stopY);
+        canvas = ((LoopView)context.findViewById(R.id.drawing)).getDrawCanvas();
+        paint = ((LoopView)context.findViewById(R.id.drawing)).getDrawPaint();
+        bitmap = ((LoopView)context.findViewById(R.id.drawing)).getCanvasBitmap();
         if(!erasing) {
             int offset = pxHeight / 150;
             if (startY - stopY == 0) {
@@ -139,8 +140,8 @@ public class PatikaUtils {
                 else canvas.drawLine(startX, startY + offset1, stopX, stopY - offset2, paint);
             }
         }
-        ((DrawView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
-        ((DrawView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
+        ((LoopView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+        ((LoopView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
 //        imageView.setImageBitmap(bitmap);
     }
 
@@ -242,7 +243,7 @@ public class PatikaUtils {
             if (op.charAt(4) == '+') {
                 paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
                 paint.setStrokeWidth((float) pxHeight / 60);
-                ((DrawView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
+                ((LoopView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
                 drawALine(firstMP[0], firstMP[1], secondMP[0], secondMP[1], true, imageView);
                 removeLine(previousC, currentC);
                 for (int i = operations.size() - 1; i >= 0; i--) {
@@ -260,7 +261,7 @@ public class PatikaUtils {
                 }
                 paint.setStrokeWidth((float) pxHeight / 75);
                 paint.setXfermode(null);
-                ((DrawView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
+                ((LoopView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
 
             } else {
                 drawALine(firstMP[0], firstMP[1], secondMP[0], secondMP[1], false, imageView);
@@ -301,8 +302,8 @@ public class PatikaUtils {
 
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
-            ((DrawView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
-            ((DrawView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
+            ((LoopView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+            ((LoopView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
 
             for (int i = 0; i < gridSize; i++){
                 for(int j = 0; j < gridSize; j++){
@@ -454,8 +455,8 @@ public class PatikaUtils {
         try{
             bitmap.eraseColor(Color.TRANSPARENT);
             canvas = new Canvas(bitmap);
-            ((DrawView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
-            ((DrawView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
+            ((LoopView)context.findViewById(R.id.drawing)).setDrawCanvas(canvas);
+            ((LoopView)context.findViewById(R.id.drawing)).setCanvasBitmap(bitmap);
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -487,7 +488,7 @@ public class PatikaUtils {
         paint.setAntiAlias(true);
 //        drawView.setDrawCanvas(canvas);
 //        drawView.setCanvasBitmap(bitmap);
-        ((DrawView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
+        ((LoopView)context.findViewById(R.id.drawing)).setDrawPaint(paint);
 
         for (int i = 0; i < PatikaUtils.gridSize; i++){
             for(int j = 0; j < PatikaUtils.gridSize; j++){

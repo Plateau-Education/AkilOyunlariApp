@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,9 +30,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.PiramitUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SayiBulmacaUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SozcukTuruUtils;
+import com.yaquila.akiloyunlariapp.gameutils.SudokuUtils;
 import com.yaquila.akiloyunlariapp.media.RtcTokenBuilder;
 import com.yaquila.akiloyunlariapp.model.AGEventHandler;
 import com.yaquila.akiloyunlariapp.model.ConstantApp;
@@ -43,6 +51,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -64,12 +73,9 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     String dbGameName;
     String gameName;
     String difficulty;
-    String clickedBox = "-1";
-    String switchPosition = "diamond";
     String type;
     String user_name;
     String classid;
-    String currentScreen = "selection";
     String instructorName = null;
     int gridSize = 5;
     boolean gotQuestion = false;
@@ -78,12 +84,9 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     boolean isParticipantsShown = false;
     boolean isCorrectDialogShown = false;
 
-    List<List<String>> operations = new ArrayList<>();
-    List<List<Integer>> currentGrid = new ArrayList<>();
-    List<String> clueIndexes = new ArrayList<>();
-    List<String> answer = new ArrayList<>();
+    List<List<Object>> currentGrid = new ArrayList<>();
+    Map<String, Class<?>> utilsMap = new HashMap<>();
     List<String> newTaskProperties = new ArrayList<>();
-    String[][] gridDCs = new String[10][10];
     Map<String,Boolean> participantMap = new HashMap<>();
     LoadingDialog loadingDialog;
     GridLayout gridGL;
@@ -93,6 +96,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     AlertDialog correctDialog;
     Spinner gameSpinner;
     Spinner diffSpinner;
+
+    public static AppCompatActivity mAppCompatActivity;
 
     public void wannaLeaveDialog(View view){
         LayoutInflater factory = LayoutInflater.from(this);
@@ -136,6 +141,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 @Override
                 public void onClick(View v) {
                     ((ConstraintLayout) findViewById(R.id.diffTV_game).getParent()).setVisibility(View.GONE);
+                    RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
+                    gridRL.removeAllViews();
                     selectGameDiff(null);
                     correctDialog.dismiss();
                 }
@@ -153,96 +160,46 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void changeClicked(View view){
-        TextView box = (TextView) view;
-        String answerIndex = box.getTag().toString();
-        int i1 = Integer.parseInt(String.valueOf(answerIndex.charAt(0)));
-        int i2 = Integer.parseInt(String.valueOf(answerIndex.charAt(1)));
-        if(!clueIndexes.contains(answerIndex) && (isPermitted || type.contains("nstructor"))) {
-            String op = null;
-            if (switchPosition.equals("diamond")) {
-                if (gridDCs[i1][i2].equals("-1")) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    gridDCs[i1][i2] = "0";
-                    op = "0";
-                } else {
-                    Drawable diamond = getResources().getDrawable(R.drawable.ic_diamond);
-                    box.setBackground(diamond);
-                    gridDCs[i1][i2] = "-1";
-                    op = "-1";
-                }
+        if(isPermitted || type.contains("nstructor")) {
+            TextView box = (TextView) view;
+            String answerIndex = box.getTag().toString();
+            try {
+                utilsMap.get(gameName).getDeclaredMethod("changeClicked", View.class).invoke(null, view);
+                sendGrid(currentGrid,utilsMap.get(gameName).getDeclaredField("answer").get(null), socket);
+                if (!utilsMap.get(gameName).getDeclaredField("clueIndexes").get(null).toString().contains(answerIndex))
+                    checkAnswer(null);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else if (switchPosition.equals("cross")) {
-                if (gridDCs[i1][i2].equals("-2")) {
-                    box.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    gridDCs[i1][i2] = "0";
-                    op = "0";
-                } else {
-                    box.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                    gridDCs[i1][i2] = "-2";
-                    op = "-2";
-                }
-            }
-            clickedBox = answerIndex;
-            assert op != null;
-            currentGrid.get(i2).set(i1,Integer.parseInt(op));
-            sendGrid(currentGrid);
-            Log.i("currentGrid",currentGrid.toString());
-            List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
-            if(!newOp.equals(operations.get(operations.size() - 1))){
-                operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
-            }
-            Log.i("operations",operations+"");
-            checkAnswer(null);
         }
     } // Tıklanan kutuya elmas/çarpı koy
     public void changeSwitch(View view){
-        ImageView switchTV = (ImageView) view;
         if(isPermitted || type.contains("nstructor")) {
-            if (switchPosition.equals("diamond")) {
-                switchTV.setImageResource(R.drawable.ic_cross);
-                switchPosition = "cross";
-            } else if (switchPosition.equals("cross")) {
-                switchTV.setImageResource(R.drawable.ic_diamond);
-                switchPosition = "diamond";
-            }
+            HazineAviUtils.changeSwitch(view);
         }
     } // Elmas - çarpı değiştir
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @SuppressLint("SetTextI18n")
+    public void numClicked(View view) throws NoSuchFieldException, IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        if((isPermitted || type.contains("nstructor")) &&
+                (int)utilsMap.get(gameName).getDeclaredField("clickedBox").get(null) != -1 &&
+                (boolean)utilsMap.get(gameName).getDeclaredMethod("numClicked", View.class)
+                        .invoke(null,view))
+            checkAnswer(null);
+    }
+
+    public void deleteNum(View view) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        if(isPermitted || type.contains("nstructor"))
+            utilsMap.get(gameName).getDeclaredMethod("deleteNum", null).invoke(null,null);
+    }
+
     @SuppressLint("UseCompatLoadingForDrawables")
     public void undoOperation(View view){
-        if(operations.size() > 1 && (isPermitted || type.contains("nstructor"))){
-//            operations = operations.subList(0,operations.size()-1);
-            List<String> tuple1 = operations.get(operations.size()-1);
-            operations = operations.subList(0,operations.size()-1);
-            String co1 = tuple1.get(0);
-            String num2 = "0";
-            String co2;
-            for(int i = operations.size()-1; i>0; i--){
-                List<String> tuple2 = operations.get(i);
-                co2 = tuple2.get(0);
-                if(co1.equals(co2)){
-                    num2 = tuple2.get(1);
-                    break;
-                }
-            }
-            Log.i("co/num",co1+" / "+num2);
-            GridLayout gridLayout = gridGL;
-            TextView currentBox = gridLayout.findViewWithTag(co1);
-            final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
-            final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
-            currentGrid.get(i1).set(i2,Integer.parseInt(num2));
-            sendGrid(currentGrid);
-
-            if(num2.equals("-1")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                gridDCs[i1][i2] = "-1";
-            }
-            else if(num2.equals("-2")){
-                currentBox.setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                gridDCs[i1][i2] = "-2";
-            }
-            else{
-                currentBox.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                gridDCs[i1][i2] = "0";
+        if(isPermitted || type.contains("nstructor")){
+            try {
+                utilsMap.get(gameName).getDeclaredMethod("undoOperation", null).invoke(null, null);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     } // Son işlemi geri al
@@ -250,83 +207,57 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public void resetGrid(View view){
         if(isPermitted || type.contains("nstructor")) {
             try {
-                final TextView resetTV = (TextView) view;
-                resetTV.setTextColor(getResources().getColor(R.color.light_red));
-                resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 19);
-                resetTV.setText(R.string.ResetNormal);
-                resetTV.postDelayed(new Runnable() {
-                    @SuppressLint("UseCompatLoadingForColorStateLists")
-                    @Override
-                    public void run() {
-                        resetTV.setTextColor(getResources().getColorStateList(R.color.reset_selector_tvcolor));
-                        resetTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                        resetTV.setText(R.string.ResetUnderlined);
-                    }
-                }, 100);
-
-                operations = new ArrayList<>();
-                operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-                GridLayout gridLayout = gridGL;
-                clickedBox = "-1";
-                for (int i = 0; i < gridSize; i++) {
-                    for (int j = 0; j < gridSize; j++) {
-                        TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                        tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                        gridDCs[j][i] = "-1";
-                        if (!clueIndexes.contains(Integer.toString(j) + i)) {
-                            tv.setText("");
-                        }
-                    }
-                }
-                for (int i = 0; i < gridSize; i++) {
-                    List<Integer> row = currentGrid.get(i);
-                    for (int j = 0; j < gridSize; j++) {
-                        if (row.get(j) < 0) row.set(j, 0);
-                    }
-                    currentGrid.set(i, row);
-                }
-                Log.i("currentGrid-reset", currentGrid.toString());
-                sendGrid(currentGrid);
-            }
-            catch (Exception e) {
+                utilsMap.get(gameName).getDeclaredMethod("resetGrid", View.class).invoke(null,view);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-    } // Tüm işlemleri sıfırla
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public void checkAnswer(View view){
-        GridLayout gridLayout = gridGL;
-        boolean checking=true;
-        for(int i = 0; i<gridSize; i++){
-            for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !gridDCs[j][i].equals("-1")){
-                    checking=false;
-                    break;
-                }
-                else if(!answer.contains(co) && gridDCs[j][i].equals("-1")){
-                    checking=false;
-                    break;
-                }
-            }
+    public void notesOnGrid(View view) {
+        if(isPermitted || type.contains("nstructor")) {
+            SayiBulmacaUtils.notesOnGrid(view);
         }
-        Log.i("check",checking+"  "+answer);
-        if(checking && answer.size()>0){ //&& type.contains("nstructor")){
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
+        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
+        boolean checking = false;
+        try {
+            checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if(checking){ //&& ((Object)utilsMap.get(gameName).getDeclaredField("gridSize").get(null)).size()>0){ //&& type.contains("nstructor")){
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
-            for (int i = 0; i < gridSize; i++) {
-                for (int j = 0; j < gridSize; j++) {
+            for (int i = 0; i < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); i++) {
+                try{
+                    gridLayout.findViewWithTag("answer" + i).setEnabled(false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++) {
                     gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
                 }
+            }
+            try {
+                TextView deleteTV = findViewById(R.id.deleteTV_ga);
+                deleteTV.setEnabled(false);
+                GridLayout numsLayout = findViewById(R.id.numsGL_ga);
+                for (int i = 0; i < 10; i++) {
+                    numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
             undoTV.setEnabled(false);
             resetTV.setEnabled(false);
             Log.i("checkingTrue - type",type);
             nextQuestion(null);
-
-
-
         }
 
     } // Çözümün doğruluğunu kontrol et
@@ -393,59 +324,105 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             ((ConstraintLayout)findViewById(R.id.diffTV_game).getParent()).setVisibility(View.VISIBLE);
         }
     } // API'den soru çek
-    @SuppressLint("UseCompatLoadingForDrawables")
+    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void seperateGridAnswer(JSONArray grid, boolean fromStudent) throws JSONException {
         GridLayout gridLayout = gridGL;
-        if(!type.contains("nstructor")){
-            clueIndexes = new ArrayList<>();
+        if(gameName.equals(getString(R.string.HazineAvı))) {
+            if (!type.contains("nstructor")) {
+                HazineAviUtils.clueIndexes = new ArrayList<>();
 //            answer = new ArrayList<>();
-        }
-        for(int i = 0; i < gridSize; i++){
-            for(int j = 0; j <  gridSize; j++) {
-                String n = ((JSONArray)grid.get(i)).get(j).toString();
-                if(Integer.parseInt(n) > 0){
-                    currentGrid.get(i).set(j,Integer.parseInt(n));
-                    if(!fromStudent || !type.contains("nstructor")) clueIndexes.add(Integer.toString(j)+i);
-                    ((TextView) gridLayout.findViewWithTag(Integer.toString(j)+i)).setText(n);
-                    gridDCs[j][i] = n;
-                }
-                else if(n.equals("-1")){
-                    if(!type.contains("nstructor") || fromStudent) {
+            }
+            for (int i = 0; i < HazineAviUtils.gridSize; i++) {
+                for (int j = 0; j < HazineAviUtils.gridSize; j++) {
+                    String n = ((JSONArray) grid.get(i)).get(j).toString();
+                    if (Integer.parseInt(n) > 0) {
                         currentGrid.get(i).set(j, Integer.parseInt(n));
-                        gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
-                        gridDCs[j][i] = "-1";
+                        if (!fromStudent || !type.contains("nstructor"))
+                            HazineAviUtils.clueIndexes.add(Integer.toString(j) + i);
+                        ((TextView) gridLayout.findViewWithTag(Integer.toString(j) + i)).setText(n);
+                        HazineAviUtils.gridDCs[j][i] = n;
+                    } else if (n.equals("-1")) {
+                        if (!type.contains("nstructor") || fromStudent) {
+                            currentGrid.get(i).set(j, Integer.parseInt(n));
+                            gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
+                            HazineAviUtils.gridDCs[j][i] = "-1";
+                        }
+                        if (!fromStudent) // || !type.contains("nstructor"))
+                            HazineAviUtils.answer.add(Integer.toString(j) + i);
+                    } else if (n.equals("-2") && (!type.contains("nstructor") || fromStudent)) {
+                        currentGrid.get(i).set(j, Integer.parseInt(n));
+                        gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
+                        HazineAviUtils.gridDCs[j][i] = "-2";
+                    } else if (n.equals("0") && (!type.contains("nstructor") || fromStudent)) {
+                        currentGrid.get(i).set(j, Integer.parseInt(n));
+                        gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
+                        HazineAviUtils.gridDCs[j][i] = "0";
                     }
-                    if(!fromStudent) // || !type.contains("nstructor"))
-                        answer.add(Integer.toString(j)+i);
-                }
-                else if(n.equals("-2") && (!type.contains("nstructor") || fromStudent)){
-                    currentGrid.get(i).set(j, Integer.parseInt(n));
-                    gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
-                    gridDCs[j][i] = "-2";
-                }
-                else if(n.equals("0") && (!type.contains("nstructor") || fromStudent)){
-                    currentGrid.get(i).set(j, Integer.parseInt(n));
-                    gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                    gridDCs[j][i] = "0";
                 }
             }
+
+            Log.i("answer", HazineAviUtils.answer + "");
+        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+            if (!fromStudent) SayiBulmacaUtils.answer = (JSONArray) grid.get(grid.length() - 1);
+            Log.i("jsonGrid",""+grid);
+            Log.i("answer",SayiBulmacaUtils.answer+"");
+            for (int i = 0; i < grid.length()-1; i++){
+                JSONArray row = (JSONArray) grid.get(i);
+                for (int j = 0; j< row.length()-1; j++){
+                    TextView tv = gridLayout.findViewWithTag(Integer.toString(j)+ i);
+                    tv.setText(row.get(j).toString());
+                    currentGrid.get(i).set(j,row.get(j));
+                }
+                JSONArray rguide = (JSONArray)row.get(row.length()-1);
+                TextView rGuideTV = gridLayout.findViewWithTag("g"+i);
+                if(rguide.get(0).toString().equals("0")){
+                    rGuideTV.setText(rguide.get(1).toString());
+                }
+                else if(rguide.get(1).toString().equals("0")){
+                    rGuideTV.setText("+"+rguide.get(0).toString());
+                }
+                else{
+                    rGuideTV.setText("+"+rguide.get(0).toString()+"  "+rguide.get(1).toString());
+                }
+                List<Integer> rg_list = new ArrayList<>();
+                for (int a = 0; a < rguide.length(); a++){
+                    rg_list.add(rguide.getInt(a));
+                }
+                currentGrid.get(i).set(row.length()-1,rg_list);
+            }
+            TextView guideanswer = gridLayout.findViewWithTag("answerguide");
+            guideanswer.setText("+"+SayiBulmacaUtils.gridSize);
+            if (!fromStudent)SayiBulmacaUtils.answer.remove(SayiBulmacaUtils.answer.length()-1);
         }
-        Log.i("answer",answer+"");
         if(type.contains("nstructor") && !isConnected) {
             isConnected = true;
             connectSocket();
             joinClass();
         } else if(!type.contains("nstructor") || fromStudent){
-            checkAnswer(null);
+            try {
+                checkAnswer(null);
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
         else if (type.contains("nstructor")){
-            sendGrid(currentGrid);
+            try {
+                sendGrid(currentGrid,utilsMap.get(gameName).getDeclaredField("answer").get(null), socket);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+            }
         }
 
-        Log.i("clueIndexes",clueIndexes.toString());
+        Log.i("clueIndexes",HazineAviUtils.clueIndexes.toString());
         Log.i("currentGrid",currentGrid.toString());
     } // Çekilen soruyu kullanıcıya göster
+
+
     @SuppressLint("InflateParams")
     public void loadingDialogFunc(){
         loadingDialog = new LoadingDialog(GroupSolvingActivity.this, getLayoutInflater().inflate(R.layout.loading_dialog,null));
@@ -481,11 +458,28 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             return dbToVisible.get(string);
         }
     }
+    public String databaseToLayout(String dbgn){
+        List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
+                "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
+                "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
+                "SayiBulmaca.3", "SayiBulmaca.4", "SayiBulmaca.5", "SozcukTuru.Easy", "SozcukTuru.Medium", "SozcukTuru.Hard", "SozcukTuru.Hardest",
+                "Piramit.3", "Piramit.4","Piramit.5","Piramit.6"));
+        List<String> layoutGameNames = new ArrayList<>(Arrays.asList(
+                "sudoku6_easy", "sudoku6_medium", "sudoku6_hard", "sudoku9_easy", "sudoku9_medium", "sudoku9_hard",
+                "hazineavi_easy", "hazineavi_medium", "hazineavi_hard", "patika_easy", "patika_medium", "patika_hard",
+                "sayibulmaca_easy", "sayibulmaca_medium", "sayibulmaca_hard", "sozcukturu_easy", "sozcukturu_medium", "sozcukturu_hard",
+                "piramit_easy", "Piramit_medium","piramit_hard","piramit_veryhard"));
+        Map<String,String> map = new HashMap<>();
+        for(int i = 0; i<databaseGameNames.size()-1; i++)
+            map.put(databaseGameNames.get(i),layoutGameNames.get(i));
+        return map.get(dbgn);
+    }
+
     public boolean checkIfGridHasDC(JSONArray grid) throws JSONException{
         boolean flag = false;
-        for(int i = 0; i < gridSize; i++) {
+        for(int i = 0; i < HazineAviUtils.gridSize; i++) {
             if(flag) break;
-            for (int j = 0; j < gridSize; j++) {
+            for (int j = 0; j < HazineAviUtils.gridSize; j++) {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
                 if(n.equals("-1") || n.equals("-2")){
                     flag = true;
@@ -497,24 +491,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     }
     @SuppressLint("UseCompatLoadingForDrawables")
     public void clearGrid(){
-        operations = new ArrayList<>();
-        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-        GridLayout gridLayout = gridGL;
-        currentGrid = new ArrayList<>();
-        for (int i = 0; i < gridSize; i++) {
-            List<Integer> row = new ArrayList<>();
-            for (int j = 0; j < gridSize; j++) {
-                TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
-                tv.setText("");
-                tv.setBackground(getResources().getDrawable(R.drawable.stroke_bg));
-                gridDCs[j][i] = "0";
-                tv.setEnabled(true);
-                row.add(0);
-            }
-            currentGrid.add(row);
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("clearGrid", null).invoke(null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        Log.i("firstCurrentGrid",currentGrid.toString());
-        clickedBox = "-1";
     }
     public void mainFunc(){
         TextView undoTV = findViewById(R.id.undoTV_ga);
@@ -522,9 +503,25 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         undoTV.setEnabled(true);
         resetTV.setEnabled(true);
         findViewById(R.id.clickView).setVisibility(View.GONE);
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            TextView deleteTV = findViewById(R.id.deleteTV_ga);
+            deleteTV.setEnabled(true);
+            GridLayout numsLayout = findViewById(R.id.numsGL_ga);
+            for (int i = 0; i < 10; i++) {
+                numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
         clearGrid();
-        answer = new ArrayList<>();
-        clueIndexes = new ArrayList<>();
+        HazineAviUtils.answer = new ArrayList<>();
+        SayiBulmacaUtils.answer = new JSONArray();
+        HazineAviUtils.clueIndexes = new ArrayList<>();
         GetRequest getRequest = new GetRequest();
         getRequest.execute("https://mind-plateau-api.herokuapp.com/"+newTaskProperties.get(0),"fx!Ay:;<p6Q?C8N{");
         loadingDialogFunc();
@@ -541,7 +538,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             ntLayout.findViewById(R.id.startbutton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sendGameDiff(ntLayout);
+                    try {
+                        sendGameDiff(ntLayout);
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                     ntDialog.dismiss();
                 }
             });
@@ -588,15 +591,37 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         }
     }
 
-    public void sendGameDiff(View view){
+    public void sendGameDiff(View view) throws NoSuchFieldException, IllegalAccessException {
         newTaskProperties = new ArrayList<>();
         newTaskProperties.add(shownToDatabase("shownToDatabase",gameSpinner.getSelectedItem() +" "+ diffSpinner.getSelectedItem()));
         dbGameName = newTaskProperties.get(0);
         String[] ntp = newTaskProperties.get(0).split("\\.");
         gridSize = Integer.parseInt(ntp[1]);
         gameName = (String) gameSpinner.getSelectedItem();
+        utilsMap.get(gameName).getDeclaredField("gridSize").set(utilsMap.get(gameName),gridSize);
         difficulty = (String) diffSpinner.getSelectedItem();
         ((TextView)findViewById(R.id.diffTV_game)).setText(difficulty);
+
+        currentGrid = new ArrayList<>();
+        if (gameName.equals(getString(R.string.HazineAvı))) {
+            for (int i = 0; i < gridSize; i++) {
+                List<Object> row = new ArrayList<>();
+                for (int j = 0; j < gridSize; j++) {
+                    row.add(0);
+                }
+                currentGrid.add(row);
+            }
+        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+            for (int i = 0; i < gridSize+1; i++) {
+                List<Object> row = new ArrayList<>();
+                for (int j = 0; j < gridSize; j++) {
+                    row.add(0);
+                }
+                row.add(new ArrayList<>(Arrays.asList(0,0)));
+                currentGrid.add(row);
+            }
+        }
+
         LayoutInflater inflater = getLayoutInflater();
 
         List<String> gns = new ArrayList<>(Arrays.asList("Sudoku", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
@@ -604,11 +629,38 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         Map<String,String> glmap = new HashMap<>();
         for(int i = 0; i<gns.size(); i++)
             glmap.put(gns.get(i),lns.get(i));
+        List<String> d1 = new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard),getString(R.string.VeryHard)));
+        List<String> d2 = new ArrayList<>(Arrays.asList("easy","medium","hard","veryhard"));
+        Map<String,String> diffMap = new HashMap<>();
+        for(int i = 0; i<d1.size(); i++)
+            diffMap.put(d1.get(i),d2.get(i));
 
         gridGL = (GridLayout) inflater.inflate(this.getResources().getIdentifier(glmap.get(gameName)
-                +gridSize+"_grid", "layout", this.getPackageName()),null);
+                +"_"+diffMap.get(difficulty)+"_grid", "layout", this.getPackageName()),null);
         RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
         gridRL.addView(gridGL);
+        if (gameName.equals(getString(R.string.HazineAvı))){
+        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+            ConstraintLayout cl = (ConstraintLayout) gridRL.getParent();
+            LinearLayout ll1 = (LinearLayout) cl.getChildAt(4);
+
+            LinearLayout ll2 = (LinearLayout) inflater.inflate(this.getResources().getIdentifier("nums_and_buttons_layout","layout",this.getPackageName()),null);
+            ConstraintLayout.LayoutParams params =
+                    (ConstraintLayout.LayoutParams) ll1.getLayoutParams();
+
+            ConstraintLayout.LayoutParams newParams = new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                    ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+            newParams.endToEnd = params.endToEnd;
+            newParams.topToBottom = params.topToBottom;
+            newParams.startToStart = params.startToStart;
+            newParams.bottomToBottom = params.bottomToBottom;
+            newParams.verticalBias = 0.2f;
+            cl.removeView(cl.getChildAt(4));
+            cl.addView(ll2,4,newParams);
+
+        }
         initUIandEvent();
         mainFunc();
     }
@@ -1058,11 +1110,51 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                         if(!type.contains("nstructor")) {
                             dbGameName = (String) args[0];
                             String[] ntp = dbGameName.split("\\.");
-                            gameName = ntp[0];
+                            List<String> dbns = new ArrayList<>(Arrays.asList("Sudoku","HazineAvi","Patika","SayiBulmaca","SozcukTuru","Piramit"));
+                            List<String> gns = new ArrayList<>(Arrays.asList("Sudoku", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
+                            Map<String,String> nameMap = new HashMap<>();
+                            for(int i = 0; i<gns.size(); i++)
+                                nameMap.put(dbns.get(i),gns.get(i));
+
+                            gameName = nameMap.get(ntp[0]);
+                            Log.i("gameName",gameName);
+
+                            currentGrid = new ArrayList<>();
+                            if (gameName.equals(getString(R.string.HazineAvı))) {
+                                for (int i = 0; i < gridSize; i++) {
+                                    List<Object> row = new ArrayList<>();
+                                    for (int j = 0; j < gridSize; j++) {
+                                        row.add(0);
+                                    }
+                                    currentGrid.add(row);
+                                }
+                            } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+                                for (int i = 0; i < gridSize+1; i++) {
+                                    List<Object> row = new ArrayList<>();
+                                    for (int j = 0; j < gridSize; j++) {
+                                        row.add(0);
+                                    }
+                                    row.add(new ArrayList<>(Arrays.asList(0,0)));
+                                    currentGrid.add(row);
+                                }
+                            }
+
                             gridSize = Integer.parseInt(ntp[1]);
-                            gridGL = (GridLayout) getLayoutInflater().inflate(getResources().getIdentifier(gameName.toLowerCase().replace(" ","").
-                                    replace("ı","i").replace("ö","o").replace("ü","u")
-                                    +gridSize+"_grid", "layout", getPackageName()),null);
+                            try {
+                                utilsMap.get(gameName).getDeclaredField("gridSize").set(utilsMap.get(gameName),gridSize);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (NoSuchFieldException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.i("layoutname",databaseToLayout(dbGameName));
+                            gridGL = (GridLayout) getLayoutInflater().inflate(getApplicationContext().getResources().getIdentifier(databaseToLayout(dbGameName)
+                                    + "_grid", "layout", getApplicationContext().getPackageName()),null);
+
+//                            gridGL = (GridLayout) getLayoutInflater().inflate(getResources().getIdentifier(gameName.toLowerCase().replace(" ","").
+//                                    replace("ı","i").replace("ö","o").replace("ü","u")
+//                                    +gridSize+"_grid", "layout", getPackageName()),null);
                         }
                         Log.i("gameType", args[0] + ".");
                     }
@@ -1086,6 +1178,16 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             undoTV.setEnabled(true);
                             resetTV.setEnabled(true);
                             findViewById(R.id.clickView).setVisibility(View.GONE);
+                            try {
+                                TextView deleteTV = findViewById(R.id.deleteTV_ga);
+                                deleteTV.setEnabled(true);
+                                GridLayout numsLayout = findViewById(R.id.numsGL_ga);
+                                for (int i = 0; i < 10; i++) {
+                                    numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
+                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
                         }
                         try {
                             JSONArray grid;
@@ -1095,11 +1197,15 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                                 grid = resultJB.getJSONArray(0);
                                 if(!type.contains("nstructor")) {
                                     JSONArray answerJA = resultJB.getJSONArray(1);
-                                    answer = new ArrayList<>();
-                                    for (int i = 0; i < answerJA.length(); i++) {
-                                        answer.add(String.format("%02d",(int) answerJA.get(i)));
+                                    if(gameName.equals(getString(R.string.HazineAvı))) {
+                                        HazineAviUtils.answer = new ArrayList<>();
+                                        for (int i = 0; i < answerJA.length(); i++) {
+                                            HazineAviUtils.answer.add(String.format("%02d", (int) answerJA.get(i)));
+                                        }
+                                        Log.i("answerInSendGrid", HazineAviUtils.answer.toString());
+                                    } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+                                        SayiBulmacaUtils.answer = answerJA;
                                     }
-                                    Log.i("answerInSendGrid",answer.toString());
                                 }
                             } else {
                                 grid = resultJB;
@@ -1122,14 +1228,42 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 //                                    }
 //
 //                                }
-                            if(!checkIfGridHasDC(grid)){
-                                clearGrid();
-                                Log.i("grid","cleared");
+                            try {
+                                utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
+                            if(gameName.equals(getString(R.string.HazineAvı)))
+                                if (!checkIfGridHasDC(grid)){
+                                    clearGrid();
+                                    Log.i("grid","cleared");
+                                }
                             seperateGridAnswer(grid, true);
                             RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
                             gridRL.removeAllViews();
                             gridRL.addView(gridGL);
+                            if (gameName.equals(getString(R.string.HazineAvı))){
+                            } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+                                ConstraintLayout cl = (ConstraintLayout) gridRL.getParent();
+                                LinearLayout ll1 = (LinearLayout) cl.getChildAt(4);
+
+                                LinearLayout ll2 = (LinearLayout) getLayoutInflater().inflate(getApplicationContext().getResources().getIdentifier("nums_and_buttons_layout","layout",getApplicationContext().getPackageName()),null);
+                                ConstraintLayout.LayoutParams params =
+                                        (ConstraintLayout.LayoutParams) ll1.getLayoutParams();
+
+                                ConstraintLayout.LayoutParams newParams = new ConstraintLayout.LayoutParams(
+                                        ConstraintLayout.LayoutParams.WRAP_CONTENT,
+                                        ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+                                newParams.endToEnd = params.endToEnd;
+                                newParams.topToBottom = params.topToBottom;
+                                newParams.startToStart = params.startToStart;
+                                newParams.bottomToBottom = params.bottomToBottom;
+                                newParams.verticalBias = 0.2f;
+                                cl.removeView(cl.getChildAt(4));
+                                cl.addView(ll2,4,newParams);
+
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -1194,8 +1328,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     @Override
                     public void run() {
                         isPermitted = true;
-                        operations = new ArrayList<>();
-                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
+//                        operations = new ArrayList<>();
+//                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
                         Toast.makeText(GroupSolvingActivity.this, getString(R.string.permissionGranted), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -1208,8 +1342,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     @Override
                     public void run() {
                         isPermitted = false;
-                        operations = new ArrayList<>();
-                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
+//                        operations = new ArrayList<>();
+//                        operations.add(new ArrayList<>(Arrays.asList("00", "0")));
                         Toast.makeText(GroupSolvingActivity.this, getString(R.string.permissionRemoved), Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -1253,12 +1387,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         Log.i("socket","joinToRoom");
     }
 
-    public void sendGrid(List<List<Integer>> grid){
+    public static void sendGrid(List<List<Object>> grid, Object answer, Socket socket){
 
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("grid",grid);
 //        map.put("answer",answer);
-        List<Object> lst = new ArrayList<Object>(Arrays.asList(grid,answer));
+        List<Object> lst = null;
+        lst = new ArrayList<>(Arrays.asList(grid, answer));
         socket.emit("sendGrid", lst);
     }
 
@@ -1283,18 +1418,20 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_solving);
+
+        mAppCompatActivity = this;
+        utilsMap = new HashMap<>();
+        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
+        utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
+        utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);
+        utilsMap.put(getString(R.string.SözcükTuru), SozcukTuruUtils.class);
+        utilsMap.put(getString(R.string.Piramit), PiramitUtils.class);
+
         SharedPreferences sp = getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE);
         type = sp.getString("type", getString(R.string.Unknown));
         user_name = sp.getString("username", getString(R.string.Unknown));
         classid = sp.getString("classid", getString(R.string.Unknown));
-        currentGrid = new ArrayList<>();
-        for (int i = 0; i < gridSize; i++) {
-            List<Integer> row = new ArrayList<>();
-            for (int j = 0; j < gridSize; j++) {
-                row.add(0);
-            }
-            currentGrid.add(row);
-        }
         if (type.contains("nstructor")) {
             selectGameDiff(null);
         } else {

@@ -130,15 +130,24 @@ class SayiBulmaca:
         return
 
 
-def main():
-    game = SayiBulmaca()
-    game.SetAnswer()
-    game.PerfectGrid()
-    game.ClueGuide()
-    game.isUnique()
-    if game.solutions == 1:
-        game.answer.append([3, 0])
-        game.grid.append(game.answer)
-        return game.grid
-    else:
-        return main()
+def main(count):
+    discarded = 0
+    gridList = []
+    for _ in range(count):
+        game = SayiBulmaca()
+        game.SetAnswer()
+        game.PerfectGrid()
+        game.ClueGuide()
+        game.isUnique()
+        if game.solutions == 1:
+            game.answer.append([3, 0])
+            game.grid.append(game.answer)
+            # return game.grid
+            gridList.append(game.grid)
+        else:
+            discarded+=1
+            # return main()
+    print("Discarded: ",discarded)
+    print("Saved: ",len(gridList))
+    print("Discarded percentage: %", (discarded/(discarded+len(gridList))*100))
+main(1000)

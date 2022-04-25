@@ -48,8 +48,8 @@ public class HazineAviUtils {
     public static void changeClicked(final View view){
         TextView box = (TextView) view;
         String answerIndex = box.getTag().toString();
-        int i1 = Integer.parseInt(String.valueOf(answerIndex.charAt(0)));
-        int i2 = Integer.parseInt(String.valueOf(answerIndex.charAt(1)));
+        int i1 = Integer.parseInt(String.valueOf(answerIndex.charAt(1)));
+        int i2 = Integer.parseInt(String.valueOf(answerIndex.charAt(0)));
         if (!clueIndexes.contains(answerIndex)) {
             String op = null;
             if (switchPosition.equals("diamond")) {
@@ -97,6 +97,7 @@ public class HazineAviUtils {
     public static Object[] undoOperation(){
         String co1 = "0";
         String num2 = "0";
+
         if(operations.size() > 1){
             //            operations = operations.subList(0,operations.size()-1);
             List<String> tuple1 = operations.get(operations.size()-1);
@@ -113,7 +114,7 @@ public class HazineAviUtils {
                 }
             }
             Log.i("co/num",co1+" / "+num2);
-            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
             TextView currentBox = gridLayout.findViewWithTag(co1);
             final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
             final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
@@ -150,7 +151,7 @@ public class HazineAviUtils {
 
             operations = new ArrayList<>();
             operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-            GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+            GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
             clickedBox = "-1";
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -170,19 +171,19 @@ public class HazineAviUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static boolean checkAnswer(){
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         boolean checking=true;
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){
                 String co = Integer.toString(j)+i;
-                if(answer.contains(co) && !gridDCs[j][i].equals("-1")){
+                if(answer.contains(co) && !gridDCs[i][j].equals("-1")){
                     checking=false;
-                    Log.i("checkfalse1","i,j: "+ i + ", "+ j);
+//                    Log.i("checkfalse1","i,j: "+ i + ", "+ j);
                     break;
                 }
-                else if(!answer.contains(co) && gridDCs[j][i].equals("-1")){
+                else if(!answer.contains(co) && gridDCs[i][j].equals("-1")){
                     checking=false;
-                    Log.i("checkfalse2","i,j: "+ i + ", "+ j);
+//                    Log.i("checkfalse2","i,j: "+ i + ", "+ j);
                     break;
                 }
             }
@@ -192,7 +193,7 @@ public class HazineAviUtils {
     } // Çözümün doğruluğunu kontrol et
 
     public static void seperateGridAnswer(final JSONArray grid) throws JSONException {
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         for(int i = 0; i < gridSize; i++){
             for(int j = 0; j <  gridSize; j++) {
                 String n = ((JSONArray)grid.get(i)).get(j).toString();
@@ -210,7 +211,7 @@ public class HazineAviUtils {
     public static void clearGrid(){
         operations = new ArrayList<>();
         operations.add(new ArrayList<>(Arrays.asList("00", "0")));
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
@@ -221,8 +222,6 @@ public class HazineAviUtils {
             }
         }
         clickedBox = "-1";
-        clueIndexes = new ArrayList<>();
-        answer = new ArrayList<>();
     }
 
 }

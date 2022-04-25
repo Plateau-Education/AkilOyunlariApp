@@ -106,7 +106,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
 
-        <com.yaquila.akiloyunlariapp.DrawView
+        <com.yaquila.akiloyunlariapp.LoopView
             android:id="@+id/drawing"
             android:layout_width="298dp"
             android:layout_height="298dp"

@@ -26,9 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:tint="@color/light_red"
             android:src="@drawable/ic_arrowbutton"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            app:tint="@color/light_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,6 +106,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
+
+        <com.yaquila.akiloyunlariapp.WordTourView
+            android:id="@+id/drawing"
+            android:layout_width="224dp"
+            android:layout_height="299dp"
+            app:layout_row="1"
+            app:layout_column="1"
+            app:layout_rowSpan="5"
+            app:layout_columnSpan="5"
+            android:visibility="visible"
+            android:background="#FFFFFFFF" />
 
         <ImageView
             android:id="@+id/canvasIV"
@@ -330,6 +341,7 @@ android:fontFamily="@font/mohave_bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
