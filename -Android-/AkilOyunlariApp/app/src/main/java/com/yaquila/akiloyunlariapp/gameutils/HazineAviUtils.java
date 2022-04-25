@@ -79,11 +79,11 @@ public class HazineAviUtils {
             }
             clickedBox = answerIndex;
             List<String> newOp = new ArrayList<>(Arrays.asList(answerIndex, op));
-            if (operations != null && !newOp.equals(operations.get(operations.size() - 1))) {
+            if (operations != null && operations.size()>0 && !newOp.equals(operations.get(operations.size() - 1))) {
                 operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
             }
             if(context.getClass() == GroupSolvingActivity.class) {
-                currentGrid.get(i2).set(i1, Integer.parseInt(op));
+                ((List<Integer>)currentGrid.get(i1)).set(i2, Integer.parseInt(op));
                 GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
             }
             Log.i("operations", operations + "");
@@ -127,7 +127,7 @@ public class HazineAviUtils {
             final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
             final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
             if(context.getClass() == GroupSolvingActivity.class) {
-                currentGrid.get(i1).set(i2,Integer.parseInt(num2));
+                ((List<Integer>)currentGrid.get(i1)).set(i2,Integer.parseInt(num2));
                 GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
             }
             if(num2.equals("-1")){
@@ -177,11 +177,11 @@ public class HazineAviUtils {
             }
             if(context.getClass() == GroupSolvingActivity.class) {
                 for (int i = 0; i < gridSize; i++) {
-                    List<Object> row = currentGrid.get(i);
+                    List<Object> row = (List<Object>) currentGrid.get(i);
                     for (int j = 0; j < gridSize; j++) {
                         if ((int)row.get(j) < 0) row.set(j, 0);
                     }
-                    currentGrid.set(i, row);
+                    currentGrid.add(row);
                 }
                 GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
             }
@@ -197,15 +197,15 @@ public class HazineAviUtils {
         boolean checking=true;
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(j)+i;
+                String co = Integer.toString(i)+j;
                 if(answer.contains(co) && !gridDCs[i][j].equals("-1")){
                     checking=false;
-//                    Log.i("checkfalse1","i,j: "+ i + ", "+ j);
+                    Log.i("checkfalse1","i,j: "+ i + ", "+ j);
                     break;
                 }
                 else if(!answer.contains(co) && gridDCs[i][j].equals("-1")){
                     checking=false;
-//                    Log.i("checkfalse2","i,j: "+ i + ", "+ j);
+                    Log.i("checkfalse2","i,j: "+ i + ", "+ j);
                     break;
                 }
             }
@@ -246,7 +246,7 @@ public class HazineAviUtils {
                 tv.setEnabled(true);
                 row.add(0);
             }
-            if(context.getClass() == GroupSolvingActivity.class) currentGrid.set(i,row);
+            if(context.getClass() == GroupSolvingActivity.class) currentGrid.add(row);
         }
         clickedBox = "-1";
     }

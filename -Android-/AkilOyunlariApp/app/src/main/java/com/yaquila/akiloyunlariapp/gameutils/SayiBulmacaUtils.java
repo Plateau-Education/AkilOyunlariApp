@@ -1,5 +1,7 @@
 package com.yaquila.akiloyunlariapp.gameutils;
 
+import static com.yaquila.akiloyunlariapp.GroupSolvingActivity.currentGrid;
+
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.util.Log;
@@ -12,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.GroupSolvingActivity;
 import com.yaquila.akiloyunlariapp.R;
 
 import org.json.JSONArray;
@@ -29,7 +32,6 @@ public class SayiBulmacaUtils {
     public static int clickedBox = -1;
     public static int gridSize = 3;
     public static boolean undoing=false;
-    public static boolean[] draftModeActive= new boolean[5];
 
     public static List<List<Integer>> operations = new ArrayList<>();
     public static JSONArray answer;
@@ -39,7 +41,6 @@ public class SayiBulmacaUtils {
         clickedBox = -1;
         gridSize = 3;
         undoing=false;
-        draftModeActive= new boolean[5];
         operations = new ArrayList<>();
         answer = new JSONArray();
     }
@@ -79,11 +80,6 @@ public class SayiBulmacaUtils {
                 clickedBox = -1;
             }
         }
-        if(clickedBox != -1 && draftModeActive[clickedBox]){
-            for(int i = 0; i<10; i++){
-                ((Button)gridLayout.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-            }
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -96,15 +92,15 @@ public class SayiBulmacaUtils {
             if(currentBox.getText().toString().equals("")){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox,-1)));
             }
-            if(draftModeActive[clickedBox]){
-                currentBox.setText(currentBox.getText().toString()+" "+btn.getTag().toString());
-            }
-            else{
-                currentBox.setText(btn.getTag().toString());
-            }
+            currentBox.setText(btn.getTag().toString());
             List<Integer> newOp = new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString())));
             if(!newOp.equals(operations.get(operations.size() - 1))){
                 operations.add(new ArrayList<>(Arrays.asList(clickedBox, Integer.parseInt(btn.getTag().toString()))));
+            }
+            if(context.getClass() == GroupSolvingActivity.class) {
+                List<Object> cg = ((List<Object>)currentGrid.get(0));
+                ((List<Integer>)cg.get(cg.size()-1)).set(clickedBox, Integer.parseInt(btn.getTag().toString()));
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
             }
             boolean isFull = true;
             for (int i = 0; i<gridSize; i++){
@@ -141,6 +137,11 @@ public class SayiBulmacaUtils {
             Log.i("co/num",co+" / "+num);
             GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
             TextView currentBox = gridLayout.findViewWithTag("answer"+ co);
+            if(context.getClass() == GroupSolvingActivity.class) {
+                List<Object> cg = ((List<Object>)currentGrid.get(0));
+                ((List<Integer>)cg.get(cg.size()-1)).set(co,num);
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
+            }
             if(num == -1){
                 currentBox.setText("");
             }
@@ -188,6 +189,16 @@ public class SayiBulmacaUtils {
                     tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
                 }
             }
+            if(context.getClass() == GroupSolvingActivity.class) {
+                for (int i = 0; i < gridSize; i++) {
+                    List<Object> row = (List<Object>) ((List<Object>) currentGrid.get(0)).get(i);
+                    for (int j = 0; j < gridSize; j++) {
+                        if ((int)row.get(j) < 0) row.set(j, 0);
+                    }
+                    ((List<Object>)currentGrid.get(0)).set(i, row);
+                }
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -199,6 +210,9 @@ public class SayiBulmacaUtils {
         TextView clickedTV = (TextView) view;
         GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
         String clickedNum = clickedTV.getText().toString();
+        if(currentGrid.size()<1){
+//            currentGrid.add(new ArrayList<>());
+        }
         if (Objects.equals(clickedTV.getBackground().getConstantState(), context.getResources().getDrawable(R.drawable.stroke_bg).getConstantState())) {
             for (int i = 0; i < gridSize; i++) {
                 for (int j = 0; j < gridSize; j++) {
@@ -249,49 +263,6 @@ public class SayiBulmacaUtils {
         return checking && answer.length()>0;
     }
 
-    public static void draftClicked(){
-        GridLayout numGrid = context.findViewById(R.id.numsGL_ga);
-        GridLayout questionGrid = context.findViewById(R.id.gridGL_grid);
-        if(clickedBox != -1){
-            TextView currentClickedBox = questionGrid.findViewWithTag("answer"+ clickedBox);
-            if(currentClickedBox.getText().toString().length() == 1){
-                if(currentClickedBox.getTextSize() == 25){
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
-                }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
-                    }
-                    draftModeActive[clickedBox] = false;
-                }
-            }
-            else if (currentClickedBox.getText().toString().length() == 0) {
-                if (draftModeActive[clickedBox]) {
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,25);
-                    for (int i = 0; i < 10; i++) {
-                        ((Button) numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    }
-                    draftModeActive[clickedBox] = false;
-                }
-                else{
-                    currentClickedBox.setTextSize(TypedValue.COMPLEX_UNIT_SP,16);
-                    for(int i = 0; i<10; i++){
-                        ((Button)numGrid.findViewWithTag(Integer.toString(i))).setTextSize(TypedValue.COMPLEX_UNIT_SP,14);
-                    }
-                    draftModeActive[clickedBox] = true;
-                }
-            }
-            else{
-                draftModeActive[clickedBox] = true;
-            }
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @SuppressLint("SetTextI18n")
     public static void seperateGridAnswer(final JSONArray grid) throws JSONException {
@@ -324,6 +295,8 @@ public class SayiBulmacaUtils {
     public static void clearGrid(){
         operations = new ArrayList<>();
         GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
+        if(context.getClass() == GroupSolvingActivity.class)
+            currentGrid.clear();
         for (int i = 0; i < gridSize; i++) {
             TextView currentBox = gridLayout.findViewWithTag("answer" + i);
             currentBox.setText("");
@@ -338,13 +311,17 @@ public class SayiBulmacaUtils {
         }
 
         for (int i = 0; i < gridSize; i++) {
+            List<Object> row = new ArrayList<>();
             for (int j = 0; j < gridSize; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                 tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
                 tv.setEnabled(true);
+                row.add(0);
             }
+            if(context.getClass() == GroupSolvingActivity.class) ((List<Object>)currentGrid.get(0)).add(row);
         }
         clickedBox = -1;
+        answer = new JSONArray();
     }
 
 }

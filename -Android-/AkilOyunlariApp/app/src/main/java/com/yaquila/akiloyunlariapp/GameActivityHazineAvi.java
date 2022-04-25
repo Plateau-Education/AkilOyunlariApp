@@ -147,7 +147,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     } // Tüm işlemleri sıfırla
 
     public void checkAnswer(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
         if(HazineAviUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {

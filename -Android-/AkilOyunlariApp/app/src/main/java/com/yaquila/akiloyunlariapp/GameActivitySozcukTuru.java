@@ -35,7 +35,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -53,6 +55,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
     public static Handler timerHandler;
     public static Runnable runnable;
 
+    public static String currentLang;
 
     public void wannaLeaveDialog(View view){
         LayoutInflater factory = LayoutInflater.from(this);
@@ -66,22 +69,34 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 try {
-                    ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                    ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    ArrayList<String> questions;
+                    ArrayList<Integer> gameIds;
+                    if(!currentLang.contains("tr")) {
+                        questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("ENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                        gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    } else {
+                        questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                        gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    }
                     Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
-
                     assert questions != null;
                     questions.remove(0);
+
+
+                    if(!currentLang.contains("tr")) {
+                        sharedPreferences.edit().putString("ENSozcukTuru." + difficulty, ObjectSerializer.serialize(questions)).apply();
+                        sharedPreferences.edit().putString("IDENSozcukTuru." + difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                    } else {
+                        sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                        sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                    }
+                    sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                     assert solvedQuestions != null;
                     assert gameIds != null;
                     Objects.requireNonNull(solvedQuestions.get("SozcukTuru." + difficulty)).add(gameIds.remove(0)+"-"+"0");
 
                     Log.i("solvedQuestions",solvedQuestions+"");
-
-                    sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                    sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
-                    sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -149,23 +164,34 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         if(SozcukTuruUtils.checkAnswer()){
             SharedPreferences sharedPreferences = context.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
-                ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                ArrayList<String> questions;
+                ArrayList<Integer> gameIds;
+                if(!currentLang.contains("tr")) {
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("ENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                } else {
+                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                }
                 Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
                 assert questions != null;
                 questions.remove(0);
 
+                if(!currentLang.contains("tr")) {
+                    sharedPreferences.edit().putString("ENSozcukTuru." + difficulty, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDENSozcukTuru." + difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                } else {
+                    sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                }
+                sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
+
                 assert solvedQuestions != null;
                 assert gameIds != null;
                 Objects.requireNonNull(solvedQuestions.get("SozcukTuru." + difficulty)).add(gameIds.remove(0)+"-"+timerInSeconds);
 
-                Log.i("solvedQuestions++++",solvedQuestions+"");
-
-                sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
-                sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
-
+                Log.i("solvedQuestions",solvedQuestions+"");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -233,19 +259,26 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 SharedPreferences sharedPreferences = ctx.getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 String id = sharedPreferences.getString("id", "non");
                 try {
-                    questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-                    gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    if(strings[0].contains(".TR")) {
+                        questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                        gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                        Log.i("gameIDs ---- tr",gameIds.toString());
+                    } else {
+                        questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("ENSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                        gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDENSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+                    }
                 }catch (IOException e){
                     e.printStackTrace();
                 }
                 assert gameIds != null;
+                Log.i("gameIDs"+currentLang, gameIds.toString());
                 URL reqURL;
                 if(gameIds.size() > 10) {
                     reqURL = new URL(strings[0] + "/" + id + "?" + "Info=" + (1) + "&Token=" + strings[1]);
                 }else{
                     reqURL = new URL(strings[0] + "/" + id + "?" + "Info=" + (Math.abs(10 - gameIds.size()) + 1) + "&Token=" + strings[1]);
                 }
-
+                Log.i("reqURL",reqURL.toString());
                 HttpURLConnection connection = (HttpURLConnection) reqURL.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setDoInput(true);
@@ -317,17 +350,22 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
                 e.printStackTrace();
             }
             try {
-                sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
-                sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                if(!currentLang.contains("tr")) {
+                    sharedPreferences.edit().putString("ENSozcukTuru." + difficulty, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDENSozcukTuru." + difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                } else {
+                    sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                    sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            try {
-                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Log.i("gameIds", ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru." + difficulty, ObjectSerializer.serialize(new ArrayList<Integer>()))) +"");
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             timerStopped=false;
             gotQuestion = true;
@@ -383,7 +421,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         resetTV.setEnabled(true);
         clearGrid();
         GetRequest getRequest = new GetRequest(context);
-        getRequest.execute("https://mind-plateau-api.herokuapp.com/SozcukTuru."+difficulty,"fx!Ay:;<p6Q?C8N{");
+
+
+        if (currentLang.contains("tr")){
+            getRequest.execute("https://mind-plateau-api.herokuapp.com/SozcukTuru."+difficulty+".TR","fx!Ay:;<p6Q?C8N{");
+        } else {
+            getRequest.execute("https://mind-plateau-api.herokuapp.com/SozcukTuru."+difficulty,"fx!Ay:;<p6Q?C8N{");
+        }
         loadingDialogFunc(context);
     }
 
@@ -399,8 +443,9 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         appCompatActivity = this;
+        currentLang = (this.getResources().getConfiguration().locale).getLanguage();
         SozcukTuruUtils.initVars(this);
-        
+
         Intent intent = getIntent();
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
@@ -411,12 +456,14 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         assert difficulty != null;
         if (difficulty.equals(getString(R.string.Easy))) {
             setContentView(R.layout.activity_game_sozcuk_turu34);
+            if(currentLang.contains("tr"))
+                s = "3,4,5 harfli Türkçe kelimeler bul";
+            else s = "Find English words with " + "3,4,5 " + getString(R.string.letters);
 
-            s = getString(R.string.Easy) + " - 3,4,5 " + getString(R.string.letters);
-            ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
-            textView = findViewById(R.id.diffTV_game);
-            textView.setText(ss1);
+//            ss1 = new SpannableString(s);
+//            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.find_wordsTV);
+            textView.setText(s);
 
             Log.i("diff", "easy");
             difficulty = "Easy";
@@ -425,11 +472,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         } else if (difficulty.equals(getString(R.string.Medium))) {
             setContentView(R.layout.activity_game_sozcuk_turu35);
 
-            s = getString(R.string.Medium) + " - 4,5,6 " + getString(R.string.letters);
-            ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
-            textView = findViewById(R.id.diffTV_game);
-            textView.setText(ss1);
+            if(currentLang.contains("tr"))
+                s = "4,5,6 harfli Türkçe kelimeler bul";
+            else s = "Find English words with " + "4,5,6 " + getString(R.string.letters);
+//            ss1 = new SpannableString(s);
+//            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.find_wordsTV);
+            textView.setText(s);
 
             SozcukTuruUtils.gridSizeX = 3;
             SozcukTuruUtils.gridSizeY = 5;
@@ -438,11 +487,13 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         } else if (difficulty.equals(getString(R.string.Hard))) {
             setContentView(R.layout.activity_game_sozcuk_turu45);
 
-            s = getString(R.string.Hard) + " - 2,3,4,5,6 " + getString(R.string.letters);
-            ss1 = new SpannableString(s);
-            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
-            textView = findViewById(R.id.diffTV_game);
-            textView.setText(ss1);
+            if(currentLang.contains("tr"))
+                s = "2,3,4,5,6 harfli Türkçe kelimeler bul";
+            else s = "Find English words with " + "2,3,4,5,6 " + getString(R.string.letters);
+//            ss1 = new SpannableString(s);
+//            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
+            textView = findViewById(R.id.find_wordsTV);
+            textView.setText(s);
 
             SozcukTuruUtils.gridSizeX = 4;
             SozcukTuruUtils.gridSizeY = 5;
@@ -513,24 +564,39 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onDestroy() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
-            ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
-            ArrayList<String> solvedQuestions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<String> questions;
+            ArrayList<Integer> gameIds;
+            if(!currentLang.contains("tr")) {
+                questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("ENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDENSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            } else {
+                questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<String>())));
+                gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(new ArrayList<Integer>())));
+            }
+            Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
-            sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
-            sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
-            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize(solvedQuestions)).apply();
+            if(!currentLang.contains("tr")) {
+                sharedPreferences.edit().putString("ENSozcukTuru." + difficulty, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDENSozcukTuru." + difficulty, ObjectSerializer.serialize(gameIds)).apply();
+            } else {
+                sharedPreferences.edit().putString("SozcukTuru."+difficulty, ObjectSerializer.serialize(questions)).apply();
+                sharedPreferences.edit().putString("IDSozcukTuru."+difficulty, ObjectSerializer.serialize(gameIds)).apply();
+            }
+            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            solvedQuestions.add("SozcukTuru."+difficulty+","+gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("SozcukTuru." + difficulty)).add(gameIds.remove(0)+"-"+"0");
+
+            Log.i("solvedQuestions",solvedQuestions+"");
 
 
         } catch (IOException e) {

@@ -84,7 +84,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     boolean isParticipantsShown = false;
     boolean isCorrectDialogShown = false;
 
-    public static List<List<Object>> currentGrid = new ArrayList<>();
+    public static List<Object> currentGrid = new ArrayList<>();
     Map<String, Class<?>> utilsMap = new HashMap<>();
     List<String> newTaskProperties = new ArrayList<>();
     Map<String,Boolean> participantMap = new HashMap<>();
@@ -223,7 +223,6 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
         boolean checking = false;
         try {
             checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
@@ -234,14 +233,19 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
             findViewById(R.id.clickView).setVisibility(View.VISIBLE);
             TextView undoTV = findViewById(R.id.undoTV_ga);
             TextView resetTV = findViewById(R.id.resetTV_game);
+            GridLayout gridLayout = findViewById(R.id.gridGL_grid);
             for (int i = 0; i < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); i++) {
                 try{
                     gridLayout.findViewWithTag("answer" + i).setEnabled(false);
                 } catch (Exception e) {
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
-                for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++) {
-                    gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
+                try {
+                    for (int j = 0; j < Integer.parseInt(utilsMap.get(gameName).getDeclaredField("gridSize").get(null).toString()); j++) {
+                        gridLayout.findViewWithTag(Integer.toString(j) + i).setEnabled(false);
+                    }
+                } catch(Exception e){
+                    e.printStackTrace();
                 }
             }
             try {
@@ -252,7 +256,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                     numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
                 }
             } catch (Exception e){
-                e.printStackTrace();
+//                e.printStackTrace();
             }
             undoTV.setEnabled(false);
             resetTV.setEnabled(false);
@@ -328,6 +332,31 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void seperateGridAnswer(JSONArray grid, boolean fromStudent) throws JSONException {
         GridLayout gridLayout = gridGL;
+        currentGrid = new ArrayList<>();
+        if (gameName.equals(getString(R.string.HazineAvı))) {
+            for (int i = 0; i < gridSize; i++) {
+                List<Object> row = new ArrayList<>();
+                for (int j = 0; j < gridSize; j++) {
+                    row.add(0);
+                }
+                ((List<Object>)currentGrid).add(row);
+            }
+        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
+            List<List<Object>> cg = new ArrayList<>();
+            for (int i = 0; i < gridSize+1; i++) {
+                List<Object> row = new ArrayList<>();
+                for (int j = 0; j < gridSize; j++) {
+                    row.add(0);
+                }
+                row.add(new ArrayList<>(Arrays.asList(0,0)));
+                cg.add(row);
+            }
+            ((List<Object>)currentGrid).add(cg);
+
+
+        }
+        Log.i("firstCurrentGrid",currentGrid.toString());
+
         if(gameName.equals(getString(R.string.HazineAvı))) {
             if (!type.contains("nstructor")) {
                 HazineAviUtils.clueIndexes = new ArrayList<>();
@@ -337,25 +366,25 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 for (int j = 0; j < HazineAviUtils.gridSize; j++) {
                     String n = ((JSONArray) grid.get(i)).get(j).toString();
                     if (Integer.parseInt(n) > 0) {
-                        currentGrid.get(i).set(j, Integer.parseInt(n));
+                        ((List<Integer>)currentGrid.get(i)).set(j, Integer.parseInt(n));
                         if (!fromStudent || !type.contains("nstructor"))
                             HazineAviUtils.clueIndexes.add(Integer.toString(j) + i);
                         ((TextView) gridLayout.findViewWithTag(Integer.toString(j) + i)).setText(n);
                         HazineAviUtils.gridDCs[j][i] = n;
                     } else if (n.equals("-1")) {
                         if (!type.contains("nstructor") || fromStudent) {
-                            currentGrid.get(i).set(j, Integer.parseInt(n));
+                            ((List<Integer>)currentGrid.get(i)).set(j, Integer.parseInt(n));
                             gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_diamond));
                             HazineAviUtils.gridDCs[j][i] = "-1";
                         }
-                        if (!fromStudent) // || !type.contains("nstructor"))
+                        if (!fromStudent && HazineAviUtils.answer.size()>0)
                             HazineAviUtils.answer.add(Integer.toString(j) + i);
                     } else if (n.equals("-2") && (!type.contains("nstructor") || fromStudent)) {
-                        currentGrid.get(i).set(j, Integer.parseInt(n));
+                        ((List<Integer>)currentGrid.get(i)).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.ic_cross));
                         HazineAviUtils.gridDCs[j][i] = "-2";
                     } else if (n.equals("0") && (!type.contains("nstructor") || fromStudent)) {
-                        currentGrid.get(i).set(j, Integer.parseInt(n));
+                        ((List<Integer>)currentGrid.get(i)).set(j, Integer.parseInt(n));
                         gridLayout.findViewWithTag(Integer.toString(j) + i).setBackground(getResources().getDrawable(R.drawable.stroke_bg));
                         HazineAviUtils.gridDCs[j][i] = "0";
                     }
@@ -366,13 +395,13 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         } else if (gameName.equals(getString(R.string.SayıBulmaca))){
             if (!fromStudent) SayiBulmacaUtils.answer = (JSONArray) grid.get(grid.length() - 1);
             Log.i("jsonGrid",""+grid);
-            Log.i("answer",SayiBulmacaUtils.answer+"");
+            Log.i("answer",SayiBulmacaUtils.answer+" FromStudent: "+fromStudent);
             for (int i = 0; i < grid.length()-1; i++){
                 JSONArray row = (JSONArray) grid.get(i);
                 for (int j = 0; j< row.length()-1; j++){
                     TextView tv = gridLayout.findViewWithTag(Integer.toString(j)+ i);
                     tv.setText(row.get(j).toString());
-                    currentGrid.get(i).set(j,row.get(j));
+                    ((List<Object>)currentGrid.get(i)).set(j,row.get(j));
                 }
                 JSONArray rguide = (JSONArray)row.get(row.length()-1);
                 TextView rGuideTV = gridLayout.findViewWithTag("g"+i);
@@ -389,7 +418,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 for (int a = 0; a < rguide.length(); a++){
                     rg_list.add(rguide.getInt(a));
                 }
-                currentGrid.get(i).set(row.length()-1,rg_list);
+                ((List<Object>)currentGrid.get(i)).set(row.length()-1,rg_list);
             }
             TextView guideanswer = gridLayout.findViewWithTag("answerguide");
             guideanswer.setText("+"+SayiBulmacaUtils.gridSize);
@@ -504,11 +533,6 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         resetTV.setEnabled(true);
         findViewById(R.id.clickView).setVisibility(View.GONE);
         try {
-            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             TextView deleteTV = findViewById(R.id.deleteTV_ga);
             deleteTV.setEnabled(true);
             GridLayout numsLayout = findViewById(R.id.numsGL_ga);
@@ -516,9 +540,14 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                 numsLayout.findViewWithTag(Integer.toString(i)).setEnabled(true);
             }
         } catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         clearGrid();
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         HazineAviUtils.answer = new ArrayList<>();
         SayiBulmacaUtils.answer = new JSONArray();
         HazineAviUtils.clueIndexes = new ArrayList<>();
@@ -561,7 +590,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
             gameSpinner = ntLayout.findViewById(R.id.gameSpinner);
             diffSpinner = ntLayout.findViewById(R.id.diffSpinner);
-            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit))));
+            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.HazineAvı))));
             gameSpinner.setAdapter(gameAdapter);
             final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                     new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -601,26 +630,6 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         utilsMap.get(gameName).getDeclaredField("gridSize").set(utilsMap.get(gameName),gridSize);
         difficulty = (String) diffSpinner.getSelectedItem();
         ((TextView)findViewById(R.id.diffTV_game)).setText(difficulty);
-
-        currentGrid = new ArrayList<>();
-        if (gameName.equals(getString(R.string.HazineAvı))) {
-            for (int i = 0; i < gridSize; i++) {
-                List<Object> row = new ArrayList<>();
-                for (int j = 0; j < gridSize; j++) {
-                    row.add(0);
-                }
-                currentGrid.add(row);
-            }
-        } else if (gameName.equals(getString(R.string.SayıBulmaca))){
-            for (int i = 0; i < gridSize+1; i++) {
-                List<Object> row = new ArrayList<>();
-                for (int j = 0; j < gridSize; j++) {
-                    row.add(0);
-                }
-                row.add(new ArrayList<>(Arrays.asList(0,0)));
-                currentGrid.add(row);
-            }
-        }
 
         LayoutInflater inflater = getLayoutInflater();
 
@@ -1126,7 +1135,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                                     for (int j = 0; j < gridSize; j++) {
                                         row.add(0);
                                     }
-                                    currentGrid.add(row);
+                                    ((List<Object>)currentGrid).add(row);
                                 }
                             } else if (gameName.equals(getString(R.string.SayıBulmaca))){
                                 for (int i = 0; i < gridSize+1; i++) {
@@ -1135,7 +1144,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                                         row.add(0);
                                     }
                                     row.add(new ArrayList<>(Arrays.asList(0,0)));
-                                    currentGrid.add(row);
+                                    ((List<Object>)currentGrid).add(row);
                                 }
                             }
 
@@ -1194,6 +1203,11 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             String result = (String) args[0];
                             JSONArray resultJB = new JSONArray(result);
                             if(resultJB.length()==2){
+                                try {
+                                    utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                                 grid = resultJB.getJSONArray(0);
                                 if(!type.contains("nstructor")) {
                                     JSONArray answerJA = resultJB.getJSONArray(1);
@@ -1210,30 +1224,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             } else {
                                 grid = resultJB;
                             }
-//                                try {
-//                                    String result = (String) args[0];
-//                                    grid = new JSONArray(result);
-//                                    Log.i("sendGrid - result",result);
-//                                } catch (ClassCastException e){
-//                                    JSONObject jb = (JSONObject) args[0];
-//                                    Log.i("sendGrid - jb",jb.toString());
-//                                    grid = new JSONArray(jb.getString("grid"));
-//                                    if(!type.contains("nstructor")) {
-//                                        JSONArray answerJA = new JSONArray(jb.getString("answer"));
-//                                        answer = new ArrayList<>();
-//                                        for (int i = 0; i < answerJA.length(); i++) {
-//                                            answer.add(Integer.toString((int)answerJA.get(i)));
-//                                        }
-//                                        Log.i("answerInSendGrid",answer.toString());
-//                                    }
-//
-//                                }
-                            try {
-                                utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            if(gameName.equals(getString(R.string.HazineAvı)))
+                            if(gameName.equals(getString(R.string.HazineAvı)) && !type.contains("nstructor"))
                                 if (!checkIfGridHasDC(grid)){
                                     clearGrid();
                                     Log.i("grid","cleared");
@@ -1387,7 +1378,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
         Log.i("socket","joinToRoom");
     }
 
-    public static void sendGrid(List<List<Object>> grid, Object answer, Socket socket){
+    public static void sendGrid(List<?> grid, Object answer, Socket socket){
 
 //        Map<String, Object> map = new HashMap<>();
 //        map.put("grid",grid);

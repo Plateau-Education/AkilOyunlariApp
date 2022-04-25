@@ -158,7 +158,7 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view){
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
         if(SayiBulmacaUtils.checkAnswer()){
             SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
             try {
@@ -234,10 +234,6 @@ public class GameActivitySayiBulmaca extends AppCompatActivity {
             });
             correctDialog.show();
         }
-    }
-
-    public void draftClicked(View view){
-        SayiBulmacaUtils.draftClicked();
     }
 
     @SuppressWarnings("deprecation")
