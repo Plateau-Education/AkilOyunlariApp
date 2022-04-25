@@ -84,7 +84,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     boolean isParticipantsShown = false;
     boolean isCorrectDialogShown = false;
 
-    List<List<Object>> currentGrid = new ArrayList<>();
+    public static List<List<Object>> currentGrid = new ArrayList<>();
     Map<String, Class<?>> utilsMap = new HashMap<>();
     List<String> newTaskProperties = new ArrayList<>();
     Map<String,Boolean> participantMap = new HashMap<>();
@@ -765,7 +765,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 //                "006098bfc97f1b44408b6dedc2c0d6e5568IAD3nQlRYp8qhtzZ71u9UM/HBErFPMmtdUNdbyShjwIKbH2D22oAAAAAEAD89T1fsoSTYQEAAQC3hJNh";
 
                 token.buildTokenWithUid(getString(R.string.private_app_id), getString(R.string.private_app_certificate),
-                channelName, 0, RtcTokenBuilder.Role.Role_Publisher, (int)(System.currentTimeMillis() / 1000 + 36000));
+                        channelName, 0, RtcTokenBuilder.Role.Role_Publisher, (int)(System.currentTimeMillis() / 1000 + 36000));
 
 
 
@@ -1070,8 +1070,8 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 //        }
     }
 
-    private final Socket socket;
-    {
+    public static Socket socket;
+    static {
         try {
             socket = IO.socket("https://server4groups.herokuapp.com");
         } catch (URISyntaxException e) {

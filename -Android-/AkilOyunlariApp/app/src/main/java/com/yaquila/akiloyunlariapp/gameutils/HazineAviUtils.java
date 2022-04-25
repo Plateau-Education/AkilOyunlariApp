@@ -1,5 +1,7 @@
 package com.yaquila.akiloyunlariapp.gameutils;
 
+import static com.yaquila.akiloyunlariapp.GroupSolvingActivity.currentGrid;
+
 import android.os.Build;
 import android.util.Log;
 import android.util.TypedValue;
@@ -11,11 +13,13 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.GroupSolvingActivity;
 import com.yaquila.akiloyunlariapp.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +82,10 @@ public class HazineAviUtils {
             if (operations != null && !newOp.equals(operations.get(operations.size() - 1))) {
                 operations.add(new ArrayList<>(Arrays.asList(answerIndex, op)));
             }
+            if(context.getClass() == GroupSolvingActivity.class) {
+                currentGrid.get(i2).set(i1, Integer.parseInt(op));
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
+            }
             Log.i("operations", operations + "");
         }
     }
@@ -118,6 +126,10 @@ public class HazineAviUtils {
             TextView currentBox = gridLayout.findViewWithTag(co1);
             final int i1 = Integer.parseInt(String.valueOf(co1.charAt(1)));
             final int i2 = Integer.parseInt(String.valueOf(co1.charAt(0)));
+            if(context.getClass() == GroupSolvingActivity.class) {
+                currentGrid.get(i1).set(i2,Integer.parseInt(num2));
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
+            }
             if(num2.equals("-1")){
                 currentBox.setBackground(context.getResources().getDrawable(R.drawable.ic_diamond));
                 gridDCs[i1][i2] = "-1";
@@ -162,6 +174,16 @@ public class HazineAviUtils {
                         tv.setText("");
                     }
                 }
+            }
+            if(context.getClass() == GroupSolvingActivity.class) {
+                for (int i = 0; i < gridSize; i++) {
+                    List<Object> row = currentGrid.get(i);
+                    for (int j = 0; j < gridSize; j++) {
+                        if ((int)row.get(j) < 0) row.set(j, 0);
+                    }
+                    currentGrid.set(i, row);
+                }
+                GroupSolvingActivity.sendGrid(currentGrid, answer, GroupSolvingActivity.socket);
             }
         }
         catch(Exception e){
@@ -212,14 +234,19 @@ public class HazineAviUtils {
         operations = new ArrayList<>();
         operations.add(new ArrayList<>(Arrays.asList("00", "0")));
         GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
+        if(context.getClass() == GroupSolvingActivity.class)
+            currentGrid = new ArrayList<>();
         for (int i = 0; i < gridSize; i++) {
+            List<Object> row = new ArrayList<>();
             for (int j = 0; j < gridSize; j++) {
                 TextView tv = gridLayout.findViewWithTag(Integer.toString(j) + i);
                 tv.setText("");
                 tv.setBackground(context.getResources().getDrawable(R.drawable.stroke_bg));
                 gridDCs[j][i] = "0";
                 tv.setEnabled(true);
+                row.add(0);
             }
+            if(context.getClass() == GroupSolvingActivity.class) currentGrid.set(i,row);
         }
         clickedBox = "-1";
     }
