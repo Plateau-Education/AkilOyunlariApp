@@ -41,7 +41,6 @@ public class HazineAviUtils {
     public static void initVars(AppCompatActivity ctx){
         clickedBox = "-1";
         switchPosition = "diamond";
-        gridSize = 5;
         operations = new ArrayList<>();
         clueIndexes = new ArrayList<>();
         answer = new ArrayList<>();
@@ -193,11 +192,21 @@ public class HazineAviUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static boolean checkAnswer(){
-        GridLayout gridLayout = context.findViewById(R.id.gridGL_grid);
+        Log.i("currentGrid-checkAnswer",currentGrid.toString());
         boolean checking=true;
+        if(answer.size()<1) return false;
+        String cos = "";
+        for(int i1 = 0; i1<gridSize; i1++) {
+            for (int j1 = 0; j1 < gridSize; j1++) {
+                String co1 = Integer.toString(j1) + i1;
+                if (gridDCs[i1][j1].equals("-1"))
+                    cos = cos + " " + co1;
+            }
+        }
+        Log.i("coos: ", cos);
         for(int i = 0; i<gridSize; i++){
             for(int j = 0; j<gridSize; j++){
-                String co = Integer.toString(i)+j;
+                String co = Integer.toString(j)+i;
                 if(answer.contains(co) && !gridDCs[i][j].equals("-1")){
                     checking=false;
                     Log.i("checkfalse1","i,j: "+ i + ", "+ j);

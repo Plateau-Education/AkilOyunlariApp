@@ -146,16 +146,6 @@ public class GameListActivity extends AppCompatActivity {
     public void transferBests(JSONObject jo) throws JSONException {
         SharedPreferences sP = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
 
-        JSONArray htpCounts = jo.getJSONArray("HTPCounts");
-        Log.i("htpcounts-userBest",htpCounts.toString());
-        ArrayList<String> splist = new ArrayList<>(Arrays.asList("SudokuHTPCount","HazineAviHTPCount","PatikaHTPCount","SayiBulmacaHTPCount","SozcukTuruHTPCount","PiramitHTPCount"));
-        for (int i = 0; i<6 ; i++) {
-            String htpc = htpCounts.getString(i);
-            if(Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0])<Integer.parseInt(htpc.split(" ")[0]))
-                sP.edit().putString(splist.get(i),htpc).apply();
-                Log.i("sp, htp", Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0]) + " , " + Integer.parseInt(htpc.split(" ")[0]));
-        }
-
         if(type.equals("single")) {
             sP.edit().putString("ScoreSudoku.6.Easy", Integer.toString(jo.getJSONArray("Sudoku.6.Easy").getInt(0))).apply();
             sP.edit().putString("ScoreSudoku.6.Medium", Integer.toString(jo.getJSONArray("Sudoku.6.Medium").getInt(0))).apply();
@@ -216,8 +206,18 @@ public class GameListActivity extends AppCompatActivity {
             sP.edit().putString("BestPiramit.Hard", Integer.toString(jo.getJSONArray("Piramit.5").getInt(1))).apply();
             sP.edit().putString("BestPiramit.VeryHard", Integer.toString(jo.getJSONArray("Piramit.6").getInt(1))).apply();
 
-
             Log.i("allSPs", sP.getString("ScoreHazineAvi.Easy", "") + " / " + sP.getString("BestHazineAvi.Easy", ""));
+
+            JSONArray htpCounts = jo.getJSONArray("HTPCounts");
+            Log.i("htpcounts-userBest",htpCounts.toString());
+            ArrayList<String> splist = new ArrayList<>(Arrays.asList("SudokuHTPCount","HazineAviHTPCount","PatikaHTPCount","SayiBulmacaHTPCount","SozcukTuruHTPCount","PiramitHTPCount"));
+            for (int i = 0; i<6 ; i++) {
+                String htpc = htpCounts.getString(i);
+                if(Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0])<Integer.parseInt(htpc.split(" ")[0]))
+                    sP.edit().putString(splist.get(i),htpc).apply();
+                Log.i("sp, htp", Integer.parseInt(sP.getString(splist.get(i), "0 0").split(" ")[0]) + " , " + Integer.parseInt(htpc.split(" ")[0]));
+            }
+
         } else if (type.contains("multi")){
             sP.edit().putString("SudokuCluster", Integer.toString(jo.getInt("Sudoku"))).apply();
             sP.edit().putString("HazineAviCluster", Integer.toString(jo.getInt("HazineAvi"))).apply();

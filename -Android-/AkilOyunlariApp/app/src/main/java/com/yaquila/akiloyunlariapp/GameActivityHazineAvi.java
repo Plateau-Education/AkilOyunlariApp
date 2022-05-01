@@ -366,6 +366,7 @@ public class GameActivityHazineAvi extends AppCompatActivity {
     }
 
     public void mainFunc(){
+        HazineAviUtils.initVars(this);
         TextView undoTV = findViewById(R.id.undoTV_ga);
         TextView resetTV = findViewById(R.id.resetTV_game);
         undoTV.setEnabled(true);

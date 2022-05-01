@@ -169,15 +169,6 @@ public class MultiplayerActivity extends AppCompatActivity {
                     correctDialog.dismiss();
                 }
             });
-//            leaveDialogView.findViewById(R.id.correctDialogGameMenu).setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(getApplicationContext(), GameListActivity.class);
-//                    startActivity(intent);
-//                    overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
-//                    correctDialog.dismiss();
-//                }
-//            });
             leaveDialogView.findViewById(R.id.correctDialogGameMenu).setVisibility(GONE);
             correctDialog.show();
         }
@@ -218,7 +209,7 @@ public class MultiplayerActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
         boolean checking = false;
         try {
             checking = (boolean) utilsMap.get(gameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
@@ -369,6 +360,11 @@ public class MultiplayerActivity extends AppCompatActivity {
     }
 
     public void mainFunc() throws JSONException {
+        try {
+            utilsMap.get(gameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if(currentQ == 1){
 //            solveTimeList.add(timerInSeconds);
             timerTV = findViewById(R.id.timeTV_game);

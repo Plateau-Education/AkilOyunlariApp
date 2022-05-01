@@ -23,6 +23,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
+import com.yaquila.akiloyunlariapp.gameutils.HazineAviUtils;
 import com.yaquila.akiloyunlariapp.gameutils.PatikaUtils;
 
 import org.json.JSONArray;
@@ -522,24 +523,26 @@ public class GameActivityPatika extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onDestroy() {
         SharedPreferences sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
         try {
-            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
+            ArrayList<String> questions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("Patika."+ PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<String>())));
             ArrayList<Integer> gameIds = (ArrayList<Integer>) ObjectSerializer.deserialize(sharedPreferences.getString("IDPatika."+PatikaUtils.gridSize, ObjectSerializer.serialize(new ArrayList<Integer>())));
-            ArrayList<String> solvedQuestions = (ArrayList<String>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new ArrayList<String>())));
+            Map<String,ArrayList<String>> solvedQuestions = (Map<String, ArrayList<String>>) ObjectSerializer.deserialize(sharedPreferences.getString("SolvedQuestions", ObjectSerializer.serialize(new HashMap<>())));
 
             assert questions != null;
             questions.remove(0);
 
             sharedPreferences.edit().putString("Patika."+PatikaUtils.gridSize, ObjectSerializer.serialize(questions)).apply();
             sharedPreferences.edit().putString("IDPatika."+PatikaUtils.gridSize, ObjectSerializer.serialize(gameIds)).apply();
-            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize(solvedQuestions)).apply();
+            sharedPreferences.edit().putString("SolvedQuestions", ObjectSerializer.serialize((Serializable) solvedQuestions)).apply();
 
             assert solvedQuestions != null;
             assert gameIds != null;
-            solvedQuestions.add("Patika."+PatikaUtils.gridSize+","+gameIds.remove(0)+"-"+"0");
+            Objects.requireNonNull(solvedQuestions.get("Patika." + PatikaUtils.gridSize)).add(gameIds.remove(0)+"-"+"0");
+            Log.i("solvedQuestions",solvedQuestions+"");
 
 
         } catch (IOException e) {

@@ -208,7 +208,7 @@ public class TournamentActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void checkAnswer(View view) throws NoSuchFieldException, IllegalAccessException {
-        GridLayout gridLayout = findViewById(R.id.gridGL_ga);
+        GridLayout gridLayout = findViewById(R.id.gridGL_grid);
         boolean checking = false;
         try {
             checking = (boolean) utilsMap.get(currentGameName).getDeclaredMethod("checkAnswer", null).invoke(null, null);
@@ -338,6 +338,11 @@ public class TournamentActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void mainFunc() throws JSONException {
+        try {
+            utilsMap.get(currentGameName).getDeclaredMethod("initVars", AppCompatActivity.class).invoke(null,mAppCompatActivity);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         currentQ += 1;
         Log.i("gameOrder",gameOrder.toString());
         Log.i("JsonArray",allQs.getJSONArray(gameOrder.get(0))+"");
