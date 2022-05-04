@@ -209,7 +209,7 @@ public class LeaderboardActivity extends AppCompatActivity implements GestureDet
         //tab1
         spec = tabHost.newTabSpec("tab1");
         spec.setContent(R.id.tab1);
-        spec.setIndicator("Sudoku");
+        spec.setIndicator(getString(R.string.Sudoku));
         tabHost.addTab(spec);
 
 

@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="Sudoku"
+            android:text="@string/Sudoku"
             android:textColor="@color/near_black_blue"
             android:fontFamily="@font/mohave_bold"
             android:textSize="30sp"

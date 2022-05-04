@@ -84,23 +84,23 @@
                 <TextView
                     android:id="@+id/firstTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:tag="Sudoku6"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/mohave_bold"
-                    android:text="Sudoku 6x6"
-                    android:textColor="@color/diff_selector_tvcolor"
-                    android:textSize="40sp"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:background="@drawable/diff_selector_bg"
                     android:clickable="true"
                     android:focusable="true"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
                     android:onClick="goToDiffs"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
+                    android:tag="6"
+                    android:text="6x6"
+                    android:textColor="@color/diff_selector_tvcolor"
+                    android:textSize="40sp" />
 
             </RelativeLayout>
 
@@ -112,23 +112,23 @@
                 <TextView
                     android:id="@+id/secondTV_d"
                     android:layout_width="wrap_content"
-                    android:paddingStart="50dp"
-                    android:paddingEnd="50dp"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:tag="Sudoku9"
                     android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="center"
                     android:background="@drawable/diff_selector_bg"
-                    android:fontFamily="@font/mohave_bold"
-                    android:text="Sudoku 9x9"
-                    android:textColor="@color/diff_selector_tvcolor"
-                    android:textSize="40sp"
                     android:clickable="true"
                     android:focusable="true"
+                    android:fontFamily="@font/mohave_bold"
+                    android:gravity="center"
                     android:onClick="goToDiffs"
-                    android:layout_gravity="center"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"/>
+                    android:paddingStart="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingEnd="50dp"
+                    android:paddingBottom="10dp"
+                    android:tag="9"
+                    android:text="9x9"
+                    android:textColor="@color/diff_selector_tvcolor"
+                    android:textSize="40sp" />
 
             </RelativeLayout>
 

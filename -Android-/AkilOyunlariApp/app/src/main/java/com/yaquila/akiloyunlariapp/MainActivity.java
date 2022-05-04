@@ -55,14 +55,27 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void changeLanguage(View view){
         Locale currentLocale = getResources().getConfiguration().locale;
-        if (currentLocale.getLanguage().contains("tr")){
+        Log.i("currentLocale",currentLocale.getLanguage());
+        if (currentLocale.getLanguage().contains("en")){
+            setLocale(this, "tr");
+            ((TextView)view).setText("TR \uD83C\uDDF9\uD83C\uDDF7");
+            sharedPreferences.edit().putString("locale","tr").apply();
+        } else if (currentLocale.getLanguage().contains("tr")){
+            setLocale(this, "de");
+            ((TextView)view).setText("DE \uD83C\uDDE9\uD83C\uDDEA");
+            sharedPreferences.edit().putString("locale","de").apply();
+        } else if (currentLocale.getLanguage().contains("de")){
+            setLocale(this, "ja");
+            ((TextView)view).setText("JA \uD83C\uDDEF\uD83C\uDDF5");
+            sharedPreferences.edit().putString("locale","ja").apply();
+        } else if (currentLocale.getLanguage().contains("de")){
             setLocale(this, "en");
             ((TextView)view).setText("EN \uD83C\uDDEC\uD83C\uDDE7");
             sharedPreferences.edit().putString("locale","en").apply();
         } else {
-            setLocale(this, "tr");
-            ((TextView)view).setText("TR \uD83C\uDDF9\uD83C\uDDF7");
-            sharedPreferences.edit().putString("locale","tr").apply();
+            setLocale(this, "en");
+            ((TextView)view).setText("EN \uD83C\uDDEC\uD83C\uDDE7");
+            sharedPreferences.edit().putString("locale","en").apply();
         }
         ((TextView)findViewById(R.id.uygulama_ismi1)).setText(R.string.app_name1);
         ((TextView)findViewById(R.id.uygulama_ismi2)).setText(R.string.app_name2);
@@ -235,13 +248,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         sharedPreferences = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
-        String localeString = sharedPreferences.getString("locale","en");
+        String localeString = sharedPreferences.getString("locale",getResources().getConfiguration().locale.getLanguage());
         if (localeString.equals("tr")){
             setLocale(this, "tr");
             ((TextView)findViewById(R.id.changeLanguageTV)).setText("TR \uD83C\uDDF9\uD83C\uDDF7");
-        } else {
+        } else if(localeString.equals("en")){
             setLocale(this, "en");
             ((TextView)findViewById(R.id.changeLanguageTV)).setText("EN \uD83C\uDDEC\uD83C\uDDE7");
+        } else if(localeString.equals("de")){
+            setLocale(this, "de");
+            ((TextView)findViewById(R.id.changeLanguageTV)).setText("DE \uD83C\uDDE9\uD83C\uDDEA");
+        } else if(localeString.equals("ja")){
+            setLocale(this, "ja");
+            ((TextView)findViewById(R.id.changeLanguageTV)).setText("JA \uD83C\uDDEF\uD83C\uDDF5");
         }
         ((TextView)findViewById(R.id.uygulama_ismi1)).setText(R.string.app_name1);
         ((TextView)findViewById(R.id.uygulama_ismi2)).setText(R.string.app_name2);

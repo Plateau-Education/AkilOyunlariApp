@@ -88,22 +88,22 @@ public class HowToPlayActivity extends AppCompatActivity {
         TextView tv = (TextView) view;
         TextView gameNameTV = findViewById(R.id.gameNameTV_htp);
         gameNameTV.setText((CharSequence) tv.getTag());
-        if ("Sudoku".equals(tv.getTag())) {
+        if (getString(R.string.Sudoku).equals(tv.getTag())) {
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
             sharedPreferences.edit().putString("SudokuHTPCount",(Integer.parseInt(sharedPreferences.getString("SudokuHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("SudokuHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.HazineAvı).equals(tv.getTag())) {
-            gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
+            if(tv.getTag().toString().split(" ").length>1)gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_hazineavi);
             sharedPreferences.edit().putString("HazineAviHTPCount",(Integer.parseInt(sharedPreferences.getString("HazineAviHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("HazineAviHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.Patika).equals(tv.getTag())) {
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_patika);
             sharedPreferences.edit().putString("PatikaHTPCount",(Integer.parseInt(sharedPreferences.getString("PatikaHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("PatikaHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.SayıBulmaca).equals(tv.getTag())) {
-            gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
+            if(tv.getTag().toString().split(" ").length>1)gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sayibulmaca);
             sharedPreferences.edit().putString("SayiBulmacaHTPCount",(Integer.parseInt(sharedPreferences.getString("SayiBulmacaHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("SayiBulmacaHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.SözcükTuru).equals(tv.getTag())) {
-            gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
+            if(tv.getTag().toString().split(" ").length>1)gameNameTV.setText(tv.getTag().toString().split(" ")[0]+"\n"+tv.getTag().toString().split(" ")[1]);
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sozcukturu);
             sharedPreferences.edit().putString("SozcukTuruHTPCount",(Integer.parseInt(sharedPreferences.getString("SozcukTuruHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("SozcukTuruHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.Piramit).equals(tv.getTag())) {
@@ -151,7 +151,7 @@ public class HowToPlayActivity extends AppCompatActivity {
 //        Typeface mohave_bold = Typeface.createFromAsset(getAssets(), "fonts/mohave_bold.ttf");
 //        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTypeface(mohave_bold);
 //        ((TextView) howToPlayGameListRL.findViewWithTag(currentGameName)).setTextSize(TypedValue.COMPLEX_UNIT_SP, 45);
-        if ("Sudoku".equals(currentGameName)) {
+        if (getString(R.string.Sudoku).equals(currentGameName)) {
             ((TextView) findViewById(R.id.howToPlay_text)).setText(R.string.htp_sudoku);
             if(!comefrom.equals("GameGuide"))sharedPreferences.edit().putString("SudokuHTPCount",(Integer.parseInt(sharedPreferences.getString("SudokuHTPCount","0 0").split(" ")[0])+1) + " " + sharedPreferences.getString("SudokuHTPCount","0 0").split(" ")[1]).apply();
         } else if (getString(R.string.HazineAvı).equals(currentGameName)) {

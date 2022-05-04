@@ -42,17 +42,20 @@
         android:background="@drawable/rounded_yellowish_bg"
         android:fontFamily="@font/mohave_bold"
         android:gravity="center"
+        android:onClick="changeLanguage"
         android:padding="10dp"
         android:text="EN 🇬🇧"
-        android:textSize="30sp"
         android:textColor="@color/near_black_blue"
-        android:onClick="changeLanguage"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/rankingsIcon"
+        app:layout_constraintEnd_toStartOf="@+id/imageButton"
         app:layout_constraintStart_toStartOf="@+id/uygulama_ismi1"
         app:layout_constraintTop_toTopOf="@+id/rankingsIcon"
+        app:layout_constraintHorizontal_bias="0"
         tools:ignore="ContentDescription" />
 
     <ImageButton
+        android:id="@+id/imageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/transparent"
@@ -74,10 +77,9 @@
         android:text="@string/app_name1"
         android:textColor="@color/near_black_blue"
         android:textSize="60sp"
+        android:layout_marginStart="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.07"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.221" />
 
@@ -90,13 +92,11 @@
         android:layout_marginBottom="50dp"
         android:fontFamily="@font/mohave_bold"
         android:textSize="60sp"
-        app:layout_constraintBottom_toBottomOf="@id/circle_mm"
         app:layout_constraintHorizontal_bias="0.124"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintStart_toStartOf="@+id/uygulama_ismi1"
-        app:layout_constraintTop_toBottomOf="@+id/uygulama_ismi1"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/uygulama_ismi1" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -111,18 +111,31 @@
             android:layout_weight="1"
             android:src="@color/transparent" />
 
-        <TextView
-            android:id="@+id/playTV"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.9"
+
             android:background="@color/yellowish"
-            android:fontFamily="@font/mohave_bold"
-            android:gravity="center"
-            android:onClick="goToGameList"
-            android:text="@string/play_button"
-            android:textColor="@color/near_black_blue"
-            android:textSize="160sp" />
+            android:layout_weight="0.9">
+
+            <TextView
+                android:id="@+id/playTV"
+                android:layout_width="300dp"
+                android:layout_height="150dp"
+                android:layout_weight="0.9"
+                app:autoSizeMaxTextSize="160sp"
+                app:autoSizeTextType="uniform"
+                android:fontFamily="@font/mohave_bold"
+                android:gravity="center"
+                android:onClick="goToGameList"
+                android:text="@string/play_button"
+                android:textColor="@color/near_black_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 

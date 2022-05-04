@@ -31,7 +31,7 @@ public class SizeActivityForTwoSizedGames extends AppCompatActivity {
             intent = new Intent(getApplicationContext(), MultiplayerActivity.class);
             intent.putExtra("pType",String.valueOf(type.charAt(type.length()-1)));
         }
-        intent.putExtra("gameName", view.getTag().toString());
+        intent.putExtra("gameName",getString(R.string.Sudoku) + view.getTag().toString());
         startActivity(intent);
         overridePendingTransition(R.anim.enter, R.anim.exit);
     }

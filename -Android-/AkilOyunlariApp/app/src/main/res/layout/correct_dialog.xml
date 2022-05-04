@@ -28,8 +28,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.4"
                 android:layout_marginEnd="15dp"
-                android:layout_marginRight="15dp"
-                android:tint="@color/light_red" />
+                app:tint="@color/light_red" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -57,8 +56,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.4"
                 android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:tint="@color/light_red" />
+                app:tint="@color/light_red" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -83,10 +81,11 @@
 
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="51dp"
                 android:id="@+id/correctDialogGameMenu"
                 android:background="@drawable/nums_gl_bg"
-                android:textSize="22sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="22sp"
                 android:layout_weight="1"
                 android:textColor="@color/f7f5fa"
                 android:padding="10dp"
@@ -99,7 +98,7 @@
 
             <Button
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="51dp"
                 android:layout_weight="1"
                 android:padding="10dp"
                 android:layout_marginStart="10dp"
@@ -111,7 +110,8 @@
                 android:backgroundTint="@color/light_red"
                 android:layout_marginTop="20dp"
                 android:textAllCaps="false"
-                android:textSize="22sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="22sp"
                 android:text="@string/Next"/>
 
 

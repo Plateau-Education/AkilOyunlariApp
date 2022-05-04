@@ -140,5 +140,32 @@
     <string name="your_opponent_solved_all_of_the_puzzles">Rakibin tüm soruları çözdü.</string>
     <string name="your_opponent_solved_the">Rakibin</string>
     <string name="nth_puzzle">. soruyu çözdü.</string>
+    <string name="sayibulmaca_instrings0">Sayı Bulmaca öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.</string>
+    <string name="sayibulmaca_instrings1">Sayı Bulmaca oyununda sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir.</string>
+    <string name="sayibulmaca_instrings2">Yanında \'+\' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını, Yanında \'-\' işareti olanlar ise farklı sütunda olduğunu gösterir.</string>
+    <string name="sayibulmaca_instrings3">Örneğin işaretli ipucunun olduğu satırda 2 adet sayı cevapta var ve yeri doğruyken 1 adet sayının yeri farklıdır.</string>
+    <string name="sayibulmaca_instrings4">Sayı Bulmaca çözerken ilk dikkat edilmesi gereken ipuçları, + olan ipuçlarıdır. \'+\' bulunan iki farklı satırda bir sayı farklı yerlerde bulunuyorsa o sayı elenebilir.</string>
+    <string name="sayibulmaca_instrings5">Örneğin işaretli ipuçlarının olduğu satırlarda 0 rakamı ortaktır ve iki ipucunda da yalnızca \'+\' bulunmaktadır. 0 rakamı farklı yerlerde bulunduğu için ve iki yerde aynı anda bulunamayacağı için elenir.</string>
+    <string name="sayibulmaca_instrings6">Daha sonra, toplam ipucu sayısına bakılmalıdır. Örnekte bu sayı 1+3+2+1=7 dir. Yani, 7 ipucudan 4 sayı oluşacaktır. Bu durum, bazı sayıların satırlarda ortak olması gerektiğini gösterir.</string>
+    <string name="sayibulmaca_instrings7">Toplam ipucu sayısı 7 gibi 4x4 lük bir Sayı bulmaca sorusu için orta-yüksek bir sayı ise çok satırda ortak olan sayılardan gidilmelidir. Bu sayı az olsaydı ortak olmayan sayılardan gidilebilirdi.</string>
+    <string name="sayibulmaca_instrings8">Örnekte görüleceği üzere 5 sayısı üç satırda ortaktır. Bu sayıya basarak yeşil gölgeli duruma getirebilirsiniz. Daha sonra, ipucu hakkını dolduran satırlardaki kalan sayıları eleyebiliriz.</string>
+    <string name="sayibulmaca_instrings9">İlk satırda ipucu +1 ve 5 sayısı yeşil renklidir. Dolayısıyla 5 sayısı cevapta vardır ve yeri doğrudur. Cevabın son basamağına 5 yazılmalıdır.</string>
+    <string name="sayibulmaca_instrings10">Sayılar elendiğinde, 2.satırda olabilecek 2 sayı kalır ve ipucuda da 2 sayı kaldığı için bu sayılar kesin olarak cevapta yer alacaktır. Bu sayılar yeşille işaretlenir.</string>
+    <string name="sayibulmaca_instrings11">3.satırda yeşil ile işaretlenen 9 sayısının yeri (ipucu +2 olduğu için) doğru olduğu söylenebilir. Cevabın 3.basamağına 9 yazılmalıdır.</string>
+    <string name="sayibulmaca_instrings12">2.satırda yeşil ile işaretlenen 5 sayısının yeri doğru, 9 sayısının yeri yanlış olduğu görülmektedir. Yani ipucudan geriye yalnızca +1 kalmıştır. Dolayısıyla 2 sayısının yeri doğrudur ve ilk basamaktadır.</string>
+    <string name="sayibulmaca_instrings13">Geriye yalnızca 2.basamaktaki sayı kalmıştır. 3.satırda 9 sayısının yeri doğrudur ve ipucudan geriye +1 kalmıştır. Boş olan basamak yalnızca 2.basamak olduğu için 3.satırdaki 8 sayısı cevapta olmalıdır.</string>
+    <string name="sayibulmaca_instrings14">Çözüm sona erdiğinde cevap 2895 olarak bulunur. Sayı Bulmaca soruları genel olarak bu yöntemlerle çözülebilir. Ancak çözer bir yerde tıkanırsa, en çok satırda ortak olan sayılardan deneme-yanılma ile gidilebilir.</string>
+    <string name="sayibulmaca_instrings15">Bu öğreticinin sonuna geldiniz.🏁 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.</string>
+    <string name="piramit_instrings0">Piramit öğretici uygulamasına hoşgeldiniz. Öğretici boyunca işaretli butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.</string>
+    <string name="piramit_instrings1">Piramit oyununda çözerden istenen piramitteki boş kutuları kurallı bir şekilde doldurmasıdır. Oyunun kuralları şöyledir: 1. Her iki yan yana sayının toplamı ya da farkı üstündeki sayıya eşittir.</string>
+    <string name="piramit_instrings2">2. Aynı satırda rakam tekrarı olamaz. 3. Yan yana olan sayılar ardışık olamaz. Bu 3 kurala dikkat edilerek piramit soruları çözülür. Piramit çözerken kullanılan en yaygın yöntem eleme yöntemidir.</string>
+    <string name="piramit_instrings3">Örnekte 3 satırlık bir piramit sorusu verilmiştir. Örneğin, bu piramitte en alt satırdaki boş kutudan başlanabilir.</string>
+    <string name="piramit_instrings4">En alt satırda 4 ve 7 ipuçları verilmiştir. Ardışık olmama ve tekrarlamama kurallarından yola çıkılarak boş kutunun 3,4,5,6,7 ve 8 sayılarını alamayacağı söylenebilir.</string>
+    <string name="piramit_instrings5">Dolayısıyla bu kutuya yalnızca 1,2 veya 9 sayıları yazılabilir. Sağ alttaki not alma moduna geçilerek bu ihtimaller not alınabilir. Daha sonra bu ihtimallerin tek tek ipuçlarıyla farkı ve toplamı alınabilir.</string>
+    <string name="piramit_instrings6">Örneğin 1,2 ve 9 ihtimalleri üstündeki kutuda sırasıyla (3,5), (2,6) ve 5 ihtimallerini ortaya çıkarır. Aynı şekilde yanındaki kutuda da sırasıyla (6,8), (5,9) ve 2 ihtimalleri oluşur.</string>
+    <string name="piramit_instrings7">Bu ihtimaller akıldan bulunabilir veya not alınabilir. Son bir adım olarak bu ihtimallerden hangisinin farkı veya toplamının üstteki sayıyı yani 5\'i verdiği bulunmalıdır.</string>
+    <string name="piramit_instrings8">İhtimaller incelendiğinde 3 ve 8 sayılarının farkının 5 olduğu görülebilir. Dolayısıyla bu ihtimalleri veren 1 ihtimali de doğrudur. Sağlama yapıldığında piramidin kurallara uyduğu görülür.</string>
+    <string name="piramit_instrings9">Bu öğreticinin sonuna geldiniz.🏁 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.</string>
+    <string name="Sudoku">Sudoku</string>
 
 </resources>

@@ -72,15 +72,16 @@
         <TextView
             android:id="@+id/instructionTV_guide"
             android:layout_width="248dp"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/mohave_medium"
             android:padding="15dp"
-            android:text=""
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="17sp"
-            tools:ignore="HardcodedText,SpeakableTextPresentCheck" />
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="17sp" />
 
         <ImageView
             android:layout_width="35dp"
@@ -612,8 +613,8 @@
             android:layout_width="130dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
-            android:tint="@color/near_black_blue"
-            android:src="@drawable/ic_leftarrow"/>
+            android:src="@drawable/ic_leftarrow"
+            app:tint="@color/near_black_blue" />
 <!--        <Button-->
 <!--            android:id="@+id/undoTV_ga"-->
 <!--            android:layout_width="wrap_content"-->

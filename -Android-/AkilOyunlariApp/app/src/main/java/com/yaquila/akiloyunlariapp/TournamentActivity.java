@@ -87,8 +87,8 @@ public class TournamentActivity extends AppCompatActivity {
     public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
-                "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
-                "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Hard),
                 getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
                 getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
                 getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),
@@ -824,7 +824,7 @@ public class TournamentActivity extends AppCompatActivity {
         mAppCompatActivity = this;
 
         utilsMap = new HashMap<>();
-        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put(getString(R.string.Sudoku), SudokuUtils.class);
         utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
         utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
         utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);

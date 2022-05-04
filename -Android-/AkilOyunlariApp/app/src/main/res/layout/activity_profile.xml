@@ -34,7 +34,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_homebutton"
-                    android:tint="@color/near_black_blue"
                     android:clickable="true"
                     android:onClick="goToMainMenu"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -43,7 +42,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintHorizontal_bias="0.4"
                     app:layout_constraintVertical_bias="0.2"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    app:tint="@color/near_black_blue" />
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -101,11 +101,12 @@
 
                     <TextView
                         android:id="@+id/stats_tabTV"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="200dp"
+                        android:layout_height="75dp"
                         android:text="@string/Stats"
                         android:textColor="@color/tab_selector_tvcolor"
-                        android:textSize="40sp"
+                        app:autoSizeMaxTextSize="40sp"
+                        app:autoSizeTextType="uniform"
                         android:fontFamily="@font/mohave_bold"
                         android:background="@drawable/tab_selector_bg"
                         android:layout_margin="10dp"

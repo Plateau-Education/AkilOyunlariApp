@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:tint="@color/light_red"
-            android:src="@drawable/ic_arrowbutton" />
+            android:src="@drawable/ic_arrowbutton"
+            app:tint="@color/light_red" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -69,15 +69,16 @@
         <TextView
             android:id="@+id/instructionTV_guide"
             android:layout_width="248dp"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
             android:clickable="true"
             android:focusable="true"
             android:fontFamily="@font/mohave_medium"
             android:padding="15dp"
-            android:text=""
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
             android:textColor="@color/near_black_blue"
-            android:textSize="17sp"
-            tools:ignore="HardcodedText" />
+            app:autoSizeTextType="uniform"
+            app:autoSizeMaxTextSize="17sp" />
 
         <ImageView
             android:tag="+"

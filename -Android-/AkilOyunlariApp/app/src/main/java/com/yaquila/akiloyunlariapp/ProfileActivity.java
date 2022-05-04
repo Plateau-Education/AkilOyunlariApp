@@ -1,9 +1,12 @@
 package com.yaquila.akiloyunlariapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -42,6 +45,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -62,12 +66,14 @@ public class ProfileActivity extends AppCompatActivity {
         leaveDialog.setView(leaveDialogView);
         ((TextView)leaveDialogView.findViewById(R.id.leaveDialogText)).setText(getString(R.string.wannaLogOut));
 
+        final AppCompatActivity appCompatActivity = this;
         leaveDialogView.findViewById(R.id.leaveDialogYes).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 SharedPreferences sp = getSharedPreferences("com.yaquila.akiloyunlariapp",MODE_PRIVATE);
                 sp.edit().clear().apply();
+                setLocale(appCompatActivity, Locale.getDefault().getLanguage());
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
@@ -81,9 +87,16 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
         leaveDialog.show();
+    }
 
-
-
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public static void setLocale(Activity activity, String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+        Resources resources = activity.getResources();
+        Configuration config = resources.getConfiguration();
+        config.setLocale(locale);
+        resources.updateConfiguration(config, resources.getDisplayMetrics());
     }
 
     @SuppressWarnings("deprecation")
@@ -237,12 +250,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series1.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Easy));
+            series1.setTitle(getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.Easy));
             pseries1.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.Easy)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -259,12 +272,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series2.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Medium));
+            series2.setTitle(getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.Medium));
             pseries2.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.Medium)+": "+ (int)dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -281,12 +294,12 @@ public class ProfileActivity extends AppCompatActivity {
                     maxX = (int)(Math.ceil(x/10)*10);
                 }
             }
-            series3.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Hard));
+            series3.setTitle(getString(R.string.Sudoku)+" "+gameSize+"x"+gameSize+" "+getString(R.string.Hard));
             pseries3.setOnDataPointTapListener(new OnDataPointTapListener() {
                 @Override
                 public void onTap(Series series, DataPointInterface dataPoint) {
                     mToast.cancel();
-                    mToast = Toast.makeText(ProfileActivity.this, "Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
+                    mToast = Toast.makeText(ProfileActivity.this, getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.Hard)+": "+ (int) dataPoint.getX()+", "+dataPoint.getY()+"s", Toast.LENGTH_SHORT);
                     mToast.show();
                 }
             });
@@ -304,7 +317,7 @@ public class ProfileActivity extends AppCompatActivity {
             graphView.addSeries(pseries2);
             graphView.addSeries(pseries3);
 
-            graphView.setTitle("Sudoku "+gameSize+"x"+gameSize+" "+getString(R.string.avgTime));
+            graphView.setTitle(getString(R.string.Sudoku) + " "+gameSize+"x"+gameSize+" "+getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitle(getString(R.string.numques));
 //            graphView.getGridLabelRenderer().setVerticalAxisTitle(getString(R.string.avgTime));
             graphView.getGridLabelRenderer().setHorizontalAxisTitleColor(getResources().getColor(R.color.near_black_blue));
@@ -517,7 +530,6 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         }
-
         else{
             String dif1,dif2,dif3,dif4;
             final String gameDisplayName;

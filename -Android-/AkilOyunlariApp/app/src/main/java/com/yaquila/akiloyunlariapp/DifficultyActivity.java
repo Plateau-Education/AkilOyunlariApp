@@ -24,7 +24,7 @@ public class DifficultyActivity extends AppCompatActivity {
 
     public void goToGameList(View view){
         Intent intent;
-        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        if(gameName.contains(getString(R.string.Sudoku))) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
         else intent = new Intent(this, GameListActivity.class);
         intent.putExtra("type","single");
         startActivity(intent);
@@ -44,7 +44,7 @@ public class DifficultyActivity extends AppCompatActivity {
         else if (gameName.matches(getString(R.string.Piramit))){
             intent = new Intent(getApplicationContext(), GameActivityPiramit.class);
         }
-        else if (gameName.contains("Sudoku")){
+        else if (gameName.contains(getString(R.string.Sudoku))){
             intent = new Intent(getApplicationContext(), GameActivitySudoku.class);
         }
         else if (gameName.matches(getString(R.string.HazineAvı))){
@@ -97,14 +97,14 @@ public class DifficultyActivity extends AppCompatActivity {
                 ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPiramit."+diffs[i], "0")))));
             }
         }
-        else if (Arrays.asList("Sudoku6", "Sudoku9", getString(R.string.Patika), getString(R.string.HazineAvı), getString(R.string.SayıBulmaca)).contains(gameName)){
+        else if (Arrays.asList(getString(R.string.Sudoku)+"6", getString(R.string.Sudoku)+"9", getString(R.string.Patika), getString(R.string.HazineAvı), getString(R.string.SayıBulmaca)).contains(gameName)){
             int[] diffIds = {R.string.Easy,R.string.Medium,R.string.Hard};
             String[] diffs = {"Easy","Medium","Hard"};
             for (int i = 0; i < 3; i++){
                 ConstraintLayout currentRL = ((ConstraintLayout)diffList.getChildAt(i+1));
                 TextView currentTV = (TextView) currentRL.getChildAt(1);
                 currentTV.setText(diffIds[i]);
-                if(gameName.contains("Sudoku"))
+                if(gameName.contains(getString(R.string.Sudoku)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestSudoku."+gameName.charAt(gameName.length()-1)+"."+diffs[i], "0")))));
                 else if(gameName.equals(getString(R.string.Patika)))
                     ((TextView) currentRL.getChildAt(0)).setText(formatTime(Integer.parseInt(Objects.requireNonNull(sP.getString("BestPatika."+diffs[i], "0")))));
@@ -151,7 +151,7 @@ public class DifficultyActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent;
-        if(gameName.contains("Sudoku")) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
+        if(gameName.contains(getString(R.string.Sudoku))) intent = new Intent(getApplicationContext(), SizeActivityForTwoSizedGames.class);
         else intent = new Intent(this, GameListActivity.class);
         intent.putExtra("type","single");
         startActivity(intent);

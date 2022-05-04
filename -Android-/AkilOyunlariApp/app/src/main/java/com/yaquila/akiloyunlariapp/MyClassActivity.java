@@ -105,18 +105,19 @@ public class MyClassActivity extends AppCompatActivity {
     @SuppressLint("UseCompatLoadingForDrawables")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void goToTournament(View view){
-        TextView tvdiff = (TextView) view;
-        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
-        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
-        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
-        if(Objects.equals(getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("type", "None"), "Student")){
-            intent.putExtra("userType","student");
-        } else {
-            intent.putExtra("userType","instructor");
-        }
-        intent.putExtra("code",getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("classid","none"));
-        startActivity(intent);
-        overridePendingTransition(R.anim.enter, R.anim.exit);
+//        TextView tvdiff = (TextView) view;
+//        tvdiff.setBackground(getResources().getDrawable(R.drawable.clicked_diff_bg));
+//        tvdiff.setTextColor(getResources().getColor(R.color.f7f5fa));
+//        Intent intent = new Intent(getApplicationContext(), TournamentActivity.class);
+//        if(Objects.equals(getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("type", "None"), "Student")){
+//            intent.putExtra("userType","student");
+//        } else {
+//            intent.putExtra("userType","instructor");
+//        }
+//        intent.putExtra("code",getSharedPreferences("com.yaquila.akiloyunlariapp", MODE_PRIVATE).getString("classid","none"));
+//        startActivity(intent);
+//        overridePendingTransition(R.anim.enter, R.anim.exit);
+        Toast.makeText(this, getString(R.string.Comingsoon), Toast.LENGTH_SHORT).show();
     }
 
     public void joinClicked(View view){
@@ -297,7 +298,7 @@ public class MyClassActivity extends AppCompatActivity {
             studentNames.add(0, getString(R.string.Everyone));
             ArrayAdapter<String> nameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, studentNames);
             nameSpinner.setAdapter(nameAdapter);
-            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList("Sudoku 6x6", "Sudoku 9x9", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit))));
+            ArrayAdapter<String> gameAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv, new ArrayList<>(Arrays.asList(getString(R.string.Sudoku) + " 6x6", getString(R.string.Sudoku) + " 9x9", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit))));
             gameSpinner.setAdapter(gameAdapter);
             final ArrayAdapter<String> diffAdapter = new ArrayAdapter<>(this, R.layout.spinner_tv,
                     new ArrayList<>(Arrays.asList(getString(R.string.Easy),getString(R.string.Medium),getString(R.string.Hard))));
@@ -726,8 +727,8 @@ public class MyClassActivity extends AppCompatActivity {
     public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
-                "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
-                "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Hard),
                 getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
                 getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
                 getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),

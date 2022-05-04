@@ -415,11 +415,11 @@ public class GameActivitySudoku extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         assert difficulty != null;
-        if(gameName.matches("Sudoku6")){
+        if(gameName.matches(getString(R.string.Sudoku)+"6")){
             setContentView(R.layout.activity_game_sudoku6);
             SudokuUtils.gridSize=6;
         }
-        else if(gameName.matches("Sudoku9")) {
+        else if(gameName.matches(getString(R.string.Sudoku)+"9")) {
             setContentView(R.layout.activity_game_sudoku9);
             SudokuUtils.gridSize = 9;
         }

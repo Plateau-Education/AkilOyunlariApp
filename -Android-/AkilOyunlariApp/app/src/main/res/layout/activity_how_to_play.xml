@@ -75,14 +75,14 @@
 
                 <TextView
                     android:id="@+id/gameNameTV_htp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_margin="15dp"
                     android:fontFamily="@font/mohave_bold"
                     android:gravity="center"
-                    android:text="Hazine\nAvı"
+                    android:text="Mine\nSweeper"
                     android:textColor="@color/near_black_blue"
-                    android:textSize="40sp"
+                    app:autoSizeTextType="uniform"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -116,20 +116,20 @@
                         android:paddingRight="10dp"
                         android:paddingBottom="10dp"
                         android:src="@drawable/ic_playbutton"
-                        android:tint="@color/near_black_blue"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="@color/near_black_blue" />
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="75dp"
+                        android:layout_height="55dp"
                         android:fontFamily="@font/mohave_bold"
                         android:gravity="center"
                         android:text="@string/hands_on_tutorial"
                         android:textColor="@color/near_black_blue"
-                        android:textSize="20sp"
+                        app:autoSizeTextType="uniform"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toStartOf="parent"
@@ -225,7 +225,7 @@
 
                 <TextView
                     android:id="@+id/sudoku_htpgl"
-                    android:tag="Sudoku"
+                    android:tag="@string/Sudoku"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -234,7 +234,7 @@
                     android:gravity="center"
                     android:clickable="true"
                     android:onClick="howToPlayChangeGame"
-                    android:text="Sudoku"
+                    android:text="@string/Sudoku"
                     android:textColor="@color/f7f5fa"
                     android:textSize="37sp" />
 

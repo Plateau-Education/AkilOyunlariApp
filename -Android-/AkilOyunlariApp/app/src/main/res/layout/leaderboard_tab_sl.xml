@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:scrollbars="none"
     android:overScrollMode="never"
     android:fadingEdgeLength="10dp"
@@ -41,12 +42,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="23sp"
+                app:autoSizeMaxTextSize="23sp"
+                app:autoSizeTextType="uniform"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="@string/Username"/>
 
             <TextView
@@ -91,14 +93,15 @@
             <TextView
                 android:id="@+id/UN1_LB"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:fontFamily="@font/mohave_bold"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"
                 android:textColor="@color/near_black_blue"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText" />
 
             <TextView
@@ -146,13 +149,14 @@
                 android:id="@+id/UN2_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -200,13 +204,14 @@
                 android:id="@+id/UN3_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -254,13 +259,14 @@
                 android:id="@+id/UN4_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -314,7 +320,7 @@
                 android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -362,13 +368,14 @@
                 android:id="@+id/UN6_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -422,7 +429,7 @@
                 android:textSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -470,13 +477,14 @@
                 android:id="@+id/UN8_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -524,13 +532,14 @@
                 android:id="@+id/UN9_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -578,13 +587,14 @@
                 android:id="@+id/UN10_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="----"/>
 
             <TextView
@@ -633,13 +643,14 @@
                 android:id="@+id/UNYou_LB"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="32dp"
                 android:textColor="@color/near_black_blue"
                 android:fontFamily="@font/mohave_bold"
-                android:textSize="20sp"
+                app:autoSizeTextType="uniform"
+                app:autoSizeMaxTextSize="20sp"
                 tools:ignore="HardcodedText"
                 android:layout_gravity="center"
-                android:gravity="start"
+                android:gravity="start|center_vertical"
                 android:text="@string/You"/>
 
             <TextView

@@ -450,7 +450,7 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
         gameName = intent.getStringExtra("gameName");
         difficulty = intent.getStringExtra("difficulty");
         TextView textView;
-        String s;
+        String s = null;
         SpannableString ss1;
 
         assert difficulty != null;
@@ -458,7 +458,12 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
             setContentView(R.layout.activity_game_sozcuk_turu34);
             if(currentLang.contains("tr"))
                 s = "3,4,5 harfli Türkçe kelimeler bul";
-            else s = "Find English words with " + "3,4,5 " + getString(R.string.letters);
+            else if (currentLang.contains("en"))
+                s = "Find English words with " + "3,4,5 "+ "letters";
+            else if (currentLang.contains("de"))
+                s = "Finden Sie englische Wörter mit "+"3,4,5 "+"Buchstaben";
+            else if (currentLang.contains("ja"))
+                s = "3,4,5文字の英語の単語を探す";
 
 //            ss1 = new SpannableString(s);
 //            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
@@ -474,7 +479,12 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
             if(currentLang.contains("tr"))
                 s = "4,5,6 harfli Türkçe kelimeler bul";
-            else s = "Find English words with " + "4,5,6 " + getString(R.string.letters);
+            else if (currentLang.contains("en"))
+                s = "Find English words with " + "4,5,6 "+ "letters";
+            else if (currentLang.contains("de"))
+                s = "Finden Sie englische Wörter mit "+"4,5,6 "+"Buchstaben";
+            else if (currentLang.contains("ja"))
+                s = "4,5,6文字の英語の単語を探す";
 //            ss1 = new SpannableString(s);
 //            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
             textView = findViewById(R.id.find_wordsTV);
@@ -489,7 +499,12 @@ public class GameActivitySozcukTuru extends AppCompatActivity {
 
             if(currentLang.contains("tr"))
                 s = "2,3,4,5,6 harfli Türkçe kelimeler bul";
-            else s = "Find English words with " + "2,3,4,5,6 " + getString(R.string.letters);
+            else if (currentLang.contains("en"))
+                s = "Find English words with " + "2,3,4,5,6 "+ "letters";
+            else if (currentLang.contains("de"))
+                s = "Finden Sie englische Wörter mit "+"2,3,4,5,6 "+"Buchstaben";
+            else if (currentLang.contains("ja"))
+                s = "2,3,4,5,6文字の英語の単語を探す";
 //            ss1 = new SpannableString(s);
 //            ss1.setSpan(new RelativeSizeSpan(0.35f), s.indexOf("-"), s.length(), 0); // set size
             textView = findViewById(R.id.find_wordsTV);

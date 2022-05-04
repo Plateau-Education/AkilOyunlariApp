@@ -18,14 +18,14 @@
         android:onClick="closeNewTask"
         android:padding="10dp"
         android:src="@drawable/ic_closebutton"
-        android:tint="@color/near_black_blue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        app:tint="@color/near_black_blue" />
 
     <TextView
         android:id="@+id/ogrenciSecmeTV"
@@ -61,12 +61,14 @@
 
     <TextView
         android:id="@+id/oyunSecmeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="125dp"
+        android:layout_height="27dp"
         android:fontFamily="@font/mohave_medium"
         android:text="@string/ChooseGame"
+        android:gravity="center_vertical"
         android:textColor="@color/near_black_blue"
-        android:textSize="20sp"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
         app:layout_constraintHorizontal_bias="0.0"
@@ -76,7 +78,7 @@
 
     <Spinner
         android:id="@+id/gameSpinner"
-        android:layout_width="150dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:background="@drawable/less_rounded_light_bluegreen_bg"
         android:backgroundTint="@color/light_blue_green"
@@ -93,12 +95,14 @@
 
     <TextView
         android:id="@+id/diffSecmeTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="165dp"
+        android:layout_height="27dp"
         android:fontFamily="@font/mohave_medium"
         android:text="@string/ChooseDifficulty"
         android:textColor="@color/near_black_blue"
-        android:textSize="20sp"
+        android:gravity="center_vertical"
+        app:autoSizeMaxTextSize="20sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
         app:layout_constraintHorizontal_bias="0.0"
@@ -108,7 +112,7 @@
 
     <Spinner
         android:id="@+id/diffSpinner"
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="wrap_content"
         android:background="@drawable/less_rounded_light_bluegreen_bg"
         android:backgroundTint="@color/light_blue_green"
@@ -120,17 +124,18 @@
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginRight="20dp"
         tools:targetApi="lollipop" />
 
     <TextView
         android:id="@+id/soruSayisiTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="27dp"
         android:fontFamily="@font/mohave_medium"
         android:text="@string/EnterNumberOfPuzzles"
         android:textColor="@color/near_black_blue"
-        android:textSize="20sp"
+        android:gravity="center_vertical"
+        app:autoSizeTextType="uniform"
+        app:autoSizeMaxTextSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/ogrenciSecmeTV"
         app:layout_constraintHorizontal_bias="0.0"

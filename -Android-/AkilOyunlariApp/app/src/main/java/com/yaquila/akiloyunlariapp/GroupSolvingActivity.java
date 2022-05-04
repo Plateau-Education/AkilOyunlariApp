@@ -61,6 +61,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
@@ -470,15 +471,15 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
     public String shownToDatabase(String visibleOrDatabase, String string){
         Map<String,String> visibleToDB = new HashMap<>();
         List<String> shownGameNames = new ArrayList<>(Arrays.asList(
-                "Sudoku 6x6 "+getString(R.string.Easy), "Sudoku 6x6 "+getString(R.string.Medium), "Sudoku 6x6 "+getString(R.string.Hard),
-                "Sudoku 9x9 "+getString(R.string.Easy), "Sudoku 9x9 "+getString(R.string.Medium), "Sudoku 9x9 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 6x6 "+getString(R.string.Hard),
+                getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Easy), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Medium), getString(R.string.Sudoku) + " 9x9 "+getString(R.string.Hard),
                 getString(R.string.HazineAvı)+" "+getString(R.string.Easy), getString(R.string.HazineAvı)+" "+getString(R.string.Medium), getString(R.string.HazineAvı)+" "+getString(R.string.Hard),
                 getString(R.string.Patika)+" "+getString(R.string.Easy), getString(R.string.Patika)+" "+getString(R.string.Medium), getString(R.string.Patika)+" "+getString(R.string.Hard),
                 getString(R.string.SayıBulmaca)+" "+getString(R.string.Easy), getString(R.string.SayıBulmaca)+" "+getString(R.string.Medium), getString(R.string.SayıBulmaca)+" "+getString(R.string.Hard),
                 getString(R.string.SözcükTuru)+" "+getString(R.string.Easy), getString(R.string.SözcükTuru)+" "+getString(R.string.Medium), getString(R.string.SözcükTuru)+" "+getString(R.string.Hard), getString(R.string.SözcükTuru)+" "+getString(R.string.VeryHard),
                 getString(R.string.Piramit)+" "+getString(R.string.Easy), getString(R.string.Piramit)+" "+getString(R.string.Medium), getString(R.string.Piramit)+" "+getString(R.string.Hard), getString(R.string.Piramit)+" "+getString(R.string.VeryHard)));
         List<String> databaseGameNames = new ArrayList<>(Arrays.asList(
-                "Sudoku.6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
+                getString(R.string.Sudoku) + ".6.Easy", "Sudoku.6.Medium", "Sudoku.6.Hard", "Sudoku.9.Easy", "Sudoku.9.Medium", "Sudoku.9.Hard",
                 "HazineAvi.5", "HazineAvi.8", "HazineAvi.10", "Patika.5", "Patika.7", "Patika.9",
                 "SayiBulmaca.3", "SayiBulmaca.4", "SayiBulmaca.5", "SozcukTuru.Easy", "SozcukTuru.Medium", "SozcukTuru.Hard", "SozcukTuru.Hardest",
                 "Piramit.3", "Piramit.4","Piramit.5","Piramit.6"));
@@ -644,7 +645,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
         LayoutInflater inflater = getLayoutInflater();
 
-        List<String> gns = new ArrayList<>(Arrays.asList("Sudoku", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
+        List<String> gns = new ArrayList<>(Arrays.asList(getString(R.string.Sudoku), getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
         List<String> lns = new ArrayList<>(Arrays.asList("sudoku", "hazineavi", "patika", "sayibulmaca", "sozcukturu", "piramit"));
         Map<String,String> glmap = new HashMap<>();
         for(int i = 0; i<gns.size(); i++)
@@ -1137,7 +1138,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             dbGameName = (String) args[0];
                             String[] ntp = dbGameName.split("\\.");
                             List<String> dbns = new ArrayList<>(Arrays.asList("Sudoku","HazineAvi","Patika","SayiBulmaca","SozcukTuru","Piramit"));
-                            List<String> gns = new ArrayList<>(Arrays.asList("Sudoku", getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
+                            List<String> gns = new ArrayList<>(Arrays.asList(getString(R.string.Sudoku), getString(R.string.HazineAvı), getString(R.string.Patika), getString(R.string.SayıBulmaca), getString(R.string.SözcükTuru), getString(R.string.Piramit)));
                             Map<String,String> nameMap = new HashMap<>();
                             for(int i = 0; i<gns.size(); i++)
                                 nameMap.put(dbns.get(i),gns.get(i));
@@ -1256,13 +1257,14 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
                             Log.i("grid",grid.toString());
                             seperateGridAnswer(grid, true);
                             RelativeLayout gridRL = findViewById(R.id.gridGL_ga);
-                            gridRL.removeAllViews();
-                            try{
-                                ((ViewGroup)gridGL.getParent()).removeView(gridGL);
-                            } catch (Exception e){
-
+                            if(!Objects.equals(gridRL.getChildAt(0),gridGL)){
+                                gridRL.removeAllViews();
+                                try{
+                                    gridRL.addView(gridGL);
+                                } catch(IllegalStateException e){
+                                    e.printStackTrace();
+                                }
                             }
-                            gridRL.addView(gridGL);
                             if (gameName.equals(getString(R.string.HazineAvı))){
                             } else if (gameName.equals(getString(R.string.SayıBulmaca))){
                                 ConstraintLayout cl = (ConstraintLayout) gridRL.getParent();
@@ -1442,7 +1444,7 @@ public class GroupSolvingActivity extends BaseActivityForVoice implements AGEven
 
         mAppCompatActivity = this;
         utilsMap = new HashMap<>();
-        utilsMap.put("Sudoku", SudokuUtils.class);
+        utilsMap.put(getString(R.string.Sudoku), SudokuUtils.class);
         utilsMap.put(getString(R.string.HazineAvı), HazineAviUtils.class);
         utilsMap.put(getString(R.string.Patika), PatikaUtils.class);
         utilsMap.put(getString(R.string.SayıBulmaca), SayiBulmacaUtils.class);

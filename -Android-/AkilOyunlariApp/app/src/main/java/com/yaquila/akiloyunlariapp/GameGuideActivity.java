@@ -76,8 +76,8 @@ public class GameGuideActivity extends AppCompatActivity {
     Handler animator;
     Runnable[] runnables = new Runnable[100];
 
-   List<String> allowedBoxes = new ArrayList<>();
-   
+    List<String> allowedBoxes = new ArrayList<>();
+
     public void goBackToHTP(View view){
         Intent intent = new Intent(getApplicationContext(), HowToPlayActivity.class);
         intent.putExtra("gameName", gameName);
@@ -1067,34 +1067,34 @@ public class GameGuideActivity extends AppCompatActivity {
             inStrings.add(getString(R.string.patika_instrings9));
         }
         else if (gameName.equals(getString(R.string.SayıBulmaca))){
-            inStrings.add("Sayı Bulmaca öğretici uygulamasına hoşgeldiniz. Öğretici boyunca yanıp sönen butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
-            inStrings.add("Sayı Bulmaca oyununda sağ tarafta verilen rakamlar o satırdaki rakamların kaç tanesinin cevabın içinde geçtiğini gösterir.");
-            inStrings.add("Yanında '+' işareti olan rakamlar o satırdaki rakam yada rakamların cevabın içinde aynı sütunda bulunduklarını, Yanında '-' işareti olanlar ise farklı sütunda olduğunu gösterir.");
-            inStrings.add("Örneğin işaretli ipucunun olduğu satırda 2 adet sayı cevapta var ve yeri doğruyken 1 adet sayının yeri farklıdır.");
-            inStrings.add("Sayı Bulmaca çözerken ilk dikkat edilmesi gereken ipuçları, + olan ipuçlarıdır. '+' bulunan iki farklı satırda bir sayı farklı yerlerde bulunuyorsa o sayı elenebilir.");
-            inStrings.add("Örneğin işaretli ipuçlarının olduğu satırlarda 0 rakamı ortaktır ve iki ipucunda da yalnızca '+' bulunmaktadır. 0 rakamı farklı yerlerde bulunduğu için ve iki yerde aynı anda bulunamayacağı için elenir.");
-            inStrings.add("Daha sonra, toplam ipucu sayısına bakılmalıdır. Örnekte bu sayı 1+3+2+1=7 dir. Yani, 7 ipucudan 4 sayı oluşacaktır. Bu durum, bazı sayıların satırlarda ortak olması gerektiğini gösterir.");
-            inStrings.add("Toplam ipucu sayısı 7 gibi 4x4 lük bir Sayı bulmaca sorusu için orta-yüksek bir sayı ise çok satırda ortak olan sayılardan gidilmelidir. Bu sayı az olsaydı ortak olmayan sayılardan gidilebilirdi.");
-            inStrings.add("Örnekte görüleceği üzere 5 sayısı üç satırda ortaktır. Bu sayıya basarak yeşil gölgeli duruma getirebilirsiniz. Daha sonra, ipucu hakkını dolduran satırlardaki kalan sayıları eleyebiliriz.");
-            inStrings.add("İlk satırda ipucu +1 ve 5 sayısı yeşil renklidir. Dolayısıyla 5 sayısı cevapta vardır ve yeri doğrudur. Cevabın son basamağına 5 yazılmalıdır.");
-            inStrings.add("Sayılar elendiğinde, 2.satırda olabilecek 2 sayı kalır ve ipucuda da 2 sayı kaldığı için bu sayılar kesin olarak cevapta yer alacaktır. Bu sayılar yeşille işaretlenir.");
-            inStrings.add("3.satırda yeşil ile işaretlenen 9 sayısının yeri (ipucu +2 olduğu için) doğru olduğu söylenebilir. Cevabın 3.basamağına 9 yazılmalıdır.");
-            inStrings.add("2.satırda yeşil ile işaretlenen 5 sayısının yeri doğru, 9 sayısının yeri yanlış olduğu görülmektedir. Yani ipucudan geriye yalnızca +1 kalmıştır. Dolayısıyla 2 sayısının yeri doğrudur ve ilk basamaktadır.");
-            inStrings.add("Geriye yalnızca 2.basamaktaki sayı kalmıştır. 3.satırda 9 sayısının yeri doğrudur ve ipucudan geriye +1 kalmıştır. Boş olan basamak yalnızca 2.basamak olduğu için 3.satırdaki 8 sayısı cevapta olmalıdır.");
-            inStrings.add("Çözüm sona erdiğinde cevap 2895 olarak bulunur. Sayı Bulmaca soruları genel olarak bu yöntemlerle çözülebilir. Ancak çözer bir yerde tıkanırsa, en çok satırda ortak olan sayılardan deneme-yanılma ile gidilebilir.");
-            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
+            inStrings.add(getString(R.string.sayibulmaca_instrings0));
+            inStrings.add(getString(R.string.sayibulmaca_instrings1));
+            inStrings.add(getString(R.string.sayibulmaca_instrings2));
+            inStrings.add(getString(R.string.sayibulmaca_instrings3));
+            inStrings.add(getString(R.string.sayibulmaca_instrings4));
+            inStrings.add(getString(R.string.sayibulmaca_instrings5));
+            inStrings.add(getString(R.string.sayibulmaca_instrings6));
+            inStrings.add(getString(R.string.sayibulmaca_instrings7));
+            inStrings.add(getString(R.string.sayibulmaca_instrings8));
+            inStrings.add(getString(R.string.sayibulmaca_instrings9));
+            inStrings.add(getString(R.string.sayibulmaca_instrings10));
+            inStrings.add(getString(R.string.sayibulmaca_instrings11));
+            inStrings.add(getString(R.string.sayibulmaca_instrings12));
+            inStrings.add(getString(R.string.sayibulmaca_instrings13));
+            inStrings.add(getString(R.string.sayibulmaca_instrings14));
+            inStrings.add(getString(R.string.sayibulmaca_instrings15));
         }
         else if (gameName.equals(getString(R.string.Piramit))){
-            inStrings.add("Piramit öğretici uygulamasına hoşgeldiniz. Öğretici boyunca işaretli butonlara tıklayarak kendiniz de çözüme dahil olabilirsiniz.");
-            inStrings.add("Piramit oyununda çözerden istenen piramitteki boş kutuları kurallı bir şekilde doldurmasıdır. Oyunun kuralları şöyledir: 1. Her iki yan yana sayının toplamı ya da farkı üstündeki sayıya eşittir.");
-            inStrings.add("2. Aynı satırda rakam tekrarı olamaz. 3. Yan yana olan sayılar ardışık olamaz. Bu 3 kurala dikkat edilerek piramit soruları çözülür. Piramit çözerken kullanılan en yaygın yöntem eleme yöntemidir.");
-            inStrings.add("Örnekte 3 satırlık bir piramit sorusu verilmiştir. Örneğin, bu piramitte en alt satırdaki boş kutudan başlanabilir.");
-            inStrings.add("En alt satırda 4 ve 7 ipuçları verilmiştir. Ardışık olmama ve tekrarlamama kurallarından yola çıkılarak boş kutunun 3,4,5,6,7 ve 8 sayılarını alamayacağı söylenebilir.");
-            inStrings.add("Dolayısıyla bu kutuya yalnızca 1,2 veya 9 sayıları yazılabilir. Sağ alttaki not alma moduna geçilerek bu ihtimaller not alınabilir. Daha sonra bu ihtimallerin tek tek ipuçlarıyla farkı ve toplamı alınabilir.");
-            inStrings.add("Örneğin 1,2 ve 9 ihtimalleri üstündeki kutuda sırasıyla (3,5), (2,6) ve 5 ihtimallerini ortaya çıkarır. Aynı şekilde yanındaki kutuda da sırasıyla (6,8), (5,9) ve 2 ihtimalleri oluşur.");
-            inStrings.add("Bu ihtimaller akıldan bulunabilir veya not alınabilir. Son bir adım olarak bu ihtimallerden hangisinin farkı veya toplamının üstteki sayıyı yani 5'i verdiği bulunmalıdır.");
-            inStrings.add("İhtimaller incelendiğinde 3 ve 8 sayılarının farkının 5 olduğu görülebilir. Dolayısıyla bu ihtimalleri veren 1 ihtimali de doğrudur. Sağlama yapıldığında piramidin kurallara uyduğu görülür.");
-            inStrings.add("Bu öğreticinin sonuna geldiniz.\uD83C\uDFC1 Sol üstteki geri butonundan çıkabilir veya ok tuşlarıyla önceki adımlara dönebilirsiniz.");
+            inStrings.add(getString(R.string.piramit_instrings0));
+            inStrings.add(getString(R.string.piramit_instrings1));
+            inStrings.add(getString(R.string.piramit_instrings2));
+            inStrings.add(getString(R.string.piramit_instrings3));
+            inStrings.add(getString(R.string.piramit_instrings4));
+            inStrings.add(getString(R.string.piramit_instrings5));
+            inStrings.add(getString(R.string.piramit_instrings6));
+            inStrings.add(getString(R.string.piramit_instrings7));
+            inStrings.add(getString(R.string.piramit_instrings8));
+            inStrings.add(getString(R.string.piramit_instrings9));
         }
     }
 
@@ -1252,7 +1252,7 @@ public class GameGuideActivity extends AppCompatActivity {
                         && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(1))) - Integer.parseInt(String.valueOf(currentC.charAt(1)))) == 1)
                         ||      (currentC.charAt(1) == previousC.charAt(1)
                         && Math.abs(Integer.parseInt(String.valueOf(previousC.charAt(0))) - Integer.parseInt(String.valueOf(currentC.charAt(0)))) == 1)
-                ));
+        ));
     }
 
     public void eraseLine(String co1, String co2){
