@@ -24,7 +24,8 @@ let classrooms = []
 let contestrooms = []
 
 const getGames = async (game) => {
-  const res = await axios.get(`https://akiloyunlariapp.herokuapp.com/${game}/userid`, {params: {Token: "fx!Ay:;<p6Q?C8N{", Info: 1, "Multiplayer": 1}})
+  const res = await axios.get(`https://akiloyunlariapp.herokuapp.com/${game}/userid`,
+  {params: {Token: "fx!Ay:;<p6Q?C8N{", Info: 1, "Multiplayer": 1}})
   return await res.data;
 };
 
